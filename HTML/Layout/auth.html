@@ -1,0 +1,40 @@
+<div class="auth-modal-container" id="authModalContainer" style="display: none;">
+    <div class="auth-modal" id="authModal" >
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>ĐĂNG KÝ TÀI KHOẢN GEARVN</h2>
+                <button class="close-btn" onclick="closeAuthModal()">✖</button>
+            </div>
+            <div class="auth-body">
+                <form id="registerForm">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Email" required>
+                    
+                    <label for="lastName">Họ</label>
+                    <input type="text" id="lastName" placeholder="Họ" required>
+                    
+                    <label for="firstName">Tên</label>
+                    <input type="text" id="firstName" placeholder="Tên" required>
+                    
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" placeholder="Mật khẩu" required>
+                    
+                    <button type="submit" class="register-btn">TẠO TÀI KHOẢN</button>
+                </form>
+                <p>hoặc đăng ký bằng</p>
+                <div class="social-login">
+                    <button class="google-btn">G+ Google</button>
+                    <button class="facebook-btn">F Facebook</button>
+                </div>
+                <p>Bạn đã có tài khoản? <a href="#" onclick="switchToLogin()">Đăng nhập!</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="auth-dropdown" id="authDropdown">
+        <p>👋 Xin chào, vui lòng đăng nhập</p>
+        <button class="login-btn" onclick="openAuthModal()">ĐĂNG NHẬP</button>
+        <button class="register-btn" onclick="openAuthModal()">ĐĂNG KÝ</button>
+        <p>❓ Trợ giúp</p>
+    </div>
+</div>
