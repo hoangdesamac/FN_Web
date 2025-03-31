@@ -7,43 +7,46 @@
     <link rel="stylesheet" href="../HTML/Style/style.css">
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <!-- Include Header -->
-        <div id="header-placeholder"></div>
-    </div>
+<!-- Header -->
+<div class="header">
+    <!-- Include Header -->
+    <div id="header-placeholder"></div>
+</div>
 
-    <!-- Navbar -->
-    <div class="navbar">
-        <!-- Include Navbar -->
-        <div id="navbar-placeholder"></div>
-    </div>
+<!-- Navbar -->
+<div class="navbar">
+    <!-- Include Navbar -->
+    <div id="navbar-placeholder"></div>
+</div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div id="mainContent-placeholder"></div>
-    </div>
+<!-- Main Content -->
+<div class="main-content">
+    <div id="mainContent-placeholder"></div>
+</div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <!-- Include Footer -->
-        <div id="footer-placeholder"></div>
-    </div>
-     <!-- Load Navbar Script -->
-     <script src="../Script/navbar.js"></script>
-    <script>
-        // Dùng JavaScript để nhúng các phần HTML riêng lẻ vào index.html
-        function loadHTML(elementId, file) {
-            fetch(file)
-                .then(response => response.text())
-                .then(data => document.getElementById(elementId).innerHTML = data);
-        }
+<!-- Footer -->
+<div class="footer">
+    <!-- Include Footer -->
+    <div id="footer-placeholder"></div>
+</div>
+<!-- Load Navbar Script -->
+<script src="../Script/navbar.js"></script>
+<script>
+    // Dùng JavaScript để nhúng các phần HTML riêng lẻ vào index.html
+    function loadHTML(elementId, file) {
+        fetch(file)
+            .then(response => response.text())
+            .then(data => document.getElementById(elementId).innerHTML = data);
+    }
 
-        loadHTML("header-placeholder", "../HTML/Layout/header.html");
-        loadHTML("navbar-placeholder", "../HTML/Layout/navbar.html");
-        loadHTML("footer-placeholder", "../HTML/Layout/footer.html");
-        loadHTML("mainContent-placeholder", "../HTML/Layout/mainContent.html");
-    </script>
+    loadHTML("header-placeholder", "../HTML/Layout/testheader.html");
+    loadHTML("navbar-placeholder", "../HTML/Layout/navbar.html");
+    loadHTML("footer-placeholder", "../HTML/Layout/testfooter.html");
+    loadHTML("mainContent-placeholder", "../HTML/Layout/testmaincontent.html");
+</script>
+
+</body>
+</html>
 
 </body>
 </html>
