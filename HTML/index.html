@@ -34,7 +34,7 @@
 <script>
     // Dùng JavaScript để nhúng các phần HTML riêng lẻ vào index.html
     function loadHTML(elementId, file) {
-        fetch(file)
+        fetch(file) 
             .then(response => response.text())
             .then(data => document.getElementById(elementId).innerHTML = data);
     }
