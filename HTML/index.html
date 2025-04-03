@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3TD-Máy tính cao cấp,Laptop thiết bị chơi game hàng đầu Thế Giới-3TD.COM</title>
+    <title>3TD-Máy tính cao cấp, Laptop thiết bị chơi game hàng đầu Thế Giới - 3TD.COM</title>
     <link rel="stylesheet" href="../HTML/Style/style.css">
 </head>
 <body>
 <!-- Header -->
 <div class="header">
-    <!-- Include Header -->
     <div id="header-placeholder"></div>
 </div>
+
 <!-- Navbar -->
 <div class="navbar">
-    <!-- Include Navbar -->
     <div id="navbar-placeholder"></div>
 </div>
 
@@ -25,36 +24,52 @@
 
 <!-- Footer -->
 <div class="footer">
-    <!-- Include Footer -->
     <div id="footer-placeholder"></div>
 </div>
-<!--Product
-<div class="product">
-    <div id="product-placeholder"></div>
-</div>
--->
 
-<!-- Load Navbar Script -->
+<!-- Load Components -->
 <script src="../Script/menu.js"></script>
-
 <script>
     function loadHTML(elementId, file, callback) {
         fetch(file)
             .then(response => response.text())
             .then(data => {
                 document.getElementById(elementId).innerHTML = data;
-                if (callback) callback(); // Gọi callback nếu có
-            });
+                if (callback) callback(); // Gọi callback sau khi tải xong
+            })
+            .catch(error => console.error(`Lỗi khi tải ${file}:`, error));
     }
 
-    loadHTML("header-placeholder", "../HTML/Layout/header.html", function () {
+    function setupScripts() {
+        console.log("✅ Header đã tải xong, bắt đầu gán sự kiện.");
+
+        // Gán sự kiện đăng nhập
+        const loginBtn = document.getElementById("loginBtn");
+        if (loginBtn) {
+            loginBtn.addEventListener("click", function () {
+                window.location.href = "../HTML/Layout/authlogin.html";
+            });
+            console.log("🔑 Sự kiện đăng nhập đã được gán.");
+        } else {
+            console.warn("⚠️ Không tìm thấy nút Đăng nhập.");
+        }
+
+        // Tải script menu.js (Đảm bảo chạy sau khi header đã load)
         const script = document.createElement("script");
         script.src = "../Script/menu.js";
+        script.onload = function () {
+            console.log("📂 Script menu.js đã tải thành công.");
+        };
         document.body.appendChild(script);
-    });
+    }
+
+    // Load header trước, rồi mới gán sự kiện
+    loadHTML("header-placeholder", "../HTML/Layout/header.html", setupScripts);
+
+    // Load các phần khác
     loadHTML("footer-placeholder", "../HTML/Layout/footer.html");
     loadHTML("mainContent-placeholder", "../HTML/Layout/mainContent.html");
 </script>
+
 </body>
 </html>
-
