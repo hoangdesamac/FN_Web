@@ -1,0 +1,245 @@
+/*authentication: Register*/
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content-regis {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+.input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
+    background: #f9f9f9;
+    position: relative;
+}
+
+.input-container i {
+    font-size: 18px;
+    color: #555;
+    margin-right: 10px; /* Đưa icon về phía trước */
+}
+
+.input-container input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+}
+
+button {
+    margin: 10px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+button i {
+    font-size: 20px;
+}
+
+button[type="submit"] {
+    background-color: red;
+    color: white;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.google, .facebook {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.google {
+    background-color: #db4437;
+}
+
+.facebook {
+    background-color: #4267B2;
+}
+
+a {
+    text-decoration: none;
+    color: blue;
+}
+
+.hr-container {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.hr-container hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 0;
+}
+
+.hr-container .hr-text {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    background: white;
+    padding: 0 10px;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #555;
+}
+
+/*authentication login*/
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modallogin {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
+    background: #fff;
+}
+
+.input-container i {
+    margin-right: 10px;
+    color: #666;
+}
+
+input {
+    border: none;
+    outline: none;
+    flex: 1;
+}
+
+button {
+    margin: 10px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="submit"] {
+    background-color: red;
+    color: white;
+}
+
+.hrs-container {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.hrs-container hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 0;
+}
+
+.hrs-container .hrs-text {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    background: white;
+    padding: 0 10px;
+    transform: translateX(-50%);
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.google, .facebook {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.google {
+    background-color: #db4437;
+}
+
+.facebook {
+    background-color: #4267B2;
+}
+
+a {
+    text-decoration: none;
+    color: blue;
+}
