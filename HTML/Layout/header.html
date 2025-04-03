@@ -43,12 +43,22 @@
     </div>
     <div class="user-actions">
         <span><i class='bx bx-cart'></i> Giỏ hàng</span>
-        <span id="loginBtn" onclick="window.location.href='../Layout/authlogin.html'">
+        <span id="loginBtn">
     <i class='bx bx-user'></i> Đăng nhập
 </span>
 
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("loginBtn").addEventListener("click", function () {
+                    window.location.href = "../Layout/authlogin.html";
+                });
+            });
+        </script>
+
+
     </div>
-    <script src="../menu.js"></script>
+    <script src="/FN_Web-frontend-team/Script/menu.js" defer></script>
+
 </header>
 </body>
 </html>
