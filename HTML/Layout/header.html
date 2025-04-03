@@ -14,8 +14,8 @@
         <p>3TD.COM</p>
     </div>
     <div class="menu-container">
-        <button class="menu-toggle"><i class='bx bx-menu'></i> Danh mục</button>
-        <ul class="menu">
+        <button class="menu-toggle" id="menuToggle"><i class='bx bx-menu'></i> Danh mục</button>
+        <ul class="menu" id="menuList">
             <li><i class='bx bx-keyboard'></i> Bàn phím <i class='bx bx-chevron-right'></i></li>
             <li><i class='bx bx-mouse'></i> Chuột + Lót chuột <i class='bx bx-chevron-right'></i></li>
             <li><i class='bx bx-headphone'></i> Tai Nghe <i class='bx bx-chevron-right'></i></li>
@@ -30,6 +30,7 @@
             <li><i class='bx bx-plug'></i> Phụ kiện (Hub, sạc, cáp..) <i class='bx bx-chevron-right'></i></li>
             <li><i class='bx bx-box'></i> Dịch vụ và thông tin khác <i class='bx bx-chevron-right'></i></li>
         </ul>
+
     </div>
     <div class="search-bar">
         <input type="text" placeholder="Bạn cần tìm gì?">
@@ -42,8 +43,12 @@
     </div>
     <div class="user-actions">
         <span><i class='bx bx-cart'></i> Giỏ hàng</span>
-        <span><i class='bx bx-user'></i> Đăng nhập</span>
+        <span id="loginBtn" onclick="window.location.href='authlogin.html'">
+    <i class='bx bx-user'></i> Đăng nhập
+</span>
+
     </div>
+    <script src="../Script/menu.js"></script>
 </header>
 </body>
 </html>
