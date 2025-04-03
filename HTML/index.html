@@ -35,7 +35,7 @@
 -->
 
 <!-- Load Navbar Script -->
-<script src="menu.js"></script>
+<script src="../Script/menu.js"></script>
 
 <script>
     function loadHTML(elementId, file, callback) {
@@ -49,7 +49,7 @@
 
     loadHTML("header-placeholder", "../HTML/Layout/header.html", function () {
         const script = document.createElement("script");
-        script.src = "Script/menu.js";
+        script.src = "../Script/menu.js";
         document.body.appendChild(script);
     });
     loadHTML("footer-placeholder", "../HTML/Layout/footer.html");
