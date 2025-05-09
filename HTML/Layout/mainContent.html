@@ -1,126 +1,1325 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Maincontent</title>
-    <link rel="stylesheet" href="../Style/style.css">
+    <title>Danh sách sản phẩm - Arduino</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="resetstyle.css">
 </head>
 <body>
 
 <main class="main-content">
-    <section class="product-list">
-        <div class="product-">
-            <h2>Chuột</h2>
-            <div class="product-grid">
-                <div class="product-item">
-                    <a href="../HTML/Layout/product.html">
-                        <img src="../Images/Chuot-Razer-Khong-day-Viper-V3-Pro-den.jpg" alt="Chuột Razer Không Dây Viper V3 Pro - Đen">
-                        <p>Chuột Razer Không Dây Viper V3 Pro - Đen</p>
-                        <p><strong>3,690,000₫</strong></p>
+    <!--Arduino Section -->
+    <section class="product-section" data-category="arduino">
+        <h2 class="section-title">Arduino</h2>
+        <button class="scroll-btn left" onclick="scrollProducts('productGridArduino', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridArduino', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridArduino">
+                <!-- === Danh sách sản phẩm === -->
+                <div class="product-card" data-id="ard1">
+                    <a href="testproduct.html">
+                        <img class="product-image" src="/anh/ard1.jpg" alt="KIT Arduino Mega2560 CH340G">
                     </a>
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+
+                    <div class="product-info">
+                        <p class="product-name">KIT Arduino Mega2560 CH340G</p>
+                        <p class="product-price"><strong>350.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
                 </div>
 
-                <div class="product-item">
-                    <img src="../Images/logitech-g102-lightsync-rgb-Black.jpg" alt="Chuột Logitech G102 LightSync Black">
-                    <p>Chuột Logitech G102 LightSync Black</p>
-                    <p><strong>390.000₫</strong></p>
+                <div class="product-card" data-id="ard2">
+                    <img class="product-image" src="/anh/ard2.png" alt="KIT Arduino Nano 3.0 LGT8F328P MiniEVB">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">KIT Arduino Nano 3.0 LGT8F328P MiniEVB</p>
+                        <p class="product-price"><strong>70.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
                 </div>
-                <div class="product-item">
-                    <img src="../Images/chuot-razer-deathadder-essential-white.jpg" alt="Chuột Razer Deathadder Essential White">
-                    <p>Chuột Razer Deathadder Essential White</p>
 
-                    <p><strong>410.000₫</strong></p>
+                <div class="product-card" data-id="ard3">
+                    <img class="product-image" src="/anh/ard3.png" alt="KIT Arduino Mega2560 ATMEGA16U2">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">KIT Arduino Mega2560 ATMEGA16U2</p>
+                        <p class="product-price"><strong>450.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
                 </div>
-                <div class="product-item">
-                    <img src="../Images/chuot-razer-death-adder.jpg" alt="Chuột Razer DeathAdder Essential (RZ01-03850100-R3M1)">
-                    <p>Chuột Razer DeathAdder Essential (RZ01-03850100-R3M1)</p>
-                    <p><strong>400.000₫</strong></p>
+
+                <div class="product-card" data-id="ard4">
+                    <img class="product-image" src="/anh/ard4.jpg" alt="KIT Arduino Nano CH340G">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">KIT Arduino Nano CH340G</p>
+                        <p class="product-price"><strong>130.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
                 </div>
-                <div class="product-item">
-                    <img src="../Images/chuot-khong-dayRapoo M21 Silent.jpg" alt="Chuột Không Dây Rapoo M21 Silent">
-                    <p>Chuột Không Dây Rapoo M21 Silent</p>
-                    <p><strong>150.000₫</strong></p>
+
+                <div class="product-card" data-id="ard5">
+                    <img class="product-image" src="/anh/ard5png.png" alt="KIT Arduino UNO R3 ATMEGA16U2">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">KIT Arduino UNO R3 ATMEGA16U2</p>
+                        <p class="product-price"><strong>230.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
                 </div>
-                <div class="product-item">
-                    <img src="../Images/eries-aerox-3-wireless-snow-edition.jpg" alt="Chuột Steelseries Aerox 3 Wireless Snow Edition">
-                    <p>Chuột Steelseries Aerox 3 Wireless Snow Edition</p>
-                    <p><strong>2.490.000₫</strong></p>
+                <div class="product-card" data-id="ard6">
+                    <img class="product-image" src="/anh/ard6.png" alt="Arduino Mega 2560 Rev3 Chính Hãng">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Arduino Mega 2560 Rev3 Chính Hãng</p>
+                        <p class="product-price"><strong>1.600.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
                 </div>
+                <div class="product-card" data-id="ard7">
+                    <img class="product-image" src="/anh/ard7.png" alt="Arduino SD Card Shield">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Arduino SD Card Shield</p>
+                        <p class="product-price"><strong>90.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="ard8">
+                    <img class="product-image" src="/anh/ard8.png" alt="Arduino Multi Function Shield">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Arduino Multi Function Shield</p>
+                        <p class="product-price"><strong>55.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="ard9">
+                    <img class="product-image" src="/anh/ard9.png" alt="Socket KIT Arduino Nano">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Socket KIT Arduino Nano</p>
+                        <p class="product-price"><strong>35.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="ard10">
+                    <img class="product-image" src="/anh/ard10.png" alt="Arduino UNO Proto Shield">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Arduino UNO Proto Shield</p>
+                        <p class="product-price"><strong>85.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+
+
             </div>
-
-        </div>
-        <div class="product-">
-            <h2>Bàn phím</h2>
-            <div class="product-grid">
-                <div class="product-item">
-                    <img src="../Images/mode-phien-ban-den-hong-gradientreaper-switch.jpg" alt="Bàn phím AULA F75 (Đen +Hồng Gradient/Reaper switch)">
-                    <p>Bàn phím AULA F75 (Đen +Hồng Gradient/Reaper switch)</p>
-
-                    <p><strong>1.190.000₫</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="../Images/ek87_pro_-_black_golden.jpg" alt="Bàn phím cơ gaming DareU EK87 Pro Black Golden Cloud switch">
-                    <p>Bàn phím cơ gaming DareU EK87 Pro Black Golden Cloud switch</p>
-                    <p><strong>1.130.000₫</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="../Images/haze_blue_7.jpg" alt="Bàn phím cơ gaming DareU EK106 Pro Haze Blue Cloud switch">
-                    <p>Bàn phím cơ gaming DareU EK106 Pro Haze Blue Cloud switch</p>
-                    <p><strong>1.250.000₫</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="../Images/AULA-S98-PRO-TM.jpg" alt="Bàn phím AULA S98 PRO TM (Xanh lá + Trắng/ Grey Wood V4 switch)">
-                    <p>Bàn phím AULA S98 PRO TM (Xanh lá + Trắng/ Grey Wood V4 switch)</p>
-                    <p><strong>1.590.000₫</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="../Images/Durgod-MK-75-White-Blue-Switch.jpg" alt="Bàn phím Durgod MK 75 White Blue Switch">
-                    <p>Bàn phím Durgod MK 75 White Blue Switch</p>
-                    <p><strong>690.000₫</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="../Images/AKKO-MonsGeek-MG75-Prunus.jpg" alt="Bàn phím cơ AKKO MonsGeek MG75 Prunus Lannesiana Akko V3 Cream Yellow switch">
-                    <p>Bàn phím cơ AKKO MonsGeek MG75 Prunus Lannesiana Akko V3 Cream Yellow switch</p>
-                    <p><strong>650.000₫</strong></p>
-                </div>
-            </div>
-        </div>
-        <div class="product-">
-                <h2>Tai nghe</h2>
-                <div class="product-grid">
-                    <div class="product-item">
-                        <img src="../Images/Tai-nghe-gaming-Rapoo-VH520C.jpg" alt="Tai nghe gaming Rapoo VH520C">
-                        <p>Tai nghe gaming Rapoo VH520C</p>
-                        <p><strong>370.000₫</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="../Images/Tai-nghe-DareU-EH469-7.1-RGB-Pink.jpg" alt="Tai nghe DareU EH469 7.1 RGB Pink">
-                        <p>Tai nghe DareU EH469 7.1 RGB Pink</p>
-                        <p><strong>380.000₫</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="../Images/Tai-nghe-Razer-Kraken-V3-X-USB.jpg" alt="Tai nghe Razer Kraken V3 X USB">
-                        <p>Tai nghe Razer Kraken V3 X USB</p>
-                        <p><strong>1.250.000₫</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="../Images/Tai-nghe-Logitech-G-PRO-X-2-LIGHTSPEED-White.jpg" alt="Tai nghe Logitech G PRO X 2 LIGHTSPEED White">
-                        <p>Tai nghe Logitech G PRO X 2 LIGHTSPEED White</p>
-                        <p><strong>4.590.000₫</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="../Images/Tai-nghe-Edifier-khong-day-W830NB-White.jpg" alt="Tai nghe Edifier không dây W830NB White">
-                        <p>Tai nghe Edifier không dây W830NB White</p>
-                        <p><strong>1.490.000₫</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="../Images/Tai-nghe-Asus-ROG-Cetra-true-Wireless.jpg" alt="Tai nghe Asus ROG Cetra True Wireless">
-                        <p>Tai nghe Asus ROG Cetra True Wireless</p>
-                        <p><strong>1.750.000₫</strong></p>
-                    </div>
-                </div>
         </div>
     </section>
+    <!-- Sensor Section -->
+    <section class="product-section">
+        <h2 class="section-title">Cảm biến</h2>
+        <button class="scroll-btn left" onclick="scrollProducts('productGridSensors', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridSensors', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridSensors">
+
+                <div class="product-card" data-id="sen1">
+                    <img class="product-image" src="/anh/cb1.jpeg" alt="Cảm Biến Hiệu Điện HLK-LD2410 Radar">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Cảm Biến Hiệu Điện HLK-LD2410 Radar</p>
+                        <p class="product-price"><strong>150.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="sen2">
+                    <img class="product-image" src="/anh/cb2.jpeg" alt="Cảm Biến Rung HDX-1801">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Cảm Biến Rung HDX-1801</p>
+                        <p class="product-price"><strong>1.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="sen3">
+                    <img class="product-image" src="/anh/cb3.jpg" alt="Cảm Biến Tiệm Cận LJ18A3-10-Z/BX 10mm">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Cảm Biến Tiệm Cận LJ18A3-10-Z/BX 10mm</p>
+                        <p class="product-price"><strong>125.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="sen4">
+                    <img class="product-image" src="/anh/cb4.png" alt="Cảm Biến Dòng SCT-013-000V 50A/1V">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Cảm Biến Dòng SCT-013-000V 50A/1V</p>
+                        <p class="product-price"><strong>140.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen5">
+                    <img class="product-image" src="/anh/cb5.jpeg" alt="Cảm Biến Áp Suất GY-68 BMP180">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Cảm Biến Áp Suất GY-68 BMP180</p>
+                        <p class="product-price"><strong>150.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen6">
+                    <img class="product-image" src="/anh/cb6.jpeg" alt="Cảm Biến Chất Lượng Không Khí TVOC, eCO2, AQI ENS160 và Nhiệt Độ Độ Ẩm ATH21">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Cảm Biến Chất Lượng Không Khí </p>
+                        <p class="product-price"><strong>180.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen7">
+                    <img class="product-image" src="/anh/cb7.png" alt="Cảm Biến Đo Độ Ẩm Đất Đầu Dò Chống Ăn Mòn">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Cảm Biến Đo Độ Ẩm Đất Đầu Dò Chống Ăn Mòn </p>
+                        <p class="product-price"><strong>75.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen8">
+                    <img class="product-image" src="/anh/cb8.png" alt="Cảm Biến Bụi GP2Y1010AU0F">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Cảm Biến Bụi GP2Y1010AU0F </p>
+                        <p class="product-price"><strong>110.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen9">
+                    <img class="product-image" src="/anh/cb9.png" alt="Cảm Biến Âm Thanh Mic 9x7MM 56DB SMD">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Cảm Biến Âm Thanh Mic 9x7MM 56DB SMD </p>
+                        <p class="product-price"><strong>2.500₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen10">
+                    <img class="product-image" src="/anh/cb10.jpg" alt="Cảm Biến Mực Nước">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Cảm Biến Mực Nước </p>
+                        <p class="product-price"><strong>25.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+
+
+
+                </div>
+            </div>
+    </section>
+    <!-- LED Section -->
+    <section class="product-section">
+    <h2 class="section-title">LED</h2>
+        <!-- Nút scroll nếu cần -->
+        <button class="scroll-btn left" onclick="scrollProducts('productGridLed', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridLed', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridLed">
+                <!-- Các sản phẩm -->
+                <div class="product-card" data-id="led1">
+                    <img class="product-image" src="/anh/l1.png" alt="Bộ Điều Khiển LED Dây 5050 RGB">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bộ Điều Khiển LED Dây 5050 RGB Qua Bluetooth</p>
+                        <p class="product-price"><strong>50.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="led2">
+                    <img class="product-image" src="/anh/l2.png" alt="Đèn Led Hoàng Hôn 16 Màu">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Đèn Led Hoàng Hôn 16 Màu Có Điều Khiển</p>
+                        <p class="product-price"><strong>165.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="led3">
+                    <img class="product-image" src="/anh/l3.png" alt="Led Dây Dán 5050 WS2812">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Led Dây Dán 5050 WS2812 5V Không Keo</p>
+                        <p class="product-price"><strong>85.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="led4">
+                    <img class="product-image" src="/anh/l4.jpg" alt="Led Dây 5050 RGB PN">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Led Dây 5050 RGB PN (Cuộn 5M)</p>
+                        <p class="product-price"><strong>120.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led5">
+                    <img class="product-image" src="/anh/l5.jpeg" alt="LED Matrix 2 Màu 8x8">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">LED Matrix 2 Màu Xanh Đỏ 8x8</p>
+                        <p class="product-price"><strong>26.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led6">
+                    <img class="product-image" src="/anh/l6.png" alt="Led Giao Thông 5mm Màu Vàng (5c)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Led Giao Thông 5mm Màu Vàng (5c)</p>
+                        <p class="product-price"><strong>7.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led7">
+                    <img class="product-image" src="/anh/l7.jpeg" alt="Module LED P5 Full Color Trong Nhà">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Module LED P5 Full Color Trong Nhà</p>
+                        <p class="product-price"><strong>235.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led8">
+                    <img class="product-image" src="/anh/l8.jpg" alt="LED Dây 5050 24V Trắng Sáng PN (Cuộn 5M)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">LED Dây 5050 24V Trắng Sáng PN (Cuộn 5M)</p>
+                        <p class="product-price"><strong>290.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led9">
+                    <img class="product-image" src="/anh/l9.png" alt="LED 3MM SS Nháy Đỏ (10c)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">LED 3MM SS Nháy Đỏ (10c)</p>
+                        <p class="product-price"><strong>3.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led10">
+                    <img class="product-image" src="/anh/l10.png" alt="Led Dây Dán 5050 WS2812 12V Không Keo (1 Mét 60 Bóng)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Led Dây Dán 5050 WS2812 12V Không Keo</p>
+                        <p class="product-price"><strong>130.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+    <!-- Resistor Section -->
+    <section class="product-section">
+        <h2 class="section-title">Điện Trở</h2>
+        <button class="scroll-btn left" onclick="scrollProducts('productGridResistor', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridResistor', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridResistor">
+                <div class="product-card" data-id="r1">
+                    <img class="product-image" src="/anh/tro1.jpeg" alt="Trở 5% 2W 680K (5c)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Trở 5% 2W 680K (5c)</p>
+                        <p class="product-price"><strong>5.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r2">
+                    <img class="product-image" src="/anh/tro2.png" alt="Trở Vạch 1/4W 5% 2M (50c)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Trở Vạch 1/4W 5% 2M (50c)</p>
+                        <p class="product-price"><strong>2.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r3">
+                    <img class="product-image" src="/anh/tro3.jpg" alt="Trở Sứ 5W 5% 47R (5 chiếc)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Trở Sứ 5W 5% 47R (5 chiếc)</p>
+                        <p class="product-price"><strong>7.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r4">
+                    <img class="product-image" src="/anh/tro4.jpg" alt="Trở 5% 1/2W 2.2K (10c)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Trở 5% 1/2W 2.2K (10c)</p>
+                        <p class="product-price"><strong>3.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r5">
+                    <img class="product-image" src="/anh/tro5.jpg" alt="Trở 5% 1/2W 6.8K (10c)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Trở 5% 1/2W 6.8K (10c)</p>
+                        <p class="product-price"><strong>3.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r6">
+                    <img class="product-image" src="/anh/tro6.png" alt="Trở Vạch 1/4W 5% 110R (50c)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Trở Vạch 1/4W 5% 110R (50c)</p>
+                        <p class="product-price"><strong>2.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r7">
+                    <img class="product-image" src="/anh/tro7.jpg" alt="Trở Sứ 5W 5% 470R (5 chiếc)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Trở Sứ 5W 5% 470R (5 chiếc)</p>
+                        <p class="product-price"><strong>7.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r8">
+                    <img class="product-image" src="/anh/tro8.jpg" alt="Trở Sứ 5W 5% 4.7R (5 chiếc)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Trở Sứ 5W 5% 4.7R (5 chiếc)</p>
+                        <p class="product-price"><strong>7.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r9">
+                    <img class="product-image" src="/anh/tro9.jpg" alt="Trở Sứ 5W 5% 4.7K (5 chiếc)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Trở Sứ 5W 5% 4.7K (5 chiếc)</p>
+                        <p class="product-price"><strong>7.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r10">
+                    <img class="product-image" src="/anh/tro10.jpg" alt="Trở Sứ 5W 5% 33R (5 chiếc)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Trở Sứ 5W 5% 33R (5 chiếc)</p>
+                        <p class="product-price"><strong>7.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+    <!-- Capacitor Section -->
+    <section class="product-section">
+        <h2 class="section-title">Tụ Điện</h2>
+        <button class="scroll-btn left" onclick="scrollProducts('productGridCapacitor', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridCapacitor', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridCapacitor">
+                <div class="product-card" data-id="cap1">
+                    <img class="product-image" src="/anh/tu1.jpg" alt="Tụ Hóa 4700uF 50V 18x35MM">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tụ Hóa 4700uF 50V 18x35MM</p>
+                        <p class="product-price"><strong>9.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="cap2">
+                    <img class="product-image" src="/anh/tu2.png" alt="Tụ CBB 224J 630V 10MM">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tụ CBB 224J 630V 10MM</p>
+                        <p class="product-price"><strong>1.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="cap3">
+                    <img class="product-image" src="/anh/tu3.jpeg" alt="Tụ Hóa 1000uF 16V 10x20MM">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tụ Hóa 1000uF 16V 10x20MM</p>
+                        <p class="product-price"><strong>1.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="cap4">
+                    <img class="product-image" src="/anh/tu4.png" alt="Tụ Hóa 2200uF 63V 18x35mm FuSeng">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tụ Hóa 2200uF 63V 18x35mm FuSeng</p>
+                        <p class="product-price"><strong>18.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="cap5">
+                    <img class="product-image" src="/anh/tu5.jpg" alt="Tụ Hóa 4400uF 400V Chính Hãng Nippon">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tụ Hóa 4400uF 400V Chính Hãng Nippon</p>
+                        <p class="product-price"><strong>750.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="cap6">
+                    <img class="product-image" src="/anh/tu6.jpg" alt="Tụ Gốm 104 100nF 50V (1000 chiếc)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tụ Gốm 104 100nF 50V (1000 chiếc)</p>
+                        <p class="product-price"><strong>130.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="cap7">
+                    <img class="product-image" src="/anh/tu7.jpg" alt="Tụ Nhôm 22uF 25V (5 chiếc)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tụ Nhôm 22uF 25V (5 chiếc)</p>
+                        <p class="product-price"><strong>7.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="cap8">
+                    <img class="product-image" src="/anh/tu8.jpg" alt="Tụ Nhôm 10uF 16V 4x5MM (5 chiếc)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tụ Nhôm 10uF 16V 4x5MM (5 chiếc)</p>
+                        <p class="product-price"><strong>3.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="cap9">
+                    <img class="product-image" src="/anh/tu9.jpg" alt="Tụ Hóa 4.7uF 450V 10x17MM (5 chiếc)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tụ Hóa 4.7uF 450V 10x17MM (5 chiếc)</p>
+                        <p class="product-price"><strong>7.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="cap10">
+                    <img class="product-image" src="/anh/tu10.jpg" alt="Tụ Hóa 100uF 100V 10x17MM (5 chiếc)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tụ Hóa 100uF 100V 10x17MM (5 chiếc)</p>
+                        <p class="product-price"><strong>7.500₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+    <!-- SemiConductor Section -->
+    <section class="product-section hidden" data-category="semiconductor">
+        <h2 class="section-title">Linh kiện bán dẫn</h2>
+
+        <!-- Subcategory: Transistor -->
+        <div class="subcategory-container" data-subcategory="Transistor">
+            <h3 class="section-title subcategory-title">Transistor</h3>
+            <button class="scroll-btn left" onclick="scrollProducts('productGridTransistor', -1)">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <button class="scroll-btn right" onclick="scrollProducts('productGridTransistor', 1)">
+                <i class='bx bx-chevron-right'></i>
+            </button>
+            <div class="product-grid-wrapper">
+                <div class="product-grid" id="productGridTransistor">
+                    <!-- Transistor Products -->
+                    <div class="product-card" data-id="tran1">
+                        <img class="product-image" src="/anh/tran1.jpeg" alt="ZTX384 TO92">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">ZTX384 TO92</p>
+                            <p class="product-price"><strong>6.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran2">
+                        <img class="product-image" src="/anh/tran2.png" alt="MJE13003 E13003 TO126 NPN 400V 1.5A (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">MJE13003 E13003 TO126 NPN 400V 1.5A (5 chiếc)</p>
+                            <p class="product-price"><strong>7.500₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran3">
+                        <img class="product-image" src="/anh/tran3.jpg" alt="D882 TO126 TRANS NPN 3A 30V (DIP) (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">D882 TO126 TRANS NPN 3A 30V (DIP) (5 chiếc)</p>
+                            <p class="product-price"><strong>4.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran4">
+                        <img class="product-image" src="/anh/tran4.jpg" alt="2N4401 TO92 TRANS NPN 0.5A 60V">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">2N4401 TO92 TRANS NPN 0.5A 60V</p>
+                            <p class="product-price"><strong>7.500₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran5">
+                        <img class="product-image" src="/anh/tran5.jpg" alt="B562 TO92 TRANS PNP 1A 25V">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">B562 TO92 TRANS PNP 1A 25V</p>
+                            <p class="product-price"><strong>26.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran6">
+                        <img class="product-image" src="/anh/tran6.jpg" alt="C1740 TO92S TRANS NPN 0.15A 60V (DIP) (10 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">C1740 TO92S TRANS NPN 0.15A 60V (DIP) (10 chiếc)</p>
+                            <p class="product-price"><strong>1.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran7">
+                        <img class="product-image" src="/anh/tran7.jpg" alt="2N2646 TO18 UJT N-CH">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">2N2646 TO18 UJT N-CH</p>
+                            <p class="product-price"><strong>45.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran8">
+                        <img class="product-image" src="/anh/tran8.jpg" alt="C2383 TO92 TRANS NPN 1A 160V (DIP) (5c)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">C2383 TO92 TRANS NPN 1A 160V (DIP) (5c)</p>
+                            <p class="product-price"><strong>5.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran9">
+                        <img class="product-image" src="/anh/tran9.jpg" alt="S9014 SOT23 TRANS NPN 0.1A 45V (J6) (10c)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">S9014 SOT23 TRANS NPN 0.1A 45V (J6) (10c)</p>
+                            <p class="product-price"><strong>3.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran10">
+                        <img class="product-image" src="/anh/tran10.png" alt="S9012 SOT23 TRANS PNP 0.5A 25V (2T1) (10c)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">S9012 SOT23 TRANS PNP 0.5A 25V (2T1) (10c)</p>
+                            <p class="product-price"><strong>3.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Subcategory: Diode -->
+        <div class="subcategory-container" data-subcategory="Diode">
+            <h3 class="section-title subcategory-title">Diode</h3>
+            <button class="scroll-btn left" onclick="scrollProducts('productGridDiode', -1)">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <button class="scroll-btn right" onclick="scrollProducts('productGridDiode', 1)">
+                <i class='bx bx-chevron-right'></i>
+            </button>
+            <div class="product-grid-wrapper">
+                <div class="product-grid" id="productGridDiode">
+                    <!-- Diode Products -->
+                    <div class="product-card" data-id="dio1">
+                        <img class="product-image" src="/anh/dio1.png" alt="Diode Cầu 1A 1000V DBS10 SOP4">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Diode Cầu 1A 1000V DBS10 SOP4</p>
+                            <p class="product-price"><strong>2.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio2">
+                        <img class="product-image" src="/anh/dio2.jpg" alt="Zener 6.2V 1W 1N4735 (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Zener 6.2V 1W 1N4735 (5 chiếc)</p>
+                            <p class="product-price"><strong>7.500₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-id="dio3">
+                        <img class="product-image" src="/anh/dio3.jpg" alt="Diode Zener 3A 50V DIP 1N5400 (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Diode Zener 3A 50V DIP 1N5400 (5 chiếc)</p>
+                            <p class="product-price"><strong>12.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-id="dio4">
+                        <img class="product-image" src="/anh/dio4.jpg" alt="Diode Zener 1W 7.5V DIP 1N755 (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Diode Zener 1W 7.5V DIP 1N755 (5 chiếc)</p>
+                            <p class="product-price"><strong>2.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-id="dio5">
+                        <img class="product-image" src="/anh/dio5.png" alt="Diode Zener 1W 5.1V DIP 1N4733A (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Diode Zener 1W 5.1V DIP 1N4733A (5 chiếc)</p>
+                            <p class="product-price"><strong>2.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio6">
+                        <img class="product-image" src="/anh/dio6.jpg" alt="Diode Zener 1W 4.3V DIP 1N4731A (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Diode Zener 1W 4.3V DIP 1N4731A (5 chiếc)</p>
+                            <p class="product-price"><strong>2.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio7">
+                        <img class="product-image" src="/anh/dio7.jpg" alt="Diode Zener 1W 3.9V DIP 1N4730A (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Diode Zener 1W 3.9V DIP 1N4730A (5 chiếc)</p>
+                            <p class="product-price"><strong>2.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio8">
+                        <img class="product-image" src="/anh/dio8.jpg" alt="Diode Zener 1W 3.6V DIP 1N4729A (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Diode Zener 1W 3.6V DIP 1N4729A (5 chiếc)</p>
+                            <p class="product-price"><strong>2.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio9">
+                        <img class="product-image" src="/anh/dio9.jpg" alt="Diode Zener 1W 3.3V DIP 1N4728A (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Diode Zener 1W 3.3V DIP 1N4728A (5 chiếc)</p>
+                            <p class="product-price"><strong>6.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio10">
+                        <img class="product-image" src="/anh/dio10.jpg" alt="Diode Zener 1W 12V DIP 1N4742A (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Diode Zener 1W 12V DIP 1N4742A (5 chiếc))</p>
+                            <p class="product-price"><strong>2.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Subcategory: IC -->
+        <div class="subcategory-container" data-subcategory="IC">
+            <h3 class="section-title subcategory-title">IC</h3>
+            <button class="scroll-btn left" onclick="scrollProducts('productGridIC', -1)">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <button class="scroll-btn right" onclick="scrollProducts('productGridIC', 1)">
+                <i class='bx bx-chevron-right'></i>
+            </button>
+            <div class="product-grid-wrapper">
+                <div class="product-grid" id="productGridIC">
+                    <!-- IC Products -->
+                    <div class="product-card" data-id="ic1">
+                        <img class="product-image" src="/anh/IC1.png" alt="74HC595 DIP16">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">74HC595 DIP16</p>
+                            <p class="product-price"><strong>3.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic2">
+                        <img class="product-image" src="/anh/IC2.jpg" alt="AT24C01 SOP8">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">AT24C01 SOP8</p>
+                            <p class="product-price"><strong>2.500₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic3">
+                        <img class="product-image" src="/anh/IC3.jpeg" alt="DM7493A">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">DM7493A</p>
+                            <p class="product-price"><strong>25.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic4">
+                        <img class="product-image" src="/anh/IC4.png" alt="ESP32-D0WDQ6 QFN48 6x6">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">ESP32-D0WDQ6 QFN48 6x6</p>
+                            <p class="product-price"><strong>70.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic5">
+                        <img class="product-image" src="/anh/IC5.png" alt="MCP23017-E/SO SOP28">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">MCP23017-E/SO SOP28</p>
+                            <p class="product-price"><strong>60.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic6">
+                        <img class="product-image" src="/anh/IC6.jpg" alt="PL2303TA SSOP28 (Thay Thế PL2303HXA SSOP28)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">PL2303TA SSOP28 (Thay Thế PL2303HXA SSOP28)</p>
+                            <p class="product-price"><strong>25.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic7">
+                        <img class="product-image" src="/anh/IC7.jpg" alt="TL431 TO92 (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">TL431 TO92 (5 chiếc)</p>
+                            <p class="product-price"><strong>5.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic8">
+                        <img class="product-image" src="/anh/IC8.jpg" alt="PC816 LTV816 DIP4 Cách Ly Quang (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">PC816 LTV816 DIP4 Cách Ly Quang (5 chiếc)</p>
+                            <p class="product-price"><strong>7.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic9">
+                        <img class="product-image" src="/anh/IC9.jpg" alt="TL431 SOT23 (5 chiếc)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">TL431 SOT23 (5 chiếc)</p>
+                            <p class="product-price"><strong>5.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic10">
+                        <img class="product-image" src="/anh/IC10.jpg" alt="LM348N DIP14">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">LM348N DIP14</p>
+                            <p class="product-price"><strong>12.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Power Section -->
+    <section class="product-section">
+        <h2 class="section-title">Nguồn</h2>
+        <button class="scroll-btn left" onclick="scrollProducts('productGridPower', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridPower', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridPower">
+
+                <div class="product-card" data-id="power1">
+                    <img class="product-image" src="/anh/nguon1.jpeg" alt="Nguồn Chống Nước 48VDC 4.34A IP65">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn Chống Nước 48VDC 4.34A IP65</p>
+                        <p class="product-price"><strong>400.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power2">
+                    <img class="product-image" src="/anh/nguon2.png" alt="Nguồn Adapter 5V1A DC5.5x2.1MM">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn Adapter 5V1A DC5.5x2.1MM (Phích Tròn)</p>
+                        <p class="product-price"><strong>30.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power3">
+                    <img class="product-image" src="/anh/nguon3.png" alt="Nguồn Adapter 5V4A DC5.5x2.1MM">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn Adapter 5V4A DC5.5x2.1MM</p>
+                        <p class="product-price"><strong>75.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power4">
+                    <img class="product-image" src="/anh/nguon4.png" alt="Nguồn Adapter 12V2A DC5.5x2.1MM">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn Adapter 12V2A DC5.5x2.1MM</p>
+                        <p class="product-price"><strong>45.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power5">
+                    <img class="product-image" src="/anh/nguon5.png" alt="Nguồn Adapter 12V3A DC5.5x2.1MM">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn Adapter 12V3A DC5.5x2.1MM</p>
+                        <p class="product-price"><strong>90.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power6">
+                    <img class="product-image" src="/anh/nguon6.png" alt="Nguồn Tổ Ong 5V5A">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn Tổ Ong 5V5A</p>
+                        <p class="product-price"><strong>120.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power7">
+                    <img class="product-image" src="/anh/nguon7.png" alt="Mạch Nguồn Hạ Áp XL2596S 3A Hàn Dây 20Cm P-XL2596-W20">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Mạch Nguồn Hạ Áp XL2596S 3A Hàn Dây 20Cm P-XL2596-W20</p>
+                        <p class="product-price"><strong>22.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power8">
+                    <img class="product-image" src="/anh/nguon8.jpg" alt="Nguồn Không Vỏ 5V2A">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn Không Vỏ 5V2A</p>
+                        <p class="product-price"><strong>28.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power9">
+                    <img class="product-image" src="/anh/nguon9.png" alt="Nguồn AC-DC 220V-24V 6A 150W">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn AC-DC 220V-24V 6A 150W</p>
+                        <p class="product-price"><strong>220.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power10">
+                    <img class="product-image" src="/anh/nguon10.jpg" alt="Nguồn Adapter Điều Chỉnh DC1-24V 2A JNT0124">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn Adapter Điều Chỉnh DC1-24V 2A JNT0124</p>
+                        <p class="product-price"><strong>110.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+
+
 </main>
+
+<script src="js_ShowAutoScroll.js"></script>
+
+
+
 </body>
 </html>
