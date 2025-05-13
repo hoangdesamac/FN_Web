@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Thanh toán đơn hàng tại QD Shop - Hoàn tất thanh toán của bạn một cách nhanh chóng và an toàn.">
+  <meta name="keywords" content="thanh toán, QD Shop, mua sắm trực tuyến">
+  <title>QD - Thanh toán</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="HTML/Style/stylepayment.css">
+  <link rel="stylesheet" href="HTML/Style/style.css">
+  <script src="https://unpkg.com/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+<div id="header-container"></div>
+
+<main class="payment-container">
+  <nav class="breadcrumb-steps">
+    <div class="step completed"><i class='bx bx-cart'></i> Giỏ hàng</div>
+    <div class="step completed"><i class='bx bx-truck'></i> Giao hàng</div>
+    <div class="step active"><i class='bx bx-credit-card'></i> Thanh toán</div>
+  </nav>
+  <div class="timeline">
+    <div class="timeline-step active">
+      <div class="circle">1</div>
+      <span>Thông tin</span>
+    </div>
+    <div class="timeline-step">
+      <div class="circle">2</div>
+      <span>Thanh toán</span>
+    </div>
+    <div class="timeline-step">
+      <div class="circle">3</div>
+      <span>Hoàn tất</span>
+    </div>
+  </div>
+  <h1>Thanh toán</h1>
+  <div class="payment-content">
+    <div class="accordion">
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion('recipient')">
+          <h3><i class='bx bx-map'></i> Thông tin người nhận</h3>
+          <i class='bx bx-chevron-down'></i>
+        </div>
+        <div class="accordion-body" id="recipient">
+          <div class="form-group">
+            <label for="recipient-name">Họ và tên *</label>
+            <input type="text" id="recipient-name" placeholder="Nhập họ và tên" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-phone">Số điện thoại *</label>
+            <input type="tel" id="recipient-phone" placeholder="Nhập số điện thoại" required>
+          </div>
+          <div class="form-group">
+            <label for="recipient-address">Địa chỉ giao hàng *</label>
+            <textarea id="recipient-address" placeholder="Nhập địa chỉ giao hàng" required></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion('order')">
+          <h3><i class='bx bx-cart'></i> Chi tiết đơn hàng</h3>
+          <i class='bx bx-chevron-down'></i>
+        </div>
+        <div class="accordion-body" id="order">
+          <div id="order-summary"></div>
+        </div>
+      </div>
+    </div>
+    <div class="payment-sidebar">
+      <h3>Tóm tắt thanh toán</h3>
+      <div class="payment-methods">
+        <h4>Phương thức thanh toán</h4>
+        <div class="method-option" data-method="cod" onclick="selectMethod('cod')">
+          <input type="radio" name="payment-method" id="method-cod" value="cod" checked>
+          <img src="https://via.placeholder.com/40?text=COD" alt="COD">
+          <label for="method-cod">Thanh toán khi nhận hàng (COD)</label>
+          <i class='bx bx-info-circle' title="Thanh toán bằng tiền mặt khi nhận hàng"></i>
+        </div>
+        <div class="method-option" data-method="credit" onclick="selectMethod('credit')">
+          <input type="radio" name="payment-method" id="method-credit" value="credit">
+          <img src="https://via.placeholder.com/40?text=VISA" alt="VISA">
+          <label for="method-credit">Thẻ tín dụng/Thẻ ghi nợ</label>
+          <i class='bx bx-info-circle' title="Thanh toán bằng thẻ VISA/Mastercard"></i>
+        </div>
+        <div class="method-option" data-method="wallet" onclick="selectMethod('wallet')">
+          <input type="radio" name="payment-method" id="method-wallet" value="wallet">
+          <img src="https://via.placeholder.com/40?text=MoMo" alt="MoMo">
+          <label for="method-wallet">Ví điện tử (MoMo, ZaloPay,...)</label>
+          <i class='bx bx-info-circle' title="Thanh toán qua ví điện tử như MoMo, ZaloPay"></i>
+        </div>
+      </div>
+      <div class="summary-details" id="summary-details"></div>
+      <div class="security-badges">
+        <img src="https://via.placeholder.com/50?text=SSL" alt="SSL Secured">
+        <img src="https://via.placeholder.com/50?text=Bank" alt="Bank Secured">
+      </div>
+      <button class="payment-btn ripple-btn" id="payment-btn" onclick="showConfirmation()"><i class='bx bx-check-circle'></i> Hoàn tất thanh toán</button>
+    </div>
+  </div>
+</main>
+
+<div id="confirmation-modal" class="modal">
+  <div class="modal-content">
+    <i class='bx bx-check-circle'></i>
+    <h2>Xác nhận thanh toán</h2>
+    <p>Bạn có chắc chắn muốn hoàn tất thanh toán cho đơn hàng này?</p>
+    <div class="summary" id="modal-summary"></div>
+    <div class="modal-buttons">
+      <button class="modal-btn modal-btn-confirm" onclick="processPayment()">Xác nhận</button>
+      <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Hủy</button>
+    </div>
+  </div>
+</div>
+
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loading-content">
+    <div id="loading-lottie" style="width: 100px; height: 100px;"></div>
+    <p>Đang xử lý thanh toán...</p>
+  </div>
+</div>
+
+<div id="success-modal" class="modal">
+  <div class="modal-content">
+    <div id="success-lottie" style="width: 100px; height: 100px; margin: 0 auto;"></div>
+    <h2>Thanh toán thành công!</h2>
+    <p>Cảm ơn bạn đã mua hàng tại QD.</p>
+    <button class="modal-btn modal-btn-confirm" onclick="goToLookup()">OK</button>
+  </div>
+</div>
+
+<div id="footer-container"></div>
+
+<script src="Script/js_Payment.js"></script>
+</body>
+</html>
