@@ -27,7 +27,7 @@ async function loadPagePart(url, containerId, callback = null) {
     }
 }
 
-loadPagePart("resetheader.html", "header-container", () => {
+loadPagePart("HTML/Layout/header.html", "header-container", () => {
     if (typeof updateCartCount === 'function') {
         setTimeout(updateCartCount, 300);
     }
@@ -37,7 +37,7 @@ loadPagePart("resetheader.html", "header-container", () => {
     updateOrderCount();
 });
 
-loadPagePart("resetfooter.html", "footer-container");
+loadPagePart("HTML/Layout/footer.html", "footer-container");
 
 let allOrders = [];
 

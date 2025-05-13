@@ -85,9 +85,9 @@ function filterProducts(category, subcategory = null) {
             }, 300);
         }
     }
-    else if (category === 'semiconductor') {
+    else if ( category === 'maincpuvga') {
         // Hiển thị section Semiconductor
-        const semiconductorSection = document.querySelector('.product-section[data-category="semiconductor"]');
+        const semiconductorSection = document.querySelector('.product-section[data-category="maincpuvga"]');
         if (semiconductorSection) {
             semiconductorSection.classList.remove('hidden');
 
@@ -105,7 +105,7 @@ function filterProducts(category, subcategory = null) {
                     selectedSubcategory.classList.remove('hidden');
 
                     // Thêm breadcrumb với subcategory
-                    const breadcrumb = createBreadcrumb('Linh kiện bán dẫn', subcategory);
+                    const breadcrumb = createBreadcrumb('Main-CPU-VGA', subcategory);
                     const mainContent = document.querySelector('.main-content');
                     mainContent.insertBefore(breadcrumb, mainContent.firstChild);
 
@@ -126,7 +126,7 @@ function filterProducts(category, subcategory = null) {
                 });
 
                 // Thêm breadcrumb chỉ với category
-                const breadcrumb = createBreadcrumb('Linh kiện bán dẫn');
+                const breadcrumb = createBreadcrumb('Main-CPU-VGA');
                 const mainContent = document.querySelector('.main-content');
                 mainContent.insertBefore(breadcrumb, mainContent.firstChild);
 
@@ -169,6 +169,15 @@ function filterProducts(category, subcategory = null) {
         }
     }
 }
+function filterMainCpuVga(subcategory) {
+    const section = document.getElementById("maincpuvga");
+    const items = section.querySelectorAll(".product-item");
+
+    items.forEach(item => {
+        item.style.display = (item.dataset.subcategory === subcategory) ? "block" : "none";
+    });
+}
+
 
 // Hàm quay về trang chủ
 function returnToHome() {
@@ -235,18 +244,19 @@ function setupDropdownMenu() {
 
                 // Ánh xạ tên menu với category id
                 const menuMap = {
-                    'Arduino': 'arduino',
-                    'Cảm biến': 'sensor',
-                    'LED, Điều khiển LED': 'led',
-                    'Linh kiện thụ động': 'passive',
-                    'Linh kiện bán dẫn': 'semiconductor',
-                    'Nguồn': 'power',
-                    'Connector - Socket': 'connector',
-                    'Robot, Mô hình': 'robot',
-                    'Đồng hồ vạn năng': 'multimeter',
-                    'Điện tử dân dụng': 'consumer',
-                    'Phụ kiện, Dụng cụ': 'tools',
-                    'Sản phẩm COMBO': 'combo'
+                    'Chuột': 'mouse',
+                    'Bàn Phím': 'keyboard',
+                    'Tai nghe': 'headphone',
+                    'Màn Hình': 'monitor',
+                    'Laptop': 'laptop',
+                    'Case - Nguồn - Tản': 'casepowercooling',
+                    'Main - CPU - VGA': 'maincpuvga',
+                    'Ổ cứng - Ram - Thẻ nhớ': 'storage',
+                    'Loa - Micro - Webcam': 'soundvideo',
+                    'Phần mềm - Mạng': 'software',
+                    'Handheld - Console': 'console',
+                    'Phụ kiện': 'accessory',
+                    'Dịch vụ và thông tin khác': 'others'
                 };
 
                 // Lọc sản phẩm nếu click vào menu cha
@@ -268,14 +278,15 @@ function setupDropdownMenu() {
 
                 console.log(`Click vào submenu: ${parentText} > ${subText}`);
 
-                // Kiểm tra nếu là submenu của "Linh kiện bán dẫn"
-                if (parentText === 'Linh kiện bán dẫn') {
-                    // Chỉ cho phép chọn Transistor, Diode, hoặc IC
-                    if (['Transistor', 'Diode', 'IC'].includes(subText)) {
-                        filterProducts('semiconductor', subText);
+                // Có thể thêm xử lý cho các submenu khác ở đây
+                if (parentText === 'Main - CPU - VGA') {
+                    if (['Mainboard', 'CPU', 'Card đồ họa (VGA)'].includes(subText)) {
+                        filterProducts('maincpuvga', subText);
+
                     }
                 }
-                // Có thể thêm xử lý cho các submenu khác ở đây
+
+
             });
         });
     });

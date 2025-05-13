@@ -22,6 +22,7 @@ function initializeCartSystem() {
     updateOrderCount();
 
     // Thêm sự kiện cho các nút "Thêm vào giỏ"
+    // Thêm vào giỏ hàng:
     document.querySelectorAll('.add-to-cart-btn').forEach(button => {
         button.addEventListener('click', function() {
             const productCard = this.closest('.product-card');
@@ -29,19 +30,22 @@ function initializeCartSystem() {
             const productName = productCard.querySelector('.product-name').textContent;
             const priceText = productCard.querySelector('.product-price strong').textContent;
             const priceValue = parseInt(priceText.replace(/\D/g, ''));
-            const productImage = productCard.querySelector('.product-image').getAttribute('src');
+
+            const rawSrc = productCard.querySelector('.product-image').getAttribute('src');
+            const fileName = rawSrc.split('/').pop(); // Lấy tên ảnh từ đường dẫn
+            const productImage = 'Images/' + fileName;
 
             addToCart(productId, productName, priceValue, productImage);
-
-            // Hiển thị thông báo
             showNotification(`Đã thêm "${productName}" vào giỏ hàng!`);
         });
     });
+
 
     // Tạo phần tử thông báo nếu chưa có
     if (!document.getElementById('notification')) {
         createNotificationElement();
     }
+
 
     // Dọn dẹp sản phẩm hết hạn
     cleanupExpiredItems();
@@ -220,7 +224,7 @@ function showNotification(message, type = 'success') {
     if (type === 'success' && message.includes('Đã thêm')) {
         actionButton = `
             <div class="notification-actions">
-                <a href="cart.html" class="view-cart-btn">Xem giỏ hàng</a>
+                <a href="../HTML/Layout/cart.html" class="view-cart-btn">Xem giỏ hàng</a>
                 <button class="continue-btn" onclick="hideNotification()">
                     Tiếp tục mua sắm
                 </button>
