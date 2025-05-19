@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Về Chúng Tôi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .store-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: #ff4757;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .store-btn:hover {
+            background-color: #e63946;
+            transform: scale(1.05);
+        }
+
+        /* About Content */
+        .about-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .about-text {
+            padding: 20px;
+        }
+
+        .about-text h2 {
+            font-size: 2rem;
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+
+        .about-text p {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Mission Section */
+        .mission-section {
+            background-color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .mission-section h2 {
+            font-size: 2rem;
+            color: #1e3a8a;
+            margin-bottom: 20px;
+        }
+
+        .mission-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .mission-card {
+            background: #f4f6f9;
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .mission-card i {
+            font-size: 2rem;
+            color: #3b82f6;
+            margin-bottom: 10px;
+        }
+
+        .mission-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .mission-card p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Team Section */
+        .team-section {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .team-section h2 {
+            font-size: 2rem;
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .team-member {
+            text-align: center;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: scale(1.05);
+        }
+
+        .team-member img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: block;
+            clip-path: circle();
+            transform: translateY(-10px);
+        }
+
+        .team-member h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .team-member p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .about-text h2 {
+                font-size: 1.5rem;
+            }
+
+            .about-text p {
+                font-size: 0.9rem;
+            }
+
+            .mission-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .mission-card h3 {
+                font-size: 1rem;
+            }
+
+            .team-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .team-member img {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 412px) {
+            .header {
+                padding: 20px 10px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .store-btn {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+
+            .about-content {
+                padding: 10px;
+            }
+
+            .about-text h2 {
+                font-size: 1.2rem;
+            }
+
+            .about-text p {
+                font-size: 0.8rem;
+            }
+
+            .mission-section {
+                padding: 20px 10px;
+            }
+
+            .mission-section h2 {
+                font-size: 1.2rem;
+            }
+
+            .mission-card {
+                padding: 15px;
+            }
+
+            .mission-card h3 {
+                font-size: 0.9rem;
+            }
+
+            .mission-card p {
+                font-size: 0.8rem;
+            }
+
+            .team-section {
+                padding: 20px 10px;
+            }
+
+            .team-section h2 {
+                font-size: 1.2rem;
+            }
+
+            .team-member img {
+                height: 120px;
+                transform: translateY(-5px);
+            }
+
+            .team-member h3 {
+                font-size: 1rem;
+            }
+
+            .team-member p {
+                font-size: 0.8rem;
+            }
+
+            .footer {
+                padding: 15px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <h1>Về Chúng Tôi</h1>
+    <p>Khám phá câu chuyện và sứ mệnh của Điện Tử 24/7</p>
+    <a href="../../index.html" class="store-btn">Đi Đến Cửa Hàng</a>
+</header>
+
+<!-- About Content -->
+<section class="about-content">
+    <div class="about-text">
+        <h2>Chào Mừng Đến Với Điện Tử 24/7</h2>
+        <p>Được thành lập với sứ mệnh mang đến những sản phẩm công nghệ chất lượng cao và dịch vụ tận tâm, Điện Tử 24/7 đã không ngừng phát triển để trở thành một trong những địa chỉ tin cậy của người tiêu dùng Việt Nam. Chúng tôi tự hào cung cấp các thiết bị điện tử từ chuột, bàn phím, tai nghe đến màn hình và laptop với giá cả cạnh tranh.</p>
+        <p>Đội ngũ của chúng tôi luôn nỗ lực để mang lại trải nghiệm mua sắm tuyệt vời, từ việc tư vấn nhiệt tình đến hỗ trợ sau bán hàng. Hãy cùng chúng tôi khám phá thế giới công nghệ mỗi ngày!</p>
+    </div>
+    <div class="about-image">
+        <img src="../../Images/E-DRAEGM27F180PV27.jpg" alt="About Us Image">
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="mission-section">
+    <h2>Sứ Mệnh Của Chúng Tôi</h2>
+    <div class="mission-cards">
+        <div class="mission-card">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Chất Lượng Đầu Tiên</h3>
+            <p>Cam kết cung cấp sản phẩm chính hãng với độ bền cao.</p>
+        </div>
+        <div class="mission-card">
+            <i class="fas fa-truck"></i>
+            <h3>Giao Hàng Nhanh Chóng</h3>
+            <p>Đảm bảo giao hàng đúng hẹn trên toàn quốc.</p>
+        </div>
+        <div class="mission-card">
+            <i class="fas fa-users"></i>
+            <h3>Hỗ Trợ Tận Tâm</h3>
+            <p>Đội ngũ chuyên nghiệp sẵn sàng phục vụ 24/7.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="team-section">
+    <h2>Đội Ngũ Của Chúng Tôi</h2>
+    <div class="team-grid">
+        <div class="team-member">
+            <img src="../../Images/mb1.png" alt="Team Member 1">
+            <h3>Trần Tấn Thật</h3>
+            <p>Trưởng dự án</p>
+        </div>
+        <div class="team-member">
+            <img src="../../Images/mb2.png" alt="Team Member 2">
+            <h3>Đinh Quang Đại</h3>
+            <p>Quản Lý</p>
+        </div>
+        <div class="team-member">
+            <img src="../../Images/mb3.png" alt="Team Member 3">
+            <h3>Nguyễn Phước Trường</h3>
+            <p>Nhân viên Xử lý</p>
+        </div>
+        <div class="team-member">
+            <img src="../../Images/mb4.png" alt="Team Member 4">
+            <h3>Nguyễn Ngọc Triết</h3>
+            <p>Nhân viên Thiết kế</p>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>© 2025 Điện Tử 24/7. Tất cả quyền được bảo lưu bởi 3TD Shop. | <a href="contact.html" style="color: #a1b2d1; text-decoration: underline;">Liên Hệ</a></p>
+</footer>
+</body>
+</html>

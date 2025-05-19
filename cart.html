@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Giỏ hàng của bạn tại QD Shop - Xem lại và quản lý các sản phẩm bạn đã chọn trước khi thanh toán.">
+    <meta name="keywords" content="giỏ hàng, thanh toán, mua sắm trực tuyến, QD Shop">
+    <title>QD - Giỏ hàng</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="HTML/Style/stylecart.css">
+    <link rel="stylesheet" href="HTML/Style/style.css">
+    <script src="../Script/js_CartHandler.js" defer></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #header-container, #footer-container {
+            width: 100%;
+        }
+
+        #empty-cart {
+            display: none;
+        }
+
+        .continue-shopping,
+        .empty-cart__action-wrapper .continue-shopping {
+            display: inline-block;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .continue-shopping:hover,
+        .empty-cart__action-wrapper .continue-shopping:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(67, 97, 238, 0.5);
+            background: linear-gradient(135deg, #3a0ca3, #4361ee);
+        }
+
+        .continue-shopping::before,
+        .empty-cart__action-wrapper .continue-shopping::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .continue-shopping:hover::before,
+        .empty-cart__action-wrapper .continue-shopping:hover::before {
+            left: 100%;
+        }
+
+        .continue-shopping__icon {
+            margin-right: 8px;
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .continue-shopping:hover .continue-shopping__icon {
+            transform: translateX(-3px);
+        }
+    </style>
+</head>
+<body>
+<div id="header-container"></div>
+
+<main class="cart-container">
+    <header class="cart-header">
+        <h1 class="cart-title">Giỏ hàng của bạn</h1>
+        <button id="clear-cart" class="clear-cart-btn" style="display: none;">
+            <i class='bx bx-trash-alt'></i>
+            <span>Xóa tất cả</span>
+        </button>
+    </header>
+
+    <div id="cart-content">
+        <section id="empty-cart" class="empty-cart">
+            <div class="empty-cart__content">
+                <i class='bx bx-cart empty-cart__icon'></i>
+                <h2 class="empty-cart__title">Giỏ hàng của bạn đang trống</h2>
+                <p class="empty-cart__message">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm.</p>
+            </div>
+
+            <div class="empty-cart__action-wrapper">
+                <a href="index.html" class="continue-shopping">
+                    <div class="continue-shopping__text-wrapper">
+                        <i class='bx bx-left-arrow-alt continue-shopping__icon'></i>
+                        <span class="continue-shopping__text">Tiếp tục mua sắm</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <div id="cart-loading" class="cart-loading" style="display: none;">
+            <div class="cart-skeleton">
+                <div class="skeleton-item">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-line skeleton-line--name"></div>
+                        <div class="skeleton-line skeleton-line--price"></div>
+                    </div>
+                    <div class="skeleton-quantity"></div>
+                    <div class="skeleton-total"></div>
+                </div>
+                <div class="skeleton-item" style="animation-delay: 0.1s"></div>
+                <div class="skeleton-item" style="animation-delay: 0.2s"></div>
+            </div>
+        </div>
+
+        <div id="cart-items-container"></div>
+    </div>
+</main>
+
+<div id="footer-container"></div>
+
+<div id="notification"></div>
+
+<template id="cart-item-template">
+    <div class="cart-item">
+        <img class="cart-item__image" src="" alt="">
+        <div class="cart-item__info">
+            <div class="cart-item__name"></div>
+            <div class="cart-item__price"></div>
+        </div>
+        <div class="cart-item__quantity">
+            <button class="quantity-btn quantity-btn--decrease">-</button>
+            <input type="text" class="quantity-input" value="" readonly>
+            <button class="quantity-btn quantity-btn--increase">+</button>
+        </div>
+        <div class="cart-item__total"></div>
+        <div class="cart-item__remove">
+            <i class='bx bx-trash'></i>
+        </div>
+    </div>
+</template>
+
+<template id="cart-summary-template">
+    <section class="cart-items">
+    </section>
+
+    <section class="cart-summary">
+        <h3 class="cart-summary__title">Tóm tắt đơn hàng</h3>
+
+        <div class="promo-banner">
+            <i class='bx bx-gift'></i>
+            <p>Miễn phí vận chuyển cho đơn hàng từ 500.000₫</p>
+        </div>
+
+        <div class="cart-summary__rows">
+            <div class="summary-row">
+                <span class="summary-row__label">Tạm tính:</span>
+                <span class="summary-row__value currency-value"></span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-row__label">Phí vận chuyển:</span>
+                <span class="summary-row__value currency-value">Miễn phí</span>
+            </div>
+            <div class="summary-row summary-row--total">
+                <span class="summary-row__label">Tổng cộng:</span>
+                <span class="summary-row__value currency-value"></span>
+            </div>
+        </div>
+
+        <div class="cart-actions">
+            <div class="cart-actions__buttons">
+                <a href="index.html" class="btn btn--primary btn--continue">
+                    <i class='bx bx-left-arrow-alt btn__icon'></i>
+                    <span class="btn__text">Tiếp tục mua sắm</span>
+                </a>
+                <a href="payment.html" class="btn btn--success btn--checkout">
+                    <i class='bx bx-credit-card btn__icon'></i>
+                    <span class="btn__text">Thanh toán</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</template>
+
+<script>
+    async function loadPagePart(url, containerId, callback = null) {
+        try {
+            const response = await fetch(url);
+            const html = await response.text();
+
+            const container = document.getElementById(containerId);
+            container.innerHTML = html;
+
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+
+            const scripts = tempDiv.querySelectorAll('script');
+            scripts.forEach(oldScript => {
+                const src = oldScript.src;
+                if (src && document.querySelector(`script[src="${src}"]`)) return;
+
+                const newScript = document.createElement('script');
+                if (src) {
+                    newScript.src = src;
+                    newScript.defer = true;
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                }
+                document.body.appendChild(newScript);
+            });
+
+            if (typeof callback === 'function') callback();
+        } catch (error) {
+            console.error(`Lỗi khi tải ${url}:`, error);
+        }
+    }
+
+    loadPagePart("HTML/Layout/header.html", "header-container", () => {
+        if (typeof updateCartCount === 'function') {
+            setTimeout(updateCartCount, 300);
+        }
+        if (typeof initializeMenuSystem === 'function') {
+            setTimeout(initializeMenuSystem, 300);
+        }
+    });
+
+    loadPagePart("HTML/Layout/footer.html", "footer-container");
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderCart();
+    });
+
+    function renderCart() {
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const emptyCart = document.getElementById('empty-cart');
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        if (cart.length === 0) {
+            emptyCart.style.display = 'block';
+            cartItemsContainer.innerHTML = '';
+            return;
+        }
+
+        emptyCart.style.display = 'none';
+
+        const summaryTemplate = document.getElementById('cart-summary-template').content.cloneNode(true);
+
+        const cartItemsSection = summaryTemplate.querySelector('.cart-items');
+        let total = 0;
+
+        cart.forEach((item, index) => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+
+            const itemTemplate = document.getElementById('cart-item-template').content.cloneNode(true);
+            const cartItem = itemTemplate.querySelector('.cart-item');
+
+            const img = cartItem.querySelector('.cart-item__image');
+            img.src = item.image;
+            img.alt = item.name;
+
+            cartItem.querySelector('.cart-item__name').textContent = item.name;
+            cartItem.querySelector('.cart-item__price').textContent = formatCurrency(item.price);
+            cartItem.querySelector('.quantity-input').value = item.quantity;
+            cartItem.querySelector('.cart-item__total').textContent = formatCurrency(itemTotal);
+
+            cartItem.querySelector('.quantity-btn--decrease').setAttribute('onclick', `updateQuantity(${index}, -1)`);
+            cartItem.querySelector('.quantity-btn--increase').setAttribute('onclick', `updateQuantity(${index}, 1)`);
+            cartItem.querySelector('.cart-item__remove').setAttribute('onclick', `removeItem(${index})`);
+
+            cartItemsSection.appendChild(cartItem);
+        });
+
+        summaryTemplate.querySelectorAll('.currency-value')[0].textContent = formatCurrency(total);
+        summaryTemplate.querySelectorAll('.currency-value')[2].textContent = formatCurrency(total);
+
+        cartItemsContainer.innerHTML = '';
+        cartItemsContainer.appendChild(summaryTemplate);
+    }
+
+    function updateQuantity(index, change) {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        if (cart[index]) {
+            const cartItems = document.querySelectorAll('.cart-item');
+            if (cartItems[index]) {
+                cartItems[index].classList.add('quantity-change');
+                setTimeout(() => {
+                    cartItems[index].classList.remove('quantity-change');
+                }, 300);
+            }
+
+            cart[index].quantity += change;
+
+            if (cart[index].quantity <= 0) {
+                removeItem(index);
+                return;
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+            updateCartCount();
+        }
+    }
+
+    function removeItem(index) {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        if (cart[index]) {
+            const itemName = cart[index].name;
+            const cartItems = document.querySelectorAll('.cart-item');
+            if (cartItems[index]) {
+                cartItems[index].classList.add('item-removing');
+                setTimeout(() => {
+                    cart.splice(index, 1);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    renderCart();
+                    updateCartCount();
+                    showNotification(`Đã xóa "${itemName}" khỏi giỏ hàng`, 'success');
+                }, 500);
+            } else {
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                renderCart();
+                updateCartCount();
+                showNotification(`Đã xóa "${itemName}" khỏi giỏ hàng`, 'success');
+            }
+        }
+    }
+
+    if (typeof formatCurrency !== 'function') {
+        function formatCurrency(amount) {
+            return amount.toLocaleString('vi-VN') + '₫';
+        }
+    }
+
+    if (typeof showNotification !== 'function') {
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            if (!notification) return;
+
+            let actionButton = '';
+            if (type === 'success' && message.includes('Đã thêm')) {
+                actionButton = `
+                <div class="notification-actions">
+                    <a href="cart.html" class="view-cart-btn">Xem giỏ hàng</a>
+                    <button class="continue-btn" onclick="hideNotification()">
+                        Tiếp tục mua sắm
+                    </button>
+                </div>
+            `;
+            }
+
+            notification.innerHTML = `
+            <div class="notification-message">${message}</div>
+            ${actionButton}
+        `;
+
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            notification.style.animation = 'popupNotification 0.4s ease-out forwards';
+
+            clearTimeout(notification._hideTimeout);
+            notification._hideTimeout = setTimeout(() => {
+                notification.style.animation = 'slideOutNotification 0.4s ease-in forwards';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 380);
+            }, 5000);
+        }
+    }
+
+    function hideNotification() {
+        const notification = document.getElementById('notification');
+        if (notification) {
+            notification.style.animation = 'slideOutNotification 0.4s ease-in forwards';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 380);
+        }
+    }
+
+    function clearCart() {
+        if (confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?')) {
+            localStorage.setItem('cart', JSON.stringify([]));
+            renderCart();
+            updateCartCount();
+            showNotification('Đã xóa tất cả sản phẩm khỏi giỏ hàng', 'success');
+        }
+    }
+
+    function initializeClearCartButton() {
+        const clearCartBtn = document.getElementById('clear-cart');
+        if (clearCartBtn) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            clearCartBtn.style.display = cart.length > 0 ? 'flex' : 'none';
+
+            clearCartBtn.addEventListener('click', clearCart);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const cartLoading = document.getElementById('cart-loading');
+        if (cartLoading) {
+            cartLoading.style.display = 'block';
+            setTimeout(() => {
+                cartLoading.style.display = 'none';
+                renderCart();
+                initializeClearCartButton();
+            }, 600);
+        } else {
+            renderCart();
+            initializeClearCartButton();
+        }
+    });
+
+    const originalRenderCart = renderCart;
+    renderCart = function() {
+        originalRenderCart();
+
+        const clearCartBtn = document.getElementById('clear-cart');
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (clearCartBtn) {
+            clearCartBtn.style.display = cart.length > 0 ? 'flex' : 'none';
+        }
+    };
+
+    document.head.insertAdjacentHTML('beforeend', `
+        <style>
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(50px);
+                    opacity: 0;
+                }
+            }
+        </style>
+    `);
+</script>
+</body>
+</html>

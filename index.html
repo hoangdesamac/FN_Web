@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Web3TD - Trang chủ</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="HTML/Style/style.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #header-container, #main-container {
+            width: 100%;
+        }
+        #main-container {
+            padding-top: 50px;
+        }
+    </style>
+    <!-- Thứ tự scripts quan trọng: js_ShowAutoScroll phải đầu tiên -->
+    <script src="Script/js_ShowAutoScroll.js"></script>
+    <script src="Script/js_MenuClick.js"></script>
+    <script src="Script/js_ShowPopupAuth.js"></script>
+    <script src="Script/js_Checkout.js" defer></script>
+    <script src="Script/js_CartPopup.js" defer></script>
+
+</head>
+<body>
+
+<!-- Header -->
+<div id="header-container"></div>
+
+<!-- Main Content -->
+<div id="main-container"></div>
+
+<!-- Footer -->
+<div id="footer-container"></div>
+
+<script>
+    async function loadPagePart(url, containerId, callback = null) {
+        try {
+            const response = await fetch(url);
+            const html = await response.text();
+
+            const container = document.getElementById(containerId);
+            container.innerHTML = html;
+
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+
+            const scripts = tempDiv.querySelectorAll('script');
+            scripts.forEach(oldScript => {
+                const src = oldScript.src;
+                if (src && document.querySelector(`script[src="${src}"]`)) return; // Đã có, bỏ qua
+
+                const newScript = document.createElement('script');
+                if (src) {
+                    newScript.src = src;
+                    newScript.defer = true;
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                }
+                document.body.appendChild(newScript);
+            });
+
+
+            // ✅ Gọi lại callback sau khi chèn script xong
+            if (typeof callback === 'function') callback();
+
+        } catch (error) {
+            console.error(`Lỗi khi tải ${url}:`, error);
+        }
+    }
+
+    // Tải header → gọi lại initializeMenuSystem() sau khi chèn xong
+    loadPagePart("HTML/Layout/header.html", "header-container", () => {
+        console.log("Header loaded, checking for menu...");
+
+        const checkDomReady = () => {
+            const menuToggle = document.getElementById('menuToggle');
+            const menuList = document.getElementById('menuList');
+            const submenuItems = document.querySelectorAll('.submenu li');
+
+            if (!menuToggle || !menuList || submenuItems.length < 3) {
+                console.log("Đang đợi header render đầy đủ...");
+                setTimeout(checkDomReady, 100);
+                return;
+            }
+
+            if (typeof initializeMenuSystem === 'function') {
+                console.log("Khởi tạo menu đầy đủ!");
+                initializeMenuSystem(); // ✅ chính xác tại đây
+            } else {
+                console.error("Không tìm thấy initializeMenuSystem!");
+            }
+
+            updateCartCount();
+        };
+
+        checkDomReady(); // Bắt đầu kiểm tra
+    });
+
+
+    // Tải main content và khởi tạo auto-scroll và cart system
+    loadPagePart("HTML/Layout/mainContent.html", "main-container", () => {
+        if (typeof initializeAutoScroll === 'function') {
+            initializeAutoScroll(); // Khởi tạo chức năng cuộn
+        }
+
+        // Khởi tạo hệ thống giỏ hàng sau khi tải main content
+        if (typeof initializeCartSystem === 'function') {
+            setTimeout(initializeCartSystem, 300);
+        }
+    });
+
+    // Tải footer
+    loadPagePart("HTML/Layout/footer.html", "footer-container");
+</script>
+
+
+
+</body>
+</html>

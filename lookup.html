@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tra cứu đơn hàng tại 3TD Shop - Xem chi tiết các đơn hàng của bạn.">
+    <meta name="keywords" content="tra cứu đơn hàng, 3TD Shop, mua sắm trực tuyến">
+    <title>Web3TD - Tra cứu đơn hàng</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="HTML/Style/stylelookup.css">
+    <link rel="stylesheet" href="HTML/Style/style.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+</head>
+<body>
+<div id="header-container"></div>
+
+<main class="lookup-container">
+    <div class="breadcrumb-container">
+        <div class="breadcrumb">
+            <a href="index.html">Trang chủ</a> >
+            <span>Tra cứu đơn hàng</span>
+        </div>
+    </div>
+    <h1>Tra cứu đơn hàng</h1>
+    <div class="search-filter">
+        <div class="search-bar-lookup">
+            <input type="text" id="product-keyword" placeholder="Tên sản phẩm">
+            <input type="text" id="start-date" placeholder="Từ ngày" onfocus="this.type='date'" onblur="if(this.value==='') this.type='text'">
+            <input type="text" id="end-date" placeholder="Đến ngày" onfocus="this.type='date'" onblur="if(this.value==='') this.type='text'">
+            <select id="status-filter" onchange="applyFilters()">
+            <option value="all">Tất cả trạng thái</option>
+                <option value="Đơn hàng đang xử lý">Đang xử lý</option>
+                <option value="Đơn hàng đang được vận chuyển">Đang vận chuyển</option>
+                <option value="Đơn hàng đã hoàn thành">Đã hoàn thành</option>
+                <option value="Đơn hàng đã hủy">Đã hủy</option>
+            </select>
+            <button onclick="applyFilters()">Tìm kiếm</button>
+        </div>
+    </div>
+
+    <div id="orders-container"></div>
+    <div id="searching-animation" style="display: none; text-align: center; margin: 40px 0;">
+        <lottie-player
+                src="/transformanimation/searchingfolder.json"
+                background="transparent"
+                speed="1"
+                style="width: 200px; height: 200px; margin: 0 auto;"
+                loop
+                autoplay>
+        </lottie-player>
+        <p style="margin-top: 10px; font-weight: 500; color: #555;">Đang tìm kiếm đơn hàng...</p>
+    </div>
+
+    <section id="empty-orders" class="empty-orders" style="display: none;">
+        <i class='bx bx-receipt'></i>
+        <h2>Chưa có đơn hàng nào</h2>
+        <a href="index.html">Tiếp tục mua sắm</a>
+    </section>
+</main>
+
+<div id="footer-container"></div>
+<div id="reward-popup" class="reward-popup-overlay" style="display: none;">
+    <div class="reward-popup">
+        <h3>Thông báo</h3>
+        <p>Hoàn tất nhận hàng để tiến hành nhận thưởng</p>
+        <button onclick="closeRewardPopup()">OK</button>
+    </div>
+</div>
+<div id="pdf-render-area" style="display: none;"></div>
+
+<!-- Thêm âm thanh cho hiệu ứng -->
+<audio id="swish-sound" src="/audioanimation/flipped.mp3" preload="auto"></audio>
+<audio id="ting-sound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568.wav" preload="auto"></audio>
+<audio id="newcard-sound" src="/audioanimation/newcard.mp3" preload="auto"></audio>
+
+<script src="Script/js_Lookup.js"></script>
+
+</body>
+</html>

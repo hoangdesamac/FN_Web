@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Thanh toán đơn hàng tại QD Shop - Xem giỏ hàng, nhập thông tin giao hàng và chọn phương thức thanh toán.">
+    <meta name="keywords" content="giỏ hàng, thanh toán, mua sắm trực tuyến, QD Shop">
+    <title>QD - Thanh toán</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="HTML/Style/stylecheckout.css">
+    <link rel="stylesheet" href="HTML/Style/style.css">
+    <script src="https://unpkg.com/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="Script/js_Checkout.js" defer></script>
+</head>
+<body>
+<div id="header-container"></div>
+
+<main class="checkout-container">
+    <nav class="breadcrumb-steps">
+        <div class="step active" id="breadcrumb-step-1"><i class='bx bx-cart'></i> Giỏ hàng</div>
+        <div class="step" id="breadcrumb-step-2"><i class='bx bxs-truck'></i>Giao hàng</div>
+        <div class="step" id="breadcrumb-step-3"><i class='bx bx-credit-card'></i> Thanh toán</div>
+    </nav>
+
+    <div id="step-1" class="checkout-step">
+        <header class="cart-header">
+            <h1 class="cart-title">Giỏ hàng của bạn</h1>
+            <button id="clear-cart" class="clear-cart-btn" style="display: none;">
+                <i class='bx bx-trash-alt'></i>
+                <span>Xóa tất cả</span>
+            </button>
+        </header>
+        <div id="cart-content">
+            <section id="empty-cart" class="empty-cart">
+                <div class="empty-cart__content">
+                    <div id="empty-cart-lottie" style="width: 150px; height: 150px; margin: 0 auto;"></div>
+                    <h2 class="empty-cart__title">Giỏ hàng của bạn đang trống</h2>
+                    <p class="empty-cart__message">Hãy khám phá cửa hàng và thêm những sản phẩm yêu thích vào giỏ hàng!</p>
+                </div>
+                <div class="empty-cart__action-wrapper">
+                    <a href="index.html" class="continue-shopping">
+                        <div class="continue-shopping__text-wrapper">
+                            <i class='bx bx-left-arrow-alt continue-shopping__icon'></i>
+                            <span class="continue-shopping__text">Tiếp tục mua sắm</span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+            <div id="cart-items-container"></div>
+        </div>
+        <div class="step-navigation">
+            <a href="index.html" class="btn btn--primary btn--adjusted" id="continue-shopping-btn">
+                <i class='bx bx-left-arrow-alt btn__icon'></i>
+                <span class="btn__text">Tiếp tục mua sắm</span>
+            </a>
+            <button class="btn btn--success btn--checkout" id="proceed-to-step-2" style="display: none;">
+                <i class='bx bx-credit-card btn__icon'></i>
+                <span class="btn__text">Đặt hàng ngay</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="step-2" class="checkout-step" style="display: none;">
+        <h2>Thông tin giao hàng</h2>
+        <div class="delivery-form">
+            <div class="form-group">
+                <label for="recipient-name">Họ và tên *</label>
+                <input type="text" id="recipient-name" placeholder="Nhập họ và tên" required>
+            </div>
+            <div class="form-group">
+                <label for="recipient-phone">Số điện thoại *</label>
+                <input type="tel" id="recipient-phone" placeholder="Nhập số điện thoại" required>
+            </div>
+            <div class="form-group">
+                <label for="province">Tỉnh/Thành phố *</label>
+                <select id="province" required>
+                    <option value="">Chọn tỉnh/thành phố</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="district">Quận/Huyện *</label>
+                <select id="district" required>
+                    <option value="">Chọn quận/huyện</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ward">Phường/Xã *</label>
+                <select id="ward" required>
+                    <option value="">Chọn phường/xã</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="recipient-address">Địa chỉ chi tiết (Số nhà, Số đường...) *</label>
+                <textarea id="recipient-address" placeholder="Nhập địa chỉ giao hàng" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="note">Ghi chú (tùy chọn)</label>
+                <textarea id="note" placeholder="Ghi chú cho đơn hàng"></textarea>
+            </div>
+            <div class="checkbox-group">
+                <label for="invoice-required">Yêu cầu xuất hóa đơn</label>
+                <input type="checkbox" id="invoice-required">
+            </div>
+            <div class="step-navigation">
+                <button class="btn btn--primary" onclick="showStep(1)">Quay lại</button>
+                <button class="btn btn--success" id="proceed-to-step-3">Tiếp tục</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="step-3" class="checkout-step" style="display: none;">
+        <h2>Xác nhận và thanh toán</h2>
+        <div class="payment-content">
+            <div class="summary-section">
+                <div class="info-card">
+                    <h3>Thông tin giao hàng</h3>
+                    <div id="delivery-summary" class="info-card-content"></div>
+                </div>
+                <div class="info-card">
+                    <h3>Chi tiết đơn hàng</h3>
+                    <div id="order-summary" class="info-card-content"></div>
+                </div>
+            </div>
+            <div class="payment-section">
+                <div class="payment-card">
+                    <h4>Phương thức thanh toán</h4>
+                    <div class="method-option" data-method="cod" onclick="selectMethod('cod')">
+                        <input type="radio" name="payment-method" id="method-cod" value="cod" checked>
+                        <div class="lottie-animation" id="lottie-cod"></div>
+                        <label for="method-cod">Thanh toán khi nhận hàng (COD)</label>
+                        <i class='bx bx-info-circle' title="Thanh toán khi nhận hàng"></i>
+                    </div>
+                    <p class="payment-note">*Lưu ý: Quý khách chỉ thanh toán sau khi nhận được đơn hàng!</p>
+                    <div class="summary-details" id="summary-details"></div>
+                    <div class="step-navigation">
+                        <button class="btn btn--primary" onclick="showStep(2)">Quay lại</button>
+                        <button class="btn btn--success payment-btn ripple-btn" id="payment-btn" onclick="showConfirmation()">Thanh toán</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <div class="check-icon-wrapper">
+            <i class="bx bx-check"></i>
+        </div>
+        <h2>Xác nhận thanh toán</h2>
+        <p>Bạn có chắc chắn muốn hoàn tất thanh toán cho đơn hàng này?</p>
+        <div class="summary" id="modal-summary"></div>
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-confirm" onclick="processPayment()">Xác nhận</button>
+            <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Hủy</button>
+        </div>
+    </div>
+</div>
+
+<div id="loading-overlay" class="loading-overlay">
+    <div class="loading-content">
+        <div id="loading-lottie" style="width: 300px; height: 300px;"></div>
+        <p>Đang xử lý thanh toán...</p>
+    </div>
+</div>
+
+<div id="success-modal" class="modal">
+    <div class="modal-content">
+        <div id="success-lottie" style="width: 200px; height: 200px; margin: 0 auto;"></div>
+        <h2>Thanh toán thành công!</h2>
+        <p>Cảm ơn bạn đã mua hàng tại 3TD Shop.</p>
+        <button class="modal-btn modal-btn-confirm" onclick="goToLookup()">OK</button>
+    </div>
+</div>
+
+<div id="footer-container"></div>
+<div id="notification"></div>
+
+<template id="cart-item-template">
+    <div class="cart-item">
+        <img class="cart-item__image" src="" alt="">
+        <div class="cart-item__info">
+            <div class="cart-item__name"></div>
+            <div class="cart-item__price"></div>
+        </div>
+        <div class="cart-item__quantity">
+            <button class="quantity-btn quantity-btn--decrease">-</button>
+            <input type="text" class="quantity-input" value="" readonly>
+            <button class="quantity-btn quantity-btn--increase">+</button>
+        </div>
+        <div class="cart-item__total"></div>
+        <div class="cart-item__remove">
+            <i class='bx bx-trash'></i>
+        </div>
+    </div>
+</template>
+
+<template id="cart-summary-template">
+    <section class="cart-items"></section>
+    <section class="cart-summary">
+        <h3 class="cart-summary__title">Tóm tắt đơn hàng</h3>
+        <div class="promo-banner">
+            <i class='bx bx-gift'></i>
+            <p>Miễn phí vận chuyển cho đơn hàng từ 500.000₫</p>
+        </div>
+        <div class="cart-summary__rows">
+            <div class="summary-row">
+                <span class="summary-row__label">Tạm tính:</span>
+                <span class="summary-row__value currency-value"></span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-row__label">Phí vận chuyển:</span>
+                <span class="summary-row__value currency-value">Miễn phí</span>
+            </div>
+            <div class="summary-row summary-row--total">
+                <span class="summary-row__label">Tổng cộng:</span>
+                <span class="summary-row__value currency-value"></span>
+            </div>
+        </div>
+    </section>
+</template>
+<!-- CẢNH BÁO KHÔNG YÊU CẦU HÓA ĐƠN -->
+<div id="modal-no-invoice" class="modal">
+    <div class="modal-content">
+        <h2>Cảnh báo!</h2>
+        <p>Bạn cần có hóa đơn thanh toán chi tiết để đối chiếu và khiếu nại đơn hàng.<br>
+            Nếu không có hóa đơn thanh toán chúng tôi không chịu trách nhiệm!</p>
+        <div class="modal-buttons">
+            <button id="btn-confirm-no-invoice" class="modal-btn modal-btn-confirm" disabled style="opacity: 0.5;">Vẫn tiếp tục (5)</button>
+            <button id="btn-cancel-no-invoice" class="modal-btn modal-btn-cancel">Hủy</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

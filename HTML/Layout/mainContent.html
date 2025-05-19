@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../Style/style.css">
+</head>
+<body>
+
+<main class="main-content">
+    <!--Arduino Section -->
+    <section class="product-section" data-category="mouse">
+        <h2 class="section-title">Chuột</h2>
+        <button class="scroll-btn left" onclick="scrollProducts('productGridArduino', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridArduino', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridArduino">
+                <!-- === Danh sách sản phẩm === -->
+                <div class="product-card" data-id="ard1">
+                    <a href="testproduct.html">
+                        <img class="product-image" src="Images/logitechg309.jpg" alt="Chuột Logitech G309 Lightspeed Wireless Bluetooth Trắng">
+                    </a>
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+
+                    <div class="product-info">
+                        <p class="product-name">Chuột Logitech G309 Lightspeed Wireless Bluetooth Trắng </p>
+                        <p class="product-price"><strong>2.090.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="ard2">
+                    <img class="product-image" src="Images/logitech-g102-lightsync-rgb-black.jpg" alt="Chuột Logitech G102 LightSync Black">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Chuột Logitech G102 LightSync Black</p>
+                        <p class="product-price"><strong>599.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="ard3">
+                    <img class="product-image" src="Images/LogitechG502.jpg" alt="Chuột Logitech G502 X Plus LightSpeed White">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Chuột Logitech G502 X Plus LightSpeed White</p>
+                        <p class="product-price"><strong>3.890.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="ard4">
+                    <img class="product-image" src="Images/LogitechGPro.jpg" alt="Chuột Logitech G Pro X Superlight Wireless Red">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Chuột Logitech G Pro X Superlight Wireless Red</p>
+                        <p class="product-price"><strong>3.590.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="ard5">
+                    <img class="product-image" src="Images/LogitechPOP.jpg" alt="Chuột Logitech POP with Emoji Button Blast Yellow">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Chuột Logitech POP with Emoji Button Blast Yellow</p>
+                        <p class="product-price"><strong>899.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="ard6">
+                    <img class="product-image" src="Images/LogitechPebble.jpg" alt="Chuột Logitech Pebble Mouse 2 M350S Rose">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Chuột Logitech Pebble Mouse 2 M350S Rose</p>
+                        <p class="product-price"><strong>699.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="ard7">
+                    <img class="product-image" src="Images/LogitechM650.jpg" alt="Chuột Logitech M650 Off White">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Chuột Logitech M650 Off White</p>
+                        <p class="product-price"><strong>849.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="ard8">
+                    <img class="product-image" src="Images/LogitechG903HERO.jpg" alt="Chuột Logitech G903 HERO Lightspeed Wireless Gaming">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Chuột Logitech G903 HERO Lightspeed Wireless Gaming</p>
+                        <p class="product-price"><strong>3.790.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="ard9">
+                    <img class="product-image" src="Images/LogitechG403HERO.jpg" alt="Chuột Logitech G403 HERO">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Chuột Logitech G403 HERO</p>
+                        <p class="product-price"><strong>1.590.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="ard10">
+                    <img class="product-image" src="Images/RazerBasiliskV3.jpg" alt="Chuột Razer Basilisk V3">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Chuột Razer Basilisk V3</p>
+                        <p class="product-price"><strong>1.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </section>
+    <!-- Sensor Section -->
+    <section class="product-section">
+        <h2 class="section-title">Bàn Phím</h2>
+        <button class="scroll-btn left" onclick="scrollProducts('productGridSensors', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridSensors', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridSensors">
+
+                <div class="product-card" data-id="sen1">
+                    <img class="product-image" src="Images/DareUEK106ProHazeBlue.jpg" alt="Bàn phím cơ gaming DareU EK106 Pro Haze Blue Cloud switch">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bàn phím cơ gaming DareU EK106 Pro Haze Blue Cloud switch</p>
+                        <p class="product-price"><strong>1.690.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="sen2">
+                    <img class="product-image" src="Images/AKKO5075BPlus.jpg" alt="Bàn phím cơ AKKO 5075B Plus TM Chicago Piano V3 Pro Switch">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bàn phím cơ AKKO 5075B Plus TM Chicago Piano V3 Pro Switch</p>
+                        <p class="product-price"><strong>1.990.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="sen3">
+                    <img class="product-image" src="Images/AULAS98PROTM.jpg" alt="Bàn phím AULA S98 PRO TM (Xanh Dương + Trắng + Tím đậm/ Caramel latte switch) S9806">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bàn phím AULA S98 PRO TM (Xanh Dương + Trắng + Tím đậm/ Caramel latte switch) S9806</p>
+                        <p class="product-price"><strong>1.845.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="sen4">
+                    <img class="product-image" src="Images/AULAF99.jpg" alt="Bàn phím AULA F99 (Đen + Trắng + Xanh dương/ Star Vector switch) F9907">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bàn phím AULA F99 (Đen + Trắng + Xanh dương/ Star Vector switch) F9907</p>
+                        <p class="product-price"><strong>1.929.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen5">
+                    <img class="product-image" src="Images/MonsGeekMG108BBun.jpg" alt="Bàn phím MonsGeek MG108B Bun Wonderland V3 Piano Pro switch">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bàn phím MonsGeek MG108B Bun Wonderland V3 Piano Pro switch</p>
+                        <p class="product-price"><strong>2.190.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen6">
+                    <img class="product-image" src="Images/LogitechPebbleKeys.jpg" alt="Bàn phím Logitech Pebble Keys 2 K380S White">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bàn phím Logitech Pebble Keys 2 K380S White</p>
+                        <p class="product-price"><strong>790.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen7">
+                    <img class="product-image" src="Images/RazerBlackwidow.jpg" alt="Bàn phím Razer Blackwidow V4 75% White Tactile">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bàn phím Razer Blackwidow V4 75% White Tactile</p>
+                        <p class="product-price"><strong>5.490.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen8">
+                    <img class="product-image" src="Images/E-DraEK384TripleMode.jpg" alt="Bàn phím chơi game cơ E-Dra EK384 Triple Mode Beta Blue Switch">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bàn phím chơi game cơ E-Dra EK384 Triple Mode Beta Blue Switch</p>
+                        <p class="product-price"><strong>1.290.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen9">
+                    <img class="product-image" src="Images/LogitechGProXTKL.jpg" alt="Bàn phím Logitech G Pro X TKL Light Speed Tactile Switch White">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bàn phím Logitech G Pro X TKL Light Speed Tactile Switch White</p>
+                        <p class="product-price"><strong>4.790.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="sen10">
+                    <img class="product-image" src="Images/LogitechG915XLightspeed.jpg" alt="Bàn phím Logitech G915 X Lightspeed TKL Low-Profile Wireless Black">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bàn phím Logitech G915 X Lightspeed TKL Low-Profile Wireless Black</p>
+                        <p class="product-price"><strong>5.290.000₫</strong></p>
+                        <button class="add-to-cart-btn">
+                            <i class='bx bx-cart'></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </section>
+    <!-- LED Section -->
+    <section class="product-section">
+        <h2 class="section-title">Tai Nghe</h2>
+        <!-- Nút scroll nếu cần -->
+        <button class="scroll-btn left" onclick="scrollProducts('productGridLed', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridLed', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridLed">
+                <!-- Các sản phẩm -->
+                <div class="product-card" data-id="led1">
+                    <img class="product-image" src="Images/CorsairHS55.jpg" alt="Tai nghe Corsair HS55 Wireless Core Black (CA-9011290-AP)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tai nghe Corsair HS55 Wireless Core Black (CA-9011290-AP)</p>
+                        <p class="product-price"><strong>2.845.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="led2">
+                    <img class="product-image" src="Images/CorsairVirtuoso.jpg" alt="Tai nghe Corsair Virtuoso RGB Wireless - Carbon (CA-9011185-AP)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tai nghe Corsair Virtuoso RGB Wireless - Carbon (CA-9011185-AP)</p>
+                        <p class="product-price"><strong>4.890.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="led3">
+                    <img class="product-image" src="Images/HPHyperX.jpg" alt="Tai nghe HP HyperX Cloud III Wireless Red">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tai nghe HP HyperX Cloud III Wireless Red</p>
+                        <p class="product-price"><strong>4.390.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="led4">
+                    <img class="product-image" src="Images/RazerKrakenV3.jpg" alt="Tai nghe Razer Kraken V3 X USB">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tai nghe Razer Kraken V3 X USB</p>
+                        <p class="product-price"><strong>1.250.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led5">
+                    <img class="product-image" src="Images/AsusROG.jpg" alt="Tai nghe Asus ROG THETA 7.1">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tai nghe Asus ROG THETA 7.1</p>
+                        <p class="product-price"><strong>6.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led6">
+                    <img class="product-image" src="Images/SteelSeriesArctis.jpg" alt="Tai nghe SteelSeries Arctis Nova 1 White">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tai nghe SteelSeries Arctis Nova 1 White</p>
+                        <p class="product-price"><strong>1.790.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led7">
+                    <img class="product-image" src="Images/RapooGamingVH520.jpg" alt="Tai nghe Rapoo Gaming VH520">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tai nghe Rapoo Gaming VH520</p>
+                        <p class="product-price"><strong>1.090.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led8">
+                    <img class="product-image" src="Images/DareUEH469Pink.jpg" alt="Tai nghe DareU EH469 7.1 RGB Pink">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tai nghe DareU EH469 7.1 RGB Pink</p>
+                        <p class="product-price"><strong>590.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led9">
+                    <img class="product-image" src="Images/LogitechG535.jpg" alt="Tai nghe Logitech G535 LIGHTSPEED Wireless Black">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tai nghe Logitech G535 LIGHTSPEED Wireless Black</p>
+                        <p class="product-price"><strong>3.299.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="led10">
+                    <img class="product-image" src="Images/DareUEH722X.jpg" alt="Tai nghe DareU EH722X 7.1 Pink">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Tai nghe DareU EH722X 7.1 Pink</p>
+                        <p class="product-price"><strong>749.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+    <!-- Resistor Section -->
+    <section class="product-section">
+        <h2 class="section-title">Màn Hình</h2>
+        <button class="scroll-btn left" onclick="scrollProducts('productGridResistor', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridResistor', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridResistor">
+                <div class="product-card" data-id="r1">
+                    <img class="product-image" src="Images/TUFGAMINGVG259Q3A2.jpg" alt="Màn hình Asus TUF GAMING VG259Q3A 2'' Fast IPS 180Hz Gsync chuyên game">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Màn hình Asus TUF GAMING VG259Q3A 25" Fast IPS 180Hz Gsync chuyên game</p>
+                        <p class="product-price"><strong>3.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r2">
+                    <img class="product-image" src="Images/ViewSonicVX2779-HD-PRO27.jpg" alt="Màn hình ViewSonic VX2779-HD-PRO 2'' IPS 180Hz chuyên game">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Màn hình ViewSonic VX2779-HD-PRO 27" IPS 180Hz chuyên game</p>
+                        <p class="product-price"><strong>4.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r3">
+                    <img class="product-image" src="Images/GIGABYTEG25F225.jpg" alt="Màn hình GIGABYTE G25F2 2'' IPS 200Hz chuyên game">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Màn hình GIGABYTE G25F2 25" IPS 200Hz chuyên game</p>
+                        <p class="product-price"><strong>4.490.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r4">
+                    <img class="product-image" src="Images/Philips27M2N3200L27.jpg" alt="Màn hình Philips 27M2N3200L 2'' IPS 180Hz chuyên game">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Màn hình Philips 27M2N3200L 27" IPS 180Hz chuyên game</p>
+                        <p class="product-price"><strong>3.690.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r5">
+                    <img class="product-image" src="Images/E-DRAEGM27F180PV27.jpg" alt="Màn hình E-DRA EGM27F180PV 27'' IPS 180Hz chuyên game">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Màn hình E-DRA EGM27F180PV 27" IPS 180Hz chuyên game</p>
+                        <p class="product-price"><strong>3.690.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r6">
+                    <img class="product-image" src="Images/LG24GS65F-B24.jpg" alt="Màn hình LG 24GS65F-B 24'' IPS 180Hz HDR10 Gsync chuyên game">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Màn hình LG 24GS65F-B 24" IPS 180Hz HDR10 Gsync chuyên game</p>
+                        <p class="product-price"><strong>4.390.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r7">
+                    <img class="product-image" src="Images/MSIMPG272URXQD-OLED27.jpg" alt="Màn hình MSI MPG 272URX QD-OLED 27'' QD-OLED 4K 240Hz chuyên game">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Màn hình MSI MPG 272URX QD-OLED 27" QD-OLED 4K 240Hz chuyên game</p>
+                        <p class="product-price"><strong>39.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r8">
+                    <img class="product-image" src="Images/SamsungOdysseyG8.jpg" alt="Màn hình Samsung Odyssey G8 LS32FG812SEXXV 32'' OLED 4K 240Hz">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Màn hình Samsung Odyssey G8 LS32FG812SEXXV 32" OLED 4K 240Hz</p>
+                        <p class="product-price"><strong>35.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r9">
+                    <img class="product-image" src="Images/LG45GS95QE-BUltraGear45.jpg" alt="Màn hình LG 45GS95QE-B UltraGear 45'' OLED 2K 240Hz G-Sync">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Màn hình LG 45GS95QE-B UltraGear 45" OLED 2K 240Hz G-Sync</p>
+                        <p class="product-price"><strong>41.290.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="r10">
+                    <img class="product-image" src="Images/SamsungOdysseyG8LS34DG85034.jpg" alt="Màn hình cong Samsung Odyssey G8 LS34DG850 34'' OLED 2K 175Hz chuyên game">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Màn hình cong Samsung Odyssey G8 LS34DG850 34" OLED 2K 175Hz chuyên game</p>
+                        <p class="product-price"><strong>29.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+    <!-- Capacitor Section -->
+    <section class="product-section">
+        <h2 class="section-title">Laptop</h2>
+        <button class="scroll-btn left" onclick="scrollProducts('productGridCapacitor', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridCapacitor', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridCapacitor">
+                <div class="product-card" data-id="cap1">
+                    <img class="product-image" src="Images/AcerPredatorHeliosNeo16.jpg" alt="Laptop gaming Acer Predator Helios Neo 16 PHN16 72 78L4">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Laptop gaming Acer Predator Helios Neo 16 PHN16 72 78L4</p>
+                        <p class="product-price"><strong>38.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="cap2">
+                    <img class="product-image" src="Images/ASUSTUFGamingFA401WVRG062WS.jpg" alt="Laptop gaming ASUS TUF Gaming FA401WV RG062WS">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Laptop gaming ASUS TUF Gaming FA401WV RG062WS</p>
+                        <p class="product-price"><strong>44.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="cap3">
+                    <img class="product-image" src="Images/LenovoLegion516IRX983DG004YVN.jpg" alt="Laptop gaming Lenovo Legion 5 16IRX9 83DG004YVN">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Laptop gaming Lenovo Legion 5 16IRX9 83DG004YVN</p>
+                        <p class="product-price"><strong>43.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="cap4">
+                    <img class="product-image" src="Images/ASUSROGStrixG16G614JUN3509W.jpg" alt="Laptop gaming ASUS ROG Strix G16 G614JU N3509W">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Laptop gaming ASUS ROG Strix G16 G614JU N3509W</p>
+                        <p class="product-price"><strong>40.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-id="cap5">
+                    <img class="product-image" src="Images/HPVICTUS16-r0127TX8C5N2PA.jpg" alt="Laptop gaming HP VICTUS 16-r0127TX 8C5N2PA">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Laptop gaming HP VICTUS 16-r0127TX 8C5N2PA</p>
+                        <p class="product-price"><strong>38.390.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="cap6">
+                    <img class="product-image" src="Images/AcerNitroVANV1641R36Y.jpg" alt="Laptop gaming Acer Nitro V ANV16 41 R36Y">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Laptop gaming Acer Nitro V ANV16 41 R36Y</p>
+                        <p class="product-price"><strong>28.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="cap7">
+                    <img class="product-image" src="Images/MSISword16HXB14VEKG856VN.jpg" alt="Laptop gaming MSI Sword 16 HX B14VEKG 856VN">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Laptop gaming MSI Sword 16 HX B14VEKG 856VN</p>
+                        <p class="product-price"><strong>35.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="cap8">
+                    <img class="product-image" src="Images/MSIKatana15B13VFK676VN.jpg" alt="Laptop gaming MSI Katana 15 B13VFK 676VN">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Laptop gaming MSI Katana 15 B13VFK 676VN</p>
+                        <p class="product-price"><strong>37.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="cap9">
+                    <img class="product-image" src="Images/GigabyteG5MF5H2VN353KH.jpg" alt="Laptop gaming Gigabyte G5 MF5 H2VN353KH">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Laptop gaming Gigabyte G5 MF5 H2VN353KH</p>
+                        <p class="product-price"><strong>25.490.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="cap10">
+                    <img class="product-image" src="Images/DellG155530i9H161W11GR4060.jpg" alt="Laptop gaming Dell G15 5530 i9H161W11GR4060">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Laptop gaming Dell G15 5530 i9H161W11GR4060</p>
+                        <p class="product-price"><strong>46.190.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+    <!-- SemiConductor Section -->
+    <section class="product-section hidden" data-category="maincpuvga">
+        <h2 class="section-title">Main-CPU-VGA</h2>
+
+        <!-- Subcategory: Transistor -->
+        <div class="subcategory-container" data-subcategory="Mainboard">
+            <h3 class="section-title subcategory-title">Card đồ họa (VGA)</h3>
+            <button class="scroll-btn left" onclick="scrollProducts('productGridTransistor', -1)">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <button class="scroll-btn right" onclick="scrollProducts('productGridTransistor', 1)">
+                <i class='bx bx-chevron-right'></i>
+            </button>
+            <div class="product-grid-wrapper">
+                <div class="product-grid" id="productGridTransistor">
+                    <!-- Transistor Products -->
+                    <div class="product-card" data-id="tran1">
+                        <img class="product-image" src="Images/GIGABYTEAORUSGeForceRTX5090MASTER32G.jpg" alt="Card màn hình GIGABYTE AORUS GeForce RTX 5090 MASTER 32G (GV-N5090AORUS M-32GD)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Card màn hình GIGABYTE AORUS GeForce RTX 5090 MASTER 32G (GV-N5090AORUS M-32GD)</p>
+                            <p class="product-price"><strong>119.000.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran2">
+                        <img class="product-image" src="Images/GIGABYTEAORUSGeForceRTX5090MASTERICE32G.jpg" alt="Card màn hình GIGABYTE AORUS GeForce RTX 5090 MASTER ICE 32G (GV-N5090AORUSM ICE-32GD)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Card màn hình GIGABYTE AORUS GeForce RTX 5090 MASTER ICE 32G (GV-N5090AORUSM ICE-32GD)</p>
+                            <p class="product-price"><strong>110.000.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran3">
+                        <img class="product-image" src="Images/ASUSTUFGamingGeForceRTX509032GBGDDR7.jpg" alt="Card màn hình ASUS TUF Gaming GeForce RTX 5090 32GB GDDR7 (TUF-RTX5090-32G-GAMING)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Card màn hình ASUS TUF Gaming GeForce RTX 5090 32GB GDDR7 (TUF-RTX5090-32G-GAMING)</p>
+                            <p class="product-price"><strong>104.990.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran4">
+                        <img class="product-image" src="Images/ASUSROGAstralGeForceRTX509032GBGDDR7OCEdition.jpg" alt="Card màn hình ASUS ROG Astral GeForce RTX 5090 32GB GDDR7 OC Edition (ROG-ASTRAL-RTX5090-O32G-GAMING)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Card màn hình ASUS ROG Astral GeForce RTX 5090 32GB GDDR7 OC Edition (ROG-ASTRAL-RTX5090-O32G-GAMING)</p>
+                            <p class="product-price"><strong>135.000.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran5">
+                        <img class="product-image" src="Images/ASUSROGAstralLCGeForceRTX509032GBGDDR7OCEdition.jpg" alt="Card màn hình ASUS ROG Astral LC GeForce RTX 5090 32GB GDDR7 OC Edition (ROG-ASTRAL-LC-RTX5090-O32G-GAMING)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Card màn hình ASUS ROG Astral LC GeForce RTX 5090 32GB GDDR7 OC Edition (ROG-ASTRAL-LC-RTX5090-O32G-GAMING)</p>
+                            <p class="product-price"><strong>139.000.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran6">
+                        <img class="product-image" src="Images/MSIGeForceRTX508016GVENTUS3XOCPLUS.jpg" alt="Card màn hình MSI GeForce RTX 5080 16G VENTUS 3X OC PLUS">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Card màn hình MSI GeForce RTX 5080 16G VENTUS 3X OC PLUS</p>
+                            <p class="product-price"><strong>39.990.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran7">
+                        <img class="product-image" src="Images/MSIGeForceRTX508016GSUPRIMSOC.jpg" alt="Card màn hình MSI GeForce RTX 5080 16G SUPRIM SOC">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Card màn hình MSI GeForce RTX 5080 16G SUPRIM SOC</p>
+                            <p class="product-price"><strong>44.690.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran8">
+                        <img class="product-image" src="Images/ColorfuliGameGeForceRTX5070TiUltraWOC16GB-V.jpg" alt="Card màn hình Colorful iGame GeForce RTX 5070 Ti Ultra W OC 16GB-V">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Card màn hình Colorful iGame GeForce RTX 5070 Ti Ultra W OC 16GB-V</p>
+                            <p class="product-price"><strong>29.990.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran9">
+                        <img class="product-image" src="Images/ASUSROGStrixGeForceRTX507012GBGDDR7OCEdition.jpg" alt="Card màn hình ASUS ROG Strix GeForce RTX 5070 12GB GDDR7 OC Edition (ROG-STRIX-RTX5070-O12G-GAMING)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Card màn hình ASUS ROG Strix GeForce RTX 5070 12GB GDDR7 OC Edition (ROG-STRIX-RTX5070-O12G-GAMING)</p>
+                            <p class="product-price"><strong>29.990.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="tran10">
+                        <img class="product-image" src="Images/MSIGeForceRTX5060TiGamingOC8GB.jpg" alt="Card màn hình MSI GeForce RTX 5060 Ti Gaming OC 8GB">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Card màn hình MSI GeForce RTX 5060 Ti Gaming OC 8GB</p>
+                            <p class="product-price"><strong>15.290.000₫</strong></p>
+                            <button class="add-to-cart-btn">
+                                <i class='bx bx-cart'></i> Thêm vào giỏ
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Subcategory: Diode -->
+        <div class="subcategory-container" data-subcategory="CPU">
+            <h3 class="section-title subcategory-title">CPU</h3>
+            <button class="scroll-btn left" onclick="scrollProducts('productGridDiode', -1)">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <button class="scroll-btn right" onclick="scrollProducts('productGridDiode', 1)">
+                <i class='bx bx-chevron-right'></i>
+            </button>
+            <div class="product-grid-wrapper">
+                <div class="product-grid" id="productGridDiode">
+                    <!-- Diode Products -->
+                    <div class="product-card" data-id="dio1">
+                        <img class="product-image" src="Images/IntelCoreUltra9285K.jpg" alt="Bộ vi xử lý Intel Core Ultra 9 285K / Turbo up to 5.7GHz / 24 Nhân 24 Luồng / 36MB / LGA 1851">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bộ vi xử lý Intel Core Ultra 9 285K / Turbo up to 5.7GHz / 24 Nhân 24 Luồng / 36MB / LGA 1851</p>
+                            <p class="product-price"><strong>17.490.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio2">
+                        <img class="product-image" src="Images/IntelCoreUltra5225F.jpg" alt="Bộ vi xử lý Intel Core Ultra 5 225F / Turbo up to 4.9 GHz / 10 Nhân 10 Luồng / 20MB / LGA 1851">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bộ vi xử lý Intel Core Ultra 5 225F / Turbo up to 4.9 GHz / 10 Nhân 10 Luồng / 20MB / LGA 1851</p>
+                            <p class="product-price"><strong>6.990.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-id="dio3">
+                        <img class="product-image" src="Images/IntelCorei910920X.jpg" alt="Bộ vi xử lý Intel Core i9 10920X / 3.5GHz Turbo 4.6GHz / 12 Nhân 24 Luồng / 19.25MB / LGA 2066">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bộ vi xử lý Intel Core i9 10920X / 3.5GHz Turbo 4.6GHz / 12 Nhân 24 Luồng / 19.25MB / LGA 2066</p>
+                            <p class="product-price"><strong>21.400.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-id="dio4">
+                        <img class="product-image" src="Images/IntelCorei914900KS.jpg" alt="Bộ vi xử lý Intel Core i9 14900KS / Turbo up to 6.2GHz / 24 Nhân 32 Luồng / 36MB / LGA 1700">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bộ vi xử lý Intel Core i9 14900KS / Turbo up to 6.2GHz / 24 Nhân 32 Luồng / 36MB / LGA 1700</p>
+                            <p class="product-price"><strong>19.990.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card" data-id="dio5">
+                        <img class="product-image" src="Images/IntelCorei714700.jpg" alt="Bộ vi xử lý Intel Core i7 14700 / Turbo up to 5.4GHz / 20 Nhân 28 Luồng / 33MB / LGA 1700">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bộ vi xử lý Intel Core i7 14700 / Turbo up to 5.4GHz / 20 Nhân 28 Luồng / 33MB / LGA 1700</p>
+                            <p class="product-price"><strong>12.200.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio6">
+                        <img class="product-image" src="Images/IntelCorei514400F.jpg" alt="Bộ vi xử lý Intel Core i5 14400F / Turbo up to 4.7GHz / 10 Nhân 16 Luồng / 20MB / LGA 1700">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bộ vi xử lý Intel Core i5 14400F / Turbo up to 4.7GHz / 10 Nhân 16 Luồng / 20MB / LGA 1700</p>
+                            <p class="product-price"><strong>6.300.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio7">
+                        <img class="product-image" src="Images/IntelCorei314100.jpg" alt="Bộ vi xử lý Intel Core i3 14100 / Turbo up to 4.7GHz / 4 Nhân 8 Luồng / 12MB / LGA 1700">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bộ vi xử lý Intel Core i3 14100 / Turbo up to 4.7GHz / 4 Nhân 8 Luồng / 12MB / LGA 1700</p>
+                            <p class="product-price"><strong>4.400.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio8">
+                        <img class="product-image" src="Images/AMDAthlon3000G.jpg" alt="Bộ vi xử lý AMD Athlon 3000G / 3.5GHz / 2 nhân 4 luồng / 5MB / AM4">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bộ vi xử lý AMD Athlon 3000G / 3.5GHz / 2 nhân 4 luồng / 5MB / AM4</p>
+                            <p class="product-price"><strong>1.990.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio9">
+                        <img class="product-image" src="Images/AMDRyzen79800X3D.jpg" alt="Bộ vi xử lý AMD Ryzen 7 9800X3D / 4.7GHz Boost 5.2GHz / 8 nhân 16 luồng / 104MB / AM5">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bộ vi xử lý AMD Ryzen 7 9800X3D / 4.7GHz Boost 5.2GHz / 8 nhân 16 luồng / 104MB / AM5</p>
+                            <p class="product-price"><strong>14.990.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="dio10">
+                        <img class="product-image" src="Images/AMDRyzenThreadripperPRO5995WX.jpg" alt="Bộ vi xử lý AMD Ryzen Threadripper PRO 5995WX / 2.7GHz Boost 4.5GHz / 64 nhân 128 luồng / 292MB / sWRX8">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bộ vi xử lý AMD Ryzen Threadripper PRO 5995WX / 2.7GHz Boost 4.5GHz / 64 nhân 128 luồng / 292MB / sWRX8</p>
+                            <p class="product-price"><strong>180.000.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Subcategory: IC -->
+        <div class="subcategory-container" data-subcategory="VGA">
+            <h3 class="section-title subcategory-title">Mainboard</h3>
+            <button class="scroll-btn left" onclick="scrollProducts('productGridIC', -1)">
+                <i class='bx bx-chevron-left'></i>
+            </button>
+            <button class="scroll-btn right" onclick="scrollProducts('productGridIC', 1)">
+                <i class='bx bx-chevron-right'></i>
+            </button>
+            <div class="product-grid-wrapper">
+                <div class="product-grid" id="productGridIC">
+                    <!-- IC Products -->
+                    <div class="product-card" data-id="ic1">
+                        <img class="product-image" src="Images/ASUSB760M-AYWWIFID4.jpg" alt="Bo mạch chủ ASUS B760M-AYW WIFI D4">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bo mạch chủ ASUS B760M-AYW WIFI D4</p>
+                            <p class="product-price"><strong>2.990.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic2">
+                        <img class="product-image" src="Images/GIGABYTEB760MGAMINGWIFIPLUSDDR5.jpg" alt="Bo mạch chủ GIGABYTE B760M GAMING WIFI PLUS DDR5">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bo mạch chủ GIGABYTE B760M GAMING WIFI PLUS DDR5</p>
+                            <p class="product-price"><strong>3.690.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic3">
+                        <img class="product-image" src="Images/GIGABYTEX870EAORUSPROICE(DDR5).jpg" alt="Bo mạch chủ GIGABYTE X870E AORUS PRO ICE (DDR5)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bo mạch chủ GIGABYTE X870E AORUS PRO ICE (DDR5)</p>
+                            <p class="product-price"><strong>12.690.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic4">
+                        <img class="product-image" src="Images/GIGABYTEH610M-HV3(DDR4).jpg" alt="Bo mạch chủ GIGABYTE H610M-H V3 (DDR4)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bo mạch chủ GIGABYTE H610M-H V3 (DDR4)</p>
+                            <p class="product-price"><strong>1.990.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic5">
+                        <img class="product-image" src="Images/MSIMPGZ890IEDGETIWIFI(DDR5).jpg" alt="Bo mạch chủ MSI MPG Z890I EDGE TI WIFI (DDR5)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bo mạch chủ MSI MPG Z890I EDGE TI WIFI (DDR5)</p>
+                            <p class="product-price"><strong>12.690.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic6">
+                        <img class="product-image" src="Images/MSIMEGZ890ACE(DDR5).jpg" alt="Bo mạch chủ MSI MEG Z890 ACE (DDR5)">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bo mạch chủ MSI MEG Z890 ACE (DDR5)</p>
+                            <p class="product-price"><strong>22.590.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic7">
+                        <img class="product-image" src="Images/GIGABYTEZ790AORUSXTREMEXICE.jpg" alt="Bo mạch chủ GIGABYTE Z790 AORUS XTREME X ICE">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bo mạch chủ GIGABYTE Z790 AORUS XTREME X ICE</p>
+                            <p class="product-price"><strong>59.900.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic8">
+                        <img class="product-image" src="Images/GIGABYTEZ790EAGLEAXDDR5.jpg" alt="Bo mạch chủ GIGABYTE Z790 EAGLE AX DDR5">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bo mạch chủ GIGABYTE Z790 EAGLE AX DDR5</p>
+                            <p class="product-price"><strong>6.590.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic9">
+                        <img class="product-image" src="Images/ColorfulCVNB760MFROZENWIFID5V20.jpg" alt="Bo mạch chủ Colorful CVN B760M FROZEN WIFI D5 V20">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bo mạch chủ Colorful CVN B760M FROZEN WIFI D5 V20</p>
+                            <p class="product-price"><strong>4.890.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                    <div class="product-card" data-id="ic10">
+                        <img class="product-image" src="Images/MSIZ790GAMINGPLUSWIFIDDR5.jpg" alt="Bo mạch chủ MSI Z790 GAMING PLUS WIFI DDR5">
+                        <div class="product-icons">
+                            <i class='bx bx-heart'></i>
+                            <i class='bx bx-show'></i>
+                        </div>
+                        <div class="product-info">
+                            <p class="product-name">Bo mạch chủ MSI Z790 GAMING PLUS WIFI DDR5</p>
+                            <p class="product-price"><strong>6.990.000₫</strong></p>
+                            <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Power Section -->
+    <section class="product-section">
+        <h2 class="section-title">Case - Nguồn - Tản</h2>
+        <button class="scroll-btn left" onclick="scrollProducts('productGridPower', -1)">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="scroll-btn right" onclick="scrollProducts('productGridPower', 1)">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+
+        <div class="product-grid-wrapper">
+            <div class="product-grid" id="productGridPower">
+
+                <div class="product-card" data-id="power1">
+                    <img class="product-image" src="Images/XigmatekAlphardM3GFArctic%20.jpg" alt="Vỏ Xigmatek Alphard M 3GF Arctic (3 Fan)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Vỏ Xigmatek Alphard M 3GF Arctic (3 Fan)</p>
+                        <p class="product-price"><strong>850.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power2">
+                    <img class="product-image" src="Images/JetekCSGO2WukongWhite.jpg" alt="Vỏ máy tính Jetek CSGO2 Wukong White">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Vỏ máy tính Jetek CSGO2 Wukong White</p>
+                        <p class="product-price"><strong>790.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power3">
+                    <img class="product-image" src="Images/1stPlayerMV7Black.jpg" alt="Vỏ máy tính 1st Player MV7 Black">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Vỏ máy tính 1st Player MV7 Black</p>
+                        <p class="product-price"><strong>1.290.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power4">
+                    <img class="product-image" src="Images/CougarDuofaceRGBWhite.jpg" alt="Vỏ máy tính Cougar Duoface RGB White">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Vỏ máy tính Cougar Duoface RGB White</p>
+                        <p class="product-price"><strong>1.890.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power5">
+                    <img class="product-image" src="Images/ASUSROGThor1000P2-80PlusPlatinum-Full%20Modular(1000W).jpg" alt="Nguồn máy tính ASUS ROG Thor 1000P2 - 80 Plus Platinum - Full Modular (1000W)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn máy tính ASUS ROG Thor 1000P2 - 80 Plus Platinum - Full Modular (1000W)</p>
+                        <p class="product-price"><strong>8.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power6">
+                    <img class="product-image" src="Images/ASUSROGStrix1000WAURAWhiteEdition.jpg" alt="Nguồn máy tính ASUS ROG Strix 1000W AURA White Edition - 80 Plus Gold - Full Modular (1000W)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn máy tính ASUS ROG Strix 1000W AURA White Edition - 80 Plus Gold - Full Modular (1000W)</p>
+                        <p class="product-price"><strong>6.990.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power7">
+                    <img class="product-image" src="Images/CorsairRM850eATX3.1-80PlusGold.jpg" alt="Nguồn máy tính Corsair RM850e ATX 3.1 - 80 Plus Gold - Full Modular (850W) (CP-9020296-NA)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Nguồn máy tính Corsair RM850e ATX 3.1 - 80 Plus Gold - Full Modular (850W) (CP-9020296-NA)</p>
+                        <p class="product-price"><strong>3.690.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power8">
+                    <img class="product-image" src="Images/Fan%20XIGMATEK%20X20A%20ARGB%20-%20PACK%20x3,%20CONTROLLER.jpg" alt="Fan XIGMATEK X20A ARGB - PACK x3, CONTROLLER">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Fan XIGMATEK X20A ARGB - PACK x3, CONTROLLER</p>
+                        <p class="product-price"><strong>390.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power9">
+                    <img class="product-image" src="Images/CorsairRS120ARGBWHITE(CO-9050185-WW).jpg" alt="Bộ 3 quạt Corsair RS120 ARGB WHITE (CO-9050185-WW)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Bộ 3 quạt Corsair RS120 ARGB WHITE (CO-9050185-WW)</p>
+                        <p class="product-price"><strong>1.390.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+                <div class="product-card" data-id="power10">
+                    <img class="product-image" src="Images/FanLianLiUNIFanSL120TripleBlack.jpg" alt="Fan Lian Li UNI Fan SL 120 Triple Black (LED ARGB - Fan ghép nối không dây)">
+                    <div class="product-icons">
+                        <i class='bx bx-heart'></i>
+                        <i class='bx bx-show'></i>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-name">Fan Lian Li UNI Fan SL 120 Triple Black (LED ARGB - Fan ghép nối không dây)</p>
+                        <p class="product-price"><strong>2.690.000₫</strong></p>
+                        <button class="add-to-cart-btn"><i class='bx bx-cart'></i> Thêm vào giỏ</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+
+
+</main>
+
+<script src="../../Script/js_ShowAutoScroll.js"></script>
+
+
+
+</body>
+</html>

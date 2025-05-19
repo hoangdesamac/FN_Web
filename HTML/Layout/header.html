@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>QD Header + Auth</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../Style/style.css">
+</head>
+<body>
+
+<header class="header">
+  <!-- Logo -->
+  <a href="index.html" class="logo">
+    <img src="Images/Slogan.jpg" alt="Web3TD Logo" class="logo-img">
+  </a>
+
+
+  <!-- Danh mục -->
+  <div class="menu-container">
+    <button class="menu-toggle" id="menuToggle" onclick="toggleCategoryHeader()">
+      <i class='bx bx-menu'></i> Danh mục
+    </button>
+    <ul class="menu" id="menuList">
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-mouse'></i><span>Chuột</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Chuột không dây</li>
+          <li>Chuột gaming</li>
+          <li>Chuột văn phòng</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx  bxs-keyboard'></i> <span>Bàn Phím</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Bàn phím cơ</li>
+          <li>Bàn phím không dây</li>
+          <li>Bàn phím văn phòng</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-headphone'></i><span>Tai nghe</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Tai nghe gaming</li>
+          <li>Tai nghe Bluetooth</li>
+          <li>Tai nghe chụp tai</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-desktop'></i><span>Màn Hình</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Màn hình gaming</li>
+          <li>Màn hình văn phòng</li>
+          <li>Màn hình đồ họa</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-laptop'></i><span>Laptop</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Laptop gaming</li>
+          <li>Laptop văn phòng</li>
+          <li>Ultrabook</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-package'></i><span>Case - Nguồn - Tản</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Case máy tính</li>
+          <li>Nguồn (PSU)</li>
+          <li>Tản nhiệt CPU</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-chip'></i><span>Main - CPU - VGA</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Mainboard</li>
+          <li>CPU</li>
+          <li>Card đồ họa (VGA)</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-memory-card'></i><span>Ổ cứng - Ram - Thẻ nhớ</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Ổ cứng SSD</li>
+          <li>Ram máy tính</li>
+          <li>Thẻ nhớ</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-speaker'></i><span>Loa - Micro - Webcam</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Loa vi tính</li>
+          <li>Micro thu âm</li>
+          <li>Webcam</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-globe'></i><span>Phần mềm - Mạng</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Phần mềm diệt virus</li>
+          <li>Thiết bị mạng</li>
+          <li>Bộ phát Wifi</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-joystick'></i><span>Handheld - Console</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Tay cầm chơi game</li>
+          <li>Máy chơi game</li>
+          <li>Phụ kiện console</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-plug'></i><span>Phụ kiện</span><i class='bx bx-chevron-right'></i>
+        </div>
+        <ul class="submenu">
+          <li>Cáp - Hub</li>
+          <li>Giá đỡ</li>
+          <li>Đế tản nhiệt</li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
+        <div class="menu-label">
+          <i class='bx bx-box'></i><span>Dịch vụ và thông tin khác</span>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+
+
+
+  <!-- Tìm kiếm -->
+  <div class="search-bar">
+    <input type="text" placeholder="Bạn cần tìm gì?">
+    <button><i class='bx bx-search'></i></button>
+  </div>
+
+  <!-- Liên hệ -->
+  <div class="contact-info">
+    <span><i class='bx bx-phone'></i> Hotline 1900.5301</span>
+    <span><i class='bx bx-map'></i> Hệ thống Showroom</span>
+    <span>
+      <a href="lookup.html" style="text-decoration: none; color: inherit;">
+        <i class='bx bx-receipt'></i> Tra cứu đơn hàng
+        <span class="order-count" style="display: none;">0</span>
+      </a>
+    </span>
+  </div>
+
+
+  <!-- Hành động -->
+  <div class="user-actions">
+    <span class="cart-icon">
+    <a href="checkout.html" style="text-decoration: none; color: inherit;" class="cart-link">
+    <i class='bx bx-cart'></i> <span class="cart-text">Giỏ hàng</span>
+    <span class="cart-count" style="display: none;">0</span>
+    </a>
+    </span>
+    <!-- Popup giỏ hàng -->
+    <div id="cartPopup" class="cart-popup">
+      <div class="cart-popup-content">
+        <div class="cart-popup-header">
+          <h3><i class='bx bx-check-circle'></i> Đã thêm vào giỏ hàng</h3>
+          <button class="cart-popup-close" onclick="closeCartPopup()">×</button>
+        </div>
+        <div class="cart-popup-product">
+          <img id="popupProductImg" src="" alt="" class="cart-popup-product-img">
+          <div class="cart-popup-product-info">
+            <p id="popupProductName" class="cart-popup-product-name"></p>
+            <p id="popupProductPrice" class="cart-popup-product-price"></p>
+          </div>
+        </div>
+        <div class="cart-popup-actions">
+          <a href="checkout.html" class="cart-popup-viewcart">Xem giỏ hàng</a>
+          <button onclick="closeCartPopup()" class="cart-popup-continue">Tiếp tục mua sắm</button>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="login-container">
+      <div class="login-hover-area">
+        <span id="loginBtn" class="login-button" onclick="showPopup('login')">
+           <i class='bx bx-user'></i>
+           <span class="login-text">Tài khoản</span>
+        </span>
+
+        <div class="popup">
+          <h3><i class='bx bx-happy'></i> Xin chào, vui lòng đăng nhập!</h3>
+          <button class="btn" onclick="showPopup('login')">
+            <i class='bx bxs-user'></i> Đăng nhập
+          </button>
+          <button class="btn" onclick="showPopup('register')">
+            <i class='bx bxs-user-plus'></i> Đăng ký
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Popup Container -->
+  <div id="popup-container" onclick="closePopup(event)"></div>
+</header>
+
+<!-- Auth Popup Script -->
+
+<!-- Show Menu -->
+<script>
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartCountElement = document.querySelector('.cart-count');
+    if (cartCountElement) {
+      cartCountElement.textContent = cart.length;
+      cartCountElement.style.display = cart.length > 0 ? 'inline-flex' : 'none';
+    }
+  }
+
+  function updateOrderCount() {
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    const orderCountElement = document.querySelector('.order-count');
+    if (orderCountElement) {
+      orderCountElement.textContent = orders.length;
+      orderCountElement.style.display = orders.length > 0 ? 'inline-flex' : 'none';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    updateCartCount();
+    updateOrderCount();
+  });
+</script>
+
+
+
+</body>
+</html>
