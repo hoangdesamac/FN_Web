@@ -6,6 +6,7 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="HTML/Style/style.css">
+    <link rel="stylesheet" href="HTML/Style/styleBanner.css">
     <style>
         body, html {
             margin: 0;
@@ -19,9 +20,10 @@
         #main-container {
             padding-top: 50px;
         }
-        #swiper mySwiper {
-            padding-top: 20px;
-        }
+        #swiper {
+    margin-bottom: 120px;
+}
+
     </style>
     <!-- Thứ tự scripts quan trọng: js_ShowAutoScroll phải đầu tiên -->
     <script src="Script/js_ShowAutoScroll.js"></script>
@@ -35,6 +37,8 @@
 
 <!-- Header -->
 <div id="header-container"></div>
+<!-- Swiper -->
+<div id="swiper" class="mySwiper"></div>
 
 <!-- Main Content -->
 <div id="main-container"></div>
@@ -42,7 +46,6 @@
 <!-- Footer -->
 <div id="footer-container"></div>
 
-<div id="swiper mySwiper"></div>
 <script>
     async function loadPagePart(url, containerId, callback = null) {
         try {
@@ -96,7 +99,7 @@
 
             if (typeof initializeMenuSystem === 'function') {
                 console.log("Khởi tạo menu đầy đủ!");
-                initializeMenuSystem(); // ✅ chính xác tại đây
+                initializeMenuSystem(); //  chính xác tại đây
             } else {
                 console.error("Không tìm thấy initializeMenuSystem!");
             }
@@ -108,9 +111,8 @@
     });
 
     loadPagePart("HTML/Content/banner.html", "swiper", () => {
-    // Đảm bảo Swiper được khởi tạo sau khi DOM có nội dung
     setTimeout(() => {
-        new Swiper('.swiper-wrapper', {
+        new Swiper('.mySwiper', {
             loop: true,
             autoplay: {
                 delay: 4000,
@@ -127,6 +129,7 @@
         });
     }, 100);
 });
+
     // Tải main content và khởi tạo auto-scroll và cart system
     loadPagePart("HTML/Layout/mainContent.html", "main-container", () => {
         if (typeof initializeAutoScroll === 'function') {
