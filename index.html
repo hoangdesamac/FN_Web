@@ -19,6 +19,9 @@
         #main-container {
             padding-top: 50px;
         }
+        #swiper mySwiper {
+            padding-top: 20px;
+        }
     </style>
     <!-- Thứ tự scripts quan trọng: js_ShowAutoScroll phải đầu tiên -->
     <script src="Script/js_ShowAutoScroll.js"></script>
@@ -39,6 +42,7 @@
 <!-- Footer -->
 <div id="footer-container"></div>
 
+<div id="swiper mySwiper"></div>
 <script>
     async function loadPagePart(url, containerId, callback = null) {
         try {
@@ -103,7 +107,26 @@
         checkDomReady(); // Bắt đầu kiểm tra
     });
 
-
+    loadPagePart("HTML/Content/banner.html", "swiper", () => {
+    // Đảm bảo Swiper được khởi tạo sau khi DOM có nội dung
+    setTimeout(() => {
+        new Swiper('.swiper-wrapper', {
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    }, 100);
+});
     // Tải main content và khởi tạo auto-scroll và cart system
     loadPagePart("HTML/Layout/mainContent.html", "main-container", () => {
         if (typeof initializeAutoScroll === 'function') {
