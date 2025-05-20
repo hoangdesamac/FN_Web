@@ -3,8 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <title>Web3TD - Trang chủ</title>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="HTML/Style/style.css" />
     <link rel="stylesheet" href="HTML/Style/styleBanner.css" />
     <style>
@@ -30,27 +36,30 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        /* tăng chiều cao header nếu cần */
       }
       .header.scrolled {
-        box-shadow: 0 2px 16px rgba(0,0,0,0.08) !important;
-      }
-      .logo {
-        display: flex;
-        align-items: center;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08) !important;
       }
       .logo img {
-        height: 48px;
-        margin-right: 12px;
+        height: 48px; /* giảm lại từ 56px */
+        margin-right: 14px;
+      }
+      .logo img {
+        height: 56px; /* tăng logo nếu muốn */
+        margin-right: 16px;
       }
       .nav {
         display: flex;
-        gap: 32px;
+        gap: 32px; /* giảm khoảng cách */
       }
       .nav a {
         text-decoration: none;
         color: #222;
-        font-weight: 600;
+        font-weight: 700;
+        font-size: 1.1rem; /* giảm từ 1.3rem */
         transition: color 0.2s;
+        letter-spacing: 0.3px;
       }
       .nav a:hover {
         color: #e53935;
@@ -58,10 +67,11 @@
       .hotline {
         border: 2px solid #e53935;
         color: #e53935;
-        padding: 8px 20px;
+        padding: 8px 22px; /* giảm padding */
         border-radius: 24px;
         font-weight: bold;
         background: #fff;
+        font-size: 1rem; /* giảm từ 1.2rem */
       }
       .banner {
         background: #f5f8fd;
@@ -123,7 +133,9 @@
         padding: 32px 24px;
         width: 220px;
         text-align: center;
-        transition: box-shadow 0.2s, border 0.2s;
+        transition:
+          box-shadow 0.2s,
+          border 0.2s;
         cursor: pointer;
         border: 2px solid transparent;
       }
@@ -244,7 +256,8 @@
           gap: 0;
           padding: 24px 0;
         }
-        .showroom-info, .showroom-img {
+        .showroom-info,
+        .showroom-img {
           max-width: 100%;
           padding-left: 0;
         }
@@ -280,20 +293,18 @@
         }
       }
     </style>
-    <!-- Thứ tự scripts quan trọng: js_ShowAutoScroll phải đầu tiên -->
     <script src="Script/js_ShowAutoScroll.js"></script>
     <script src="Script/js_MenuClick.js"></script>
     <script src="Script/js_ShowPopupAuth.js"></script>
     <script src="Script/js_Checkout.js" defer></script>
     <script src="Script/js_CartPopup.js" defer></script>
     <script>
-      // Hiệu ứng shadow cho header khi cuộn
-      window.addEventListener('scroll', function() {
-        const header = document.querySelector('.header');
+      window.addEventListener("scroll", function () {
+        const header = document.querySelector(".header");
         if (window.scrollY > 10) {
-          header.classList.add('scrolled');
+          header.classList.add("scrolled");
         } else {
-          header.classList.remove('scrolled');
+          header.classList.remove("scrolled");
         }
       });
     </script>
@@ -319,19 +330,29 @@
         Địa điểm trải nghiệm và mua sắm thiết bị công nghệ cao cấp
       </div>
       <button class="cta-btn">XEM NGAY</button>
-      <img class="banner-img" src="Image_Showroom/showroom.jpg" alt="Showroom Banner"/>
+      <img
+        class="banner-img"
+        src="Image_Showroom/showroom.jpg"
+        alt="Showroom Banner"
+      />
     </div>
 
     <div class="area-section" id="area-section">
       <div class="area-title">CHỌN KHU VỰC CỦA BẠN</div>
       <div class="areas">
         <div class="area-card">
-          <img src="https://static.thenounproject.com/png/2412878-200.png" alt="HCM" />
-          <div class="area-card-title">Hồ Chí Minh</div>
+          <img
+            src="https://static.thenounproject.com/png/2412878-200.png"
+            alt="Miền Nam"
+          />
+          <div class="area-card-title">Miền Nam</div>
         </div>
         <div class="area-card">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Hanoi_symbol.png" alt="HN" />
-          <div class="area-card-title">Hà Nội</div>
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/a/af/Hanoi_symbol.png"
+            alt="Miền Bắc"
+          />
+          <div class="area-card-title">Miền Bắc</div>
         </div>
       </div>
     </div>
@@ -341,63 +362,62 @@
     <div id="footer-container"></div>
 
     <script>
-      // Cuộn mượt tới khu vực khi bấm XEM NGAY
-      document.querySelector('.cta-btn').onclick = function() {
-        document.getElementById('area-section').scrollIntoView({ behavior: 'smooth' });
+      document.querySelector(".cta-btn").onclick = function () {
+        document
+          .getElementById("area-section")
+          .scrollIntoView({ behavior: "smooth" });
       };
 
       // Dữ liệu showroom mẫu
       const showroomData = {
-        "Hồ Chí Minh": [
+        "Miền Nam": [
           {
             name: "HOÀNG HOA THÁM",
             address: "78-80-82 Hoàng Hoa Thám, P.12, Q.Tân Bình, TP.HCM",
             map: "https://www.google.com/maps?q=78-80-82+Hoàng+Hoa+Thám,+Tân+Bình",
-            img: "https://file.hstatic.net/200000722513/file/gearvn-hoanghoatham_1_7e2e2e2e2e2e4e2e2e2e2e2e2e2e2e2e.jpg"
+            img: "https://file.hstatic.net/200000722513/file/gearvn-hoanghoatham_1_7e2e2e2e2e2e4e2e2e2e2e2e2e2e2e2e.jpg",
           },
           {
             name: "KHA VẠN CÂN",
             address: "905 Kha Vạn Cân, P.Linh Tây, TP.Thủ Đức, TP.HCM",
             map: "https://www.google.com/maps?q=905+Kha+Vạn+Cân,+Thủ+Đức",
-            img: "https://file.hstatic.net/200000722513/file/gearvn-khavan_can_1_7e2e2e2e2e2e4e2e2e2e2e2e2e2e2e2e.jpg"
+            img: "https://file.hstatic.net/200000722513/file/gearvn-khavan_can_1_7e2e2e2e2e2e4e2e2e2e2e2e2e2e2e2e.jpg",
           },
           {
             name: "TRẦN HƯNG ĐẠO",
             address: "1081-1083 Trần Hưng Đạo, P.5, Q.5, TP.HCM",
             map: "https://www.google.com/maps?q=1081-1083+Trần+Hưng+Đạo,+Q.5",
-            img: "https://file.hstatic.net/200000722513/file/gearvn-tranhungdao_1_7e2e2e2e2e2e4e2e2e2e2e2e2e2e2e2e.jpg"
-          }
+            img: "https://file.hstatic.net/200000722513/file/gearvn-tranhungdao_1_7e2e2e2e2e2e4e2e2e2e2e2e2e2e2e2e.jpg",
+          },
         ],
-        "Hà Nội": [
+        "Miền Bắc": [
           {
             name: "THÁI HÀ",
             address: "162-164 Thái Hà, P.Trung Liệt, Q.Đống Đa, Hà Nội",
             map: "https://www.google.com/maps?q=162-164+Thái+Hà,+Đống+Đa",
-            img: "https://file.hstatic.net/200000722513/file/gearvn-thaiha_1_7e2e2e2e2e2e4e2e2e2e2e2e2e2e2e2e.jpg"
-          }
-        ]
+            img: "https://file.hstatic.net/200000722513/file/gearvn-thaiha_1_7e2e2e2e2e2e4e2e2e2e2e2e2e2e2e2e.jpg",
+          },
+        ],
       };
 
-      // Hàm render khu vực chọn lại
       function renderAreaSection() {
         return `
           <div class="area-section" style="margin-top:48px;">
             <div class="area-title">CHỌN KHU VỰC KHÁC</div>
             <div class="areas">
               <div class="area-card">
-                <img src="https://static.thenounproject.com/png/2412878-200.png" alt="HCM" />
-                <div class="area-card-title">Hồ Chí Minh</div>
+                <img src="https://static.thenounproject.com/png/2412878-200.png" alt="Miền Nam" />
+                <div class="area-card-title">Miền Nam</div>
               </div>
               <div class="area-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Hanoi_symbol.png" alt="HN" />
-                <div class="area-card-title">Hà Nội</div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Hanoi_symbol.png" alt="Miền Bắc" />
+                <div class="area-card-title">Miền Bắc</div>
               </div>
             </div>
           </div>
         `;
       }
 
-      // Hàm render showroom + tiện ích + chọn khu vực khác
       function renderShowroom(area) {
         var list = showroomData[area];
         if (!list) return;
@@ -407,14 +427,14 @@
           </div>
           <div class="showroom-list-content">
         `;
-        list.forEach(function(sr, idx) {
+        list.forEach(function (sr, idx) {
           html += `
             <div class="showroom-row">
               <div class="showroom-img">
                 <img src="${sr.img}" alt="${sr.name}">
               </div>
               <div class="showroom-info">
-                <div class="showroom-info-title">SHOWROOM GEARVN<br>${sr.name}</div>
+                <div class="showroom-info-title">SHOWROOM 3TD<br>${sr.name}</div>
                 <div class="showroom-info-address">${sr.address}</div>
                 <div class="showroom-info-map">
                   <a href="${sr.map}" target="_blank">Xem bản đồ</a>
@@ -425,7 +445,6 @@
         });
         html += `</div>`;
 
-        // Thêm tiện ích sau danh sách showroom
         html += `
           <div class="showroom-benefit-section">
             <div class="showroom-benefit-title">CÁC TIỆN ÍCH TẠI SHOWROOM 3TD</div>
@@ -440,38 +459,33 @@
               <div class="benefit-item"><i class='bx bx-cart'></i><div>Giao hàng tận nhà</div></div>
             </div>
           </div>
+          ${renderAreaSection()}
         `;
 
-        // Thêm phần chọn khu vực khác
-        html += renderAreaSection();
-
-        document.getElementById('showroom-list').innerHTML = html;
-        // Gắn lại sự kiện click cho các nút khu vực khác
-        document.querySelectorAll('#showroom-list .area-card').forEach(function(card) {
-          card.onclick = function() {
-            var area = card.querySelector('.area-card-title').innerText;
-            renderShowroom(area);
-            document.getElementById('showroom-list').scrollIntoView({behavior:'smooth'});
-          };
-        });
-        // Cuộn tới danh sách showroom
-        document.getElementById('showroom-list').scrollIntoView({behavior:'smooth'});
+        document.getElementById("showroom-list").innerHTML = html;
+        document
+          .querySelectorAll("#showroom-list .area-card")
+          .forEach(function (card) {
+            card.onclick = function () {
+              var area = card.querySelector(".area-card-title").innerText;
+              renderShowroom(area);
+              document
+                .getElementById("showroom-list")
+                .scrollIntoView({ behavior: "smooth" });
+            };
+          });
+        document
+          .getElementById("showroom-list")
+          .scrollIntoView({ behavior: "smooth" });
       }
 
-      // Sự kiện click lần đầu ở khu vực chính
-      document.querySelectorAll('.area-card').forEach(function(card) {
-        card.onclick = function() {
-          var area = card.querySelector('.area-card-title').innerText;
+      document.querySelectorAll(".area-card").forEach(function (card) {
+        card.onclick = function () {
+          var area = card.querySelector(".area-card-title").innerText;
           renderShowroom(area);
         };
       });
 
-      // Cuộn mượt tới khu vực khi bấm XEM NGAY
-      document.querySelector('.cta-btn').onclick = function() {
-        document.getElementById('area-section').scrollIntoView({ behavior: 'smooth' });
-      };
-
-      // Tải footer
       async function loadPagePart(url, containerId, callback = null) {
         try {
           const response = await fetch(url);
@@ -486,7 +500,7 @@
           const scripts = tempDiv.querySelectorAll("script");
           scripts.forEach((oldScript) => {
             const src = oldScript.src;
-            if (src && document.querySelector(`script[src="${src}"]`)) return; // Đã có, bỏ qua
+            if (src && document.querySelector(`script[src="${src}"]`)) return;
 
             const newScript = document.createElement("script");
             if (src) {
