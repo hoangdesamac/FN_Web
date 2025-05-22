@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Module</title>
+    <link rel="stylesheet" href="HTML/Style/stylechatmodule.css">
+</head>
+<body>
+<div class="chat-module" id="chatModule">
+    <button class="close-btn" onclick="closeChatModule()">X</button>
+    <h3>CẦN TƯ VẤN TRONG 3 TIẾNG ĐỒNG HỒ? CHAT NGAY!</h3>
+    <p>Chúng tôi sẵn sàng hỗ trợ bạn chọn sản phẩm phù hợp nhất!</p>
+    <button class="chat-btn" onclick="openChat()">Chat ngay</button>
+</div>
+
+<div class="chat-window" id="chatWindow" style="display: none;">
+    <div class="chat-header">
+        <h3>GearVN - Chat với chúng tôi</h3>
+        <button class="close-btn" onclick="closeChatWindow()">X</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+        <div class="message bot-message">
+            <p><strong>ĐÙNG TÚ CHỌN - Ế GEARVN LO!</strong></p>
+            <p>Phần mềm bạn cần để làm gì? Mình giúp bạn chọn cho chuẩn nhé!</p>
+        </div>
+        <div class="message bot-message">
+            <p>Game - Đồ họa - Học tập - Làm việc cơ bản</p>
+            <p>TIN NGAY để được tư vấn FREE & chuẩn từ GearVN nhé!</p>
+        </div>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="chatInput" placeholder="Nhập nội dung tư vấn...">
+        <button class="send-btn" onclick="sendMessage()">Gửi</button>
+    </div>
+</div>
+
+<script src="Script/chat_module.js"></script>
+</body>
+</html>

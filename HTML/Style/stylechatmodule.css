@@ -1,0 +1,205 @@
+
+/* Nội dung CSS từ stylechatmodule.css */
+.chat-module {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #E30019;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+    animation: slideUp 0.5s ease-in-out;
+    width: 300px;
+    z-index: 1000;
+}
+
+.chat-module h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.chat-module p {
+    margin: 0 0 15px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.chat-module .chat-btn {
+    background-color: #003087;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: opacity 0.3s;
+}
+
+.chat-module .chat-btn:hover {
+    opacity: 0.9;
+}
+
+.chat-module .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.chat-window {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    height: 450px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.chat-header {
+    background-color: #E30019;
+    color: white;
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+}
+
+.message {
+    margin-bottom: 10px;
+}
+
+.bot-message p {
+    background-color: #003087;
+    color: white;
+    padding: 8px;
+    border-radius: 10px;
+    margin: 5px 0;
+    display: inline-block;
+    max-width: 80%;
+}
+
+.user-message p {
+    background-color: #E30019;
+    color: white;
+    padding: 8px;
+    border-radius: 10px;
+    margin: 5px 0;
+    display: inline-block;
+    max-width: 80%;
+    text-align: right;
+    float: right;
+}
+
+.chat-footer {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+}
+
+.chat-footer input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.chat-footer .send-btn {
+    background-color: #003087;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: opacity 0.3s;
+}
+
+.chat-footer .send-btn:hover {
+    opacity: 0.9;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* CSS cho nút bấm mở chat */
+.chat-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #E30019;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    transition: transform 0.3s;
+}
+
+.chat-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+.chat-toggle-btn i {
+    font-size: 24px;
+}
+
+@media (max-width: 768px) {
+    .chat-module {
+        width: 250px;
+        bottom: 70px; /* Điều chỉnh để tránh chồng lên nút */
+        right: 10px;
+    }
+    .chat-window {
+        width: 300px;
+        height: 400px;
+        bottom: 70px;
+        right: 10px;
+    }
+    .chat-toggle-btn {
+        bottom: 10px;
+        right: 10px;
+    }
+}

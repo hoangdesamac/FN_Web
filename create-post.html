@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Phụ Kiện Điện Tử</title>
+    <link rel="stylesheet" href="HTML/Style/stylepost.css">
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Forum Phụ Kiện Điện Tử</a>
+            <div class="d-flex">
+                <input class="form-control me-2" type="search" id="searchInput" placeholder="Tìm kiếm bài đăng..." aria-label="Search">
+                <button class="btn btn-warning" id="postButton">Đăng bài</button>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div id="postList" class="posts"></div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mt-3" id="pagination"></ul>
+            </nav>
+        </div>
+        <div class="col-lg-4">
+            <div class="card sidebar">
+                <div class="card-body">
+                    <h5 class="card-title">Danh mục</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" id="category-all">Tất cả</li>
+                        <li class="list-group-item" id="category-Tai nghe">Tai nghe</li>
+                        <li class="list-group-item" id="category-Bàn phím">Bàn phím</li>
+                        <li class="list-group-item" id="category-Chuột">Chuột</li>
+                        <li class="list-group-item" id="category-Khác">Khác</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="postFormModal" tabindex="-1" aria-labelledby="postFormLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postFormLabel">Đăng bài mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editPostId">
+                <div class="mb-3">
+                    <label for="postTitle" class="form-label">Tiêu đề</label>
+                    <input type="text" class="form-control" id="postTitle" placeholder="Tiêu đề">
+                </div>
+                <div class="mb-3">
+                    <label for="postDescription" class="form-label">Mô tả sản phẩm</label>
+                    <textarea class="form-control" id="postDescription" placeholder="Mô tả sản phẩm"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="postPrice" class="form-label">Giá (VND)</label>
+                    <input type="number" class="form-control" id="postPrice" placeholder="Giá (VND)">
+                </div>
+                <div class="mb-3">
+                    <label for="postCategory" class="form-label">Danh mục</label>
+                    <select class="form-select" id="postCategory">
+                        <option value="Tai nghe">Tai nghe</option>
+                        <option value="Bàn phím">Bàn phím</option>
+                        <option value="Chuột">Chuột</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="postImage" class="form-label">Hình ảnh</label>
+                    <input type="file" class="form-control" id="postImage" accept="image/*">
+                    <img id="previewImage" class="img-fluid mt-2" style="max-height: 200px; display: none;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-warning" onclick="submitPost()">Đăng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="commentFormModal" tabindex="-1" aria-labelledby="commentFormLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="commentFormLabel">Chỉnh sửa bình luận</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editCommentPostId">
+                <input type="hidden" id="editCommentIndex">
+                <div class="mb-3">
+                    <label for="editCommentText" class="form-label">Nội dung bình luận</label>
+                    <textarea class="form-control" id="editCommentText" placeholder="Nhập bình luận..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-warning" onclick="submitCommentEdit()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-primary text-white text-center py-3 mt-4">
+    <p>Liên hệ: contact@phukienforum.vn | Theo dõi chúng tôi trên mạng xã hội</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/compressorjs@1.2.1/dist/compressor.min.js"></script>
+<script src="bootstrap-5.3.6-dist/js/bootstrap.bundle.min.js"></script>
+<script src="Script/js_post.js"></script>
+</body>
+</html>

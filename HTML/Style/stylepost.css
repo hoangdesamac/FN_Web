@@ -1,0 +1,347 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e6f0fa 0%, #f9f9f9 100%);
+    color: #2d3436;
+    margin: 0;
+    padding-bottom: 100px; /* Để footer không che nội dung */
+    min-height: 100vh;
+}
+
+.navbar {
+    background: linear-gradient(90deg, #2c3e50, #3498db);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+    padding: 15px 0;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.6rem;
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand i {
+    font-size: 1.8rem;
+    margin-right: 8px;
+}
+
+.navbar .btn-warning {
+    background-color: #f39c12;
+    border: none;
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.navbar .btn-warning:hover {
+    background-color: #e67e22;
+}
+
+.navbar .btn-outline-light {
+    border-radius: 25px;
+    padding: 8px 20px;
+    font-weight: 500;
+}
+
+.post .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    margin-bottom: 25px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post .card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.post .card-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 12px;
+}
+
+.post .img-fluid {
+    max-height: 280px;
+    object-fit: cover;
+    border-radius: 15px 15px 0 0;
+    width: 100%;
+}
+
+.post .card-text {
+    font-size: 1rem;
+    color: #636e72;
+    line-height: 1.6;
+}
+
+.post .text-primary {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #3498db !important;
+}
+
+.post .text-muted {
+    font-size: 0.9rem;
+    color: #95a5a6 !important;
+}
+
+.post .btn {
+    border-radius: 25px;
+    padding: 8px 18px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.post .btn-primary {
+    background-color: #3498db;
+    border: none;
+}
+
+.post .btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.post .btn-outline-secondary {
+    border-color: #7f8c8d;
+    color: #7f8c8d;
+}
+
+.post .btn-outline-secondary:hover {
+    background-color: #7f8c8d;
+    color: #fff;
+}
+
+.post .btn-outline-danger {
+    border-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.post .btn-outline-danger:hover {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.post .comment {
+    font-size: 0.95rem;
+    border-left: 5px solid #3498db;
+    padding: 12px 18px;
+    margin-bottom: 15px;
+    background-color: #f5f7fa;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.post .comment:hover {
+    background-color: #dfe6e9;
+}
+
+.post .comment small {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+.sidebar .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.sidebar .card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+.sidebar .list-group-item {
+    border: none;
+    padding: 12px 18px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2d3436;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.sidebar .list-group-item:hover {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.sidebar .badge {
+    background-color: #3498db;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+}
+
+.sidebar .list-group-item:hover .badge {
+    background-color: #fff;
+    color: #3498db;
+}
+
+footer {
+    background: linear-gradient(90deg, #2c3e50, #3498db);
+    color: #fff;
+    padding: 20px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.2);
+}
+
+footer p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+footer a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 8px;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #f39c12;
+}
+
+footer i {
+    font-size: 1.3rem;
+}
+
+.modal-content {
+    border-radius: 15px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background: linear-gradient(90deg, #2c3e50, #3498db);
+    color: #fff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.modal-footer .btn {
+    border-radius: 25px;
+    padding: 8px 22px;
+    font-weight: 500;
+}
+
+.input-group .form-control {
+    border-radius: 25px 0 0 25px;
+    border: 1px solid #dfe6e9;
+}
+
+.input-group .btn {
+    border-radius: 0 25px 25px 0;
+}
+
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 1px solid #dfe6e9;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+}
+
+.pagination .page-link {
+    border-radius: 50%;
+    margin: 0 5px;
+    color: #3498db;
+    border: 1px solid #dfe6e9;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: #3498db;
+    color: #fff;
+    border-color: #3498db;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #3498db;
+    border-color: #3498db;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 120px;
+    }
+
+    .navbar .form-control {
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 25px;
+    }
+
+    .navbar .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .post .card-title {
+        font-size: 1.4rem;
+    }
+
+    .post .img-fluid {
+        max-height: 220px;
+    }
+
+    .sidebar {
+        margin-top: 25px;
+    }
+
+    footer {
+        position: relative;
+        padding: 25px 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.3rem;
+    }
+
+    .navbar-brand i {
+        font-size: 1.5rem;
+    }
+
+    .post .card-title {
+        font-size: 1.2rem;
+    }
+
+    .post .card-text {
+        font-size: 0.9rem;
+    }
+
+    .post .btn {
+        padding: 6px 14px;
+        font-size: 0.9rem;
+    }
+
+    .modal-dialog {
+        margin: 1rem;
+    }
+}
