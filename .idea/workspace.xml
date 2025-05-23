@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f3ba6ec-90f4-461f-9c59-1783aa5875f1" name="Changes" comment="error banner" />
+    <list default="true" id="0f3ba6ec-90f4-461f-9c59-1783aa5875f1" name="Changes" comment="error banner">
+      <change afterPath="$PROJECT_DIR$/FN_Web/MobileLibrary/chi-tiet-sach.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FN_Web/MobileLibrary/css/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FN_Web/MobileLibrary/danh-muc-sach.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FN_Web/MobileLibrary/gioi-thieu.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FN_Web/MobileLibrary/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FN_Web/MobileLibrary/js/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FN_Web/MobileLibrary/lien-lac.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,7 +93,7 @@
     "JavaScript Debug.index.html.executor": "Debug",
     "JavaScript Debug.showRoom.html.executor": "Debug",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
@@ -151,6 +159,7 @@
       <workItem from="1747963109705" duration="156000" />
       <workItem from="1747963276575" duration="67000" />
       <workItem from="1747963351480" duration="315000" />
+      <workItem from="1747987458579" duration="21000" />
     </task>
     <task id="LOCAL-00001" summary="error banner">
       <option name="closed" value="true" />
