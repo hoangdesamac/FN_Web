@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giới Thiệu Thư Viện Sách</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <style>
+      body {
+        background: #fff;
+      }
+      .logo-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1976d2;
+        letter-spacing: 1px;
+        transition: color 0.2s;
+      }
+      .navbar-brand:hover .logo-title {
+        color: #1251a2;
+      }
+      .intro-section {
+        background: #f5f7fa;
+        border-radius: 1rem;
+        padding: 2.5rem 2rem 2rem 2rem;
+        margin-top: 2rem;
+        box-shadow: 0 2px 16px 0 rgba(25, 118, 210, 0.07);
+      }
+      .intro-icon {
+        font-size: 3rem;
+        color: #1976d2;
+      }
+      .navbar-nav .nav-link {
+        transition: color 0.2s, background 0.2s;
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+      }
+      .navbar-nav .nav-link:hover,
+      .navbar-nav .nav-link.active {
+        background: #1976d2;
+        color: #fff !important;
+      }
+      .intro-section ul {
+        margin-bottom: 1.2rem;
+      }
+      .intro-section ul li {
+        margin-bottom: 0.5rem;
+        line-height: 1.7;
+      }
+      .intro-section hr {
+        margin: 2rem 0 1.5rem 0;
+      }
+      @media (max-width: 767.98px) {
+        .intro-section {
+          padding: 1.2rem 0.7rem;
+        }
+        .intro-icon {
+          font-size: 2.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <nav
+      class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm"
+    >
+      <div class="container">
+        <a
+          class="navbar-brand d-flex align-items-center"
+          href="index.html"
+          title="Về trang chủ"
+        >
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
+            alt="Logo"
+            width="40"
+            height="40"
+            class="me-2"
+            style="transition: transform 0.2s"
+            onmouseover="this.style.transform='scale(1.08)'"
+            onmouseout="this.style.transform='scale(1)'"
+          />
+          <span class="logo-title">Thư Viện Sách</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavbar"
+          aria-controls="mainNavbar"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="gioi-thieu.html"
+                >Giới thiệu thư viện</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#categories"
+                >Trang danh mục sách</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#book-detail"
+                >Trang chi tiết sách</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#contact">Liên lạc</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Giới thiệu -->
+    <div class="container intro-section shadow-sm">
+      <div class="row align-items-center">
+        <div class="col-md-2 text-center mb-3 mb-md-0">
+          <!-- Ảnh trên: Giới thiệu thư viện -->
+          <img
+            src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80"
+            alt="Không gian thư viện hiện đại"
+            class="img-fluid rounded shadow-sm"
+            style="max-height: 110px; object-fit: cover"
+          />
+        </div>
+        <div class="col-md-10">
+          <h2 class="mb-3">Giới Thiệu Thư Viện Sách</h2>
+          <p>
+            <strong>Thư Viện Sách</strong> là nơi kết nối tri thức, lan tỏa văn
+            hóa đọc đến cộng đồng. Chúng tôi cung cấp hàng ngàn đầu sách đa dạng
+            về thể loại: Văn học, Khoa học, Thiếu nhi, Kinh tế, Kỹ năng... đáp
+            ứng nhu cầu học tập, giải trí và phát triển bản thân cho mọi lứa
+            tuổi.
+          </p>
+          <ul>
+            <li>Kho sách phong phú, cập nhật liên tục</li>
+            <li>Không gian đọc hiện đại, thân thiện</li>
+            <li>Hỗ trợ tìm kiếm, tra cứu và mượn sách nhanh chóng</li>
+            <li>Đội ngũ nhân viên nhiệt tình, chuyên nghiệp</li>
+          </ul>
+          <p>
+            Hãy đồng hành cùng <strong>Thư Viện Sách</strong> để khám phá thế
+            giới tri thức vô tận!
+          </p>
+        </div>
+      </div>
+      <hr />
+      <div class="row align-items-center mt-4">
+        <div class="col-md-2 text-center mb-3 mb-md-0 order-md-2">
+          <img
+            src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=600&q=80"
+            alt="Đọc sách trật tự trong thư viện"
+            class="img-fluid rounded shadow-sm"
+            style="max-height: 110px; object-fit: cover"
+          />
+        </div>
+        <div class="col-md-10 order-md-1">
+          <h4 class="mb-2">Quy tắc sử dụng thư viện</h4>
+          <ul>
+            <li>
+              <strong>Tôn trọng không gian chung:</strong> Giữ trật tự, không
+              gây ồn ào, nói chuyện nhỏ nhẹ để không ảnh hưởng đến người khác.
+            </li>
+            <li>
+              <strong>Bảo quản tài sản thư viện:</strong> Không viết, vẽ, làm
+              rách, làm bẩn sách, báo, tài liệu và các thiết bị trong thư viện.
+            </li>
+            <li>
+              <strong>Giữ gìn vệ sinh:</strong> Không mang thức ăn, nước uống,
+              chất lỏng vào khu vực đọc sách và khu vực máy tính.
+            </li>
+            <li>
+              <strong>Tuân thủ quy định mượn/trả sách:</strong> Đăng ký mượn
+              sách đúng thủ tục, trả sách đúng hạn và đúng vị trí quy định. Nếu
+              làm mất hoặc hư hỏng sách, phải bồi thường theo quy định.
+            </li>
+            <li>
+              <strong>Bảo mật thông tin cá nhân:</strong> Không sử dụng tài
+              khoản thư viện của người khác, không chia sẻ thông tin đăng nhập.
+            </li>
+            <li>
+              <strong>Không sử dụng thiết bị cá nhân gây ảnh hưởng:</strong>
+              Không sử dụng điện thoại, máy tính cá nhân phát âm thanh lớn,
+              không quay phim/chụp ảnh khi chưa được phép.
+            </li>
+            <li>
+              <strong>Tôn trọng nhân viên thư viện:</strong> Tuân thủ hướng dẫn
+              của cán bộ, nhân viên thư viện; hợp tác khi được yêu cầu kiểm tra.
+            </li>
+            <li>
+              <strong
+                >Không sử dụng thư viện cho mục đích trái pháp luật:</strong
+              >
+              Không sao chép, phát tán tài liệu vi phạm bản quyền, không sử dụng
+              mạng thư viện cho các hoạt động bất hợp pháp.
+            </li>
+            <li>
+              <strong>Giữ gìn an ninh, an toàn:</strong> Không mang vật dụng
+              nguy hiểm, chất dễ cháy nổ vào thư viện; báo ngay cho nhân viên
+              khi phát hiện sự cố bất thường.
+            </li>
+            <li>
+              <strong>Trang phục lịch sự:</strong> Ăn mặc gọn gàng, phù hợp môi
+              trường học tập và nghiên cứu.
+            </li>
+          </ul>
+          <p class="mt-3">
+            Việc tuân thủ các quy tắc trên giúp xây dựng một môi trường học tập,
+            nghiên cứu văn minh, an toàn và hiệu quả cho tất cả mọi người. Xin
+            cảm ơn sự hợp tác của bạn!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white text-dark pt-5 pb-3 border-top mt-5">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-12 col-md-3">
+            <div class="mb-2 d-flex align-items-center">
+              <a href="index.html" title="Về trang chủ">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
+                  alt="Logo"
+                  width="32"
+                  height="32"
+                  class="me-2 align-middle"
+                  style="transition: transform 0.2s"
+                  onmouseover="this.style.transform='scale(1.08)'"
+                  onmouseout="this.style.transform='scale(1)'"
+                />
+              </a>
+              <span class="fw-bold fs-5">Ngân Hàng Sách</span>
+            </div>
+            <ul class="list-unstyled">
+              <li>
+                <a href="gioi-thieu.html" class="text-dark text-decoration-none"
+                  >Giới thiệu</a
+                >
+              </li>
+              <li>
+                <a
+                  href="index.html#contact"
+                  class="text-dark text-decoration-none"
+                  >Liên hệ</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-2">
+            <div class="fw-semibold mb-2">CHÍNH SÁCH</div>
+            <ul class="list-unstyled">
+              <li>
+                <a href="#" class="text-dark text-decoration-none"
+                  >Chính sách bảo hành</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-dark text-decoration-none"
+                  >Chính sách giao hàng</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-dark text-decoration-none"
+                  >Chính sách bảo mật</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="fw-semibold mb-2">THÔNG TIN</div>
+            <ul class="list-unstyled">
+              <li>
+                <a href="#" class="text-dark text-decoration-none"
+                  >Hệ thống cửa hàng</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-dark text-decoration-none"
+                  >Hướng dẫn mua hàng</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-dark text-decoration-none"
+                  >Hướng dẫn thanh toán</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-dark text-decoration-none"
+                  >Hướng dẫn trả góp</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-dark text-decoration-none"
+                  >Tra cứu địa chỉ bảo hành</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="fw-semibold mb-2">
+              TỔNG ĐÀI HỖ TRỢ <span class="fw-normal">(8:00 - 21:00)</span>
+            </div>
+            <ul class="list-unstyled mb-2">
+              <li>
+                Mua hàng:
+                <a href="tel:19005301" class="text-primary text-decoration-none"
+                  >1900.5301</a
+                >
+              </li>
+              <li>
+                Bảo hành:
+                <a href="tel:19005325" class="text-primary text-decoration-none"
+                  >1900.5325</a
+                >
+              </li>
+              <li>
+                Kiếu nại:
+                <a href="tel:18006173" class="text-primary text-decoration-none"
+                  >1800.6173</a
+                >
+              </li>
+              <li>
+                Email:
+                <a
+                  href="mailto:cskh@nganhsach.com"
+                  class="text-primary text-decoration-none"
+                  >cskh@nganhsach.com</a
+                >
+              </li>
+            </ul>
+            <div class="fw-semibold mb-2 mt-3">ĐƠN VỊ VẬN CHUYỂN</div>
+            <div class="mb-2">
+              <img
+                src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Logo-GHN-Express.png"
+                alt="GHN"
+                height="24"
+                class="me-2"
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/2/2b/EMS_logo.svg"
+                alt="EMS"
+                height="24"
+                class="me-2"
+              />
+              <img
+                src="https://cdn.gearvn.com/2020/10/logo-gvn.png"
+                alt="GVN"
+                height="24"
+                class="me-2"
+              />
+            </div>
+            <div class="fw-semibold mb-2">CÁCH THỨC THANH TOÁN</div>
+            <div>
+              <img
+                src="https://cdn.haitrieu.com/wp-content/uploads/2022/11/Logo-Visa.png"
+                alt="Visa"
+                height="24"
+                class="me-1"
+              />
+              <img
+                src="https://cdn.haitrieu.com/wp-content/uploads/2022/11/Logo-Mastercard.png"
+                alt="MasterCard"
+                height="24"
+                class="me-1"
+              />
+              <img
+                src="https://cdn.haitrieu.com/wp-content/uploads/2022/11/Logo-MoMo.png"
+                alt="MoMo"
+                height="24"
+                class="me-1"
+              />
+              <img
+                src="https://cdn.haitrieu.com/wp-content/uploads/2022/11/Logo-ZaloPay.png"
+                alt="ZaloPay"
+                height="24"
+                class="me-1"
+              />
+              <img
+                src="https://cdn.haitrieu.com/wp-content/uploads/2022/11/Logo-JCB.png"
+                alt="JCB"
+                height="24"
+                class="me-1"
+              />
+              <img
+                src="https://cdn.haitrieu.com/wp-content/uploads/2022/11/Logo-Internet-Banking.png"
+                alt="Internet Banking"
+                height="24"
+                class="me-1"
+              />
+              <img
+                src="https://cdn.haitrieu.com/wp-content/uploads/2022/11/Logo-Tien-Mat.png"
+                alt="Tiền mặt"
+                height="24"
+                class="me-1"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-4 small text-secondary">
+          &copy; 2025 Ngân Hàng Sách. All rights reserved.
+        </div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
