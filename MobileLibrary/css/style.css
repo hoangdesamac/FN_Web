@@ -1,0 +1,61 @@
+
+/* style.css - hỗ trợ responsive cho thiết bị di động */
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Giữ footer luôn dưới đáy nếu nội dung ngắn */
+html, body {
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+}
+main {
+    flex: 1;
+}
+
+/* Header và Footer */
+header {
+    background-color: #0d6efd;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+footer {
+    background-color: #e9ecef;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+/* Responsive cho mobile và tablet */
+@media (max-width: 768px) {
+    h1, h2 {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
+    .navbar-nav {
+        text-align: center;
+    }
+
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    main {
+        padding: 0.5rem;
+    }
+
+    footer p {
+        font-size: 0.9rem;
+    }
+}
