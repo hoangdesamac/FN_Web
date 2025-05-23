@@ -1,526 +1,82 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Thư Viện Sách</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <title>Trang chủ - Thư viện Sách</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <style>
-      body {
-        background: #fff;
-      }
-      .logo-title {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #1976d2;
-        letter-spacing: 1px;
-      }
-      .book-card img {
-        object-fit: cover;
-        height: 220px;
-      }
-      .book-card .card-title {
-        font-size: 1rem;
-        font-weight: 600;
-      }
-      .book-card .card-text {
-        font-size: 0.95rem;
-        color: #555;
-      }
-      .category-btn {
-        margin: 0 0.25rem 0.5rem 0;
-      }
-      .category-btn.active,
-      .category-btn:hover {
-        background: #1976d2;
-        color: #fff;
-      }
-      .search-bar {
-        max-width: 350px;
-      }
-      .navbar-nav .nav-link {
-        transition: color 0.2s, background 0.2s;
-        border-radius: 0.375rem;
-        padding: 0.5rem 1rem;
-      }
-      .navbar-nav .nav-link:hover,
-      .navbar-nav .nav-link.active {
-        background: #1976d2;
-        color: #fff !important;
-      }
-      #searchBtn {
-        transition: background 0.2s;
-      }
-      #searchBtn:hover {
-        background: #1251a2;
-      }
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #f9f9f9;
+        }
+        .logo-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1976d2;
+        }
+        .section {
+            padding: 4rem 0;
+        }
+        .section h2 {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #1976d2;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #1251a2;
+        }
     </style>
-  </head>
-  <body>
-    <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
-      <div class="container">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+    <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="#">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
-            alt="Logo"
-            width="40"
-            height="40"
-            class="me-2"
-          />
-          <span class="logo-title">Thư Viện Sách</span>
+            <img src="https://cdn-icons-png.flaticon.com/512/29/29302.png" alt="Logo" width="40" height="40" class="me-2" />
+            <span class="logo-title">Thư Viện Sách</span>
         </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainNavbar"
-          aria-controls="mainNavbar"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="mainNavbar">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" href="gioi-thieu.html">Giới thiệu thư viện</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#categories">Trang danh mục sách</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#book-detail">Trang chi tiết sách</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#contact">Liên lạc</a>
-            </li>
-          </ul>
-          <form class="d-flex ms-lg-3 mt-3 mt-lg-0 search-bar" role="search">
-            <div class="input-group">
-              <input
-                class="form-control rounded-start"
-                type="search"
-                placeholder="Tìm kiếm..."
-                aria-label="Tìm kiếm"
-                id="searchInput"
-              />
-              <button class="btn btn-primary rounded-end px-3" type="submit" id="searchBtn">
-                <i class="bi bi-search"></i>
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
-    </nav>
+    </div>
+</nav>
 
-    <!-- Category Filter -->
-    <div class="container mt-3">
-      <div class="d-flex flex-wrap align-items-center">
-        <button
-          class="btn btn-outline-primary category-btn active"
-          data-category="all"
-        >
-          Tất cả
-        </button>
-        <button
-          class="btn btn-outline-primary category-btn"
-          data-category="Văn học"
-        >
-          Văn học
-        </button>
-        <button
-          class="btn btn-outline-primary category-btn"
-          data-category="Khoa học"
-        >
-          Khoa học
-        </button>
-        <button
-          class="btn btn-outline-primary category-btn"
-          data-category="Thiếu nhi"
-        >
-          Thiếu nhi
-        </button>
-        <button
-          class="btn btn-outline-primary category-btn"
-          data-category="Kinh tế"
-        >
-          Kinh tế
-        </button>
-        <button
-          class="btn btn-outline-primary category-btn"
-          data-category="Kỹ năng"
-        >
-          Kỹ năng
-        </button>
-        <!-- Thêm các danh mục khác nếu muốn -->
-      </div>
+<!-- Hero Section -->
+<header class="section bg-light text-center">
+    <div class="container">
+        <h1 class="display-5">Chào mừng đến với Thư Viện Sách</h1>
+        <p class="lead">Nơi chia sẻ tri thức – Kết nối cộng đồng đọc sách</p>
+        <a href="danh-muc-sach.html" class="btn btn-primary mt-3">Khám phá sách</a>
     </div>
 
-    <!-- Book Grid -->
-    <div class="container mt-3" id="bookGrid">
-      <div class="row" id="bookList">
-        <!-- Sách sẽ được render ở đây bằng JS -->
-      </div>
-      <div class="text-center mt-3">
-        <button class="btn btn-outline-secondary" id="loadMoreBtn">
-          Xem Thêm
-        </button>
-      </div>
+</header>
+
+<!-- Nội dung giới thiệu ngắn -->
+<section class="section text-center">
+    <div class="container">
+        <h2>Về Thư Viện Sách</h2>
+        <p class="mt-3">
+            Chúng tôi cung cấp hàng ngàn đầu sách ở nhiều lĩnh vực khác nhau: văn học, khoa học, kỹ năng, thiếu nhi...
+            Với không gian thân thiện, giao diện trực quan và hỗ trợ tìm kiếm mạnh mẽ, bạn sẽ dễ dàng tiếp cận tri thức mỗi ngày.
+        </p>
+        <a href="gioi-thieu.html" class="btn btn-outline-primary mt-3">Tìm hiểu thêm</a>
     </div>
+</section>
 
-    <!-- Footer -->
-    <footer class="bg-white text-dark pt-5 pb-3 border-top mt-5">
-      <div class="container">
-        <div class="row gy-4">
-          <div class="col-12 col-md-3">
-            <div class="mb-2 d-flex align-items-center">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/29/29302.png"
-                alt="Logo"
-                width="32"
-                height="32"
-                class="me-2 align-middle"
-              />
-              <span class="fw-bold fs-5">Ngân Hàng Sách</span>
-            </div>
-            <ul class="list-unstyled">
-              <li>
-                <a href="#about" class="text-dark text-decoration-none"
-                  >Giới thiệu</a
-                >
-              </li>
-              <li>
-                <a href="#contact" class="text-dark text-decoration-none"
-                  >Liên hệ</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div class="col-12 col-md-2">
-            <div class="fw-semibold mb-2">CHÍNH SÁCH</div>
-            <ul class="list-unstyled">
-              <li>
-                <a href="#" class="text-dark text-decoration-none"
-                  >Chính sách bảo hành</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-dark text-decoration-none"
-                  >Chính sách giao hàng</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-dark text-decoration-none"
-                  >Chính sách bảo mật</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div class="col-12 col-md-3">
-            <div class="fw-semibold mb-2">THÔNG TIN</div>
-            <ul class="list-unstyled">
-              <li>
-                <a href="#" class="text-dark text-decoration-none"
-                  >Hệ thống cửa hàng</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-dark text-decoration-none"
-                  >Hướng dẫn mua hàng</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-dark text-decoration-none"
-                  >Hướng dẫn thanh toán</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-dark text-decoration-none"
-                  >Hướng dẫn trả góp</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-dark text-decoration-none"
-                  >Tra cứu địa chỉ bảo hành</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div class="col-12 col-md-4">
-            <div class="fw-semibold mb-2">
-              TỔNG ĐÀI HỖ TRỢ <span class="fw-normal">(8:00 - 21:00)</span>
-            </div>
-            <ul class="list-unstyled mb-2">
-              <li>
-                Mua hàng:
-                <a href="tel:19005301" class="text-primary text-decoration-none"
-                  >1900.5301</a
-                >
-              </li>
-              <li>
-                Bảo hành:
-                <a href="tel:19005325" class="text-primary text-decoration-none"
-                  >1900.5325</a
-                >
-              </li>
-              <li>
-                Kiếu nại:
-                <a href="tel:18006173" class="text-primary text-decoration-none"
-                  >1800.6173</a
-                >
-              </li>
-              <li>
-                Email:
-                <a
-                  href="mailto:cskh@nganhsach.com"
-                  class="text-primary text-decoration-none"
-                  >cskh@nganhsach.com</a
-                >
-              </li>
-            </ul>
-            <div class="fw-semibold mb-2 mt-3">ĐƠN VỊ VẬN CHUYỂN</div>
-            <div class="mb-2">
-              <img
-                src="https://play-lh.googleusercontent.com/R6Kzs8sI4-yEqn-o1TVl70l7Adv3M3OHdvT5ZI1knjAfih7zM50XU3UZX0UJy1G2DnM"
-                alt="GHN"
-                height="24"
-                class="me-2"
-              />
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsyHalAImTxPBH_iLfkVO2lJk8wenc-aH_ag&s"
-                alt="EMS"
-                height="24"
-                class="me-2"
-              />
-              <img
-                src="https://scontent.fdad1-2.fna.fbcdn.net/v/t39.30808-6/275607801_110599234909673_7583102137226743807_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=nbmqtTG5U6YQ7kNvwGKZdyj&_nc_oc=AdnuUhwiXy1CMuaHhtUSs-OLVeaizpiVAKETRdCgfntlLWiNlK7PmkR5JnJPXfFh-uw&_nc_zt=23&_nc_ht=scontent.fdad1-2.fna&_nc_gid=KC995gbSILgNSIJeqjIzXA&oh=00_AfLgHna_DEOXdi61oSFPDfaIIluoyu9GWvLi4Rh2-4AFHQ&oe=6835F657"
-                alt="GVN"
-                height="24"
-                class="me-2"
-              />
-            </div>
-            <div class="fw-semibold mb-2">CÁCH THỨC THANH TOÁN</div>
-            <div>
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/1/16/Former_Visa_%28company%29_logo.svg"
-                alt="Visa"
-                height="24"
-                class="me-1"
-              />
-              <img
-                src="https://news.appotapay.com/wp-content/uploads/2024/03/mastercard-va-visa-co-gi-khac-nhau-nen-lam-visa-hay-mastercard-1-600x428.jpg"
-                alt="MasterCard"
-                height="24"
-                class="me-1"
-              />
-              <img
-                src="https://play-lh.googleusercontent.com/uCtnppeJ9ENYdJaSL5av-ZL1ZM1f3b35u9k8EOEjK3ZdyG509_2osbXGH5qzXVmoFv0"
-                alt="MoMo"
-                height="24"
-                class="me-1"
-              />
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTlp4qW2M8xPofmuZHwEfGi9mNMWUG0zs53A&s"
-                alt="ZaloPay"
-                height="24"
-                class="me-1"
-              />
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSgber4MngQY983WF6ItDL0bzmmImENuVrPw&s"
-                alt="JCB"
-                height="24"
-                class="me-1"
-              />
-              <img
-                src="https://bidv.com.vn/wps/wcm/connect/e97287cc-fadd-4923-937e-291d8b73a852/1/e-Banking-cho-phep-nguoi-dung-thuc-hien-giao-dich-online.jpeg?MOD=AJPERES&CVID="
-                alt="Internet Banking"
-                height="24"
-                class="me-1"
-              />
-              <img
-                src="https://e7.pngegg.com/pngimages/178/28/png-clipart-computer-icons-money-bag-bank-cash-angle-hand-thumbnail.png"
-                alt="Tiền mặt"
-                height="24"
-                class="me-1"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="text-center mt-4 small text-secondary">
-          &copy; 2025 Ngân Hàng Sách. All rights reserved.
-        </div>
-      </div>
-    </footer>
+<!-- Footer -->
+<footer class="bg-white text-center py-4 border-top">
+    <div class="container">
+        <p class="mb-0">&copy; 2025 Thư viện Sách. Mọi quyền được bảo lưu.</p>
+    </div>
+</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      // Dữ liệu mẫu cho sách
-      const books = [
-        {
-          title: "Thiên Long Bát Bộ",
-          author: "Kim Dung",
-          category: "Văn học",
-          img: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630546779i/22470055.jpg",
-          desc: "Một Lương đại anh hùng kiệt xuất, dấn thân vào giang hồ đầy phong ba...",
-        },
-        {
-          title: "Tiếu Ngạo Giang Hồ",
-          author: "Kim Dung",
-          category: "Văn học",
-          img: "https://isach.info/images/story/cover/tieu_ngao_giang_ho__kim_dung.jpg",
-          desc: "Câu chuyện về Lệnh Hồ Xung và những biến cố trong giang hồ.",
-        },
-        {
-          title: "Ai Lấy Miếng Pho Mát Của Tôi?",
-          author: "Spencer Johnson",
-          category: "Kỹ năng",
-          img: "https://salt.tikicdn.com/cache/750x750/ts/product/b3/63/e6/f0e0e4e15eb6ff840218fe096b4d9b13.jpg.webp",
-          desc: "Bí quyết thích nghi với thay đổi trong công việc và cuộc sống.",
-        },
-        {
-          title: "Hiệp Khách Hành",
-          author: "Kim Dung",
-          category: "Văn học",
-          img: "https://thegioivanhoc.com/wp-content/uploads/2024/02/hiep-khach-hanh.png",
-          desc: "Cách đây hàng trăm năm, hai anh em sinh đôi bị chia cắt...",
-        },
-        {
-          title: "Bản Chất Của Dối Trá",
-          author: "Dan Ariely",
-          category: "Kinh tế",
-          img: "https://bizweb.dktcdn.net/100/180/408/products/ban-chat-cua-doi-tra.jpg?v=1665478245710",
-          desc: "Khám phá những lý do khiến con người không trung thực.",
-        },
-        {
-          title: "7 Nguyên Tắc Bất Biến Để Xây Dựng Doanh Nghiệp Nhỏ",
-          author: "Michael E. Gerber",
-          category: "Kinh tế",
-          img: "https://bizweb.dktcdn.net/thumb/grande/100/197/269/products/7-nguyen-tac-bat-bien-de-xay-dung-doanh-nghiep-nho-01.jpg?v=1533807262510",
-          desc: "7 nguyên tắc để phát triển doanh nghiệp nhỏ thành công.",
-        },
-        {
-          title: "Lục Tiểu Phụng",
-          author: "Cổ Long",
-          category: "Văn học",
-          img: "https://thuviensach.net/_next/image?url=https%3A%2F%2Fapi.thuviensach.net%2Fuploads%2Fimages%2FScreenshot%202024-08-14%20at%2011.07.581723608487193.png&w=1920&q=80",
-          desc: "Lục Tiểu Phụng nổi tiếng với tài trí, gan góc và hài hước.",
-        },
-        {
-          title: "Thư Kiếm Ân Cừu Lục",
-          author: "Kim Dung",
-          category: "Văn học",
-          img: "https://docsach24.co/filemanager/data-images/Ki%E1%BA%BFm%20Hi%E1%BB%87p%20-%20Ti%C3%AAn%20Hi%E1%BB%87p/thukiemancuuluc.JPG",
-          desc: "Thăng sau âm mưu của triều đình và những bí ẩn giang hồ.",
-        },
-        // Sách Khoa học
-        {
-          title: "Vũ Trụ Trong Vỏ Hạt Dẻ",
-          author: "Stephen Hawking",
-          category: "Khoa học",
-          img: "https://www.nxbtre.com.vn/Images/Book/nxbtre_thumb_26112017_041133.jpg",
-          desc: "Khám phá những bí ẩn của vũ trụ qua ngòi bút của nhà vật lý thiên tài.",
-        },
-        {
-          title: "Khám Phá Khoa Học Kỳ Thú",
-          author: "Nhiều tác giả",
-          category: "Khoa học",
-          img: "https://cdn1.fahasa.com/media/catalog/product/q/u/quiz_khoa_hoc_ki_thu_kham_pha_nao_bo.jpg",
-          desc: "Những thí nghiệm và kiến thức khoa học thú vị cho mọi lứa tuổi.",
-        },
-        // Sách Thiếu nhi
-        {
-          title: "Bách Khoa Tri Thức Cho Trẻ Em",
-          author: "Nhiều tác giả",
-          category: "Thiếu nhi",
-          img: "https://cdn1.fahasa.com/media/catalog/product/8/9/8935212358583_1.jpg",
-          desc: "Cuốn sách tổng hợp kiến thức khoa học, lịch sử, địa lý dành cho thiếu nhi.",
-        },
-        {
-          title: "Trái Đất Quanh Ta",
-          author: "Nhiều tác giả",
-          category: "Thiếu nhi",
-          img: "https://cdn1.fahasa.com/media/catalog/product/8/9/8934974185079.jpg",
-          desc: "Giúp trẻ em hiểu về hành tinh xanh và môi trường sống xung quanh.",
-        },
-      ];
-
-      let booksPerPage = 8;
-      let currentPage = 1;
-      let currentCategory = "all";
-      let currentKeyword = "";
-
-      function renderBooks() {
-        let filtered = books.filter(
-          (book) =>
-            (currentCategory === "all" || book.category === currentCategory) &&
-            (book.title.toLowerCase().includes(currentKeyword) ||
-              book.author.toLowerCase().includes(currentKeyword))
-        );
-        let start = 0;
-        let end = booksPerPage * currentPage;
-        let showBooks = filtered.slice(0, end);
-
-        let html = showBooks
-          .map(
-            (book) => `
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                    <div class="card h-100 book-card">
-                        <img src="${book.img}" class="card-img-top" alt="${book.title}">
-                        <div class="card-body">
-                            <div class="card-title">${book.title}</div>
-                            <div class="card-text">${book.desc}</div>
-                        </div>
-                    </div>
-                </div>
-            `
-          )
-          .join("");
-        $("#bookList").html(html);
-
-        // Ẩn nút "Xem Thêm" nếu đã hết sách
-        if (showBooks.length >= filtered.length) {
-          $("#loadMoreBtn").hide();
-        } else {
-          $("#loadMoreBtn").show();
-        }
-      }
-
-      $(function () {
-        renderBooks();
-
-        // Bộ lọc danh mục
-        $(".category-btn").click(function () {
-          $(".category-btn").removeClass("active");
-          $(this).addClass("active");
-          currentCategory = $(this).data("category");
-          currentPage = 1;
-          renderBooks();
-        });
-
-        // Tìm kiếm
-        $("form").submit(function (e) {
-          e.preventDefault();
-          currentKeyword = $("#searchInput").val().toLowerCase();
-          currentPage = 1;
-          renderBooks();
-        });
-
-        // Xem thêm
-        $("#loadMoreBtn").click(function () {
-          currentPage++;
-          renderBooks();
-        });
-      });
-    </script>
-  </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
-
