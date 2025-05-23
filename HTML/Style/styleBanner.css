@@ -1,77 +1,150 @@
-/* styleBanner.css */
-
-/* Reset và cấu trúc cơ bản */
-body {
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
     font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
 }
 
-/* Toàn bộ vùng Swiper banner */
-.mySwiper {
-    width: 100%;
-    height: 600px;
-    position: relative;
-    background: linear-gradient(135deg, #0f1438, #3b3acc);
+.banner-container {
+    display: grid;
+    grid-template-areas:
+        "left-top main-banner right-top"
+        "left-middle main-banner right-middle"
+        "left-bottom main-banner right-bottom"
+        "left-bottom bottom-middle-left bottom-middle-right right-bottom";
+    grid-template-columns: 1.75fr 2fr 2fr 1.75fr; /* 1 phần trái, 4 phần trung tâm, 1 phần phải */
+    grid-template-rows: 190px 190px 190px; /* Tất cả các hàng có chiều cao 350px */
+    gap: 20px; /* Khoảng cách giữa các ô grid */
+    padding-left: 60px;
+    padding-right: 35px;
+    max-width: 100%;
+    margin: 0 auto;
+    align-items: start;
+}
+
+.banner {
+    border-radius: 8px;
     overflow: hidden;
+    background-color: #f5f5f5;
 }
 
-/* Slide wrapper */
-.swiper-wrapper {
+.small-banner {
+    height: 100%; /* Sử dụng chiều cao của hàng grid (350px) */
+    width: 300px;
+}
+
+.left-top {
+    grid-area: left-top;
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+}
+
+.left-middle {
+    grid-area: left-middle;
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+
+.left-bottom {
+    grid-area: left-bottom;
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+}
+
+.main-banner {
+    grid-area: main-banner;
+    position: relative;
+    overflow: hidden;
+    height: 400px; /* Chiều cao cố định cho Mainbanner */
+    width: 685px;
+    grid-row: 1 / 2;
+    grid-column: 2 / 6;
+}
+
+.right-top {
+    grid-area: right-top;
+    grid-row: 1 / 2;
+    grid-column: 4 / 5;
+}
+
+.right-middle {
+    grid-area: right-middle;
+    grid-row: 2 / 3;
+    grid-column: 4 / 5;
+}
+
+.right-bottom {
+    grid-area: right-bottom;
+    grid-row: 3 / 4;
+    grid-column: 4 / 5;
+}
+
+.bottom-middle-left {
+    grid-area: bottom-middle-left;
+    margin-right: 15px; /* Khoảng cách giữa bottom-middle-left và bottom-middle-right */
+    width: 310px; /* Cố định chiều rộng */
+    height: 190px;
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+}
+
+.bottom-middle-right {
+    grid-area: bottom-middle-right;
+    margin-left: 20px; /* Khoảng cách giữa bottom-middle-right và left-bottom/right-bottom */
+    width: 310px; /* Cố định chiều rộng */
+    height: 190px;
+    grid-row: 3 / 4;
+    grid-column: 3 / 4;
+}
+
+.small-banner img {
     width: 100%;
     height: 100%;
 }
 
-/* Mỗi slide */
-.swiper-slide {
+.slideshow {
+    width: 100%;
+    height: 100%;
     position: relative;
-    background-color: #000;
 }
 
-/* Ảnh trong slide */
-.swiper-slide img {
-    width: auto;
-    height: 100%;
-    max-width: none;
+.slide {
+    width: 685px; /* Khớp với width của .main-banner */
+    height: 400px;
+    position: absolute;
+    transition: transform 0.5s ease-in-out;
+}
+
+.nav-button {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    object-fit: cover;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 5px;
+    z-index: 10;
 }
 
-/* Overlay chữ mô tả trên slide */
-.slide-overlay {
-    position: absolute;
-    bottom: 40px;
-    left: 50px;
-    color: #fff;
-    font-family: sans-serif;
+.prev-button {
+    left: 10px;
 }
 
-.slide-overlay h2 {
-    margin: 0;
-    font-size: 2.5rem;
-    text-transform: uppercase;
+.next-button {
+    right: 10px;
 }
 
-.slide-overlay p {
-    margin-top: 0.5rem;
-    font-size: 1.25rem;
+.nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
-/* Nút điều hướng (next/prev) */
-.swiper-button-next,
-.swiper-button-prev {
-    color: #fff;
-    width: 50px;
-    height: 50px;
-}
-
-/* Dấu chấm chuyển slide (pagination bullets) */
-.swiper-pagination-bullet {
-    background: rgba(255, 255, 255, 0.7);
-}
-
-.swiper-pagination-bullet-active {
-    background: #fff;
+.nav-button i {
+    font-size: 15px;
 }

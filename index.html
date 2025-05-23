@@ -5,18 +5,35 @@
     <title>Web3TD - Trang chủ</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.2/lottie.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="HTML/Style/style.css">
-    <link rel="stylesheet" href="HTML/Style/styleBanner.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        #header-container, #main-container {
+            width: 100%;
+        }
+
+        #banner-container {
+            padding-top: 30px;
+        }
+    </style>
+    <script src="Script/js_ShowAutoScroll.js"></script>
+    <script src="Script/js_MenuClick.js"></script>
+    <script src="Script/js_ShowPopupAuth.js"></script>
+    <script src="Script/js_Checkout.js" defer></script>
+    <script src="Script/js_CartPopup.js" defer></script>
 </head>
 <body>
-
 <!-- Header -->
 <div id="header-container"></div>
-<!-- Swiper -->
-<div id="swiper" class="mySwiper"></div>
+
+<!-- Banner -->
+<div id="banner-container"></div>
 
 <!-- Main Content -->
 <div id="main-container"></div>
@@ -24,52 +41,7 @@
 <!-- Footer -->
 <div id="footer-container"></div>
 
-<!-- Nút bấm mở chat -->
-<button class="chat-toggle-btn" onclick="openChatWindow()">
-    <i class='bx bx-message-square-detail'></i>
-</button>
 
-<!-- Cửa sổ chat -->
-<div class="chat-window" id="chatWindow">
-    <div class="chat-header">
-        <img src="https://via.placeholder.com/30x30" alt="GearVN Logo" class="logo">
-        <h3>GearVN - Chat với chúng tôi</h3>
-        <button class="minimize-btn" onclick="minimizeChatWindow()"><i class='bx bx-minus'></i></button>
-        <button class="close-btn" onclick="closeChatWindow()">X</button>
-        <button class="history-tab" onclick="toggleHistory()">Lịch sử</button>
-        <button class="language-toggle" onclick="toggleLanguage()">VN | EN</button>
-    </div>
-    <div class="chat-body" id="chatBody">
-        <div class="message bot-message">
-            <p id="welcomeMessage"><strong>ĐÙNG TÚ CHỌN - Ế GEARVN LO!</strong></p>
-            <p>Phần mềm bạn cần để làm gì? Mình giúp bạn chọn cho chuẩn nhé!</p>
-            <div class="quick-replies">
-                <button class="quick-reply-btn" onclick="sendQuickReply('Game')">Game</button>
-                <button class="quick-reply-btn" onclick="sendQuickReply('Đồ họa')">Đồ họa</button>
-                <button class="quick-reply-btn" onclick="sendQuickReply('Học tập')">Học tập</button>
-                <button class="quick-reply-btn" onclick="sendQuickReply('Làm việc cơ bản')">Làm việc cơ bản</button>
-            </div>
-        </div>
-        <div class="message bot-message">
-            <p>TIN NGAY để được tư vấn FREE & chuẩn từ GearVN nhé!</p>
-            <img src="https://via.placeholder.com/100x100" alt="Sản phẩm gợi ý" class="product-image">
-        </div>
-        <div class="promo-banner">
-            <div class="promo-carousel" id="promoCarousel">
-                <div class="promo-slide">Giảm 10% cho đơn hàng đầu tiên</div>
-                <div class="promo-slide">Miễn phí vận chuyển cho đơn từ 1 triệu</div>
-            </div>
-            <button class="promo-close" onclick="hidePromo()">X</button>
-        </div>
-    </div>
-    <div class="chat-footer">
-        <input type="text" id="chatInput" placeholder="Nhập nội dung tư vấn..." onfocus="handleKeyboardFocus()" onblur="handleKeyboardBlur()" oninput="searchProduct()">
-        <button class="send-btn" onclick="sendMessage()">Gửi</button>
-    </div>
-    <div class="history-content" id="historyContent">
-        <!-- Nội dung lịch sử sẽ được thêm động qua JavaScript -->
-    </div>
-</div>
 
 <script>
     async function loadPagePart(url, containerId, callback = null) {
@@ -104,6 +76,7 @@
         }
     }
 
+    // Load header
     loadPagePart("HTML/Layout/header.html", "header-container", () => {
         const checkDomReady = () => {
             const menuToggle = document.getElementById('menuToggle');
@@ -123,243 +96,35 @@
         checkDomReady();
     });
 
-    loadPagePart("HTML/Content/banner.html", "swiper", () => {
-        const waitForSwiperContent = () => {
-            const swiperEl = document.querySelector('.mySwiper');
-            const wrapper = swiperEl?.querySelector('.swiper-wrapper');
-            const slides = swiperEl?.querySelectorAll('.swiper-slide');
-
-            if (!swiperEl || !wrapper || !slides || slides.length === 0) {
-                setTimeout(waitForSwiperContent, 50);
-                return;
+    // Load banner
+    loadPagePart("HTML/Content/banner.html", "banner-container", () => {
+        // Đảm bảo js_BannerDynamic.js được load và gọi initializeSlideshow
+        const checkBannerScripts = () => {
+            if (typeof initializeSlideshow === 'function') {
+                initializeSlideshow();
+            } else {
+                const bannerScript = document.createElement('script');
+                bannerScript.src = "/Script/js_BannerDynamic.js";
+                bannerScript.defer = true;
+                bannerScript.onload = () => {
+                    if (typeof initializeSlideshow === 'function') {
+                        initializeSlideshow();
+                    }
+                };
+                document.body.appendChild(bannerScript);
             }
-
-            requestAnimationFrame(() => {
-                new Swiper(swiperEl, {
-                    loop: true,
-                    effect: 'fade',
-                    autoplay: { delay: 4000, disableOnInteraction: false },
-                    pagination: { el: '.swiper-pagination', clickable: true },
-                    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-                });
-            });
         };
-        waitForSwiperContent();
+        checkBannerScripts();
     });
 
+    // Load main content
     loadPagePart("HTML/Layout/mainContent.html", "main-container", () => {
         if (typeof initializeAutoScroll === 'function') initializeAutoScroll();
         if (typeof initializeCartSystem === 'function') setTimeout(initializeCartSystem, 300);
     });
 
+    // Load footer
     loadPagePart("HTML/Layout/footer.html", "footer-container");
-
-    function closeChatWindow() {
-        const chatWindow = document.getElementById('chatWindow');
-        chatWindow.classList.remove('show');
-        chatWindow.classList.add('hide');
-        setTimeout(() => {
-            chatWindow.style.display = 'none';
-            sessionStorage.setItem('chatWindowClosed', 'true');
-        }, 300);
-    }
-
-    function openChatWindow() {
-        const chatWindow = document.getElementById('chatWindow');
-        chatWindow.style.display = 'flex';
-        chatWindow.classList.remove('hide');
-        chatWindow.classList.add('show');
-        sessionStorage.removeItem('chatWindowClosed');
-    }
-
-    function minimizeChatWindow() {
-        const chatWindow = document.getElementById('chatWindow');
-        chatWindow.style.height = '60px';
-        chatWindow.style.padding = '0';
-        document.querySelector('.chat-body').style.display = 'none';
-        document.querySelector('.chat-footer').style.display = 'none';
-    }
-
-    function restoreChatWindow() {
-        const chatWindow = document.getElementById('chatWindow');
-        chatWindow.style.height = '480px';
-        chatWindow.style.padding = '15px';
-        document.querySelector('.chat-body').style.display = 'block';
-        document.querySelector('.chat-footer').style.display = 'flex';
-    }
-
-    function sendMessage() {
-        const chatInput = document.getElementById('chatInput');
-        const chatBody = document.getElementById('chatBody');
-
-        if (chatInput.value.trim() !== '') {
-            const userMessage = document.createElement('div');
-            userMessage.classList.add('message', 'user-message');
-            userMessage.innerHTML = `<p>${chatInput.value}</p>`;
-            chatBody.appendChild(userMessage);
-            chatBody.scrollTop = chatBody.scrollHeight;
-            chatInput.value = '';
-            resetAutoReplyTimeout();
-        }
-    }
-
-    function sendQuickReply(reply) {
-        const chatBody = document.getElementById('chatBody');
-        const userMessage = document.createElement('div');
-        userMessage.classList.add('message', 'user-message');
-        userMessage.innerHTML = `<p>${reply}</p>`;
-        chatBody.appendChild(userMessage);
-        chatBody.scrollTop = chatBody.scrollHeight;
-
-        setTimeout(() => {
-            const botMessage = document.createElement('div');
-            botMessage.classList.add('message', 'bot-message');
-            botMessage.innerHTML = `<p>Được rồi! Tôi sẽ gợi ý sản phẩm phù hợp với ${reply}. Vui lòng chờ nhé!</p>`;
-            chatBody.appendChild(botMessage);
-            chatBody.scrollTop = chatBody.scrollHeight;
-        }, 500);
-        resetAutoReplyTimeout();
-    }
-
-    function toggleHistory() {
-        const historyContent = document.getElementById('historyContent');
-        const chatBody = document.getElementById('chatBody');
-        const isActive = historyContent.classList.contains('active');
-
-        if (isActive) {
-            historyContent.classList.remove('active');
-            chatBody.style.display = 'block';
-        } else {
-            historyContent.classList.add('active');
-            chatBody.style.display = 'none';
-            historyContent.innerHTML = '<p>11:38 PM - Bạn: Game</p><p>11:39 PM - Bot: Được rồi! Tôi sẽ gợi ý...</p>';
-        }
-    }
-
-    function handleKeyboardFocus() {
-        const chatWindow = document.getElementById('chatWindow');
-        chatWindow.classList.add('keyboard-active');
-    }
-
-    function handleKeyboardBlur() {
-        const chatWindow = document.getElementById('chatWindow');
-        chatWindow.classList.remove('keyboard-active');
-    }
-
-    function hidePromo() {
-        const promoBanner = document.querySelector('.promo-banner');
-        promoBanner.style.display = 'none';
-    }
-
-    function updateWelcomeMessage() {
-        const welcomeMessage = document.getElementById('welcomeMessage');
-        const hour = new Date().getHours();
-        let greeting = '';
-        if (hour < 12) greeting = 'Chào buổi sáng';
-        else if (hour < 17) greeting = 'Chào buổi chiều';
-        else greeting = 'Chào buổi tối';
-        welcomeMessage.textContent = `${greeting}! ĐÙNG TÚ CHỌN - Ế GEARVN LO!`;
-    }
-
-    function startPromoCarousel() {
-        const promoCarousel = document.getElementById('promoCarousel');
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.promo-slide');
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % slides.length;
-            promoCarousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-        }, 5000);
-    }
-
-    function toggleLanguage() {
-        const languageToggle = document.querySelector('.language-toggle');
-        const chatBody = document.getElementById('chatBody');
-        const isEnglish = languageToggle.textContent.includes('EN');
-
-        if (isEnglish) {
-            languageToggle.textContent = 'VN | EN';
-            languageToggle.classList.remove('active');
-            updateWelcomeMessage(); // Chuyển về Tiếng Việt
-            chatBody.querySelectorAll('.message').forEach(msg => {
-                if (msg.querySelector('p')) msg.querySelector('p').textContent = msg.querySelector('p').textContent.replace(/Good evening|Good morning|Good afternoon/g, match => {
-                    return { 'Good evening': 'Chào buổi tối', 'Good morning': 'Chào buổi sáng', 'Good afternoon': 'Chào buổi chiều' }[match];
-                });
-            });
-        } else {
-            languageToggle.textContent = 'EN | VN';
-            languageToggle.classList.add('active');
-            const hour = new Date().getHours();
-            let greeting = '';
-            if (hour < 12) greeting = 'Good morning';
-            else if (hour < 17) greeting = 'Good afternoon';
-            else greeting = 'Good evening';
-            document.getElementById('welcomeMessage').textContent = `${greeting}! RIGHT CHOICE - LEAVE IT TO GEARVN!`;
-            chatBody.querySelectorAll('.message').forEach(msg => {
-                if (msg.querySelector('p')) msg.querySelector('p').textContent = msg.querySelector('p').textContent.replace(/Chào buổi tối|Chào buổi sáng|Chào buổi chiều/g, match => {
-                    return { 'Chào buổi tối': 'Good evening', 'Chào buổi sáng': 'Good morning', 'Chào buổi chiều': 'Good afternoon' }[match];
-                }).replace('ĐÙNG TÚ CHỌN - Ế GEARVN LO!', 'RIGHT CHOICE - LEAVE IT TO GEARVN!');
-            });
-        }
-    }
-
-    const products = {
-        'chuột logitech g102': { name: 'Chuột Logitech G102', price: '450,000 VNĐ', image: 'Images/logitechg309.jpg1' },
-        'bàn phím mechanical': { name: 'Bàn phím Mechanical GearVN', price: '1,200,000 VNĐ', image: 'https://via.placeholder.com/80x80' }
-    };
-
-    function searchProduct() {
-        const chatInput = document.getElementById('chatInput');
-        const chatBody = document.getElementById('chatBody');
-        const query = chatInput.value.toLowerCase().trim();
-
-        if (products[query]) {
-            const suggestion = document.createElement('div');
-            suggestion.classList.add('message', 'bot-message', 'product-suggestion');
-            suggestion.innerHTML = `
-                <p>Đề xuất sản phẩm: ${products[query].name}</p>
-                <p>Giá: ${products[query].price}</p>
-                <img src="${products[query].image}" alt="${products[query].name}" class="product-image" style="max-width: 80px;">
-                <button class="add-to-cart-btn-suggestion" onclick="addToCart('${products[query].name}')">Thêm vào giỏ</button>
-            `;
-            chatBody.appendChild(suggestion);
-            chatBody.scrollTop = chatBody.scrollHeight;
-            resetAutoReplyTimeout();
-        }
-    }
-
-    function addToCart(productName) {
-        alert(`${productName} đã được thêm vào giỏ hàng!`);
-        // Logic thêm vào giỏ hàng thực tế có thể được tích hợp ở đây
-    }
-
-    let autoReplyTimeout;
-
-    function resetAutoReplyTimeout() {
-        clearTimeout(autoReplyTimeout);
-        autoReplyTimeout = setTimeout(() => {
-            const chatBody = document.getElementById('chatBody');
-            const reminder = document.createElement('div');
-            reminder.classList.add('message', 'bot-message');
-            reminder.innerHTML = '<p>Bạn cần giúp gì thêm không?</p>';
-            chatBody.appendChild(reminder);
-            chatBody.scrollTop = chatBody.scrollHeight;
-        }, 30000);
-    }
-
-    window.onload = () => {
-        if (sessionStorage.getItem('chatWindowClosed') === 'true') {
-            const chatWindow = document.getElementById('chatWindow');
-            chatWindow.style.display = 'none';
-        }
-        document.querySelector('.chat-toggle-btn').addEventListener('click', () => {
-            if (document.getElementById('chatWindow').style.height === '60px') {
-                restoreChatWindow();
-            }
-        });
-        updateWelcomeMessage();
-        startPromoCarousel();
-        resetAutoReplyTimeout(); // Bắt đầu timeout khi tải trang
-    };
 </script>
 </body>
 </html>

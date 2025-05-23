@@ -1,31 +1,68 @@
-<!-- banner.html -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-<div class="swiper mySwiper">
-  <div class="swiper-wrapper">
-    <div class="swiper-slide">
-      <img src="https://file.hstatic.net/200000722513/file/thang_04_pc_tang_man_banner_web_slider_800x400.jpg" alt="Banner 1">
-      <div class="slide-overlay">
-        <h2>Mua PC GVN × MSI</h2>
-        <p>Tặng màn OLED 240Hz</p>
-      </div>
-    </div>
-    <div class="swiper-slide">
-      <img src="https://file.hstatic.net/200000722513/file/thang_04_laptop_gaming_banner_web_slider_800x400.jpg" alt="Banner 2">
-      <div class="slide-overlay">
-        <h2>Khuyến mãi Tháng 4</h2>
-        <p>Giảm giá lên đến 30%</p>
-      </div>
-    </div>
-    <div class="swiper-slide">
-      <img src="https://file.hstatic.net/200000722513/file/asus_zenbook_a14_800x400.png" alt="Banner 3">
-      <div class="slide-overlay">
-        <h2>Asus ZenBook A14</h2>
-        <p>Siêu mỏng – Siêu nhẹ</p>
-      </div>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GearVN Banner</title>
+  <link rel="stylesheet" href="/HTML/Style/styleBanner.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<div class="banner-container">
+  <!-- Left Top Banner -->
+  <div class="banner small-banner left-top">
+    <img src="/Images/around1.png" alt="Around 1">
   </div>
-  <div class="swiper-button-next"></div>
-  <div class="swiper-button-prev"></div>
-  <div class="swiper-pagination"></div>
+
+  <!-- Left Middle Banner -->
+  <div class="banner small-banner left-middle">
+    <img src="/Images/around2.png" alt="Around 2">
+  </div>
+
+  <!-- Left Bottom Banner (phần dưới cùng) -->
+  <div class="banner small-banner left-bottom">
+    <img src="/Images/around3.png" alt="Around 3">
+  </div>
+
+  <!-- Main Banner -->
+  <div class="banner main-banner">
+    <div class="slideshow">
+      <img src="/Images/mbanner1.png" alt="Main Banner 1" class="slide">
+      <img src="/Images/mbanner2.png" alt="Main Banner 2" class="slide">
+      <img src="/Images/mbanner3.png" alt="Main Banner 3" class="slide">
+      <img src="/Images/mbanner4.png" alt="Main Banner 4" class="slide">
+      <img src="/Images/mbanner5.png" alt="Main Banner 5" class="slide">
+    </div>
+    <button class="nav-button prev-button"><i class="fas fa-chevron-left"></i></button>
+    <button class="nav-button next-button"><i class="fas fa-chevron-right"></i></button>
+  </div>
+
+  <!-- Right Top Banner -->
+  <div class="banner small-banner right-top">
+    <img src="/Images/around4.png" alt="Around 4">
+  </div>
+
+  <!-- Right Middle Banner -->
+  <div class="banner small-banner right-middle">
+    <img src="/Images/around5.png" alt="Around 5">
+  </div>
+
+  <!-- Right Bottom Banner (phần dưới cùng) -->
+  <div class="banner small-banner right-bottom">
+    <img src="/Images/around6.png" alt="Around 6">
+  </div>
+
+  <!-- Bottom Middle Left Banner -->
+  <div class="banner small-banner bottom-middle-left">
+    <img src="/Images/around7.png" alt="Around 7">
+  </div>
+
+  <!-- Bottom Middle Right Banner -->
+  <div class="banner small-banner bottom-middle-right">
+    <img src="/Images/around8.png" alt="Around 8">
+  </div>
 </div>
+
+<script src="/Script/js_BannerDynamic.js"></script>
+</body>
+</html>

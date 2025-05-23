@@ -1,205 +1,433 @@
-
-/* Nội dung CSS từ stylechatmodule.css */
-.chat-module {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #E30019;
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    display: none;
-    animation: slideUp 0.5s ease-in-out;
-    width: 300px;
-    z-index: 1000;
-}
-
-.chat-module h3 {
-    margin: 0 0 10px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.chat-module p {
-    margin: 0 0 15px;
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-.chat-module .chat-btn {
-    background-color: #003087;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: opacity 0.3s;
-}
-
-.chat-module .chat-btn:hover {
-    opacity: 0.9;
-}
-
-.chat-module .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-}
-
+/* Thiết kế lại module chat */
 .chat-window {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 350px;
-    height: 450px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 450px;
+    height: 480px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
     display: none;
     flex-direction: column;
-    z-index: 1000;
+    z-index: 1002; /* Tăng z-index để hiển thị trên nút toggle */
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+.chat-window {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.chat-window.show {
+    display: flex;
+    opacity: 1;
+    transform: scale(1);
+}
+
+.chat-window.hide {
+    opacity: 0;
+    transform: scale(0.95);
 }
 
 .chat-header {
-    background-color: #E30019;
+    background: linear-gradient(135deg, #E30019, #A30014);
+    animation: gradientAnimation 6s ease infinite;
     color: white;
-    padding: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    padding: 15px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: 600;
 }
 
 .chat-header h3 {
     margin: 0;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chat-header h3::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: #00cc00;
+    border-radius: 50%;
+    display: inline-block;
+}
+.chat-header .logo {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+.promo-banner {
+    width: 100%;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.promo-carousel {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.promo-slide {
+    min-width: 100%;
+    text-align: center;
+    padding: 10px;
+    background: #f0f7ff;
+    color: #003087;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.promo-slide:hover {
+    background: #e0efff;
+}
+
+.promo-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: #aaa;
     font-size: 16px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.promo-close:hover {
+    color: #e10600;
 }
 
 .chat-body {
-    flex: 1;
-    padding: 10px;
     overflow-y: auto;
-    background-color: #f5f5f5;
 }
 
-.message {
-    margin-bottom: 10px;
+.chat-body::-webkit-scrollbar {
+    width: 6px;
 }
 
-.bot-message p {
-    background-color: #003087;
-    color: white;
-    padding: 8px;
-    border-radius: 10px;
-    margin: 5px 0;
-    display: inline-block;
-    max-width: 80%;
+.chat-body::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 3px;
 }
 
-.user-message p {
-    background-color: #E30019;
-    color: white;
-    padding: 8px;
-    border-radius: 10px;
-    margin: 5px 0;
-    display: inline-block;
-    max-width: 80%;
-    text-align: right;
-    float: right;
+.chat-body::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+}
+
+.chat-body {
+    scrollbar-width: thin;
+    scrollbar-color: #bbb #f9f9f9;
+}
+.chat-header {
+    border-bottom: 1px solid #ddd;
+}
+
+.chat-body {
+    border-bottom: 1px solid #ddd;
 }
 
 .chat-footer {
-    padding: 10px;
     border-top: 1px solid #ddd;
+}
+
+.message {
+    margin-bottom: 12px;
+}
+.message {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUpFadeIn 0.3s ease forwards;
+}
+
+@keyframes slideUpFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bot-message p {
+    background: linear-gradient(90deg, #003087, #002766);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px 10px 10px 2px;
+    margin: 6px 0;
+    display: inline-block;
+    max-width: 75%;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.user-message p {
+    background: linear-gradient(90deg, #E30019, #A30014);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px 10px 2px 10px;
+    margin: 6px 0;
+    display: inline-block;
+    max-width: 75%;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: right;
+    float: right;
+}
+.bot-message p:hover, .user-message p:hover {
+    transform: scale(1.02);
+    opacity: 0.95;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.chat-footer {
+    padding: 12px;
     display: flex;
     align-items: center;
+    background: #fff;
 }
 
 .chat-footer input {
     flex: 1;
-    padding: 8px;
+    padding: 10px 15px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-right: 10px;
     font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.chat-footer input:focus {
+    border-color: #003087;
 }
 
 .chat-footer .send-btn {
-    background-color: #003087;
+    background: linear-gradient(90deg, #003087, #002766);
     color: white;
     border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 14px;
-    transition: opacity 0.3s;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .chat-footer .send-btn:hover {
-    opacity: 0.9;
+    background: linear-gradient(90deg, #002766, #001944);
+    transform: translateY(-2px) scale(1.02);
+    opacity: 0.95;
 }
 
-@keyframes slideUp {
-    from {
-        transform: translateY(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* CSS cho nút bấm mở chat */
+/* Thiết kế lại nút bấm mở chat */
 .chat-toggle-btn {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #E30019;
+    background: linear-gradient(135deg, #E30019, #A30014);
+    animation: gradientAnimation 6s ease infinite;
     color: white;
     border: none;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1001;
-    transition: transform 0.3s;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    z-index: 1001; /* Giữ z-index thấp hơn chat-window */
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .chat-toggle-btn:hover {
-    transform: scale(1.1);
+    background: linear-gradient(135deg, #A30014, #80000F);
+    transform: scale(1.15);
 }
 
 .chat-toggle-btn i {
-    font-size: 24px;
+    font-size: 28px;
 }
 
-@media (max-width: 768px) {
-    .chat-module {
-        width: 250px;
-        bottom: 70px; /* Điều chỉnh để tránh chồng lên nút */
-        right: 10px;
-    }
+@media (max-width: 600px) {
     .chat-window {
-        width: 300px;
-        height: 400px;
-        bottom: 70px;
-        right: 10px;
+        position: fixed;
+        left: 5%;
+        right: 5%;
+        width: 90%;
+        bottom: 20px;
+        margin: 0 auto;
     }
     .chat-toggle-btn {
         bottom: 10px;
         right: 10px;
+        width: 50px;
+        height: 50px;
     }
+    .chat-toggle-btn i {
+        font-size: 24px;
+    }
+    @keyframes slideUp {
+        from { transform: translateY(0); }
+        to { transform: translateY(-50%); }
+    }
+    .chat-window.keyboard-active {
+        animation: slideUp 0.3s ease forwards;
+    }
+    .chat-footer .send-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1003;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 600px) {
+        .chat-footer .send-btn {
+            bottom: 10px;
+            right: 10px;
+        }
+    }
+
+    .chat-footer input {
+        flex: 1;
+        margin-right: 0; /* Loại bỏ margin khi nút nổi */
+    }
+}
+
+
+
+
+.message .product-image {
+    max-width: 100%;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.message .product-image:hover {
+    transform: scale(1.1);
+}
+.chat-header .minimize-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.chat-header .minimize-btn:hover {
+    transform: scale(1.2);
+}
+.chat-header .history-tab {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.chat-header .history-tab:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.history-content {
+    display: none;
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+}
+
+.history-content.active {
+    display: block;
+}
+.quick-replies {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.quick-reply-btn {
+    background: #f0f7ff;
+    color: #003087;
+    border: 1px solid #ddd;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.quick-reply-btn:hover {
+    background: #e0efff;
+    transform: scale(1.05);
+}
+.product-suggestion {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f0f7ff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.add-to-cart-btn-suggestion {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.add-to-cart-btn-suggestion:hover {
+    background: #1e40af;
+    transform: scale(1.05);
+}
+.language-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.language-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.language-toggle.active {
+    background: #003087;
 }
