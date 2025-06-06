@@ -1,0 +1,58 @@
+[33m560f598[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{0}: commit: Lưu thay đổi trước khi pull
+[33m5e3aa1a[m HEAD@{1}: commit: Push code lên nhánh master
+[33m9c181e3[m HEAD@{2}: commit: Push code lên nhánh master
+[33m4e7c8a9[m HEAD@{3}: checkout: moving from frontend-team to master
+[33m7c59b4f[m[33m ([m[1;32mfrontend-team[m[33m)[m HEAD@{4}: commit: Lưu thay đổi tạm thời trước khi chuyển nhánh
+[33me2f079b[m HEAD@{5}: commit: Mô tả thay đổi của bạn
+[33m24031e7[m HEAD@{6}: reset: moving to origin/frontend-team
+[33m243318e[m HEAD@{7}: rebase (abort): returning to refs/heads/frontend-team
+[33m243318e[m HEAD@{8}: rebase (abort): returning to refs/heads/frontend-team
+[33m3b9e9e2[m HEAD@{9}: rebase (continue): Mô tả thay đổi của bạn
+[33m243318e[m HEAD@{10}: checkout: moving from e2ea5a5133a8863da555a2fcc6c87bb1b1c5c548 to frontend-team
+[33me2ea5a5[m HEAD@{11}: commit: Mô tả thay đổi của bạn
+[33mbc02076[m HEAD@{12}: commit (merge): Mô tả thay đổi của bạn
+[33me165026[m HEAD@{13}: commit: Mô tả thay đổi của bạn
+[33m2718d6f[m HEAD@{14}: commit: Mô tả thay đổi của bạn
+[33m74477dd[m HEAD@{15}: pull origin frontend-team --rebase (start): checkout 74477dde213c5e133f97cf8e3fd52f3563b8deca
+[33m243318e[m HEAD@{16}: commit: Mô tả thay đổi của bạn
+[33m10f13ff[m HEAD@{17}: commit: Mô tả thay đổi của bạn
+[33m3fcd29c[m HEAD@{18}: commit: Mô tả thay đổi của bạn
+[33m2e17055[m HEAD@{19}: pull origin frontend-team --rebase: Fast-forward
+[33m3c8276a[m HEAD@{20}: pull origin frontend-team --rebase: Fast-forward
+[33m9593cbb[m HEAD@{21}: pull origin frontend-team --rebase: Fast-forward
+[33md651c5d[m HEAD@{22}: pull origin frontend-team --rebase: Fast-forward
+[33mabe11f8[m HEAD@{23}: pull origin frontend-team --rebase: Fast-forward
+[33m9257d6c[m HEAD@{24}: commit: Mô tả thay đổi của bạn
+[33m2403b27[m HEAD@{25}: pull origin frontend-team --rebase (finish): returning to refs/heads/frontend-team
+[33m2403b27[m HEAD@{26}: pull origin frontend-team --rebase (pick): 4/1/2025
+[33m2790ff5[m HEAD@{27}: pull origin frontend-team --rebase (pick): New
+[33m4a24420[m HEAD@{28}: pull origin frontend-team --rebase (start): checkout 4a244202c091260372cdea1883ab107899fbc9b9
+[33m05758ab[m HEAD@{29}: rebase (finish): returning to refs/heads/frontend-team
+[33m05758ab[m HEAD@{30}: commit: 4/1/2025
+[33m326ad71[m HEAD@{31}: pull origin frontend-team --rebase (pick): New
+[33m85999a0[m HEAD@{32}: pull origin frontend-team --rebase (start): checkout 85999a05dd963585379c1f627b2961c909f08b69
+[33m06a0e60[m HEAD@{33}: commit: 4/1/2025
+[33m3e656e4[m HEAD@{34}: pull origin frontend-team --rebase (finish): returning to refs/heads/frontend-team
+[33m3e656e4[m HEAD@{35}: pull origin frontend-team --rebase (pick): New
+[33m50061e8[m HEAD@{36}: pull origin frontend-team --rebase (start): checkout 50061e889bb7a2fdec1e474014dda418ad9e2161
+[33m5ea6393[m HEAD@{37}: commit: New
+[33m8828134[m HEAD@{38}: commit: Mô tả thay đổi của bạn
+[33maa49efc[m HEAD@{39}: checkout: moving from frontend-team to frontend-team
+[33maa49efc[m HEAD@{40}: checkout: moving from frontend-team to frontend-team
+[33maa49efc[m HEAD@{41}: commit: Update giao diện frontend
+[33m99946fd[m HEAD@{42}: pull origin frontend-team: Fast-forward
+[33m24517e8[m HEAD@{43}: pull origin frontend-team: Fast-forward
+[33m40dc929[m HEAD@{44}: reset: moving to HEAD
+[33m40dc929[m HEAD@{45}: reset: moving to HEAD
+[33m40dc929[m HEAD@{46}: pull origin frontend-team: Fast-forward
+[33ma8eb91a[m[33m ([m[1;32mmain[m[33m)[m HEAD@{47}: reset: moving to HEAD
+[33ma8eb91a[m[33m ([m[1;32mmain[m[33m)[m HEAD@{48}: reset: moving to HEAD
+[33ma8eb91a[m[33m ([m[1;32mmain[m[33m)[m HEAD@{49}: reset: moving to a8eb91a
+[33m8be30f4[m HEAD@{50}: reset: moving to 8be30f4
+[33md5b0d16[m HEAD@{51}: checkout: moving from frontend-team to frontend-team
+[33md5b0d16[m HEAD@{52}: reset: moving to d5b0d16
+[33m8be30f4[m HEAD@{53}: reset: moving to 8be30f4
+[33ma9f4d31[m HEAD@{54}: reset: moving to a9f4d31
+[33m8be30f4[m HEAD@{55}: commit: Cập nhật code trên frontend-team
+[33ma9f4d31[m HEAD@{56}: checkout: moving from main to frontend-team
+[33ma8eb91a[m[33m ([m[1;32mmain[m[33m)[m HEAD@{57}: commit (initial): Adds initial project setup with HTML structure
