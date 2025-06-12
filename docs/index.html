@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>
         Web3TD - Trang chủ
-
     </title>
     <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
@@ -25,6 +24,43 @@
         #banner-container {
             padding-top: 30px;
         }
+
+        /* Thêm kiểu cho icon và container chat */
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #ff4500;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+        }
+
+        .chat-icon:hover {
+            background-color: #ff6347;
+        }
+
+        #chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            background-color: #fff;
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+            display: none;
+        }
     </style>
     <script src="Script/js_ShowAutoScroll.js"></script>
     <script src="Script/js_MenuClick.js"></script>
@@ -33,7 +69,6 @@
     <script src="Script/js_CartPopup.js" defer></script>
 </head>
 <body>
-   
 <!-- Header -->
 <div id="header-container"></div>
 
@@ -46,7 +81,11 @@
 <!-- Footer -->
 <div id="footer-container"></div>
 
+<!-- Icon chat -->
+<div id="chat-icon" class="chat-icon">💬</div>
 
+<!-- Container cho chat module -->
+<div id="chat-container"></div>
 
 <script>
     async function loadPagePart(url, containerId, callback = null) {
@@ -103,7 +142,6 @@
 
     // Load banner
     loadPagePart("HTML/Content/banner.html", "banner-container", () => {
-        // Đảm bảo js_BannerDynamic.js được load và gọi initializeSlideshow
         const checkBannerScripts = () => {
             if (typeof initializeSlideshow === 'function') {
                 initializeSlideshow();
@@ -130,6 +168,25 @@
 
     // Load footer
     loadPagePart("HTML/Layout/footer.html", "footer-container");
+
+    // Load và hiển thị chat module
+    async function loadChatModule() {
+        const chatContainer = document.getElementById('chat-container');
+        if (chatContainer.style.display === 'none' || chatContainer.style.display === '') {
+            await loadPagePart("chat-module.html", "chat-container", () => {
+                const chatScript = document.createElement('script');
+                chatScript.src = "chat_module.js";
+                chatScript.defer = true;
+                document.body.appendChild(chatScript);
+                chatContainer.style.display = 'block';
+            });
+        } else {
+            chatContainer.style.display = 'none';
+        }
+    }
+
+    // Gắn sự kiện click cho icon
+    document.getElementById('chat-icon').addEventListener('click', loadChatModule);
 </script>
 </body>
 </html>
