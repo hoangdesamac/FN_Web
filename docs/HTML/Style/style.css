@@ -1942,12 +1942,14 @@ body {
 @media (max-width: 600px) {
   /* Ẩn chữ, chỉ giữ icon ở header (menu-toggle, contact, user, cart, login) */
   .menu-toggle .menu-toggle-text,
+  .menu-toggle span:not(:has(i)),
   .contact-info span:not(:has(i)),
   .user-actions span:not(:has(i)),
   .cart-link .cart-text,
   #loginBtn .login-text {
     display: none !important;
   }
+  /* Nếu icon và chữ cùng trong 1 span, chỉ giữ icon */
   .contact-info span,
   .user-actions span,
   .cart-link,
@@ -1961,6 +1963,7 @@ body {
   .cart-count {
     font-size: 1.6rem !important;
     display: inline-block !important;
+    vertical-align: middle;
   }
 
   /* HEADER luôn nằm ngang trên cùng */

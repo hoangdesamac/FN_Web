@@ -40,6 +40,10 @@
   }
   .main-image {
     border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: static;
   }
   .thumbnails-wrapper {
     max-width: 100vw;
@@ -144,6 +148,7 @@
     width: 100px;
     padding: 6px;
     border-radius: 7px;
+    height: 140px;
   }
   .bundle-products .product-card img {
     height: 60px;
@@ -207,6 +212,10 @@
     padding: 6px 8px;
     border-radius: 3px;
     width: 100%;
+  }
+  .rating-summary ul {
+    font-size: 13px;
+    margin-top: 8px;
   }
 }
 * {
