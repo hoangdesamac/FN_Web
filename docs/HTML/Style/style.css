@@ -1967,7 +1967,7 @@ body {
   /* HEADER GRID LAYOUT */
   .header {
     display: grid;
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto 1fr auto; /* Sửa lại chỉ còn 3 cột */
     align-items: center;
     height: 52px;
     padding: 6px 10px;
