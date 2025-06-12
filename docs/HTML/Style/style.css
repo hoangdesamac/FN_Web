@@ -1987,21 +1987,6 @@ body {
   .menu-container {
     justify-self: center;
   }
-  .menu-toggle {
-    padding: 8px 10px;
-    font-size: 20px;
-    min-width: 44px;
-    min-height: 44px;
-    border-radius: 8px;
-    background: #0052ff;
-    color: #fff;
-    border: none;
-    box-shadow: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
   .header-icons {
     display: flex;
     align-items: center;
@@ -2012,7 +1997,7 @@ body {
   .user-actions {
     display: flex !important;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
   }
   .contact-info span,
   .user-actions span,
