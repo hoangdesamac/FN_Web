@@ -102,7 +102,7 @@
     });
 
     // Load banner
-    loadPagePart("Content/banner.html", "banner-container", () => {
+    loadPagePart("HTML/Content/banner.html", "banner-container", () => {
         // Đảm bảo js_BannerDynamic.js được load và gọi initializeSlideshow
         const checkBannerScripts = () => {
             if (typeof initializeSlideshow === 'function') {
@@ -123,13 +123,13 @@
     });
 
     // Load main content
-    loadPagePart("Layout/mainContent.html", "main-container", () => {
+    loadPagePart("HTML/Layout/mainContent.html", "main-container", () => {
         if (typeof initializeAutoScroll === 'function') initializeAutoScroll();
         if (typeof initializeCartSystem === 'function') setTimeout(initializeCartSystem, 300);
     });
 
     // Load footer
-    loadPagePart("Layout/footer.html", "footer-container");
+    loadPagePart("HTML/Layout/footer.html", "footer-container");
 </script>
 </body>
 </html>
