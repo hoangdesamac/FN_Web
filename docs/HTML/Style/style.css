@@ -1939,72 +1939,166 @@ body {
     font-size: 15px;
 }
 @media (max-width: 600px) {
+  /* Header cố định trên mobile */
   .header {
     display: flex !important;
-    flex-wrap: wrap;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    height: auto;
-    padding: 6px 6px;
+    height: 60px;
+    padding: 8px 12px;
     background: #0A54FF;
     position: fixed;
-    top: 0; left: 0; right: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   }
+
+  /* Logo nhỏ gọn */
   .logo {
-    flex: 0 0 auto;
-    margin-right: 8px;
+    flex-shrink: 0;
   }
+
+  .logo-img {
+    height: 45px;
+    width: 50px;
+  }
+
+  /* Menu container ở giữa */
   .menu-container {
-    flex: 1 1 100%;
-    order: 2;
-    margin: 8px 0 0 0;
+    flex: 1;
+    max-width: 150px;
+    margin: 0 10px;
+  }
+
+  .menu-toggle {
+    padding: 8px 10px;
+    font-size: 13px;
     width: 100%;
   }
+
+  /* Ẩn search bar trên mobile */
   .search-bar {
     display: none !important;
   }
+
+  /* Actions bên phải */
   .contact-info,
   .user-actions {
-    flex: 0 0 auto;
     display: flex !important;
     align-items: center;
-    gap: 10px;
-    margin-left: 8px;
+    gap: 8px;
   }
+
+  /* Chỉ hiển thị icon, ẩn text */
   .header .contact-info span,
   .header .user-actions span,
   .cart-link,
   #loginBtn {
-    font-size: 0 !important;
-    padding: 0 4px;
-    min-width: 36px;
-    min-height: 36px;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
     display: flex !important;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    background: none;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.1);
     transition: background 0.2s;
   }
+
+  /* Touch feedback */
+  .header .contact-info span:active,
+  .header .user-actions span:active,
+  .cart-link:active,
+  #loginBtn:active {
+    background: rgba(255,255,255,0.2);
+    transform: scale(0.95);
+  }
+
+  /* Icon size */
   .header .contact-info i,
   .header .user-actions i,
   .cart-link i,
-  #loginBtn i,
-  .cart-count {
-    font-size: 1.6rem !important;
-    display: inline-block !important;
-    vertical-align: middle;
+  #loginBtn i {
+    font-size: 1.4rem !important;
+    color: white;
   }
-  .header .menu-toggle .menu-toggle-text,
-  .header .contact-info span:not(:has(i)),
-  .header .user-actions span:not(:has(i)),
-  .cart-link .cart-text,
-  #loginBtn .login-text {
+
+  /* Cart count badge */
+  .cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 11px !important;
+    min-width: 18px;
+    height: 18px;
+    background: #ff4757;
+    border-radius: 50%;
+  }
+
+  /* Ẩn tất cả text trên mobile */
+  .menu-toggle-text,
+  .contact-info span:not(:has(i)),
+  .user-actions span:not(:has(i)),
+  .cart-text,
+  .login-text {
     display: none !important;
   }
+
+  /* Điều chỉnh body để không bị che */
   body {
-    padding-top: 60px;
+    padding-top: 70px;
+  }
+
+  /* Menu dropdown trên mobile */
+  .menu {
+    top: 55px;
+    width: 100%;
+    max-width: 200px;
+  }
+
+  /* Banner container responsive */
+  .banner-container {
+    padding: 20px 10px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "main-banner"
+      "left-top"
+      "left-middle"
+      "left-bottom"
+      "right-top"
+      "right-middle"
+      "right-bottom"
+      "bottom-middle-left"
+      "bottom-middle-right";
+    gap: 15px;
+  }
+
+  .main-banner {
+    width: 100%;
+    height: 200px;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .slide {
+    width: 100%;
+    height: 200px;
+  }
+
+  .small-banner {
+    width: 100%;
+    height: 150px;
+  }
+
+  /* Main content responsive */
+  .main-content {
+    padding: 20px 10px;
+  }
+
+  .product-card {
+    flex: 0 0 calc(50% - 10px);
   }
 }
