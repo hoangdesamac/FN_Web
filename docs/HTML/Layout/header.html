@@ -155,83 +155,82 @@
     <button><i class='bx bx-search'></i></button>
   </div>
 
-  <!-- Liên hệ -->
-  <div class="contact-info">
-    <span><i class='bx bx-phone'></i> Hotline 1900.5301</span>
-    <a href="showRoom.html" style="text-decoration: none; color: inherit;">
-      <span><i class='bx bx-map'></i> Hệ thống Showroom</span>
-    </a>
-    <span>
-      <a href="lookup.html" style="text-decoration: none; color: inherit;">
-        <i class='bx bx-receipt'></i> Tra cứu đơn hàng
-        <span class="order-count" style="display: none;">0</span>
+  <!-- Nhóm icon liên hệ + user (gộp vào 1 div .header-icons) -->
+  <div class="header-icons">
+    <div class="contact-info">
+      <span><i class='bx bx-phone'></i> Hotline 1900.5301</span>
+      <a href="showRoom.html" style="text-decoration: none; color: inherit;">
+        <span><i class='bx bx-map'></i> Hệ thống Showroom</span>
       </a>
-    </span>
-  </div>
-
-  <!-- Hành động -->
-  <div class="user-actions">
-    <span class="cart-icon">
-      <a href="checkout.html" style="text-decoration: none; color: inherit;" class="cart-link">
-        <i class='bx bx-cart'></i> <span class="cart-text">Giỏ hàng</span>
-        <span class="cart-count" style="display: none;">0</span>
-      </a>
-    </span>
-    <!-- Popup giỏ hàng -->
-    <div id="cartPopup" class="cart-popup">
-      <div class="cart-popup-content">
-        <div class="cart-popup-header">
-          <h3><i class='bx bx-check-circle'></i> Đã thêm vào giỏ hàng</h3>
-          <button class="cart-popup-close" onclick="closeCartPopup()">×</button>
-        </div>
-        <div class="cart-popup-product">
-          <img id="popupProductImg" src="" alt="" class="cart-popup-product-img">
-          <div class="cart-popup-product-info">
-            <p id="popupProductName" class="cart-popup-product-name"></p>
-            <p id="popupProductPrice" class="cart-popup-product-price"></p>
+      <span>
+        <a href="lookup.html" style="text-decoration: none; color: inherit;">
+          <i class='bx bx-receipt'></i> Tra cứu đơn hàng
+          <span class="order-count" style="display: none;">0</span>
+        </a>
+      </span>
+    </div>
+    <div class="user-actions">
+      <span class="cart-icon">
+        <a href="checkout.html" style="text-decoration: none; color: inherit;" class="cart-link">
+          <i class='bx bx-cart'></i> <span class="cart-text">Giỏ hàng</span>
+          <span class="cart-count" style="display: none;">0</span>
+        </a>
+      </span>
+      <!-- Popup giỏ hàng -->
+      <div id="cartPopup" class="cart-popup">
+        <div class="cart-popup-content">
+          <div class="cart-popup-header">
+            <h3><i class='bx bx-check-circle'></i> Đã thêm vào giỏ hàng</h3>
+            <button class="cart-popup-close" onclick="closeCartPopup()">×</button>
+          </div>
+          <div class="cart-popup-product">
+            <img id="popupProductImg" src="" alt="" class="cart-popup-product-img">
+            <div class="cart-popup-product-info">
+              <p id="popupProductName" class="cart-popup-product-name"></p>
+              <p id="popupProductPrice" class="cart-popup-product-price"></p>
+            </div>
+          </div>
+          <div class="cart-popup-actions">
+            <a href="checkout.html" class="cart-popup-viewcart">Xem giỏ hàng</a>
+            <button onclick="closeCartPopup()" class="cart-popup-continue">Tiếp tục mua sắm</button>
           </div>
         </div>
-        <div class="cart-popup-actions">
-          <a href="checkout.html" class="cart-popup-viewcart">Xem giỏ hàng</a>
-          <button onclick="closeCartPopup()" class="cart-popup-continue">Tiếp tục mua sắm</button>
+      </div>
+      <div id="productCartPopup" class="notification-popup" style="display: none;">
+        <div class="popup-content">
+          <div class="header">
+            <i class='bx bx-check-circle'></i>
+            <span class="popup-message">Đã thêm 1 sản phẩm vào giỏ hàng!</span>
+            <button class="popup-close" onclick="closeProductPopup()">
+              <i class='bx bx-x'></i>
+            </button>
+          </div>
+          <button class="view-cart-btn" onclick="handleProductViewCartClick(false)">Xem giỏ hàng</button>
         </div>
       </div>
-    </div>
-    <div id="productCartPopup" class="notification-popup" style="display: none;">
-      <div class="popup-content">
-        <div class="header">
-          <i class='bx bx-check-circle'></i>
-          <span class="popup-message">Đã thêm 1 sản phẩm vào giỏ hàng!</span>
-          <button class="popup-close" onclick="closeProductPopup()">
-            <i class='bx bx-x'></i>
-          </button>
-        </div>
-        <button class="view-cart-btn" onclick="handleProductViewCartClick(false)">Xem giỏ hàng</button>
-      </div>
-    </div>
-
-    <div class="login-container">
-      <div class="login-hover-area">
-        <span id="loginBtn" class="login-button" onclick="showPopup('login')">
-          <i class='bx bx-user'></i>
-          <span class="login-text">Tài khoản</span>
-        </span>
-        <div class="popup">
-          <h3><i class='bx bx-happy'></i> Xin chào, vui lòng đăng nhập!</h3>
-          <button class="btn" onclick="showPopup('login')">
-            <i class='bx bxs-user'></i> Đăng nhập
-          </button>
-          <button class="btn" onclick="showPopup('register')">
-            <i class='bx bxs-user-plus'></i> Đăng ký
-          </button>
+      <div class="login-container">
+        <div class="login-hover-area">
+          <span id="loginBtn" class="login-button" onclick="showPopup('login')">
+            <i class='bx bx-user'></i>
+            <span class="login-text">Tài khoản</span>
+          </span>
+          <div class="popup">
+            <h3><i class='bx bx-happy'></i> Xin chào, vui lòng đăng nhập!</h3>
+            <button class="btn" onclick="showPopup('login')">
+              <i class='bx bxs-user'></i> Đăng nhập
+            </button>
+            <button class="btn" onclick="showPopup('register')">
+              <i class='bx bxs-user-plus'></i> Đăng ký
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Popup Container -->
-  <div id="popup-container" onclick="closePopup(event)"></div>
 </header>
+
+<!-- Popup Container -->
+<div id="popup-container" onclick="closePopup(event)"></div>
 
 <!-- Auth Popup Script -->
 <script>
