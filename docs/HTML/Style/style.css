@@ -1956,23 +1956,18 @@ body {
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   }
 
-  /* Logo nhỏ gọn */
-  .logo {
-    flex-shrink: 0;
-  }
-
+  /* Logo */
   .logo-img {
     height: 45px;
-    width: 50px;
+    width: auto;
   }
 
-  /* Menu container ở giữa */
+  /* Menu container */
   .menu-container {
     flex: 1;
     max-width: 150px;
     margin: 0 10px;
   }
-
   .menu-toggle {
     padding: 8px 10px;
     font-size: 13px;
@@ -1984,33 +1979,27 @@ body {
     display: none !important;
   }
 
-  /* Actions bên phải */
+  /* Actions bên phải: đảm bảo parent relative để badge hoạt động */
   .contact-info,
   .user-actions {
     display: flex !important;
     align-items: center;
     gap: 8px;
   }
+  .user-actions .cart-icon,
+  .contact-info .contact-item {
+    position: relative;
+  }
 
-  /* Chỉ hiển thị icon, ẩn text */
-  .header .contact-info span,
-  .header .user-actions span,
-  .cart-link,
-  #loginBtn {
-    min-width: 40px;
-    min-height: 40px;
-    padding: 0;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    background: rgba(255,255,255,0.1);
-    transition: background 0.2s;
+  /* Chỉ hiển thị icon, ẩn text: cần HTML có phân tách */
+  .contact-text,
+  .user-text {
+    display: none !important;
   }
 
   /* Touch feedback */
-  .header .contact-info span:active,
-  .header .user-actions span:active,
+  .contact-item:active,
+  .user-actions span:active,
   .cart-link:active,
   #loginBtn:active {
     background: rgba(255,255,255,0.2);
@@ -2018,8 +2007,8 @@ body {
   }
 
   /* Icon size */
-  .header .contact-info i,
-  .header .user-actions i,
+  .contact-item i,
+  .user-actions i,
   .cart-link i,
   #loginBtn i {
     font-size: 1.4rem !important;
@@ -2036,32 +2025,32 @@ body {
     height: 18px;
     background: #ff4757;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
   }
 
-  /* Ẩn tất cả text trên mobile */
-  .menu-toggle-text,
-  .contact-info span:not(:has(i)),
-  .user-actions span:not(:has(i)),
-  .cart-text,
-  .login-text {
-    display: none !important;
-  }
-
-  /* Điều chỉnh body để không bị che */
+  /* Điều chỉnh body để không bị che header */
   body {
     padding-top: 70px;
   }
 
   /* Menu dropdown trên mobile */
   .menu {
-    top: 55px;
+    position: absolute;
+    top: 60px;
+    left: 0;
     width: 100%;
     max-width: 200px;
+    background: white;
+    /* thêm style nếu cần */
   }
 
-  /* Banner container responsive */
+  /* Banner container responsive: chỉ ví dụ, tuỳ HTML thực tế */
   .banner-container {
     padding: 20px 10px;
+    display: grid;
     grid-template-columns: 1fr;
     grid-template-areas:
       "main-banner"
@@ -2075,29 +2064,20 @@ body {
       "bottom-middle-right";
     gap: 15px;
   }
-
-  .main-banner {
-    width: 100%;
-    height: 200px;
-    grid-column: 1;
-    grid-row: 1;
-  }
-
+  .main-banner,
   .slide {
     width: 100%;
     height: 200px;
   }
-
   .small-banner {
     width: 100%;
     height: 150px;
   }
 
-  /* Main content responsive */
+  /* Main content responsive: ví dụ */
   .main-content {
     padding: 20px 10px;
   }
-
   .product-card {
     flex: 0 0 calc(50% - 10px);
   }
