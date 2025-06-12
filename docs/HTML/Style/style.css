@@ -1940,9 +1940,6 @@ body {
 }
 /* Responsive cho popup modal nổi */
 @media (max-width: 600px) {
-  .menu-toggle .menu-toggle-text {
-    display: none !important;
-  }
   .menu-toggle .menu-toggle-text,
   .menu-toggle span:not(:has(i)),
   .contact-info span:not(:has(i)),
