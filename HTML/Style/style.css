@@ -53,7 +53,7 @@ body, .header {
 }
 
 .menu-toggle {
-    background-color: #0049F5;
+    background-color: #0052ff ;
     color: white;
     padding: 10px 12px;
     border: 1px solid #0052ff;
@@ -66,7 +66,7 @@ body, .header {
     gap: 10px;
 }
 .menu-toggle:hover {
-    background-color: #0052ff;
+    background-color: #0049F5;
 }
 
 .menu {

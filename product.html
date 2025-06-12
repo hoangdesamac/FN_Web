@@ -25,9 +25,9 @@
     <div class="product-section">
         <div class="product-images">
             <div id="lightgallery" class="slideshow-wrapper">
-                <a href="/HPHyperX.jpg" data-lg-size="1406-1390">
+                <a href="/HPHyperX.png" data-lg-size="1406-1390">
                     <div class="image-container">
-                        <img id="mainImage" class="main-image zoom-hover" src="/HPHyperX.jpg" alt="PC GVN" />
+                        <img id="mainImage" class="main-image zoom-hover" src="/HPHyperX.png" alt="PC GVN" />
                     </div>
                 </a>
             </div>
@@ -51,7 +51,7 @@
                 <button class="nav-btn nav-next" onclick="scrollThumbnails(1)">→</button>
             </div>
             <div class="bundle-products">
-                <h3>Gợi ý sản phẩm mua kèm</h3>
+                <h3>Mua kèm combo</h3>
                 <div class="product-list-wrapper">
                     <button class="nav-btn bundle-prev" onclick="scrollBundleProducts(-1)">←</button>
                     <div class="product-list" id="bundleProductList">
@@ -90,22 +90,30 @@
                     </div>
                     <button class="nav-btn bundle-next" onclick="scrollBundleProducts(1)">→</button>
                 </div>
+                <div class="subtotal-row">
+                    <div class="subtotal">
+                        <span>Tạm tính:</span>
+                        <span id="bundleSubtotal">0₫</span>
+                    </div>
+                    <button class="add-to-cart-bundle"><i class='bx bx-cart-add'></i> Thêm vào giỏ</button>
+                </div>
             </div>
         </div>
 
         <div class="product-info">
             <div class="sticky-box">
-                <h1>PC GVN Intel i5 13400F / RX 6600 / Main H610</h1>
+                <h1 class="product-name">PC GVN Intel i5 13400F / RX 6600 / Main H610</h1>
                 <div class="price-box">
-                    <p class="price">18.490.000₫</p>
+                    <span class="price product-price"><strong>18.490.000₫</strong></span>
                 </div>
-                <div class="action-buttons">
-                    <button class="add-to-cart"><i class='bx bx-cart-add'></i> Thêm vào giỏ</button>
-                </div>
+                <button class="buy-now add-to-cart-btn" data-id="pc-gvn-i5-13400f-rx6600">
+                    <span class="main-text">MUA NGAY</span>
+                    <span class="sub-text">hoặc mua combo để nhận ưu đãi</span>
+                </button>
                 <div class="promotion-box">
-                    <h4>🎁 Ưu đãi đặc biệt:</h4>
-                    <ul>
-                        <li>🔖 Giảm đến <strong>34%</strong> cho combo mua kèm</li>
+                    <h4>Ưu đãi đặc biệt:</h4>
+                    <ul class="benefits">
+                        <li>🔖 Giảm đến 34% cho combo mua kèm</li>
                         <li>🚚 Miễn phí giao hàng toàn quốc</li>
                         <li>💳 Trả góp 0% qua thẻ Visa/Master/JCB</li>
                     </ul>
@@ -134,7 +142,7 @@
                 <li>🎮 Hỗ trợ chơi tốt các game AAA như GTA V, Valorant, Elden Ring.</li>
                 <li>🛠️ Dễ nâng cấp, tản nhiệt tốt, thiết kế case hiện đại RGB.</li>
             </ul>
-            <img src="/HPHyperX.jpg" alt="Ảnh minh họa" style="max-width: 100%; margin-top: 20px; border-radius: 10px;">
+            <img src="/HPHyperX.png" alt="Ảnh minh họa" style="max-width: 100%; margin-top: 20px; border-radius: 10px;">
         </div>
         <div id="tab2" class="tab-content">
             <table class="spec-table">
@@ -203,7 +211,6 @@
 <script src="Script/js_MenuClick.js"></script>
 <script src="Script/js_ShowPopupAuth.js"></script>
 <script src="Script/js_Checkout.js" defer></script>
-<script src="Script/js_CartPopup.js" defer></script>
 <script src="Script/js_product.js"></script>
 <script>
     async function loadPagePart(url, containerId, callback = null) {
