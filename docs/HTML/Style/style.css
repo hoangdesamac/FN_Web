@@ -1940,7 +1940,27 @@ body {
 }
 /* Responsive cho popup modal nổi */
 @media (max-width: 600px) {
-  /* HEADER luôn nằm ngang trên cùng */
+  .menu-toggle .menu-toggle-text,
+  .contact-info span:not(:has(i)),
+  .user-actions span:not(:has(i)),
+  .cart-link .cart-text,
+  #loginBtn .login-text {
+    display: none !important;
+  }
+  .contact-info span,
+  .user-actions span,
+  .cart-link,
+  #loginBtn {
+    font-size: 0 !important;
+  }
+  .contact-info i,
+  .user-actions i,
+  .cart-link i,
+  #loginBtn i,
+  .cart-count {
+    font-size: 1.6rem !important;
+    display: inline-block !important;
+  }
   .header {
     position: fixed;
     top: 0; left: 0; right: 0;
