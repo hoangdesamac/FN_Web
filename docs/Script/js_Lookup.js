@@ -525,7 +525,7 @@ function generatePDFContent(orderId) {
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
          <!-- Logo bên trái -->
             <div style="flex: 1;">
-            <img src="Images/Slogan.jpg" alt="Web3TD Logo" style="height: 70px;">
+            <img src="Image_Showroom/Slogan_w.jpg" alt="Web3TD Logo" style="height: 70px;">
             </div>
          <!-- Tiêu đề căn giữa -->
         <div style="flex: 2; text-align: center;">

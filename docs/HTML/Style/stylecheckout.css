@@ -1022,17 +1022,17 @@ body, html {
 }
 /* Popup cảnh báo không có hóa đơn */
 #modal-no-invoice .modal-content {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeeba;
+    background: white;
+    color: #e21216;
     text-align: center;
 }
 
 #modal-no-invoice .modal-content h2 {
     font-size: 20px;
     margin-bottom: 12px;
-    color: #d63333;
+    color: #e21216;
 }
+
 
 #modal-no-invoice .modal-buttons {
     margin-top: 20px;

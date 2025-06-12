@@ -22,10 +22,8 @@
         <div class="product-grid-wrapper">
             <div class="product-grid" id="productGridArduino">
                 <!-- === Danh sách sản phẩm === -->
-                <div class="product-card" data-id="ard1">
-                    <a href="product.html">
+                <div class="product-card clickable" data-id="mouse-logitech-g309">
                         <img class="product-image" src="Images/logitechg309.jpg" alt="Chuột Logitech G309 Lightspeed Wireless Bluetooth Trắng">
-                    </a>
                     <div class="product-icons">
                         <i class='bx bx-heart'></i>
                         <i class='bx bx-show'></i>
@@ -38,7 +36,7 @@
                     </div>
                 </div>
 
-                <div class="product-card" data-id="ard2">
+                <div class="product-card clickable" data-id="mouse-logitech-g102">
                     <img class="product-image" src="Images/logitech-g102-lightsync-rgb-black.jpg" alt="Chuột Logitech G102 LightSync Black">
                     <div class="product-icons">
                         <i class='bx bx-heart'></i>
@@ -165,8 +163,7 @@
 
         <div class="product-grid-wrapper">
             <div class="product-grid" id="productGridSensors">
-
-                <div class="product-card" data-id="sen1">
+                <div class="product-card clickable" data-id="keyboard-dareu-ek106">
                     <img class="product-image" src="Images/DareUEK106ProHazeBlue.jpg" alt="Bàn phím cơ gaming DareU EK106 Pro Haze Blue Cloud switch">
                     <div class="product-icons">
                         <i class='bx bx-heart'></i>
@@ -356,7 +353,7 @@
                 </div>
 
                 <div class="product-card" data-id="led3">
-                    <img class="product-image" src="Images/HPHyperX.jpg" alt="Tai nghe HP HyperX Cloud III Wireless Red">
+                    <img class="product-image" src="Images/HPHyperX.png" alt="Tai nghe HP HyperX Cloud III Wireless Red">
                     <div class="product-icons">
                         <i class='bx bx-heart'></i>
                         <i class='bx bx-show'></i>
@@ -1316,6 +1313,14 @@
 </main>
 
 <script src="../../Script/js_ShowAutoScroll.js"></script>
+<script>
+    document.querySelectorAll('.product-card.clickable').forEach(card => {
+        card.addEventListener('click', () => {
+            const productId = card.getAttribute('data-id');
+            window.location.href = `product.html?id=${productId}`;
+        });
+    });
+</script>
 
 
 

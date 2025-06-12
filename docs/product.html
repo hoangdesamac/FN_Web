@@ -3,50 +3,40 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trang Sản Phẩm - PC GVN</title>
+    <title>Trang Sản Phẩm</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-    <!-- Thêm CSS từ index.html -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="HTML/Style/style.css">
-    <!-- LightGallery CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css">
+    <link rel="stylesheet" href="HTML/Style/style.css">
     <link rel="stylesheet" href="HTML/Style/styleproduct.css">
 </head>
 <body>
-<!-- Thêm header container -->
+<!-- Header container -->
 <div id="header-container"></div>
 
+<!-- Breadcrumb -->
 <div class="breadcrumb">
     <a href="index.html"><i class='bx bx-home-alt'></i> Trang chủ</a> ›
-    PC GVN Intel i5 13400F / RX 6600
+    <span id="productCategory"></span> ›
+    <span id="productName"></span>
 </div>
+
 <div class="container">
     <div class="product-section">
         <div class="product-images">
             <div id="lightgallery" class="slideshow-wrapper">
-                <a href="/HPHyperX.png" data-lg-size="1406-1390">
+                <a href="" data-lg-size="1406-1390">
                     <div class="image-container">
-                        <img id="mainImage" class="main-image zoom-hover" src="/HPHyperX.png" alt="PC GVN" />
+                        <img id="mainImage" class="main-image zoom-hover" src="" alt="Product Image" />
                     </div>
                 </a>
             </div>
-
             <div class="thumbnails-wrapper">
                 <button class="nav-btn nav-prev" onclick="scrollThumbnails(-1)">←</button>
                 <div class="thumbnails" id="thumbnailsList">
-                    <img src="/AcerNitroVANV1641R36Y.jpg" data-full="/AcerNitroVANV1641R36Y.jpg" alt="thumb 1" class="active" />
-                    <img src="/AcerPredatorHeliosNeo16.jpg" data-full="/AcerPredatorHeliosNeo16.jpg" alt="thumb 2" />
-                    <img src="/AKKO-MonsGeek-MG75-Prunus.jpg" data-full="/AKKO-MonsGeek-MG75-Prunus.jpg" alt="thumb 3" />
-                    <img src="/AMDRyzenThreadripperPRO5995WX.jpg" data-full="/AMDRyzenThreadripperPRO5995WX.jpg" alt="thumb 4" />
-                    <img src="/AMDAthlon3000G.jpg" data-full="/AMDAthlon3000G.jpg" alt="thumb 5" />
-                    <img src="/ASUSROGAstralLCGeForceRTX509032GBGDDR7OCEdition.jpg" data-full="/ASUSROGAstralLCGeForceRTX509032GBGDDR7OCEdition.jpg" alt="thumb 6" />
-                    <img src="/AKKO5075BPlus.jpg" data-full="/AKKO5075BPlus.jpg" alt="thumb 7" />
-                    <img src="/ASUSB760M-AYWWIFID4.jpg" data-full="/ASUSB760M-AYWWIFID4.jpg" alt="thumb 8" />
-                    <img src="/AsusROG.jpg" data-full="/AsusROG.jpg" alt="thumb 9" />
-                    <img src="/XigmatekAlphardM3GFArctic%20.jpg" data-full="/XigmatekAlphardM3GFArctic%20.jpg" alt="thumb 10" />
-
-
+                    <!-- Thumbnails sẽ được thêm động bằng JS -->
                 </div>
                 <button class="nav-btn nav-next" onclick="scrollThumbnails(1)">→</button>
             </div>
@@ -55,38 +45,7 @@
                 <div class="product-list-wrapper">
                     <button class="nav-btn bundle-prev" onclick="scrollBundleProducts(-1)">←</button>
                     <div class="product-list" id="bundleProductList">
-                        <div class="product-card">
-                            <div class="card-content">
-                                <img src="/AMDAthlon3000G.jpg" alt="RAM Kingston" />
-                                <h4>RAM Kingston 8GB DDR4</h4>
-                            </div>
-                            <p class="price">790.000₫</p>
-                            <button class="select-product">Chọn sản phẩm</button>
-                        </div>
-                        <div class="product-card">
-                            <div class="card-content">
-                                <img src="/AMDRyzenThreadripperPRO5995WX.jpg" alt="PSU Antec" />
-                                <h4>PSU Antec 550W</h4>
-                            </div>
-                            <p class="price">1.090.000₫</p>
-                            <button class="select-product">Chọn sản phẩm</button>
-                        </div>
-                        <div class="product-card">
-                            <div class="card-content">
-                                <img src="/AMDRyzenThreadripperPRO5995WX.jpg" alt="SSD 512GB" />
-                                <h4>SSD 512GB NVMe</h4>
-                            </div>
-                            <p class="price">1.290.000₫</p>
-                            <button class="select-product">Chọn sản phẩm</button>
-                        </div>
-                        <div class="product-card">
-                            <div class="card-content">
-                                <img src="/ASUSB760M-AYWWIFID4.jpg" alt="Cooling Fan RGB" />
-                                <h4>Cooling Fan RGB</h4>
-                            </div>
-                            <p class="price">490.000₫</p>
-                            <button class="select-product">Chọn sản phẩm</button>
-                        </div>
+                        <!-- Bundle products sẽ được thêm động bằng JS -->
                     </div>
                     <button class="nav-btn bundle-next" onclick="scrollBundleProducts(1)">→</button>
                 </div>
@@ -99,14 +58,13 @@
                 </div>
             </div>
         </div>
-
         <div class="product-info">
             <div class="sticky-box">
-                <h1 class="product-name">PC GVN Intel i5 13400F / RX 6600 / Main H610</h1>
+                <h1 id="productTitle" class="product-name"></h1>
                 <div class="price-box">
-                    <span class="price product-price"><strong>18.490.000₫</strong></span>
+                    <span class="price product-price"><strong id="productPrice"></strong></span>
                 </div>
-                <button class="buy-now add-to-cart-btn" data-id="pc-gvn-i5-13400f-rx6600">
+                <button class="buy-now add-to-cart-btn" data-id="">
                     <span class="main-text">MUA NGAY</span>
                     <span class="sub-text">hoặc mua combo để nhận ưu đãi</span>
                 </button>
@@ -136,39 +94,19 @@
             <button class="tab-btn" onclick="showTab('tab4', event)">Sản phẩm liên quan</button>
         </div>
         <div id="tab1" class="tab-content active">
-            <p><strong>Giới thiệu:</strong> Bộ PC GVN sử dụng vi xử lý Intel Core i5 thế hệ 13 mạnh mẽ, kết hợp card đồ họa RX 6600 – phù hợp cho game thủ 1080p và người làm đồ họa nhẹ.</p>
-            <ul>
-                <li>✅ Hiệu năng vượt trội với CPU i5 13400F.</li>
-                <li>🎮 Hỗ trợ chơi tốt các game AAA như GTA V, Valorant, Elden Ring.</li>
-                <li>🛠️ Dễ nâng cấp, tản nhiệt tốt, thiết kế case hiện đại RGB.</li>
-            </ul>
-            <img src="/HPHyperX.png" alt="Ảnh minh họa" style="max-width: 100%; margin-top: 20px; border-radius: 10px;">
+            <div id="productDescription"></div>
         </div>
         <div id="tab2" class="tab-content">
             <table class="spec-table">
-                <tr><th>Thành phần</th><th>Chi tiết</th></tr>
-                <tr><td>CPU</td><td>Intel Core i5-13400F</td></tr>
-                <tr><td>Mainboard</td><td>H610M</td></tr>
-                <tr><td>RAM</td><td>16GB DDR4</td></tr>
-                <tr><td>VGA</td><td>RX 6600 8GB</td></tr>
-                <tr><td>SSD</td><td>512GB NVMe</td></tr>
-                <tr><td>PSU</td><td>550W</td></tr>
-                <tr><td>Case</td><td>M-ATX LED RGB</td></tr>
+                <tbody id="productSpecs"></tbody>
             </table>
         </div>
         <div id="tab3" class="tab-content">
             <div class="rating-summary">
                 <h4>⭐ Tổng quan đánh giá</h4>
-                <ul>
-                    <li>⭐⭐⭐⭐⭐ (3)</li>
-                    <li>⭐⭐⭐⭐ (2)</li>
-                    <li>⭐⭐⭐ (0)</li>
-                    <li>⭐⭐ (0)</li>
-                    <li>⭐ (0)</li>
-                </ul>
+                <ul id="ratingSummary"></ul>
             </div>
-            <div class="review-item">⭐⭐⭐⭐⭐ - Quá tuyệt vời cho tầm giá này! (Nguyễn Văn A)</div>
-            <div class="review-item">⭐⭐⭐⭐ - Cấu hình ổn định, chơi game mượt. (Trần Thị B)</div>
+            <div id="reviewList"></div>
             <div class="review-form">
                 <h4>Gửi đánh giá của bạn:</h4>
                 <textarea placeholder="Viết đánh giá tại đây..."></textarea>
@@ -176,38 +114,25 @@
             </div>
         </div>
         <div id="tab4" class="tab-content">
-            <ul>
-                <li>🖥️ PC Ryzen 5 + GTX 1660 Super - 16.990.000₫</li>
-                <li>🖥️ PC Intel i5 + RTX 3060 - 22.990.000₫</li>
-            </ul>
+            <div id="relatedProducts"></div>
         </div>
     </div>
+
     <div class="recently-viewed">
         <h3>👀 Đã xem gần đây:</h3>
         <button class="nav-btn nav-prev" onclick="scrollRecent(-1)">←</button>
         <button class="nav-btn nav-next" onclick="scrollRecent(1)">→</button>
-        <div class="product-list" id="recentlyViewedList">
-            <div class="product-card">
-                <img src="/PCRyzen5.jpg" alt="PC Ryzen 5" />
-                <h4>PC Ryzen 5 + GTX 1660</h4>
-                <p class="price">16.990.000₫</p>
-            </div>
-            <div class="product-card">
-                <img src="/PCi5RTX3060.jpg" alt="PC i5 RTX 3060" />
-                <h4>PC Intel i5 + RTX 3060</h4>
-                <p class="price">22.990.000₫</p>
-            </div>
-        </div>
+        <div class="product-list" id="recentlyViewedList"></div>
     </div>
 </div>
 
-<!-- Thêm footer container -->
+<!-- Footer container -->
 <div id="footer-container"></div>
 
-<!-- LightGallery JS -->
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/lightgallery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script>
-<!-- Thêm script từ index.html -->
 <script src="Script/js_MenuClick.js"></script>
 <script src="Script/js_ShowPopupAuth.js"></script>
 <script src="Script/js_Checkout.js" defer></script>
@@ -217,18 +142,15 @@
         try {
             const response = await fetch(url);
             const html = await response.text();
-
             const container = document.getElementById(containerId);
             container.innerHTML = html;
 
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
-
             const scripts = tempDiv.querySelectorAll('script');
             scripts.forEach(oldScript => {
                 const src = oldScript.src;
                 if (src && document.querySelector(`script[src="${src}"]`)) return;
-
                 const newScript = document.createElement('script');
                 if (src) {
                     newScript.src = src;
@@ -245,18 +167,15 @@
         }
     }
 
-    // Load header
     loadPagePart("HTML/Layout/header.html", "header-container", () => {
         const checkDomReady = () => {
             const menuToggle = document.getElementById('menuToggle');
             const menuList = document.getElementById('menuList');
             const submenuItems = document.querySelectorAll('.submenu li');
-
             if (!menuToggle || !menuList || submenuItems.length < 3) {
                 setTimeout(checkDomReady, 100);
                 return;
             }
-
             if (typeof initializeMenuSystem === 'function') {
                 initializeMenuSystem();
             }
@@ -265,7 +184,6 @@
         checkDomReady();
     });
 
-    // Load footer
     loadPagePart("HTML/Layout/footer.html", "footer-container");
 </script>
 </body>
