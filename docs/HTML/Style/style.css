@@ -1940,6 +1940,7 @@ body {
 }
 /* Responsive cho popup modal nổi */
 @media (max-width: 600px) {
+  /* Ẩn chữ, chỉ giữ icon ở header (menu-toggle, contact, user, cart, login) */
   .menu-toggle .menu-toggle-text,
   .contact-info span:not(:has(i)),
   .user-actions span:not(:has(i)),
@@ -1961,6 +1962,8 @@ body {
     font-size: 1.6rem !important;
     display: inline-block !important;
   }
+
+  /* HEADER luôn nằm ngang trên cùng */
   .header {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -1999,7 +2002,7 @@ body {
     align-items: center;
     gap: 8px;
   }
-  /* MENU DANH MỤC phủ xuống dưới header */
+  /* MENU DANH MỤC phủ xuống dưới header, vẫn hiện chữ */
   .menu {
     position: absolute;
     top: 100%; /* phủ ngay dưới header */
