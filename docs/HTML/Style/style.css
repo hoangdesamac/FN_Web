@@ -1938,3 +1938,73 @@ body {
 .nav-button i {
     font-size: 15px;
 }
+@media (max-width: 600px) {
+  .header {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    height: auto;
+    padding: 6px 6px;
+    background: #0A54FF;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+  .logo {
+    flex: 0 0 auto;
+    margin-right: 8px;
+  }
+  .menu-container {
+    flex: 1 1 100%;
+    order: 2;
+    margin: 8px 0 0 0;
+    width: 100%;
+  }
+  .search-bar {
+    display: none !important;
+  }
+  .contact-info,
+  .user-actions {
+    flex: 0 0 auto;
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    margin-left: 8px;
+  }
+  .header .contact-info span,
+  .header .user-actions span,
+  .cart-link,
+  #loginBtn {
+    font-size: 0 !important;
+    padding: 0 4px;
+    min-width: 36px;
+    min-height: 36px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: none;
+    transition: background 0.2s;
+  }
+  .header .contact-info i,
+  .header .user-actions i,
+  .cart-link i,
+  #loginBtn i,
+  .cart-count {
+    font-size: 1.6rem !important;
+    display: inline-block !important;
+    vertical-align: middle;
+  }
+  .header .menu-toggle .menu-toggle-text,
+  .header .contact-info span:not(:has(i)),
+  .header .user-actions span:not(:has(i)),
+  .cart-link .cart-text,
+  #loginBtn .login-text {
+    display: none !important;
+  }
+  body {
+    padding-top: 60px;
+  }
+}

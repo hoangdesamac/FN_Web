@@ -3,19 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <title>Web3TD - Trang chủ</title>
-    <link rel="icon" type="image/png" href="Image_Showroom/Slogan.png">
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="HTML/Style/style.css" />
     <link rel="stylesheet" href="HTML/Style/styleBanner.css" />
     <link rel="stylesheet" href="HTML/Style/styleShowRoom.css">
-  
     <script src="Script/js_ShowAutoScroll.js"></script>
     <script src="Script/js_MenuClick.js"></script>
     <script src="Script/js_ShowPopupAuth.js"></script>
@@ -40,10 +33,10 @@
         </a>
       </div>
       <nav class="nav">
-        <a href="#">Hệ thống Showroom</a>
-        <a href="#">Trả góp</a>
-        <a href="#">Bảo hành</a>
-        <a href="#">Liên hệ</a>
+        <a href="showRoom.html">Hệ thống Showroom</a>
+        <a href="#" id="open-tra-gop">Trả góp</a>
+        <a href="#" id="open-bao-hanh">Bảo hành</a>
+        <a href="#" id="open-lien-he">Liên hệ</a>
       </nav>
       <div class="hotline">Hotline: 1900 200641</div>
     </div>
@@ -53,24 +46,17 @@
         Địa điểm trải nghiệm và mua sắm thiết bị công nghệ cao cấp
       </div>
       <button class="cta-btn">XEM NGAY</button>
-      
     </div>
 
     <div class="area-section" id="area-section">
       <div class="area-title">CHỌN KHU VỰC CỦA BẠN</div>
       <div class="areas">
         <div class="area-card">
-          <img
-            src="https://static.thenounproject.com/png/2412878-200.png"
-            alt="Miền Nam"
-          />
+          <img src="https://static.thenounproject.com/png/2412878-200.png" alt="Miền Nam" />
           <div class="area-card-title">Miền Nam</div>
         </div>
         <div class="area-card">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/a/af/Hanoi_symbol.png"
-            alt="Miền Bắc"
-          />
+          <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Hanoi_symbol.png" alt="Miền Bắc" />
           <div class="area-card-title">Miền Bắc</div>
         </div>
       </div>
@@ -80,11 +66,17 @@
     <!-- Footer -->
     <div id="footer-container"></div>
 
+    <!-- Popup Modal -->
+    <div id="popup-modal" style="display:none;position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;">
+      <div id="popup-content" style="background:#fff;max-width:420px;width:90vw;padding:32px 24px 24px 24px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.15);position:relative;">
+        <button id="close-popup" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer;">&times;</button>
+        <!-- Nội dung popup sẽ được thay đổi bằng JS -->
+      </div>
+    </div>
+
     <script>
       document.querySelector(".cta-btn").onclick = function () {
-        document
-          .getElementById("area-section")
-          .scrollIntoView({ behavior: "smooth" });
+        document.getElementById("area-section").scrollIntoView({ behavior: "smooth" });
       };
 
       // Dữ liệu showroom mẫu
@@ -236,7 +228,77 @@
           console.error(`Lỗi khi tải ${url}:`, error);
         }
       }
-      loadPagePart("../Layout/footer.html", "footer-container");
+      loadPagePart("HTML/Layout/footer.html", "footer-container");
+
+      // Popup logic
+      const popupModal = document.getElementById("popup-modal");
+      const popupContent = document.getElementById("popup-content");
+      const closePopupBtn = document.getElementById("close-popup");
+
+      function showPopup(type) {
+        let html = "";
+        if (type === "tra-gop") {
+          html = `
+            <button id="close-popup" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer;">&times;</button>
+            <h2 style="margin-top:0;">Chính sách trả góp tại 3TD</h2>
+            <ul style="line-height:2;">
+              <li>Áp dụng cho sản phẩm từ 3 triệu đồng trở lên.</li>
+              <li>Trả trước từ 10% giá trị sản phẩm.</li>
+              <li>Kỳ hạn linh hoạt: 3, 6, 9, 12 tháng.</li>
+              <li>Thủ tục: CMND/CCCD và bằng lái xe/hộ khẩu.</li>
+              <li>Hỗ trợ qua thẻ tín dụng hoặc công ty tài chính.</li>
+              <li>Xét duyệt nhanh, nhận máy ngay.</li>
+              <li>Không áp dụng đồng thời với khuyến mãi khác.</li>
+            </ul>
+            <p style="margin-bottom:0;">Liên hệ hotline hoặc đến showroom để được tư vấn chi tiết.</p>
+          `;
+        } else if (type === "bao-hanh") {
+          html = `
+            <button id="close-popup" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer;">&times;</button>
+            <h2 style="margin-top:0;">Chính sách bảo hành tại 3TD</h2>
+            <ul style="line-height:2;">
+              <li>Bảo hành chính hãng theo quy định của nhà sản xuất.</li>
+              <li>Thời gian bảo hành: 12-24 tháng tùy sản phẩm.</li>
+              <li>Đổi mới trong 7 ngày nếu lỗi do nhà sản xuất.</li>
+              <li>Vui lòng giữ hóa đơn và hộp sản phẩm để được bảo hành.</li>
+              <li>Hỗ trợ bảo hành nhanh tại tất cả showroom 3TD.</li>
+            </ul>
+            <p style="margin-bottom:0;">Liên hệ hotline hoặc đến showroom để được hỗ trợ bảo hành.</p>
+          `;
+        } else if (type === "lien-he") {
+          html = `
+            <button id="close-popup" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer;">&times;</button>
+            <h2 style="margin-top:0;">Liên hệ 3TD</h2>
+            <p><strong>Địa chỉ:</strong> 78-80-82 Hoàng Hoa Thám, P.12, Q.Tân Bình, TP.HCM</p>
+            <p><strong>Hotline:</strong> 1900 200641</p>
+            <p><strong>Email:</strong> info@3td.vn</p>
+            <p><strong>Fanpage:</strong> <a href="https://facebook.com/3td.vn" target="_blank">facebook.com/3td.vn</a></p>
+          `;
+        }
+        popupContent.innerHTML = html;
+        popupModal.style.display = "flex";
+        // Gán lại sự kiện đóng popup cho nút mới
+        document.getElementById("close-popup").onclick = function() {
+          popupModal.style.display = "none";
+        };
+      }
+
+      document.getElementById("open-tra-gop").onclick = function(e) {
+        e.preventDefault();
+        showPopup("tra-gop");
+      };
+      document.getElementById("open-bao-hanh").onclick = function(e) {
+        e.preventDefault();
+        showPopup("bao-hanh");
+      };
+      document.getElementById("open-lien-he").onclick = function(e) {
+        e.preventDefault();
+        showPopup("lien-he");
+      };
+      // Đóng popup khi bấm ra ngoài
+      popupModal.onclick = function(e) {
+        if (e.target === this) popupModal.style.display = "none";
+      };
     </script>
   </body>
 </html>

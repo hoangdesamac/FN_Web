@@ -1,3 +1,177 @@
+@media (max-width: 600px) {
+  body, html {
+    padding: 4px;
+  }
+  .payment-container {
+    max-width: 100vw;
+    margin: 8px 0;
+    padding: 8px 2vw;
+    border-radius: 8px;
+  }
+  .breadcrumb-steps {
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 4px;
+    font-size: 13px;
+  }
+  .breadcrumb-steps .step {
+    font-size: 13px;
+    margin: 2px 0;
+    padding: 8px 4px;
+  }
+  .timeline {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .timeline .timeline-step .circle {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+  .timeline .timeline-step span {
+    font-size: 11px;
+  }
+  .payment-content {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+  }
+  .accordion,
+  .payment-sidebar {
+    min-width: 0;
+    padding: 0;
+  }
+  .accordion-header,
+  .accordion-body {
+    padding: 10px 6px;
+  }
+  .form-group label {
+    font-size: 13px;
+  }
+  .form-group input,
+  .form-group textarea {
+    font-size: 13px;
+    padding: 8px 6px;
+    border-radius: 7px;
+  }
+  .order-summary {
+    padding: 8px 2px;
+  }
+  .order-product {
+    gap: 8px;
+    padding: 8px 0;
+  }
+  .order-product img {
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+  }
+  .order-product-name {
+    font-size: 13px;
+  }
+  .order-product-price {
+    font-size: 11px;
+  }
+  .order-total {
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  .payment-sidebar {
+    padding: 10px 4px;
+    border-radius: 8px;
+  }
+  .payment-sidebar h3 {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  .payment-methods {
+    margin-bottom: 10px;
+  }
+  .method-option {
+    padding: 8px 4px;
+    font-size: 13px;
+    border-radius: 7px;
+    gap: 6px;
+  }
+  .method-option img {
+    width: 28px;
+    height: 28px;
+  }
+  .method-option label {
+    font-size: 13px;
+  }
+  .summary-details {
+    margin-bottom: 10px;
+  }
+  .summary-row {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .summary-row.total {
+    font-size: 14px;
+    padding-top: 6px;
+  }
+  .security-badges {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .security-badges img {
+    width: 32px;
+    height: 32px;
+  }
+  .payment-btn {
+    font-size: 14px;
+    padding: 10px 0;
+    border-radius: 8px;
+    position: static;
+    width: 100%;
+    margin-top: 10px;
+    left: 0;
+    right: 0;
+  }
+  .modal-content {
+    padding: 12px 4px;
+    border-radius: 8px;
+    max-width: 98vw;
+    width: 98vw;
+  }
+  .modal-content h2 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .modal-content p {
+    font-size: 13px;
+  }
+  .modal-content .summary {
+    font-size: 13px;
+    padding: 6px 2px;
+    border-radius: 6px;
+  }
+  .modal-buttons {
+    gap: 8px;
+  }
+  .modal-btn {
+    font-size: 13px;
+    padding: 8px 0;
+    border-radius: 7px;
+  }
+  .loading-content {
+    padding: 10px 4px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .notification {
+    top: 10px;
+    right: 10px;
+    padding: 8px 10px;
+    border-radius: 7px;
+    font-size: 13px;
+    min-width: 180px;
+    max-width: 90vw;
+  }
+}
 body, html {
     margin: 0;
     padding: 30px;
