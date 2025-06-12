@@ -1946,11 +1946,10 @@ body {
     justify-content: space-between;
     padding: 6px 8px;
     height: 56px;
-    background: #e10600; /* màu đỏ GearVN */
+    background: #e10600;
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
     gap: 6px;
   }
   .logo {
@@ -2012,13 +2011,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  .header-icons {
-    flex: 0 0 auto;
-    display: flex !important;
-    align-items: center;
-    gap: 8px;
-    margin-left: 4px;
   }
   .contact-info {
     display: none !important;
