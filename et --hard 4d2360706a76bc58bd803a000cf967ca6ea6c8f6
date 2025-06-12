@@ -1,0 +1,172 @@
+[33mcommit 3ea4627012c1b731582cb164a7c39ea66959345e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Thu Jun 12 09:28:56 2025 +0700
+
+    First commit
+
+[33mcommit 4d2360706a76bc58bd803a000cf967ca6ea6c8f6[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Thu Jun 12 09:15:20 2025 +0700
+
+    First commit
+
+[33mcommit e5ed34d69253861c763c22f109653373e99f9fe2[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Thu Jun 12 08:55:32 2025 +0700
+
+    Di chuyển toàn bộ nội dung vào thư mục docs/
+
+[33mcommit 418756716e385dfc9e4841405903d24813838ccd[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Thu Jun 12 08:44:00 2025 +0700
+
+    Remove broken submodule FN_Web
+
+[33mcommit a180de307aff501cdc5588c896990033fa34b5b2[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Thu Jun 12 08:36:55 2025 +0700
+
+    Rename index.html to docs/index.html
+
+[33mcommit 14dd0521c7c162d5f59719c771fdefc54578e8a2[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Thu Jun 12 08:32:35 2025 +0700
+
+    Create CNAME
+
+[33mcommit 3102c9433a5f2a389934009fea531d6222f6a01c[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Wed Jun 11 20:07:03 2025 +0700
+
+    Create CNAME
+
+[33mcommit 779898769f31ffa3e91c03d8387deb99ff040a72[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Fri Jun 6 21:45:35 2025 +0700
+
+    Add files via upload
+    
+    new
+
+[33mcommit 818fba04e9499aecfb42101a98a434f1a2309e07[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Fri Jun 6 21:42:10 2025 +0700
+
+    Update index.html
+
+[33mcommit 78844d9fe715fe3bfb587753d4ffedaecd79530c[m
+Merge: 8abfec2 1ba21cb
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Fri Jun 6 21:34:20 2025 +0700
+
+    Merge branch 'master' of https://github.com/hoangdesamac/FN_Web
+
+[33mcommit 8abfec26dd3918dabcfc6f54329e095223b2d878[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Fri Jun 6 21:33:26 2025 +0700
+
+    Lưu thay đổi trước khi pull
+
+[33mcommit 1ba21cb24c3c4b84546a98eaad107d6a421d4d5b[m
+Merge: cac7411 5e3aa1a
+Author: FE_JAVA <daidqbs06@gmail.com>
+Date:   Fri Jun 6 21:27:11 2025 +0700
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit cac7411c41d659249fd69cf7c9cd6bb58ccfb7ee[m
+Author: FE_JAVA <daidqbs06@gmail.com>
+Date:   Fri Jun 6 21:14:50 2025 +0700
+
+    update index ultimated
+
+[33mcommit 5e3aa1a490cfac859fc8a6e463dcba139f0f3d50[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Thu Jun 5 20:58:47 2025 +0700
+
+    Push code lên nhánh master
+
+[33mcommit 9c181e3e63c5b98321dfc743d14276e6f0732d68[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Thu Jun 5 20:44:34 2025 +0700
+
+    Push code lên nhánh master
+
+[33mcommit 4e7c8a9e2a40baaa1a4632be579087f0b31a2f5d[m
+Author: FE_JAVA <daidqbs06@gmail.com>
+Date:   Sat May 24 00:38:55 2025 +0700
+
+    update index with banner
+
+[33mcommit 9400d93b5eabd590cccc127ba7d00320af5e3be8[m
+Merge: 67535cc d649872
+Author: FE_JAVA <daidqbs06@gmail.com>
+Date:   Thu May 22 08:19:56 2025 +0700
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit d649872bedf7b6529b9e3804b274c616710abbf7[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Thu May 22 08:19:25 2025 +0700
+
+    error banner
+
+[33mcommit 67535cc10631ec3f385a7f1467a8ae94ddff5460[m
+Author: FE_JAVA <daidqbs06@gmail.com>
+Date:   Thu May 22 08:13:21 2025 +0700
+
+    miss
+
+[33mcommit ab16da97de2ce23dd6d76992047a545d11cb835b[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Thu May 22 07:49:50 2025 +0700
+
+    error banner
+
+[33mcommit 91b4f4d9a5f5938ec0ba04682060fcc561020528[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Tue May 20 22:31:15 2025 +0700
+
+    error banner
+
+[33mcommit 28a060e1dae4722e3b826bde70a4540003b4f1c3[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Tue May 20 22:05:41 2025 +0700
+
+    error banner
+
+[33mcommit 1d0081f7e5b5cd73e3d4c6fe31d1e4f986ee0c63[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Tue May 20 10:58:00 2025 +0700
+
+    error banner
+
+[33mcommit 06368702cc3de515abceca624f42b8c4edccaee5[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Mon May 19 23:49:42 2025 +0700
+
+    error banner
+
+[33mcommit ee52246ef0f0de22879a1c44bbf5ad0adf17392e[m
+Author: hoangdesamac <tanthat2019@gmail.com>
+Date:   Mon May 19 23:29:03 2025 +0700
+
+    error banner
+
+[33mcommit 06403f9e027d9121459d48249b333af8adf38838[m
+Author: FE_JAVA <daidqbs06@gmail.com>
+Date:   Mon May 19 16:02:25 2025 +0700
+
+    miss
+
+[33mcommit 8a8c0be26442c101fd324a4b6472d3608f25482a[m
+Author: FE_JAVA <daidqbs06@gmail.com>
+Date:   Mon May 19 08:13:34 2025 +0700
+
+    jj
+
+[33mcommit 989128b39c6001987b7b306220598ebf37974e8e[m
+Author: FE_JAVA <daidqbs06@gmail.com>
+Date:   Mon May 19 08:11:15 2025 +0700
+
+    jj
