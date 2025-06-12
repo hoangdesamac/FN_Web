@@ -1,26 +1,29 @@
 @media (max-width: 600px) {
   .banner-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-left: 4px;
-    padding-right: 4px;
-    max-width: 100vw;
-  }
-  .main-banner {
-    width: 100vw !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
     max-width: 100vw !important;
-    height: 180px !important;
-    min-height: 120px;
-    border-radius: 8px;
-    margin: 0 auto;
+    grid-template-areas: unset !important;
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+    align-items: unset !important;
+    margin: 0 !important;
   }
+  .main-banner,
   .slide {
     width: 100vw !important;
     max-width: 100vw !important;
     height: 180px !important;
-    min-height: 120px;
-    border-radius: 8px;
+    min-height: 120px !important;
+    border-radius: 8px !important;
+    margin: 0 auto !important;
+    grid-area: unset !important;
+    grid-row: unset !important;
+    grid-column: unset !important;
+    position: relative !important;
   }
   .small-banner,
   .bottom-middle-left,
@@ -28,9 +31,12 @@
     width: 100vw !important;
     max-width: 100vw !important;
     height: 90px !important;
-    min-height: 60px;
-    border-radius: 8px;
-    margin: 0 auto 6px auto;
+    min-height: 60px !important;
+    border-radius: 8px !important;
+    margin: 0 auto 6px auto !important;
+    grid-area: unset !important;
+    grid-row: unset !important;
+    grid-column: unset !important;
   }
   .small-banner img,
   .bottom-middle-left img,
@@ -45,153 +51,154 @@
     top: 45%;
   }
 }
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
 }
 
 .banner-container {
-    display: grid;
-    grid-template-areas:
-        "left-top main-banner right-top"
-        "left-middle main-banner right-middle"
-        "left-bottom main-banner right-bottom"
-        "left-bottom bottom-middle-left bottom-middle-right right-bottom";
-    grid-template-columns: 1.75fr 2fr 2fr 1.75fr; /* 1 phần trái, 4 phần trung tâm, 1 phần phải */
-    grid-template-rows: 190px 190px 190px; /* Tất cả các hàng có chiều cao 350px */
-    gap: 20px; /* Khoảng cách giữa các ô grid */
-    padding-left: 60px;
-    padding-right: 35px;
-    max-width: 100%;
-    margin: 0 auto;
-    align-items: start;
+  display: grid;
+  grid-template-areas:
+    "left-top main-banner right-top"
+    "left-middle main-banner right-middle"
+    "left-bottom main-banner right-bottom"
+    "left-bottom bottom-middle-left bottom-middle-right right-bottom";
+  grid-template-columns: 1.75fr 2fr 2fr 1.75fr;
+  grid-template-rows: 190px 190px 190px;
+  gap: 20px;
+  padding-left: 60px;
+  padding-right: 35px;
+  max-width: 100%;
+  margin: 0 auto;
+  align-items: start;
 }
 
 .banner {
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f5f5f5;
 }
 
 .small-banner {
-    height: 100%; /* Sử dụng chiều cao của hàng grid (350px) */
-    width: 300px;
+  height: 100%;
+  width: 300px;
 }
 
 .left-top {
-    grid-area: left-top;
-    grid-row: 1 / 2;
-    grid-column: 1 / 2;
+  grid-area: left-top;
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
 }
 
 .left-middle {
-    grid-area: left-middle;
-    grid-row: 2 / 3;
-    grid-column: 1 / 2;
+  grid-area: left-middle;
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
 }
 
 .left-bottom {
-    grid-area: left-bottom;
-    grid-row: 3 / 4;
-    grid-column: 1 / 2;
+  grid-area: left-bottom;
+  grid-row: 3 / 4;
+  grid-column: 1 / 2;
 }
 
 .main-banner {
-    grid-area: main-banner;
-    position: relative;
-    overflow: hidden;
-    height: 400px; /* Chiều cao cố định cho Mainbanner */
-    width: 685px;
-    grid-row: 1 / 2;
-    grid-column: 2 / 6;
+  grid-area: main-banner;
+  position: relative;
+  overflow: hidden;
+  height: 400px;
+  width: 685px;
+  grid-row: 1 / 2;
+  grid-column: 2 / 6;
 }
 
 .right-top {
-    grid-area: right-top;
-    grid-row: 1 / 2;
-    grid-column: 4 / 5;
+  grid-area: right-top;
+  grid-row: 1 / 2;
+  grid-column: 4 / 5;
 }
 
 .right-middle {
-    grid-area: right-middle;
-    grid-row: 2 / 3;
-    grid-column: 4 / 5;
+  grid-area: right-middle;
+  grid-row: 2 / 3;
+  grid-column: 4 / 5;
 }
 
 .right-bottom {
-    grid-area: right-bottom;
-    grid-row: 3 / 4;
-    grid-column: 4 / 5;
+  grid-area: right-bottom;
+  grid-row: 3 / 4;
+  grid-column: 4 / 5;
 }
 
 .bottom-middle-left {
-    grid-area: bottom-middle-left;
-    margin-right: 15px; /* Khoảng cách giữa bottom-middle-left và bottom-middle-right */
-    width: 310px; /* Cố định chiều rộng */
-    height: 190px;
-    grid-row: 3 / 4;
-    grid-column: 2 / 3;
+  grid-area: bottom-middle-left;
+  margin-right: 15px;
+  width: 310px;
+  height: 190px;
+  grid-row: 3 / 4;
+  grid-column: 2 / 3;
 }
 
 .bottom-middle-right {
-    grid-area: bottom-middle-right;
-    margin-left: 20px; /* Khoảng cách giữa bottom-middle-right và left-bottom/right-bottom */
-    width: 310px; /* Cố định chiều rộng */
-    height: 190px;
-    grid-row: 3 / 4;
-    grid-column: 3 / 4;
+  grid-area: bottom-middle-right;
+  margin-left: 20px;
+  width: 310px;
+  height: 190px;
+  grid-row: 3 / 4;
+  grid-column: 3 / 4;
 }
 
 .small-banner img {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .slideshow {
-    width: 100%;
-    height: 100%;
-    position: relative;
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 .slide {
-    width: 685px; /* Khớp với width của .main-banner */
-    height: 400px;
-    position: absolute;
-    transition: transform 0.5s ease-in-out;
+  width: 685px;
+  height: 400px;
+  position: absolute;
+  transition: transform 0.5s ease-in-out;
 }
 
 .nav-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 15px;
-    border-radius: 5px;
-    z-index: 10;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  border-radius: 5px;
+  z-index: 10;
 }
 
 .prev-button {
-    left: 10px;
+  left: 10px;
 }
 
 .next-button {
-    right: 10px;
+  right: 10px;
 }
 
 .nav-button:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .nav-button i {
-    font-size: 15px;
+  font-size: 15px;
 }
