@@ -1967,7 +1967,7 @@ body {
   /* HEADER GRID LAYOUT */
   .header {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr auto auto;
     align-items: center;
     height: 52px;
     padding: 6px 10px;
@@ -1987,17 +1987,20 @@ body {
   .menu-container {
     justify-self: center;
   }
-  .header-icons {
-    display: flex;
+  .search-bar {
+    display: none !important;
+  }
+  .contact-info {
+    display: flex !important;
     align-items: center;
-    gap: 18px;
+    gap: 14px;
     justify-self: end;
   }
-  .contact-info,
   .user-actions {
     display: flex !important;
     align-items: center;
     gap: 14px;
+    justify-self: end;
   }
   .contact-info span,
   .user-actions span,
@@ -2018,9 +2021,6 @@ body {
   .cart-link:active,
   #loginBtn:active {
     background: rgba(255,255,255,0.08);
-  }
-  .search-bar {
-    display: none !important;
   }
   body {
     padding-top: 52px;
