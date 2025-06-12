@@ -1965,6 +1965,7 @@ body {
     vertical-align: middle;
   }
 
+  @media (max-width: 600px) {
   .header {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -2040,4 +2041,5 @@ body {
   body {
     padding-top: 52px;
   }
+}
 }
