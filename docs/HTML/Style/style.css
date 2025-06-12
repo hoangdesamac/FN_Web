@@ -1940,15 +1940,14 @@ body {
 }
 /* Responsive cho popup modal nổi */
 @media (max-width: 600px) {
+  /* Ẩn chữ, chỉ giữ icon ở header */
   .menu-toggle .menu-toggle-text,
-  .menu-toggle span:not(:has(i)),
   .contact-info span:not(:has(i)),
   .user-actions span:not(:has(i)),
   .cart-link .cart-text,
   #loginBtn .login-text {
     display: none !important;
   }
-  /* Nếu icon và chữ cùng trong 1 span, chỉ giữ icon */
   .contact-info span,
   .user-actions span,
   .cart-link,
@@ -1965,7 +1964,7 @@ body {
     vertical-align: middle;
   }
 
-  @media (max-width: 600px) {
+  /* HEADER GRID LAYOUT */
   .header {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -1981,20 +1980,24 @@ body {
   .logo {
     justify-self: start;
   }
+  .logo-img {
+    height: 32px;
+    width: 36px;
+  }
   .menu-container {
     justify-self: center;
   }
   .header-icons {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 18px;
     justify-self: end;
   }
   .contact-info,
   .user-actions {
     display: flex !important;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
   }
   .contact-info span,
   .user-actions span,
@@ -2016,30 +2019,10 @@ body {
   #loginBtn:active {
     background: rgba(255,255,255,0.08);
   }
-  .logo-img {
-    height: 32px;
-    width: 36px;
-  }
-  .menu-toggle {
-    padding: 8px 10px;
-    font-size: 20px;
-    min-width: 44px;
-    min-height: 44px;
-    border-radius: 8px;
-    background: #0052ff;
-    color: #fff;
-    border: none;
-    box-shadow: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
   .search-bar {
     display: none !important;
   }
   body {
     padding-top: 52px;
   }
-}
 }
