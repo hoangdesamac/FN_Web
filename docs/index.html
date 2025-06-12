@@ -81,7 +81,7 @@
     }
 
     // Load header
-    loadPagePart("HTML/Layout/header.html", "header-container", () => {
+    loadPagePart("Layout/header.html", "header-container", () => {
         const checkDomReady = () => {
             const menuToggle = document.getElementById('menuToggle');
             const menuList = document.getElementById('menuList');
@@ -101,7 +101,7 @@
     });
 
     // Load banner
-    loadPagePart("HTML/Content/banner.html", "banner-container", () => {
+    loadPagePart("Content/banner.html", "banner-container", () => {
         // Đảm bảo js_BannerDynamic.js được load và gọi initializeSlideshow
         const checkBannerScripts = () => {
             if (typeof initializeSlideshow === 'function') {
@@ -122,13 +122,13 @@
     });
 
     // Load main content
-    loadPagePart("HTML/Layout/mainContent.html", "main-container", () => {
+    loadPagePart("Layout/mainContent.html", "main-container", () => {
         if (typeof initializeAutoScroll === 'function') initializeAutoScroll();
         if (typeof initializeCartSystem === 'function') setTimeout(initializeCartSystem, 300);
     });
 
     // Load footer
-    loadPagePart("HTML/Layout/footer.html", "footer-container");
+    loadPagePart("Layout/footer.html", "footer-container");
 </script>
 </body>
 </html>
