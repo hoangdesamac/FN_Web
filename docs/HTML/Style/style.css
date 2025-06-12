@@ -1939,12 +1939,10 @@ body {
     font-size: 15px;
 }
 @media (max-width: 600px) {
-  /* Header cố định trên mobile */
   .header {
-    display: flex !important;
-    flex-direction: row;
-    align-items: center;
+    display: flex;
     justify-content: space-between;
+    align-items: center;
     height: 60px;
     padding: 8px 12px;
     background: #0A54FF;
@@ -1953,132 +1951,91 @@ body {
     left: 0;
     right: 0;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   }
 
-  /* Logo */
   .logo-img {
-    height: 45px;
-    width: auto;
+    height: 40px;
   }
 
-  /* Menu container */
   .menu-container {
-    flex: 1;
     max-width: 150px;
+    flex: 1;
     margin: 0 10px;
   }
-  .menu-toggle {
-    padding: 8px 10px;
-    font-size: 13px;
-    width: 100%;
+
+  .search-bar,
+  .contact-text,
+  .user-text {
+    display: none;
   }
 
-  /* Ẩn search bar trên mobile */
-  .search-bar {
-    display: none !important;
-  }
-
-  /* Actions bên phải: đảm bảo parent relative để badge hoạt động */
   .contact-info,
   .user-actions {
-    display: flex !important;
-    align-items: center;
+    display: flex;
     gap: 8px;
   }
-  .user-actions .cart-icon,
-  .contact-info .contact-item {
+
+  .cart-icon,
+  .contact-item {
     position: relative;
   }
 
-  /* Chỉ hiển thị icon, ẩn text: cần HTML có phân tách */
-  .contact-text,
-  .user-text {
-    display: none !important;
-  }
-
-  /* Touch feedback */
-  .contact-item:active,
-  .user-actions span:active,
-  .cart-link:active,
-  #loginBtn:active {
-    background: rgba(255,255,255,0.2);
-    transform: scale(0.95);
-  }
-
-  /* Icon size */
   .contact-item i,
-  .user-actions i,
-  .cart-link i,
-  #loginBtn i {
-    font-size: 1.4rem !important;
+  .user-actions i {
+    font-size: 1.4rem;
     color: white;
   }
 
-  /* Cart count badge */
   .cart-count {
     position: absolute;
     top: -5px;
     right: -5px;
-    font-size: 11px !important;
-    min-width: 18px;
+    font-size: 11px;
+    width: 18px;
     height: 18px;
     background: #ff4757;
+    color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
   }
 
-  /* Điều chỉnh body để không bị che header */
   body {
     padding-top: 70px;
   }
 
-  /* Menu dropdown trên mobile */
   .menu {
     position: absolute;
     top: 60px;
     left: 0;
     width: 100%;
-    max-width: 200px;
     background: white;
-    /* thêm style nếu cần */
   }
 
-  /* Banner container responsive: chỉ ví dụ, tuỳ HTML thực tế */
   .banner-container {
     padding: 20px 10px;
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "main-banner"
-      "left-top"
-      "left-middle"
-      "left-bottom"
-      "right-top"
-      "right-middle"
-      "right-bottom"
-      "bottom-middle-left"
-      "bottom-middle-right";
     gap: 15px;
   }
+
   .main-banner,
   .slide {
     width: 100%;
     height: 200px;
   }
+
   .small-banner {
     width: 100%;
     height: 150px;
   }
 
-  /* Main content responsive: ví dụ */
   .main-content {
     padding: 20px 10px;
   }
+
   .product-card {
     flex: 0 0 calc(50% - 10px);
   }
 }
+
