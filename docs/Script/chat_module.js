@@ -4,7 +4,7 @@ function sendMessage() {
     if (message) {
         addMessage('Bạn: ' + message, 'user');
         input.value = '';
-        setTimeout(() => addMessage('GearVN: Cảm ơn bạn đã nhắn! Chúng tôi sẽ hỗ trợ ngay.', 'bot'), 500);
+        setTimeout(() => addMessage('3TD: Cảm ơn bạn đã nhắn! Chúng tôi sẽ hỗ trợ ngay.', 'bot'), 500);
     }
 }
 
