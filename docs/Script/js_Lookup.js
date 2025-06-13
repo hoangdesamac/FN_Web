@@ -28,13 +28,19 @@ async function loadPagePart(url, containerId, callback = null) {
 }
 
 loadPagePart("HTML/Layout/header.html", "header-container", () => {
-    if (typeof updateCartCount === 'function') {
-        setTimeout(updateCartCount, 300);
-    }
-    if (typeof initializeMenuSystem === 'function') {
-        setTimeout(initializeMenuSystem, 300);
-    }
-    updateOrderCount();
+    const checkDomReady = () => {
+        const loginBtn = document.getElementById('loginBtn');
+        const popup = document.querySelector('.popup');
+        if (!loginBtn || !popup) {
+            setTimeout(checkDomReady, 100);
+            return;
+        }
+        if (typeof initializeUser === 'function') {
+            console.log('Calling initializeUser on lookup...');
+            initializeUser();
+        }
+    };
+    checkDomReady();
 });
 
 loadPagePart("HTML/Layout/footer.html", "footer-container");

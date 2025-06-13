@@ -136,6 +136,10 @@
                 initializeMenuSystem();
             }
             updateCartCount();
+            // Gọi initializeUser từ js_ShowPopupAuth.js sau khi header được tải
+            if (typeof initializeUser === 'function') {
+                initializeUser();
+            }
         };
         checkDomReady();
     });

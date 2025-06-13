@@ -771,12 +771,19 @@ function setupPaymentMethodAnimations() {
 document.addEventListener('DOMContentLoaded', () => {
     initializeCartSystem();
     loadPagePart("HTML/Layout/header.html", "header-container", () => {
-        if (typeof updateCartCount === 'function') {
-            setTimeout(updateCartCount, 300);
-        }
-        if (typeof initializeMenuSystem === 'function') {
-            setTimeout(initializeMenuSystem, 300);
-        }
+        const checkDomReady = () => {
+            const loginBtn = document.getElementById('loginBtn');
+            const popup = document.querySelector('.popup');
+            if (!loginBtn || !popup) {
+                setTimeout(checkDomReady, 100);
+                return;
+            }
+            if (typeof initializeUser === 'function') {
+                console.log('Calling initializeUser on checkout...');
+                initializeUser();
+            }
+        };
+        checkDomReady();
     });
     loadPagePart("HTML/Layout/footer.html", "footer-container");
 
@@ -841,21 +848,6 @@ document.addEventListener('DOMContentLoaded', function () {
     invoiceCheckbox.addEventListener('change', () => {
         if (!invoiceCheckbox.checked) {
             modal.style.display = 'flex';
-            let counter = 5;
-            btnConfirm.textContent = `Vẫn tiếp tục (${counter})`;
-            btnConfirm.disabled = true;
-            btnConfirm.style.opacity = 0.5;
-
-            const countdown = setInterval(() => {
-                counter--;
-                btnConfirm.textContent = `Vẫn tiếp tục (${counter})`;
-                if (counter === 0) {
-                    clearInterval(countdown);
-                    btnConfirm.disabled = false;
-                    btnConfirm.style.opacity = 1;
-                    btnConfirm.textContent = 'Vẫn tiếp tục';
-                }
-            }, 1000);
         }
     });
 

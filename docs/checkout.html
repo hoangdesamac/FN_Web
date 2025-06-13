@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Thanh toán đơn hàng tại QD Shop - Xem giỏ hàng, nhập thông tin giao hàng và chọn phương thức thanh toán.">
     <meta name="keywords" content="giỏ hàng, thanh toán, mua sắm trực tuyến, QD Shop">
-    <title>QD - Thanh toán</title>
+    <title>Web3TD - Đặt hàng</title>
     <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,6 +14,8 @@
     <script src="https://unpkg.com/lottie-web@5.12.2/build/player/lottie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <script src="Script/js_Checkout.js" defer></script>
+    <script src="Script/js_MenuClick.js"></script>
+    <script src="Script/js_ShowPopupAuth.js"></script>
 </head>
 <body>
 <div id="header-container"></div>
@@ -229,11 +231,12 @@
         <p>Bạn cần có hóa đơn thanh toán chi tiết để đối chiếu và khiếu nại đơn hàng.<br>
             Nếu không có hóa đơn thanh toán chúng tôi không chịu trách nhiệm!</p>
         <div class="modal-buttons">
-            <button id="btn-confirm-no-invoice" class="modal-btn modal-btn-confirm" disabled style="opacity: 0.5;">Vẫn tiếp tục (5)</button>
+            <button id="btn-confirm-no-invoice" class="modal-btn modal-btn-confirm">Vẫn tiếp tục</button>
             <button id="btn-cancel-no-invoice" class="modal-btn modal-btn-cancel">Hủy</button>
         </div>
     </div>
 </div>
+
 
 </body>
 </html>

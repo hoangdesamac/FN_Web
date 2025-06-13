@@ -1,4 +1,3 @@
-
 body {
   font-family: "Inter", sans-serif;
   margin: 0;
@@ -9,7 +8,7 @@ body {
   margin: 0 auto;
   padding: 0 16px;
 }
-.headerS {
+.header {
   position: sticky;
   top: 0;
   width: 100%;
@@ -49,15 +48,7 @@ body {
 .nav a:hover {
   color: #e53935;
 }
-.hotline {
-  border: 2px solid #e53935;
-  color: #e53935;
-  padding: 8px 22px; /* giảm padding */
-  border-radius: 24px;
-  font-weight: bold;
-  background: #fff;
-  font-size: 1rem; /* giảm từ 1.2rem */
-}
+
 .banner {
   background: #f5f8fd;
   padding: 48px 0 24px 0;
@@ -119,8 +110,8 @@ body {
   width: 220px;
   text-align: center;
   transition:
-    box-shadow 0.2s,
-    border 0.2s;
+          box-shadow 0.2s,
+          border 0.2s;
   cursor: pointer;
   border: 2px solid transparent;
 }
@@ -298,12 +289,6 @@ body {
     font-size: 1rem;
     padding: 4px 0;
   }
-  .hotline {
-    font-size: 0.95rem;
-    padding: 6px 10px;
-    border-radius: 14px;
-    margin-top: 4px;
-  }
   .banner {
     padding: 18px 0 8px 0;
   }
@@ -401,5 +386,106 @@ body {
   .benefit-item i {
     font-size: 1.7rem;
     margin-bottom: 4px;
+  }
+}
+@media (min-width: 600px) {
+  .header {
+    flex-direction: row;
+    align-items: center;
+    padding: 16px 0;
+    gap: 0;
+  }
+  .nav {
+    display: flex;
+    gap: 18px;
+    margin-left: 24px;
+  }
+  .menu-btn {
+    display: none;
+  }
+}
+@media (min-width: 600px) {
+  .main-container,
+  #showroom-list {
+    padding: 0 24px;
+  }
+  .areas {
+    gap: 24px;
+    justify-content: center;
+    overflow-x: visible;
+    flex-wrap: wrap;
+  }
+  .area-card {
+    min-width: 200px;
+    max-width: 240px;
+    padding: 24px 14px;
+  }
+  .showroom-list-content {
+    gap: 24px;
+  }
+  .showroom-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    min-height: 180px;
+  }
+  .showroom-img {
+    width: 220px;
+    max-width: 220px;
+    min-width: 180px;
+    height: 180px;
+    border-radius: 0;
+  }
+  .showroom-img img {
+    height: 180px;
+    border-radius: 0;
+  }
+  .showroom-info {
+    flex: 1;
+    padding: 18px 24px;
+  }
+  .showroom-benefits {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+@media (min-width: 900px) {
+  .main-container {
+    max-width: 1200px;
+    padding: 0 32px;
+  }
+  #showroom-list {
+    max-width: 1200px;
+    padding: 0 32px;
+  }
+  .areas {
+    gap: 36px;
+  }
+  .area-card {
+    min-width: 220px;
+    max-width: 260px;
+    padding: 32px 18px;
+  }
+  .showroom-list-content {
+    gap: 32px;
+  }
+  .showroom-row {
+    min-height: 220px;
+  }
+  .showroom-img {
+    width: 300px;
+    max-width: 300px;
+    min-width: 220px;
+    height: 220px;
+  }
+  .showroom-img img {
+    height: 220px;
+  }
+  .showroom-info {
+    padding: 28px 36px;
+  }
+  .showroom-benefits {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
   }
 }
