@@ -20,9 +20,28 @@
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
 }
+.logo-text-container {
+    display: flex;
+    align-items: center;
+}
 
 .chat-logo {
-    height: 20px;
+    height: 50px; /* Tăng kích thước logo lên 30px từ 20px */
+    margin-right: 10px; /* Khoảng cách giữa logo và text */
+}
+.header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-text span:first-child {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.header-text span:last-child {
+    font-size: 0.9em;
+    color: #e0e0e0;
 }
 
 .close-btn {
@@ -55,7 +74,7 @@
 }
 
 .user-message {
-    background-color: #f6f4f4;
+    background-color: white;
     text-align: right;
 }
 
