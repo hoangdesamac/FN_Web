@@ -220,9 +220,11 @@ body, .header {
     cursor: pointer;
     color: #0052ff;
 }
+
 .search-bar button:hover {
     background-color: #e6f0ff;
 }
+
 .search-bar input,
 .search-bar button {
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -443,7 +445,6 @@ body, .header {
 .popup .btn:hover {
     background: darkred;
 }
-
 
 @keyframes fadeIn {
     from {
