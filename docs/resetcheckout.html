@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng - 3TD Shop</title>
+    <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Rajdhani -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Audiowide&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- ✅ Boxicons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <!-- Custom Cyber CSS -->
+    <link rel="stylesheet" href="HTML/Style/common.css">
+    <link rel="stylesheet" href="HTML/Style/resetcheckout.css">
+</head>
+
+<body class="cyber-body">
+<div id="header-container"></div>
+<div class="container-fluid checkout-container cyber-main">
+    <!-- Breadcrumb Steps -->
+    <div class="breadcrumb-steps d-flex justify-content-between align-items-center mb-4 p-3 rounded">
+        <div class="step active" id="breadcrumb-step-1">
+            <i class="fa fa-shopping-cart"></i> Giỏ hàng
+        </div>
+        <div class="step" id="breadcrumb-step-2">
+            <i class="fa fa-truck"></i> Giao hàng
+        </div>
+        <div class="step" id="breadcrumb-step-3">
+            <i class="fa fa-credit-card"></i> Thanh toán
+        </div>
+    </div>
+
+    <!-- Checkout Step: Cart -->
+    <div class="checkout-step cart-step" id="step-1">
+        <div class="cart-header d-flex justify-content-between align-items-center mb-4">
+            <h2 class="cart-title">Giỏ hàng của bạn</h2>
+            <button class="clear-cart-btn btn btn-danger" id="clear-cart">
+                <i class="fa fa-trash"></i> Xóa tất cả
+            </button>
+        </div>
+
+        <!-- Empty Cart -->
+        <div class="empty-cart d-flex flex-column align-items-center justify-content-center text-center rounded" id="empty-cart">
+            <div id="empty-cart-lottie" class="mb-3"></div>
+            <h3 class="empty-cart__title">Giỏ hàng của bạn đang trống</h3>
+            <p class="empty-cart__message">Hãy khám phá cửa hàng và thêm những sản phẩm yêu thích vào giỏ hàng!</p>
+            <a href="index.html" class="continue-shopping btn btn-primary mt-4" id="continue-shopping-btn">
+                <i class="fa fa-arrow-left continue-shopping__icon"></i> Tiếp tục mua sắm
+            </a>
+        </div>
+
+        <!-- Cart Items -->
+        <div class="cart-items" id="cart-items-container"></div>
+
+        <!-- Cart Summary -->
+        <div class="cart-summary p-4 rounded">
+            <h3 class="cart-summary__title">Tóm tắt đơn hàng</h3>
+            <div class="promo-banner d-flex align-items-center p-3 mb-4 rounded">
+                <i class="fa fa-gift me-2"></i>
+                <p>Miễn phí vận chuyển cho đơn hàng từ 500.000₫</p>
+            </div>
+            <div class="cart-summary__rows">
+                <div class="summary-row d-flex justify-content-between mb-2">
+                    <span class="summary-row__label">Tạm tính:</span>
+                    <span class="summary-row__value currency-value">0₫</span>
+                </div>
+                <div class="summary-row d-flex justify-content-between mb-2">
+                    <span class="summary-row__label">Phí vận chuyển:</span>
+                    <span class="summary-row__value currency-value">Miễn phí</span>
+                </div>
+                <div class="summary-row summary-row--total d-flex justify-content-between mt-3 pt-3">
+                    <span class="summary-row__label">Tổng cộng:</span>
+                    <span class="summary-row__value currency-value">0₫</span>
+                </div>
+            </div>
+            <div class="step-navigation d-flex flex-wrap justify-content-between gap-3 mt-4">
+                <a href="index.html" class="btn btn-outline-primary flex-grow-1 text-center">
+                    Tiếp tục mua sắm
+                </a>
+                <button class="btn btn-success btn--checkout flex-grow-1 text-center" id="proceed-to-step-2">
+                    Đặt hàng ngay
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Checkout Step: Delivery -->
+    <div class="checkout-step delivery-step d-none" id="step-2">
+        <h2 class="cart-title mb-4">Thông tin giao hàng</h2>
+        <form class="delivery-form">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label for="recipient-name" class="form-label">Họ và tên *</label>
+                    <input type="text" class="form-control" id="recipient-name" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label for="recipient-phone" class="form-label">Số điện thoại *</label>
+                    <input type="tel" class="form-control" id="recipient-phone" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="province" class="form-label">Tỉnh/Thành phố *</label>
+                    <select class="form-select" id="province" required>
+                        <option selected disabled>Chọn tỉnh/thành phố</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="district" class="form-label">Quận/Huyện *</label>
+                    <select class="form-select" id="district" required>
+                        <option selected disabled>Chọn quận/huyện</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="ward" class="form-label">Phường/Xã *</label>
+                    <select class="form-select" id="ward" required>
+                        <option selected disabled>Chọn phường/xã</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label for="recipient-address" class="form-label">Địa chỉ chi tiết *</label>
+                    <input type="text" class="form-control" id="recipient-address" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label for="note" class="form-label">Ghi chú (tùy chọn)</label>
+                    <textarea class="form-control" id="note"></textarea>
+                </div>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="invoice-required" checked>
+                <label class="form-check-label" for="invoice-required">Yêu cầu xuất hóa đơn</label>
+            </div>
+            <div class="step-navigation d-flex justify-content-between gap-3 mt-4">
+                <button type="button" class="btn btn-outline-primary flex-fill" onclick="showStep(1)">
+                    Quay lại
+                </button>
+                <button type="button" class="btn btn-success flex-fill" id="proceed-to-step-3">
+                    Tiếp tục
+                </button>
+            </div>
+
+
+        </form>
+    </div>
+
+    <!-- Checkout Step: Payment -->
+    <div class="checkout-step payment-step d-none" id="step-3">
+        <h2 class="cart-title mb-4">Xác nhận và thanh toán</h2>
+        <div class="payment-content row">
+            <div class="summary-section col-lg-7">
+                <div class="info-card p-4 mb-4 rounded">
+                    <h3>Thông tin giao hàng</h3>
+                    <div class="info-card-content" id="delivery-summary"></div>
+                </div>
+                <div class="info-card p-4 rounded">
+                    <h3>Chi tiết đơn hàng</h3>
+                    <div id="order-summary"></div>
+                </div>
+            </div>
+
+            <div class="payment-section col-lg-5">
+                <div class="payment-card p-4 rounded">
+                    <h4>Phương thức thanh toán</h4>
+                    <div class="method-option p-3 mb-3 rounded selected cod" data-method="cod">
+                        <label for="cod" class="d-flex align-items-center gap-2">
+                            <input type="radio" name="payment-method" id="cod" value="cod" checked>
+                            <div id="lottie-cod" class="lottie-animation"></div>
+                            <span>Thanh toán khi nhận hàng (COD)</span>
+                        </label>
+                    </div>
+
+                    <p class="payment-note">*Lưu ý: Quý khách chỉ thanh toán sau khi nhận được đơn hàng!</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="button" class="btn btn-outline-primary flex-fill" onclick="showStep(2)">
+                            Quay lại
+                        </button>
+                        <button class="btn btn-success flex-fill" id="payment-btn" onclick="showConfirmation()">
+                            Thanh toán
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal: Confirm Payment -->
+    <div class="modal fade" id="confirmation-modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content cyber-modal">
+                <h2 class="text-center mb-4">Xác nhận thanh toán</h2>
+                <div id="modal-summary"></div>
+                <div class="modal-buttons d-flex gap-3 mt-4">
+                    <button class="modal-btn btn btn-danger flex-fill" onclick="closeModal()">Hủy</button>
+                    <button class="modal-btn btn btn-success flex-fill" onclick="processPayment()">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal: No Invoice Warning -->
+    <div class="modal fade" id="modal-no-invoice">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content cyber-modal">
+                <h2>Cảnh báo!</h2>
+                <p>Bạn cần có hóa đơn thanh toán chi tiết để đối chiếu và khiếu nại đơn hàng. Nếu không có hóa đơn, chúng tôi không chịu trách nhiệm!</p>
+                <div class="modal-buttons d-flex gap-3">
+                    <button id="btn-confirm-no-invoice" class="modal-btn btn btn-success">Vẫn tiếp tục</button>
+                    <button id="btn-cancel-no-invoice" class="modal-btn btn btn-danger" data-bs-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Loading -->
+    <div class="modal fade" id="loading-overlay">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content cyber-modal loading-content">
+                <div id="loading-lottie"></div>
+                <p>Đang xử lý thanh toán...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Payment Success -->
+    <div class="modal fade" id="success-modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content cyber-modal text-center">
+                <div id="success-lottie" style="width: 150px; height: 150px; margin: 0 auto;"></div>
+                <h2 class="mt-4">Thanh toán thành công!</h2>
+                <p>Cảm ơn bạn đã mua hàng tại 3TD Shop.</p>
+                <button class="modal-btn btn btn-success mt-3" onclick="goToLookup()">OK</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="footer-container"></div>
+<!-- Bootstrap 5 JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+<!-- Lottie Animation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<!-- Custom JS -->
+<script src="Script/js_header.js" defer></script>
+<script src="Script/js_resetcheckout.js" defer></script>
+</body>
+</html>

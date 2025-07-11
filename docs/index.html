@@ -40,13 +40,18 @@
 <script src="Script/js_header.js" defer></script>
 <!-- ✅ JS riêng cho main content -->
 <script src="Script/js_maincontent.js" defer></script>
-
+<script src="Script/js_resetcheckout.js" defer></script>
+<script src="Script/js_resetlookup.js" defer></script>
 
 <!-- ✅ Script load động -->
 <script defer>
     document.addEventListener("DOMContentLoaded", function() {
         loadSection("HTML/Layout/resetheader.html", "#header-container", function() {
             if (typeof initHeader === 'function') initHeader();
+
+        });
+        loadSection("HTML/Layout/resetmaincontent.html", "#maincontent-container", function() {
+            initializeCartSystem(); // Gọi lại để gắn sự kiện cho nút "Mua ngay"
             if (typeof initMainContent === 'function') initMainContent();
         });
 

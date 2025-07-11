@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra cứu đơn hàng - 3TD Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="HTML/Style/resetlookup.css">
+    <link rel="stylesheet" href="HTML/Style/common.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <!-- Flatpickr CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+</head>
+<body class="cyber-main">
+<div id="header-container"></div>
+
+<div class="container lookup-container cyber-main">
+    <div class="breadcrumb-steps d-flex justify-content-between align-items-center mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tra cứu đơn hàng</li>
+            </ol>
+        </nav>
+    </div>
+
+    <h1 class="cart-title">Tra cứu đơn hàng</h1>
+
+    <div class="search-filter mb-4 p-4 rounded">
+        <div class="search-bar-lookup row g-3">
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="product-keyword" placeholder="Tìm kiếm theo tên sản phẩm">
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="status-filter">
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="Đơn hàng đang xử lý">Đang xử lý</option>
+                    <option value="Đơn hàng đang được vận chuyển">Đang vận chuyển</option>
+                    <option value="Đơn hàng đã hoàn thành">Đã hoàn thành</option>
+                    <option value="Đơn hàng đã hủy">Đã hủy</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <div class="input-group datepicker-wrapper">
+                    <input type="text" class="form-control" id="start-date" placeholder="Ngày bắt đầu">
+                    <span class="input-group-text start-date-icon">
+                        <i class='bx bx-calendar'></i>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="input-group datepicker-wrapper">
+                    <input type="text" class="form-control" id="end-date" placeholder="Ngày kết thúc">
+                    <span class="input-group-text end-date-icon">
+                         <i class='bx bx-calendar'></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100" onclick="applyFilters()"><i class="bx bx-search"></i> Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="searching-animation" class="loading text-center d-none">
+        <lottie-player src="/transformanimation/orderprocessing.json" background="transparent" speed="1" style="width: 100px; height: 100px; margin: 0 auto;" loop autoplay></lottie-player>
+        <p>Đang tìm kiếm đơn hàng...</p>
+    </div>
+
+    <div id="orders-container" class="orders-container"></div>
+
+    <div id="empty-orders" class="empty-orders text-center d-none">
+        <lottie-player src="/transformanimation/emptycart.json" background="transparent" speed="1" style="width: 200px; height: 200px; margin: 0 auto;" loop autoplay></lottie-player>
+        <h2>Chưa có đơn hàng nào</h2>
+        <a href="index.html" class="btn btn-primary continue-shopping-btn">Tiếp tục mua sắm</a>
+    </div>
+
+    <div id="reward-popup" class="reward-popup-overlay d-none">
+        <div class="reward-popup">
+            <h3>Thông báo</h3>
+            <p>Hoàn tất nhận hàng để tiến hành nhận thưởng</p>
+            <button class="btn btn-success" onclick="closeRewardPopup()">OK</button>
+        </div>
+    </div>
+
+    <div id="pdf-render-area" style="display: none;"></div>
+</div>
+
+<div id="footer-container"></div>
+
+<audio id="newcard-sound" src="/sounds/newcard.mp3"></audio>
+<audio id="ting-sound" src="/sounds/ting.mp3"></audio>
+<audio id="swish-sound" src="/sounds/swish.mp3"></audio>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="Script/js_resetlookup.js"></script>
+<script src="Script/js_header.js"></script>
+<script src="Script/js_resetcheckout.js" defer></script>
+</body>
+</html>

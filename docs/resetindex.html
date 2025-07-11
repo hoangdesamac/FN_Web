@@ -1,80 +1,196 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Web3TD - Trang chủ</title>
+    <meta charset="UTF-8">
+    <title>
+        Web3TD - Trang chủ
+    </title>
     <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
-
-    <!-- ✅ BOOTSTRAP CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- ✅ FontAwesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-
-    <!-- ✅ Boxicons -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../HTML/Style/style.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
 
-    <!-- ✅ Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Audiowide&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+        #header-container, #main-container {
+            width: 100%;
+        }
 
-    <!-- ✅ CSS CHUNG -->
-    <link rel="stylesheet" href="HTML/Style/common.css">
+        #banner-container {
+            padding-top: 30px;
+        }
 
-    <!-- ✅ CSS RIÊNG PHẦN MAIN -->
-    <link rel="stylesheet" href="HTML/Style/resetmaincontent.css">
+        /* Thêm kiểu cho icon và container chat */
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #ff4500;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+        }
 
+        .chat-icon:hover {
+            background-color: #ff6347;
+        }
+
+        #chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            background-color: #fff;
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+            display: none;
+        }
+    </style>
+    <script src="Script/js_ShowAutoScroll.js"></script>
+    <script src="Script/js_MenuClick.js"></script>
+    <script src="Script/js_ShowPopupAuth.js"></script>
+    <script src="Script/js_Checkout.js" defer></script>
+    <script src="Script/js_CartPopup.js" defer></script>
 </head>
 <body>
-
-<!-- ✅ Container các phần tách -->
-
+<!-- Header -->
 <div id="header-container"></div>
+
+<!-- Banner -->
+<div id="banner-container"></div>
+
+<!-- Main Content -->
+<div id="main-container"></div>
+
+<!-- Footer -->
 <div id="footer-container"></div>
 
-<!-- ✅ Bootstrap JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+<!-- Icon chat -->
+<div id="chat-icon" class="chat-icon">💬</div>
 
-<!-- ✅ JS riêng header -->
-<script src="Script/js_header.js" defer></script>
-<!-- ✅ JS riêng cho main content -->
-<script src="Script/js_maincontent.js" defer></script>
+<!-- Container cho chat module -->
+<div id="chat-container"></div>
 
+<script>
+    async function loadPagePart(url, containerId, callback = null) {
+        try {
+            const response = await fetch(url);
+            const html = await response.text();
 
-<!-- ✅ Script load động -->
-<script defer>
-    document.addEventListener("DOMContentLoaded", function() {
-        loadSection("HTML/Layout/resetheader.html", "#header-container", function() {
-            if (typeof initHeader === 'function') initHeader();
-            if (typeof initMainContent === 'function') initMainContent();
-        });
+            const container = document.getElementById(containerId);
+            container.innerHTML = html;
 
-        loadSection("HTML/Layout/resetfooter.html", "#footer-container", function() {
-            if (typeof initFooter === 'function') initFooter();
-        });
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+
+            const scripts = tempDiv.querySelectorAll('script');
+            scripts.forEach(oldScript => {
+                const src = oldScript.src;
+                if (src && document.querySelector(`script[src="${src}"]`)) return;
+
+                const newScript = document.createElement('script');
+                if (src) {
+                    newScript.src = src;
+                    newScript.defer = true;
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                }
+                document.body.appendChild(newScript);
+            });
+
+            if (typeof callback === 'function') callback();
+        } catch (error) {
+            console.error(`Lỗi khi tải ${url}:`, error);
+        }
+    }
+
+    // Load header
+    loadPagePart("HTML/Layout/header.html", "header-container", () => {
+        const checkDomReady = () => {
+            const menuToggle = document.getElementById('menuToggle');
+            const menuList = document.getElementById('menuList');
+            const submenuItems = document.querySelectorAll('.submenu li');
+
+            if (!menuToggle || !menuList || submenuItems.length < 3) {
+                setTimeout(checkDomReady, 100);
+                return;
+            }
+
+            if (typeof initializeMenuSystem === 'function') {
+                initializeMenuSystem();
+            }
+            updateCartCount();
+            // Gọi initializeUser từ js_ShowPopupAuth.js sau khi header được tải
+            if (typeof initializeUser === 'function') {
+                initializeUser();
+            }
+        };
+        checkDomReady();
     });
 
-    function loadSection(url, selector, callback) {
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.text();
-            })
-            .then(data => {
-                document.querySelector(selector).innerHTML = data;
+    // Load banner
+    loadPagePart("HTML/Content/banner.html", "banner-container", () => {
+        const checkBannerScripts = () => {
+            if (typeof initializeSlideshow === 'function') {
+                initializeSlideshow();
+            } else {
+                const bannerScript = document.createElement('script');
+                bannerScript.src = "Script/js_BannerDynamic.js";
+                bannerScript.defer = true;
+                bannerScript.onload = () => {
+                    if (typeof initializeSlideshow === 'function') {
+                        initializeSlideshow();
+                    }
+                };
+                document.body.appendChild(bannerScript);
+            }
+        };
+        checkBannerScripts();
+    });
 
-                // ✅ Gọi callback nếu có
-                if (callback && typeof callback === 'function') {
-                    callback();
-                }
-            })
-            .catch(error => {
-                console.error('Error loading section:', error);
+    // Load main content
+    loadPagePart("HTML/Layout/mainContent.html", "main-container", () => {
+        if (typeof initializeAutoScroll === 'function') initializeAutoScroll();
+        if (typeof initializeCartSystem === 'function') setTimeout(initializeCartSystem, 300);
+    });
+
+    // Load footer
+    loadPagePart("HTML/Layout/footer.html", "footer-container");
+
+    // Load và hiển thị chat module
+    async function loadChatModule() {
+        const chatContainer = document.getElementById('chat-container');
+        if (chatContainer.style.display === 'none' || chatContainer.style.display === '') {
+            await loadPagePart("chat-module.html", "chat-container", () => {
+                const chatScript = document.createElement('script');
+                chatScript.src = "chat_module.js";
+                chatScript.defer = true;
+                document.body.appendChild(chatScript);
+                chatContainer.style.display = 'block';
             });
+        } else {
+            chatContainer.style.display = 'none';
+        }
     }
-</script>
 
+    // Gắn sự kiện click cho icon
+    document.getElementById('chat-icon').addEventListener('click', loadChatModule);
+</script>
 </body>
 </html>

@@ -473,7 +473,7 @@
 .sale-price {
     color: red;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .rating {
@@ -488,7 +488,7 @@
 
 .sold-info {
     font-size: 0.8rem;
-    color: var(--cyber-secondary);
+    color: white;
     margin-bottom: 0.5rem;
     word-wrap: break-word;
     overflow-wrap: break-word;

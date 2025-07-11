@@ -1,40 +1,54 @@
+function loadPagePart(url, selector, callback = null, executeScripts = true) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(data => {
+            const container = document.querySelector(selector);
+            if (container) {
+                container.innerHTML = data;
 
-    async function loadPagePart(url, containerId, callback = null) {
-        try {
-            const response = await fetch(url);
-            const html = await response.text();
-            const container = document.getElementById(containerId);
-            container.innerHTML = html;
-
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            const scripts = tempDiv.querySelectorAll('script');
-            scripts.forEach(oldScript => {
-                const src = oldScript.src;
-                if (src && document.querySelector(`script[src="${src}"]`)) return;
-                const newScript = document.createElement('script');
-                if (src) {
-                    newScript.src = src;
-                    newScript.defer = true;
-                } else {
-                    newScript.textContent = oldScript.textContent;
+                if (executeScripts) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = data;
+                    const scripts = tempDiv.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        if (oldScript.src) {
+                            if (!document.querySelector(`script[src="${oldScript.src}"]`)) {
+                                newScript.src = oldScript.src;
+                                newScript.defer = true;
+                                document.body.appendChild(newScript);
+                            }
+                        } else {
+                            newScript.textContent = oldScript.textContent;
+                            document.body.appendChild(newScript);
+                        }
+                    });
                 }
-                document.body.appendChild(newScript);
-            });
 
-            if (typeof callback === 'function') callback();
-        } catch (error) {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
+        })
+        .catch(error => {
             console.error(`Lỗi khi tải ${url}:`, error);
-        }
-    }
+        });
+}
 
 let deliveryInfo = {};
 let currentStep = 1;
 
 function showStep(step) {
-    document.querySelectorAll('.checkout-step').forEach(stepDiv => stepDiv.style.display = 'none');
-    document.getElementById(`step-${step}`).style.display = 'block';
-    document.querySelectorAll('.breadcrumb-steps .step').forEach(stepEl => stepEl.classList.remove('active', 'completed'));
+    document.querySelectorAll('.checkout-step').forEach(stepDiv => stepDiv.classList.add('d-none'));
+    document.getElementById(`step-${step}`).classList.remove('d-none');
+    document.querySelectorAll('.breadcrumb-steps .step').forEach(stepEl => {
+        stepEl.classList.remove('active', 'completed');
+    });
     for (let i = 1; i <= 3; i++) {
         const stepEl = document.getElementById(`breadcrumb-step-${i}`);
         if (i < step) stepEl.classList.add('completed');
@@ -52,18 +66,28 @@ function initializeCartSystem() {
         renderCart();
     }
 
-
-    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-        button.addEventListener('click', function() {
+    // Logic cho nút "Mua ngay"
+    document.querySelectorAll('.buy-button').forEach(button => {
+        button.addEventListener('click', function () {
             const productCard = this.closest('.product-card');
-            const productId = productCard.getAttribute('data-id');
-            const productName = productCard.querySelector('.product-name').textContent;
-            const priceText = productCard.querySelector('.product-price strong').textContent;
-            const priceValue = parseInt(priceText.replace(/\D/g, ''));
-            const productImage = productCard.querySelector('.product-image').getAttribute('src');
+            if (!productCard) {
+                showNotification('Không tìm thấy thông tin sản phẩm!', 'error');
+                return;
+            }
 
-            addToCart(productId, productName, priceValue, productImage);
-            showNotification(`Đã thêm "${productName}" vào giỏ hàng!`);
+            const productId = productCard.getAttribute('data-id') || `prod_${Date.now()}`;
+            const productName = productCard.querySelector('.product-name')?.textContent.trim() || 'Sản phẩm không tên';
+            const originalPriceText = productCard.querySelector('.original-price')?.textContent || '0';
+            const salePriceText = productCard.querySelector('.sale-price')?.textContent || originalPriceText;
+            const originalPrice = parseInt(originalPriceText.replace(/\D/g, '')) || 0;
+            const salePrice = parseInt(salePriceText.replace(/\D/g, '')) || originalPrice;
+            const discountPercentText = productCard.querySelector('.discount-badge')?.textContent || '0%';
+            const discountPercent = parseInt(discountPercentText.replace(/[^0-9]/g, '')) || 0;
+            const productImage = productCard.querySelector('.product-image img')?.src || '';
+
+            addToCart(productId, productName, originalPrice, salePrice, discountPercent, productImage);
+            showNotification(`Đã thêm "${productName}" vào giỏ hàng!`, 'success');
+            setTimeout(() => window.location.href = 'resetcheckout.html', 800);
         });
     });
 
@@ -93,7 +117,7 @@ function saveCart(cart) {
     cartCache = cart;
 }
 
-function addToCart(productId, productName, price, image) {
+function addToCart(productId, productName, originalPrice, salePrice, discountPercent, image) {
     let cart = getCart();
     const existingItemIndex = cart.findIndex(item => item.id === productId);
     animateCartIcon();
@@ -105,19 +129,23 @@ function addToCart(productId, productName, price, image) {
         cart.push({
             id: productId,
             name: productName,
-            price: price,
+            originalPrice: originalPrice,
+            salePrice: salePrice,
+            discountPercent: discountPercent,
             image: image,
             quantity: 1,
-            addedAt: new Date().toISOString()
+            addedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
         });
     }
 
     saveCart(cart);
     updateCartCount();
+    renderCart();
 }
 
 function animateCartIcon() {
-    const cartIcon = document.querySelector('.user-actions .bx-cart, .user-actions .bxs-cart');
+    const cartIcon = document.querySelector('.user-actions .fa-cart-shopping');
     if (cartIcon) {
         cartIcon.classList.add('cart-bounce');
         setTimeout(() => {
@@ -132,7 +160,7 @@ function updateCartCount() {
     let cartCountElement = document.querySelector('.cart-count');
 
     if (!cartCountElement) {
-        const cartIcon = document.querySelector('.user-actions span:first-child');
+        const cartIcon = document.querySelector('.user-actions .fa-cart-shopping')?.parentElement;
         if (cartIcon) {
             cartCountElement = document.createElement('span');
             cartCountElement.className = 'cart-count';
@@ -162,6 +190,7 @@ function createNotificationElement() {
 
     const notification = document.createElement('div');
     notification.id = 'notification';
+    notification.className = 'notification';
     notification.style.display = 'none';
     document.body.appendChild(notification);
     return notification;
@@ -186,10 +215,8 @@ function showNotification(message, type = 'success') {
     if (type === 'success' && message.includes('Đã thêm')) {
         actionButton = `
             <div class="notification-actions">
-                <a href="checkout.html" class="view-cart-btn">Xem giỏ hàng</a>
-                <button class="continue-btn" onclick="hideNotification()">
-                    Tiếp tục mua sắm
-                </button>
+                <a href="resetcheckout.html" class="view-cart-btn">Xem giỏ hàng</a>
+                <button class="continue-btn" onclick="hideNotification()">Tiếp tục mua sắm</button>
             </div>
         `;
     }
@@ -235,16 +262,8 @@ function hideNotification() {
 function clearCart() {
     if (confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?')) {
         saveCart([]);
-        if (document.getElementById('cart-items-container')) {
-            renderCart();
-        }
+        renderCart();
         updateCartCount();
-
-        const clearCartBtn = document.getElementById('clear-cart');
-        if (clearCartBtn) {
-            clearCartBtn.style.display = 'none';
-        }
-
         showNotification('Đã xóa tất cả sản phẩm khỏi giỏ hàng', 'success');
     }
 }
@@ -331,105 +350,100 @@ function renderCart() {
     const proceedButton = document.getElementById('proceed-to-step-2');
     const clearCartBtn = document.getElementById('clear-cart');
     const continueBtn = document.getElementById('continue-shopping-btn');
-    let cart = JSON.parse(localStorage.getItem('cart')) || []; // Đảm bảo lấy trực tiếp từ localStorage
-    if (cartCache) {
-        cart = cartCache; // Sử dụng cache nếu đã có
-    }
-
-    // Dọn phần tử trùng empty-cart nếu có (chống nhân đôi)
-    const emptyCartList = document.querySelectorAll('#empty-cart');
-    if (emptyCartList.length > 1) {
-        emptyCartList.forEach((el, i) => {
-            if (i > 0) el.remove();
-        });
-    }
+    let cart = getCart();
 
     if (cart.length === 0) {
-        if (emptyCart) emptyCart.style.display = 'block';
-        if (cartItemsContainer) cartItemsContainer.innerHTML = '';
-        if (proceedButton) proceedButton.style.display = 'none';
-        if (clearCartBtn) clearCartBtn.style.display = 'none';
-        if (continueBtn) continueBtn.style.display = 'none';
+        if (emptyCart) emptyCart.classList.remove('d-none');
+        if (cartItemsContainer) {
+            cartItemsContainer.classList.add('d-none'); // Ẩn khung sản phẩm
+            cartItemsContainer.innerHTML = '';
+        }
+        const cartSummary = document.querySelector('.cart-summary');
+        if (cartSummary) cartSummary.classList.add('d-none'); // Ẩn khung tóm tắt
+        if (proceedButton) proceedButton.classList.add('d-none');
+        if (clearCartBtn) clearCartBtn.classList.add('d-none');
+        if (continueBtn) continueBtn.classList.remove('d-none');
+        updateCartSummary(0);
         return;
     }
 
-    if (emptyCart) emptyCart.style.display = 'none';
-    if (proceedButton) proceedButton.style.display = 'block';
-
-    // Tạo lại nội dung giỏ hàng
-    if (!cartItemsContainer) return;
-
-    const summaryTemplate = document.getElementById('cart-summary-template');
-    if (!summaryTemplate) return;
-
-    const summary = summaryTemplate.content.cloneNode(true);
-    const cartItemsSection = summary.querySelector('.cart-items');
+    if (emptyCart) emptyCart.classList.add('d-none');
+    if (proceedButton) proceedButton.classList.remove('d-none');
+    if (clearCartBtn) clearCartBtn.classList.remove('d-none');
+    if (continueBtn) continueBtn.classList.remove('d-none');
 
     let total = 0;
+    let cartItemsHTML = '';
 
     cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
+        const itemTotal = item.salePrice * item.quantity;
         total += itemTotal;
 
-        const itemTemplate = document.getElementById('cart-item-template');
-        if (!itemTemplate) return;
-
-        const clone = itemTemplate.content.cloneNode(true);
-        const cartItem = clone.querySelector('.cart-item');
-
-        const img = cartItem.querySelector('.cart-item__image');
-        img.src = item.image;
-        img.alt = item.name;
-
-        cartItem.querySelector('.cart-item__name').textContent = item.name;
-        cartItem.querySelector('.cart-item__price').textContent = formatCurrency(item.price);
-        cartItem.querySelector('.quantity-input').value = item.quantity;
-        cartItem.querySelector('.cart-item__total').textContent = formatCurrency(itemTotal);
-
-        cartItem.querySelector('.quantity-btn--decrease').setAttribute('onclick', `updateQuantity(${index}, -1)`);
-        cartItem.querySelector('.quantity-btn--increase').setAttribute('onclick', `updateQuantity(${index}, 1)`);
-        cartItem.querySelector('.cart-item__remove').setAttribute('onclick', `removeItem(${index})`);
-
-        cartItemsSection.appendChild(cartItem);
+        cartItemsHTML += `
+            <div class="cart-item d-flex align-items-center p-3 mb-3 rounded">
+                <img src="${item.image}" alt="${item.name}" class="cart-item__image me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                <div class="cart-item__info flex-grow-1">
+                    <h5 class="cart-item__name">${item.name}</h5>
+                    <div class="price-section">
+                        <span class="original-price me-2">${formatCurrency(item.originalPrice)}</span>
+                        <span class="sale-price">${formatCurrency(item.salePrice)}</span>
+                        <span class="discount-badge badge bg-danger ms-2">-${item.discountPercent}%</span>
+                    </div>
+                </div>
+                <div class="cart-item__quantity d-flex align-items-center">
+                   <button class="quantity-btn quantity-btn--decrease" onclick="updateQuantity(${index}, -1)">
+                      <i class="fa fa-minus"></i>
+                   </button>
+                   <input type="number" class="quantity-input" value="${item.quantity}" readonly>
+                   <button class="quantity-btn quantity-btn--increase" onclick="updateQuantity(${index}, 1)">
+                      <i class="fa fa-plus"></i>
+                   </button>
+                </div>
+                <div class="cart-item__total ms-3">${formatCurrency(itemTotal)}</div>
+                <button class="cart-item__remove ms-3" onclick="removeItem(${index})">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+        `;
     });
 
-    summary.querySelectorAll('.currency-value')[0].textContent = formatCurrency(total);
-    if (summary.querySelectorAll('.currency-value')[2])
-        summary.querySelectorAll('.currency-value')[2].textContent = formatCurrency(total);
-
-    cartItemsContainer.innerHTML = '';
-    cartItemsContainer.appendChild(summary);
-
-    if (clearCartBtn) {
-        clearCartBtn.style.display = cart.length > 0 ? 'flex' : 'none';
+    if (cartItemsContainer) {
+        cartItemsContainer.innerHTML = cartItemsHTML;
     }
+
+    updateCartSummary(total);
 }
 
+function updateCartSummary(total) {
+    const summaryRows = document.querySelectorAll('.cart-summary__rows .currency-value');
+    const shippingFee = total >= 500000 ? 0 : 30000; // Miễn phí vận chuyển cho đơn từ 500.000₫
+    if (summaryRows.length >= 3) {
+        summaryRows[0].textContent = formatCurrency(total);
+        summaryRows[1].textContent = shippingFee === 0 ? 'Miễn phí' : formatCurrency(shippingFee);
+        summaryRows[2].textContent = formatCurrency(total + shippingFee);
+    }
+}
 
 function loadDeliveryInfo() {
     const delivery = JSON.parse(localStorage.getItem('deliveryInfo')) || {};
 
-    if (delivery) {
-        const fullNameEl = document.getElementById('recipient-name');
-        const phoneEl = document.getElementById('recipient-phone');
-        const emailEl = document.getElementById('email');
-        const addressEl = document.getElementById('recipient-address');
-        const provinceEl = document.getElementById('province');
-        const districtEl = document.getElementById('district');
-        const wardEl = document.getElementById('ward');
-        const noteEl = document.getElementById('note');
-        const invoiceCheckbox = document.getElementById('invoice-required');
+    const fullNameEl = document.getElementById('recipient-name');
+    const phoneEl = document.getElementById('recipient-phone');
+    const addressEl = document.getElementById('recipient-address');
+    const provinceEl = document.getElementById('province');
+    const districtEl = document.getElementById('district');
+    const wardEl = document.getElementById('ward');
+    const noteEl = document.getElementById('note');
+    const invoiceCheckbox = document.getElementById('invoice-required');
 
-        if (fullNameEl) fullNameEl.value = delivery.fullName || '';
-        if (phoneEl) phoneEl.value = delivery.phoneNumber || '';
-        if (emailEl) emailEl.value = delivery.email || '';
-        if (addressEl) addressEl.value = delivery.address || '';
-        if (provinceEl) provinceEl.value = delivery.province || '';
-        if (districtEl) districtEl.value = delivery.district || '';
-        if (wardEl) wardEl.value = delivery.ward || '';
-        if (noteEl) noteEl.value = delivery.note || '';
-        if (invoiceCheckbox) invoiceCheckbox.checked = delivery.invoiceRequested || false;
-    }
+    if (fullNameEl) fullNameEl.value = delivery.name || '';
+    if (phoneEl) phoneEl.value = delivery.phone || '';
+    if (addressEl) addressEl.value = delivery.address || '';
+    if (provinceEl) provinceEl.value = delivery.province || '';
+    if (districtEl) districtEl.value = delivery.district || '';
+    if (wardEl) wardEl.value = delivery.ward || '';
+    if (noteEl) noteEl.value = delivery.note || '';
+    if (invoiceCheckbox) invoiceCheckbox.checked = delivery.invoiceRequired || true;
 }
 
 function saveDeliveryInfo() {
@@ -450,7 +464,6 @@ function saveDeliveryInfo() {
 
     localStorage.setItem('deliveryInfo', JSON.stringify(deliveryInfo));
 }
-
 
 function validateDeliveryInfo() {
     const name = document.getElementById('recipient-name').value.trim();
@@ -483,45 +496,36 @@ function renderOrderSummary() {
     }
 
     let productsHTML = '';
+    let total = 0;
+
     cart.forEach(item => {
+        const itemTotal = item.salePrice * item.quantity;
+        total += itemTotal;
         productsHTML += `
-            <div class="order-product">
-                <img src="${item.image}" alt="${item.name}">
-                <div class="order-product-info">
-                    <p class="order-product-name">${item.name} (x${item.quantity})</p>
-                    <p class="order-product-price">${formatCurrency(item.price)}</p>
+            <div class="order-product d-flex align-items-center p-3 mb-2 rounded">
+                <img src="${item.image}" alt="${item.name}" class="me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                <div class="order-product-info flex-grow-1">
+                    <h5 class="order-product-name">${item.name} (x${item.quantity})</h5>
+                    <div class="price-section">
+                        <span class="original-price me-2">${formatCurrency(item.originalPrice)}</span>
+                        <span class="sale-price">${formatCurrency(item.salePrice)}</span>
+                        <span class="discount-badge badge bg-danger ms-2">-${item.discountPercent}%</span>
+                    </div>
                 </div>
             </div>
         `;
     });
 
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     orderSummary.innerHTML = `
         ${productsHTML}
-        <div class="order-total">Tổng cộng: ${formatCurrency(total)}</div>
-    `;
-
-    const summaryDetails = document.getElementById('summary-details');
-    summaryDetails.innerHTML = `
-        <div class="summary-row">
-            <span>Tạm tính:</span>
-            <span>${formatCurrency(total)}</span>
-        </div>
-        <div class="summary-row">
-            <span>Phí vận chuyển:</span>
-            <span>Miễn phí</span>
-        </div>
-        <div class="summary-row total">
-            <span>Tổng cộng:</span>
-            <span>${formatCurrency(total)}</span>
-        </div>
+        <div class="order-total mt-3">Tổng cộng: ${formatCurrency(total)}</div>
     `;
 }
 
 function renderDeliverySummary() {
     const summary = document.getElementById('delivery-summary');
     summary.innerHTML = `
-        <p><strong>Người nhận:</strong> ${deliveryInfo.name}</p>
+        <p><strong>Họ và tên:</strong> ${deliveryInfo.name}</p>
         <p><strong>Số điện thoại:</strong> ${deliveryInfo.phone}</p>
         <p><strong>Địa chỉ:</strong> ${deliveryInfo.address}, ${deliveryInfo.ward}, ${deliveryInfo.district}, ${deliveryInfo.province}</p>
         ${deliveryInfo.note ? `<p><strong>Ghi chú:</strong> ${deliveryInfo.note}</p>` : ''}
@@ -542,27 +546,47 @@ function showConfirmation() {
         return;
     }
 
-    const selectedMethod = document.querySelector('input[name="payment-method"]:checked').value;
+    const selectedMethod = document.querySelector('input[name="payment-method"]:checked')?.value;
+    if (!selectedMethod) {
+        showNotification('Vui lòng chọn phương thức thanh toán!', 'error');
+        return;
+    }
+
     const methodText = {
-        cod: 'Thanh toán khi nhận hàng (COD)',
-
+        cod: 'Thanh toán khi nhận hàng (COD)'
     }[selectedMethod];
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
+    const total = cart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
     document.getElementById('modal-summary').innerHTML = `
         <p><strong>Tổng tiền:</strong> ${formatCurrency(total)}</p>
         <p><strong>Phương thức thanh toán:</strong> ${methodText}</p>
-        <p><strong>Người nhận:</strong> ${deliveryInfo.name}</p>
+        <p><strong>Họ và tên:</strong> ${deliveryInfo.name}</p>
         <p><strong>Địa chỉ:</strong> ${deliveryInfo.address}, ${deliveryInfo.ward}, ${deliveryInfo.district}, ${deliveryInfo.province}</p>
         ${deliveryInfo.note ? `<p><strong>Ghi chú:</strong> ${deliveryInfo.note}</p>` : ''}
         <p><strong>Yêu cầu xuất hóa đơn:</strong> ${deliveryInfo.invoiceRequired ? 'Có' : 'Không'}</p>
     `;
-    document.getElementById('confirmation-modal').style.display = 'flex';
+
+    const modal = new bootstrap.Modal(document.getElementById('confirmation-modal'));
+    modal.show();
 }
 
 function closeModal() {
-    document.getElementById('confirmation-modal').style.display = 'none';
+    const modalEl = document.getElementById('confirmation-modal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+
+    if (modal) {
+        modal.hide();
+    }
+
+    setTimeout(() => {
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.remove();
+
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = 'auto'; // ✅ fix chuẩn
+        document.body.style.paddingRight = '';
+    }, 500);
 }
+
 
 function generateOrderId() {
     const orders = JSON.parse(localStorage.getItem('orders')) || [];
@@ -579,7 +603,8 @@ function generateOrderId() {
 }
 
 function showSuccessModal() {
-    document.getElementById('success-modal').style.display = 'flex';
+    const modal = new bootstrap.Modal(document.getElementById('success-modal'));
+    modal.show();
 
     confetti({
         particleCount: 100,
@@ -596,14 +621,15 @@ function showSuccessModal() {
     });
 }
 
-
 function goToLookup() {
-    window.location.href = 'lookup.html';
+    window.location.href = 'resetlookup.html';
 }
 
 function processPayment() {
     closeModal();
-    document.getElementById('loading-overlay').style.display = 'flex';
+    const loadingModal = new bootstrap.Modal(document.getElementById('loading-overlay'));
+    loadingModal.show();
+
     try {
         lottie.loadAnimation({
             container: document.getElementById('loading-lottie'),
@@ -620,16 +646,14 @@ function processPayment() {
         const cart = getCart();
         let orders = JSON.parse(localStorage.getItem('orders')) || [];
         orders.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-        const orderNumber = orders.length + 1;
-        const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
-        const orderId = `DH-${today}-${orderNumber}`;
+        const orderId = generateOrderId();
 
         const selectedMethod = document.querySelector('input[name="payment-method"]:checked').value;
 
         const order = {
             id: orderId,
             items: cart,
-            total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+            total: cart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0),
             status: 'Đơn hàng đang xử lý',
             createdAt: new Date().toISOString(),
             paymentMethod: selectedMethod,
@@ -645,13 +669,13 @@ function processPayment() {
         updateCartCount();
         updateOrderCount();
 
-        // Reset các trường nhập liệu
         const savedInfo = JSON.parse(localStorage.getItem('deliveryInfo')) || {};
         delete savedInfo.name;
         delete savedInfo.phone;
         delete savedInfo.address;
         localStorage.setItem('deliveryInfo', JSON.stringify(savedInfo));
-        document.getElementById('loading-overlay').style.display = 'none';
+
+        loadingModal.hide();
         showSuccessModal();
     }, 2000);
 }
@@ -669,38 +693,13 @@ function updateOrderCount() {
     }
 }
 
-
-function setupRippleEffect() {
-    const rippleButton = document.querySelector('.ripple-button');
-
-    if (rippleButton) {
-        rippleButton.addEventListener('click', function (e) {
-            const circle = document.createElement('span');
-            circle.classList.add('ripple');
-
-            const rect = this.getBoundingClientRect();
-            circle.style.left = `${e.clientX - rect.left}px`;
-            circle.style.top = `${e.clientY - rect.top}px`;
-
-            this.appendChild(circle);
-
-            setTimeout(() => {
-                circle.remove();
-            }, 500);
-        });
-    }
-}
-
-
 function setupAddressDropdownsFromTree(data) {
     const provinceSelect = document.getElementById('province');
     const districtSelect = document.getElementById('district');
     const wardSelect = document.getElementById('ward');
 
-    // Kiểm tra sự tồn tại của các phần tử
     if (!provinceSelect || !districtSelect || !wardSelect) return;
 
-    // Bước 1: Load tỉnh/thành phố
     provinceSelect.innerHTML = '<option value="">Chọn tỉnh/thành phố</option>';
     for (const [provinceCode, provinceObj] of Object.entries(data)) {
         const opt = document.createElement('option');
@@ -709,7 +708,6 @@ function setupAddressDropdownsFromTree(data) {
         provinceSelect.appendChild(opt);
     }
 
-    // Bước 2: Khi chọn tỉnh → load quận/huyện
     provinceSelect.addEventListener('change', () => {
         const provinceCode = provinceSelect.value;
         districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
@@ -726,7 +724,6 @@ function setupAddressDropdownsFromTree(data) {
         }
     });
 
-    // Bước 3: Khi chọn quận/huyện → load phường/xã
     districtSelect.addEventListener('change', () => {
         const provinceCode = provinceSelect.value;
         const districtCode = districtSelect.value;
@@ -749,13 +746,9 @@ function setupAddressDropdownsFromTree(data) {
     });
 }
 
-
-
-
 function setupPaymentMethodAnimations() {
     const animations = [
-        { containerId: 'lottie-cod', path: '/transformanimation/cod.json' },
-
+        { containerId: 'lottie-cod', path: '/transformanimation/cod.json' }
     ];
 
     animations.forEach(animation => {
@@ -769,9 +762,10 @@ function setupPaymentMethodAnimations() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", function () {
     initializeCartSystem();
-    loadPagePart("HTML/Layout/header.html", "header-container", () => {
+    loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {
+        initHeader();
         const checkDomReady = () => {
             const loginBtn = document.getElementById('loginBtn');
             const popup = document.querySelector('.popup');
@@ -786,20 +780,23 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         checkDomReady();
     });
-    loadPagePart("HTML/Layout/footer.html", "footer-container");
+
+    loadPagePart("HTML/Layout/resetfooter.html", "#footer-container", () => {
+        if (typeof initFooter === 'function') initFooter();
+    });
 
     renderCart();
     loadDeliveryInfo();
-    setupRippleEffect();
+
     fetch("/FormText/tree.json")
         .then(res => res.json())
         .then(data => {
             setupAddressDropdownsFromTree(data);
-
         })
         .catch(err => {
             console.error("Lỗi khi tải tree.json:", err);
         });
+
     setupPaymentMethodAnimations();
 
     document.querySelectorAll('.method-option').forEach(option => {
@@ -807,6 +804,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectMethod(option.dataset.method);
         });
     });
+
     const proceedStep2Btn = document.getElementById('proceed-to-step-2');
     if (proceedStep2Btn) {
         proceedStep2Btn.addEventListener('click', () => {
@@ -830,44 +828,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
     const clearCartBtn = document.getElementById('clear-cart');
     if (clearCartBtn) {
         clearCartBtn.addEventListener('click', clearCart);
     }
-});
-document.addEventListener('DOMContentLoaded', function () {
+
+    const paymentBtn = document.getElementById('payment-btn');
+    if (paymentBtn) {
+        paymentBtn.addEventListener('click', showConfirmation);
+    }
+
     const invoiceCheckbox = document.getElementById('invoice-required');
     const modal = document.getElementById('modal-no-invoice');
     const btnConfirm = document.getElementById('btn-confirm-no-invoice');
     const btnCancel = document.getElementById('btn-cancel-no-invoice');
 
-    if (!invoiceCheckbox) return; // nếu form chưa render
+    if (invoiceCheckbox && modal && btnConfirm && btnCancel) {
+        invoiceCheckbox.addEventListener('change', () => {
+            if (!invoiceCheckbox.checked) {
+                const noInvoiceModal = new bootstrap.Modal(modal);
+                noInvoiceModal.show();
+            }
+        });
 
-    invoiceCheckbox.checked = true; // luôn mặc định có hóa đơn
+        btnCancel.addEventListener('click', () => {
+            invoiceCheckbox.checked = true;
+            const noInvoiceModal = bootstrap.Modal.getInstance(modal);
+            if (noInvoiceModal) noInvoiceModal.hide();
+        });
 
-    invoiceCheckbox.addEventListener('change', () => {
-        if (!invoiceCheckbox.checked) {
-            modal.style.display = 'flex';
-        }
-    });
+        btnConfirm.addEventListener('click', () => {
+            const noInvoiceModal = bootstrap.Modal.getInstance(modal);
+            if (noInvoiceModal) noInvoiceModal.hide();
+            localStorage.setItem('hideInvoiceForOrder', 'true');
+        });
+    }
 
-    btnCancel.addEventListener('click', () => {
-        invoiceCheckbox.checked = true;
-        modal.style.display = 'none';
-    });
-
-    btnConfirm.addEventListener('click', () => {
-        modal.style.display = 'none';
-        localStorage.setItem('hideInvoiceForOrder', 'true');
+    lottie.loadAnimation({
+        container: document.getElementById('empty-cart-lottie'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '/transformanimation/emptycart.json'
     });
 });
 
 function selectMethod(method) {
-    document.querySelectorAll('.method-option').forEach(opt => opt.classList.remove('selected', 'cod', 'credit', 'wallet'));
+    document.querySelectorAll('.method-option').forEach(opt => opt.classList.remove('selected', 'cod'));
     const selected = document.querySelector(`.method-option[data-method="${method}"]`);
-    selected.classList.add('selected', method);
-    selected.querySelector('input').checked = true;
+    if (selected) {
+        selected.classList.add('selected', method);
+        selected.querySelector('input').checked = true;
+    }
 }
 
 window.addEventListener('storage', function(e) {
@@ -891,14 +903,3 @@ window.addEventListener('scroll', function() {
         }
     }
 });
-
-document.addEventListener('DOMContentLoaded', () => {
-    lottie.loadAnimation({
-        container: document.getElementById('empty-cart-lottie'),
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: '/transformanimation/emptycart.json'
-    });
-});
-
