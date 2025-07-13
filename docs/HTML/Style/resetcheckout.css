@@ -166,15 +166,6 @@
     box-shadow: 0 0 20px var(--cyber-primary);
 }
 
-.continue-shopping__icon {
-    margin-right: 8px;
-    transition: transform 0.3s ease;
-}
-
-.continue-shopping:hover .continue-shopping__icon {
-    transform: translateX(-5px);
-}
-
 /* 6. Cart Items */
 .cart-items {
     border-radius: var(--radius-lg);
@@ -392,6 +383,7 @@
     color: #ccc;
 }
 
+
 /* 9. Payment Section */
 .info-card, .payment-card {
     border: 1px solid var(--cyber-primary);
@@ -555,14 +547,7 @@
 }
 
 /* 12. Notifications */
-.notification {
-    background: rgba(13, 13, 43, 0.95);
-    border-left: 5px solid #00ff7f;
-    border-radius: var(--radius-md);
-    padding: 15px;
-    box-shadow: var(--shadow-cyber);
-}
-
+/* 12.1 Custom Notification Modal */
 .notification.success {
     border-left-color: #00ff7f;
 }
@@ -821,4 +806,56 @@
     .modal-content p {
         font-size: 12px;
     }
+}
+.cyber-link {
+    cursor: pointer;
+    color: var(--cyber-primary);
+    font-weight: 500;
+}
+
+.cyber-link:hover {
+    color: var(--cyber-accent);
+    text-shadow: 0 0 5px var(--cyber-primary);
+}
+#terms-modal .modal-dialog {
+    max-width: 720px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#terms-modal .modal-content {
+    background: rgba(13, 13, 43, 0.95);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--cyber-primary);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    color: var(--cyber-primary);
+    box-shadow: 0 0 30px var(--cyber-primary);
+}
+
+#terms-modal h2 {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 0 0 8px var(--cyber-primary);
+}
+
+.required-icon {
+    margin-left: 3px;
+    font-size: 10px;
+    vertical-align: top;
+}
+
+.selected-item {
+    background: var( --cyber-dark); /* Xanh đen Cyber Gaming */
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 12px #00f2ff88;
+    transition: all 0.3s ease-in-out;
+}
+.select-all-wrapper {
+    padding-left: 4px;
+    margin-top: 6px;
+    margin-bottom: 0;
 }

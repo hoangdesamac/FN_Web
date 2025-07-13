@@ -17,6 +17,7 @@
 }
 
 body {
+    margin-top: 230px;
     font-family: 'Rajdhani', sans-serif;
     background: var(--bg-gradient);
     min-height: 100vh;
@@ -67,6 +68,18 @@ body {
     100% { text-shadow: 0 0 0 rgba(255,255,255,0); }
 }
 
+#header-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: transform 0.4s ease;
+}
+#header-wrapper.hide-banner {
+    transform: translateY(-115px); /* hoặc đúng chiều cao banner */
+}
+
 /* Cyberpunk Hologram Banner - Đã cập nhật */
 .cyber-banner {
     width: 100%;
@@ -92,15 +105,18 @@ body {
 
 /* Main Header with Holographic Effect */
 .cyber-header {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
     background: var(--header-bg);
     backdrop-filter: blur(10px);
     border-bottom: 2px solid var(--primary);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
 }
+
 
 .cyber-header.scrolled {
     background: rgba(5, 5, 20, 0.98);
@@ -1109,7 +1125,94 @@ body {
     font-weight: 600;
     text-shadow: 0 0 6px rgba(0,242,255,0.3);
 }
+.notification-modal {
+    position: fixed;
+    top: 110px;
+    right: 20px;
+    background: rgba(13, 13, 43, 0.95);
+    border-left: 5px solid #00ff7f;
+    border-radius: 8px;
+    padding: 12px 20px;
+    box-shadow: 0 0 20px rgba(0, 255, 127, 0.5);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    animation: none;
+}
+.notification-modal-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #00ff7f;
+    font-weight: 600;
+}
 
+
+.notification-modal i {
+    font-size: 20px;
+    color: #00ff7f;
+    text-shadow: 0 0 6px #00ff7f;
+}
+
+.notification-modal span {
+    font-size: 15px;
+    color: #fff;
+    font-weight: 500;
+}
+
+@keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOutSlide {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-20px); }
+}
+/* Tablet */
+@media (max-width: 992px) {
+    #header-wrapper.hide-banner {
+        transform: translateY(-130px);
+    }
+}
+/* ==== Footer Carousel Arrows ==== */
+.carousel-footer-prev,
+.carousel-footer-next {
+    width: 30px;
+    height: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 242, 255, 0.15);
+    border: 1px solid var(--primary);
+    border-radius: 50%;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.carousel-footer-prev:hover,
+.carousel-footer-next:hover {
+    background-color: var(--primary);
+    border-color: var(--secondary);
+    box-shadow: 0 0 10px var(--secondary);
+}
+
+/* Dịch trái/phải ra ngoài thêm */
+.carousel-footer-prev {
+    left: -20px;
+}
+.carousel-footer-next {
+    right: -20px;
+}
+
+/* Mobile chỉnh gần vào */
+@media (max-width: 768px) {
+    .carousel-footer-prev {
+        left: -10px;
+    }
+    .carousel-footer-next {
+        right: -10px;
+    }
+}
 
 
 

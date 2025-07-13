@@ -87,7 +87,6 @@ function initializeCartSystem() {
 
             addToCart(productId, productName, originalPrice, salePrice, discountPercent, productImage);
             showNotification(`Đã thêm "${productName}" vào giỏ hàng!`, 'success');
-            setTimeout(() => window.location.href = 'resetcheckout.html', 800);
         });
     });
 
@@ -99,6 +98,54 @@ function initializeCartSystem() {
 }
 
 let cartCache = null;
+let selectedItems = [];
+
+function handleSelectItem(checkbox, index) {
+    const cart = getCart();
+    const item = cart[index];
+    const cartItemDiv = checkbox.closest('.cart-item');
+
+    if (checkbox.checked) {
+        if (!selectedItems.includes(item.id)) {
+            selectedItems.push(item.id);
+        }
+        cartItemDiv.classList.add('selected-item');
+    } else {
+        selectedItems = selectedItems.filter(id => id !== item.id);
+        cartItemDiv.classList.remove('selected-item');
+    }
+
+    // ✅ Cập nhật selectedCart trong localStorage
+    const selected = cart.filter(item => selectedItems.includes(item.id));
+    localStorage.setItem('selectedCart', JSON.stringify(selected));
+
+    // ✅ Đồng bộ lại trạng thái của "Chọn tất cả"
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    if (selectAllCheckbox) {
+        const allChecked = cart.length > 0 && cart.every(item => selectedItems.includes(item.id));
+        selectAllCheckbox.checked = allChecked;
+    }
+}
+
+
+function handleSelectAllToggle(checked) {
+    const cart = getCart();
+    selectedItems = checked ? cart.map(item => item.id) : [];
+
+    const selected = cart.filter(item => selectedItems.includes(item.id));
+    localStorage.setItem('selectedCart', JSON.stringify(selected));
+
+    document.querySelectorAll('.cart-item').forEach((itemDiv, index) => {
+        const checkbox = itemDiv.querySelector('.select-checkbox');
+        if (checkbox) checkbox.checked = checked;
+
+        if (checked) {
+            itemDiv.classList.add('selected-item');
+        } else {
+            itemDiv.classList.remove('selected-item');
+        }
+    });
+}
 
 function refreshCartCache() {
     cartCache = JSON.parse(localStorage.getItem('cart')) || [];
@@ -196,67 +243,31 @@ function createNotificationElement() {
     return notification;
 }
 
-function positionNotificationUnderCart() {
-    const notification = document.getElementById('notification');
-    if (notification) {
-        notification.style.zIndex = '9999';
-    }
-}
-
-function showNotification(message, type = 'success') {
-    let notification = document.getElementById('notification');
+function showNotification(message = 'Đã thêm sản phẩm vào giỏ hàng!') {
+    let notification = document.getElementById('notification-modal');
     if (!notification) {
-        notification = createNotificationElement();
-    }
-
-    positionNotificationUnderCart();
-    let icon = type === 'success' ? '<i class="bx bx-check-circle"></i>' : '<i class="bx bx-error-circle"></i>';
-    let actionButton = '';
-    if (type === 'success' && message.includes('Đã thêm')) {
-        actionButton = `
-            <div class="notification-actions">
-                <a href="resetcheckout.html" class="view-cart-btn">Xem giỏ hàng</a>
-                <button class="continue-btn" onclick="hideNotification()">Tiếp tục mua sắm</button>
-            </div>
-        `;
+        notification = document.createElement('div');
+        notification.id = 'notification-modal';
+        notification.className = 'notification-modal';
+        document.body.appendChild(notification);
     }
 
     notification.innerHTML = `
-        <div class="notification-content">
-            ${icon}
-            <div class="notification-message">${message}</div>
-            <button class="notification-close" onclick="hideNotification()">
-                <i class="bx bx-x"></i>
-            </button>
+        <div class="notification-modal-content d-flex align-items-center gap-2">
+            <i class="fa fa-check-circle text-success fs-4"></i>
+            <span class="text-light">${message}</span>
         </div>
-        ${actionButton}
     `;
 
-    notification.className = `notification notification-popup ${type}`;
-    notification.style.display = 'block';
-    notification.style.animation = 'popupNotification 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards';
+    notification.style.display = 'flex';
+    notification.style.animation = 'fadeInSlide 0.3s ease forwards';
 
-    const autoHideTimeout = setTimeout(() => {
-        hideNotification();
-    }, 5000);
-
-    const closeBtn = notification.querySelector('.notification-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            clearTimeout(autoHideTimeout);
-            hideNotification();
-        });
-    }
-}
-
-function hideNotification() {
-    const notification = document.getElementById('notification');
-    if (notification) {
-        notification.style.animation = 'slideOutNotification 0.3s forwards';
+    setTimeout(() => {
+        notification.style.animation = 'fadeOutSlide 0.3s ease forwards';
         setTimeout(() => {
             notification.style.display = 'none';
         }, 300);
-    }
+    }, 3000);
 }
 
 function clearCart() {
@@ -358,6 +369,10 @@ function renderCart() {
             cartItemsContainer.classList.add('d-none'); // Ẩn khung sản phẩm
             cartItemsContainer.innerHTML = '';
         }
+        const selectAllWrapper = document.querySelector('.select-all-wrapper');
+        if (selectAllWrapper) {
+            selectAllWrapper.classList.add('d-none');
+        }
         const cartSummary = document.querySelector('.cart-summary');
         if (cartSummary) cartSummary.classList.add('d-none'); // Ẩn khung tóm tắt
         if (proceedButton) proceedButton.classList.add('d-none');
@@ -372,6 +387,7 @@ function renderCart() {
     if (clearCartBtn) clearCartBtn.classList.remove('d-none');
     if (continueBtn) continueBtn.classList.remove('d-none');
 
+
     let total = 0;
     let cartItemsHTML = '';
 
@@ -380,38 +396,58 @@ function renderCart() {
         total += itemTotal;
 
         cartItemsHTML += `
-            <div class="cart-item d-flex align-items-center p-3 mb-3 rounded">
-                <img src="${item.image}" alt="${item.name}" class="cart-item__image me-3" style="width: 80px; height: 80px; object-fit: cover;">
-                <div class="cart-item__info flex-grow-1">
-                    <h5 class="cart-item__name">${item.name}</h5>
-                    <div class="price-section">
-                        <span class="original-price me-2">${formatCurrency(item.originalPrice)}</span>
-                        <span class="sale-price">${formatCurrency(item.salePrice)}</span>
-                        <span class="discount-badge badge bg-danger ms-2">-${item.discountPercent}%</span>
-                    </div>
-                </div>
-                <div class="cart-item__quantity d-flex align-items-center">
-                   <button class="quantity-btn quantity-btn--decrease" onclick="updateQuantity(${index}, -1)">
-                      <i class="fa fa-minus"></i>
-                   </button>
-                   <input type="number" class="quantity-input" value="${item.quantity}" readonly>
-                   <button class="quantity-btn quantity-btn--increase" onclick="updateQuantity(${index}, 1)">
-                      <i class="fa fa-plus"></i>
-                   </button>
-                </div>
-                <div class="cart-item__total ms-3">${formatCurrency(itemTotal)}</div>
-                <button class="cart-item__remove ms-3" onclick="removeItem(${index})">
-                    <i class="fa fa-trash"></i>
-                </button>
+    <div class="cart-item d-flex align-items-start p-3 mb-3 rounded position-relative" data-index="${index}">
+        <input type="checkbox" class="form-check-input select-checkbox position-absolute" style="top: 10px; left: 10px;" onchange="handleSelectItem(this, ${index})">
+        <img src="${item.image}" alt="${item.name}" class="cart-item__image me-3" style="width: 80px; height: 80px; object-fit: cover;">
+        <div class="cart-item__info flex-grow-1">
+            <h5 class="cart-item__name">${item.name}</h5>
+            <div class="price-section">
+                <span class="original-price me-2">${formatCurrency(item.originalPrice)}</span>
+                <span class="sale-price">${formatCurrency(item.salePrice)}</span>
+                <span class="discount-badge badge bg-danger ms-2">-${item.discountPercent}%</span>
             </div>
-        `;
+        </div>
+        <div class="cart-item__quantity d-flex align-items-center">
+            <button class="quantity-btn quantity-btn--decrease" onclick="updateQuantity(${index}, -1)">
+                <i class="fa fa-minus"></i>
+            </button>
+            <input type="number" class="quantity-input" value="${item.quantity}" readonly>
+            <button class="quantity-btn quantity-btn--increase" onclick="updateQuantity(${index}, 1)">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <div class="cart-item__total ms-3" style="margin-top: 6px;">${formatCurrency(item.salePrice * item.quantity)}</div>
+        <button class="cart-item__remove ms-3" onclick="removeItem(${index})">
+            <i class="fa fa-trash"></i>
+        </button>
+    </div>
+`;
+
     });
 
     if (cartItemsContainer) {
         cartItemsContainer.innerHTML = cartItemsHTML;
     }
+    // ✅ Khôi phục trạng thái tick sau khi render lại
+    const savedSelected = JSON.parse(localStorage.getItem('selectedCart')) || [];
+    selectedItems = savedSelected.map(item => item.id);
+
+    document.querySelectorAll('.cart-item').forEach((itemDiv, index) => {
+        const cart = getCart();
+        const item = cart[index];
+        const checkbox = itemDiv.querySelector('.select-checkbox');
+        if (selectedItems.includes(item.id)) {
+            checkbox.checked = true;
+            itemDiv.classList.add('selected-item');
+        }
+    });
 
     updateCartSummary(total);
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    if (selectAllCheckbox) {
+        const allChecked = cart.length > 0 && cart.every(item => selectedItems.includes(item.id));
+        selectAllCheckbox.checked = allChecked;
+    }
 }
 
 function updateCartSummary(total) {
@@ -466,27 +502,60 @@ function saveDeliveryInfo() {
 }
 
 function validateDeliveryInfo() {
-    const name = document.getElementById('recipient-name').value.trim();
-    const phone = document.getElementById('recipient-phone').value.trim();
-    const province = document.getElementById('province').value;
-    const district = document.getElementById('district').value;
-    const ward = document.getElementById('ward').value;
-    const address = document.getElementById('recipient-address').value.trim();
-    const phoneRegex = /^0\d{9}$/;
+    const nameEl = document.getElementById('recipient-name');
+    const phoneEl = document.getElementById('recipient-phone');
+    const provinceEl = document.getElementById('province');
+    const districtEl = document.getElementById('district');
+    const wardEl = document.getElementById('ward');
+    const addressEl = document.getElementById('recipient-address');
 
-    if (!name || !phone || !province || !district || !ward || !address) {
-        showNotification('Vui lòng điền đầy đủ thông tin giao hàng!', 'error');
-        return false;
+    // Reset viền trước
+    [nameEl, phoneEl, provinceEl, districtEl, wardEl, addressEl].forEach(el => el.classList.remove('input-invalid'));
+
+    let isValid = true;
+
+    // Kiểm tra từng ô nhập
+    if (!nameEl.value.trim()) {
+        nameEl.classList.add('input-invalid');
+        isValid = false;
     }
-    if (!phoneRegex.test(phone)) {
-        showNotification('Số điện thoại không hợp lệ! Vui lòng nhập lại', 'error');
-        return false;
+
+    const phone = phoneEl.value.trim();
+    const phoneRegex = /^0\d{9}$/;
+    if (!phone || !phoneRegex.test(phone)) {
+        phoneEl.classList.add('input-invalid');
+        isValid = false;
     }
-    return true;
+
+    if (!provinceEl.value) {
+        provinceEl.classList.add('input-invalid');
+        isValid = false;
+    }
+
+    if (!districtEl.value) {
+        districtEl.classList.add('input-invalid');
+        isValid = false;
+    }
+
+    if (!wardEl.value) {
+        wardEl.classList.add('input-invalid');
+        isValid = false;
+    }
+
+    if (!addressEl.value.trim()) {
+        addressEl.classList.add('input-invalid');
+        isValid = false;
+    }
+
+    if (!isValid) {
+        showNotification('Vui lòng điền đầy đủ thông tin giao hàng hợp lệ!', 'error');
+    }
+
+    return isValid;
 }
 
 function renderOrderSummary() {
-    const cart = getCart();
+    const cart = JSON.parse(localStorage.getItem('selectedCart')) || [];
     const orderSummary = document.getElementById('order-summary');
 
     if (cart.length === 0) {
@@ -539,10 +608,10 @@ function showConfirmation() {
     }
 
     saveDeliveryInfo();
-    const cart = getCart();
+    const cart = JSON.parse(localStorage.getItem('selectedCart')) || [];
     if (cart.length === 0) {
-        showNotification('Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi thanh toán.', 'error');
-        window.location.href = 'index.html';
+        showNotification('Không có sản phẩm nào được chọn!', 'error');
+        showStep(1);
         return;
     }
 
@@ -643,7 +712,7 @@ function processPayment() {
     }
 
     setTimeout(() => {
-        const cart = getCart();
+        const cart = JSON.parse(localStorage.getItem('selectedCart')) || [];
         let orders = JSON.parse(localStorage.getItem('orders')) || [];
         orders.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         const orderId = generateOrderId();
@@ -665,8 +734,12 @@ function processPayment() {
         localStorage.setItem('orders', JSON.stringify(orders));
         console.log('Đơn hàng mới được tạo từ checkout:', order);
 
-        localStorage.setItem('cart', JSON.stringify([]));
+        let fullCart = JSON.parse(localStorage.getItem('cart')) || [];
+        const remaining = fullCart.filter(item => !cart.find(selected => selected.id === item.id));
+        localStorage.setItem('cart', JSON.stringify(remaining));
         updateCartCount();
+        localStorage.removeItem('selectedCart');
+        selectedItems = [];
         updateOrderCount();
 
         const savedInfo = JSON.parse(localStorage.getItem('deliveryInfo')) || {};
@@ -707,6 +780,7 @@ function setupAddressDropdownsFromTree(data) {
         opt.textContent = provinceObj.name;
         provinceSelect.appendChild(opt);
     }
+
 
     provinceSelect.addEventListener('change', () => {
         const provinceCode = provinceSelect.value;
@@ -786,6 +860,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     renderCart();
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', () => {
+            const checked = selectAllCheckbox.checked;
+            handleSelectAllToggle(checked);
+        });
+    }
+
     loadDeliveryInfo();
 
     fetch("/FormText/tree.json")
@@ -808,13 +890,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const proceedStep2Btn = document.getElementById('proceed-to-step-2');
     if (proceedStep2Btn) {
         proceedStep2Btn.addEventListener('click', () => {
-            if (getCart().length > 0) {
-                showStep(2);
-            } else {
-                showNotification('Giỏ hàng trống! Vui lòng thêm sản phẩm.', 'error');
+            const cart = getCart();
+            const selected = cart.filter(item => selectedItems.includes(item.id));
+
+            if (selected.length === 0) {
+                showNotification('Vui lòng chọn ít nhất một sản phẩm để tiếp tục!', 'error');
+                return;
             }
+
+            // ✅ Lưu danh sách sản phẩm đã chọn vào localStorage
+            localStorage.setItem('selectedCart', JSON.stringify(selected));
+
+            // Chuyển sang bước 2
+            showStep(2);
         });
     }
+
 
     const proceedStep3Btn = document.getElementById('proceed-to-step-3');
     if (proceedStep3Btn) {
@@ -837,32 +928,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (paymentBtn) {
         paymentBtn.addEventListener('click', showConfirmation);
     }
-
-    const invoiceCheckbox = document.getElementById('invoice-required');
-    const modal = document.getElementById('modal-no-invoice');
-    const btnConfirm = document.getElementById('btn-confirm-no-invoice');
-    const btnCancel = document.getElementById('btn-cancel-no-invoice');
-
-    if (invoiceCheckbox && modal && btnConfirm && btnCancel) {
-        invoiceCheckbox.addEventListener('change', () => {
-            if (!invoiceCheckbox.checked) {
-                const noInvoiceModal = new bootstrap.Modal(modal);
-                noInvoiceModal.show();
-            }
-        });
-
-        btnCancel.addEventListener('click', () => {
-            invoiceCheckbox.checked = true;
-            const noInvoiceModal = bootstrap.Modal.getInstance(modal);
-            if (noInvoiceModal) noInvoiceModal.hide();
-        });
-
-        btnConfirm.addEventListener('click', () => {
-            const noInvoiceModal = bootstrap.Modal.getInstance(modal);
-            if (noInvoiceModal) noInvoiceModal.hide();
-            localStorage.setItem('hideInvoiceForOrder', 'true');
+    // Bắt sự kiện mở modal điều khoản sử dụng
+    const termsLink = document.getElementById('terms-link');
+    if (termsLink) {
+        termsLink.addEventListener('click', () => {
+            const termsModal = new bootstrap.Modal(document.getElementById('terms-modal'));
+            termsModal.show();
         });
     }
+
 
     lottie.loadAnimation({
         container: document.getElementById('empty-cart-lottie'),

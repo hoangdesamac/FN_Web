@@ -36,11 +36,17 @@
 
     <!-- Checkout Step: Cart -->
     <div class="checkout-step cart-step" id="step-1">
-        <div class="cart-header d-flex justify-content-between align-items-center mb-4">
-            <h2 class="cart-title">Giỏ hàng của bạn</h2>
-            <button class="clear-cart-btn btn btn-danger" id="clear-cart">
-                <i class="fa fa-trash"></i> Xóa tất cả
-            </button>
+        <div class="cart-header mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="cart-title mb-0">Giỏ hàng của bạn</h2>
+                <button class="clear-cart-btn btn btn-danger" id="clear-cart">
+                    <i class="fa fa-trash"></i> Xóa tất cả
+                </button>
+            </div>
+            <div class="select-all-wrapper mt-2 d-flex align-items-center">
+                <input type="checkbox" id="select-all-checkbox" class="form-check-input me-2">
+                <label for="select-all-checkbox" class="text-light fw-semibold">Chọn tất cả</label>
+            </div>
         </div>
 
         <!-- Empty Cart -->
@@ -48,9 +54,7 @@
             <div id="empty-cart-lottie" class="mb-3"></div>
             <h3 class="empty-cart__title">Giỏ hàng của bạn đang trống</h3>
             <p class="empty-cart__message">Hãy khám phá cửa hàng và thêm những sản phẩm yêu thích vào giỏ hàng!</p>
-            <a href="index.html" class="continue-shopping btn btn-primary mt-4" id="continue-shopping-btn">
-                <i class="fa fa-arrow-left continue-shopping__icon"></i> Tiếp tục mua sắm
-            </a>
+            <a href="index.html" class="continue-shopping btn btn-primary mt-4" id="continue-shopping-btn">Tiếp tục mua sắm</a>
         </div>
 
         <!-- Cart Items -->
@@ -95,31 +99,41 @@
         <form class="delivery-form">
             <div class="row mb-3">
                 <div class="col-12">
-                    <label for="recipient-name" class="form-label">Họ và tên *</label>
+                    <label for="recipient-name" class="form-label">
+                        Họ và tên <i class="fas fa-asterisk text-danger required-icon"></i>
+                    </label>
                     <input type="text" class="form-control" id="recipient-name" required>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-12">
-                    <label for="recipient-phone" class="form-label">Số điện thoại *</label>
+                    <label for="recipient-phone" class="form-label">
+                        Số điện thoại <i class="fas fa-asterisk text-danger required-icon"></i>
+                    </label>
                     <input type="tel" class="form-control" id="recipient-phone" required>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label for="province" class="form-label">Tỉnh/Thành phố *</label>
+                    <label for="province" class="form-label">
+                        Tỉnh/Thành phố <i class="fas fa-asterisk text-danger required-icon"></i>
+                    </label>
                     <select class="form-select" id="province" required>
                         <option selected disabled>Chọn tỉnh/thành phố</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label for="district" class="form-label">Quận/Huyện *</label>
+                    <label for="district" class="form-label">
+                        Quận/Huyện <i class="fas fa-asterisk text-danger required-icon"></i>
+                    </label>
                     <select class="form-select" id="district" required>
                         <option selected disabled>Chọn quận/huyện</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label for="ward" class="form-label">Phường/Xã *</label>
+                    <label for="ward" class="form-label">
+                        Phường/Xã <i class="fas fa-asterisk text-danger required-icon"></i>
+                    </label>
                     <select class="form-select" id="ward" required>
                         <option selected disabled>Chọn phường/xã</option>
                     </select>
@@ -127,7 +141,9 @@
             </div>
             <div class="row mb-3">
                 <div class="col-12">
-                    <label for="recipient-address" class="form-label">Địa chỉ chi tiết *</label>
+                    <label for="recipient-address" class="form-label">
+                        Địa chỉ chi tiết <i class="fas fa-asterisk text-danger required-icon"></i>
+                    </label>
                     <input type="text" class="form-control" id="recipient-address" required>
                 </div>
             </div>
@@ -137,10 +153,21 @@
                     <textarea class="form-control" id="note"></textarea>
                 </div>
             </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="invoice-required" checked>
-                <label class="form-check-label" for="invoice-required">Yêu cầu xuất hóa đơn</label>
+
+            <!-- Checkbox và link chính sách -->
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <div class="form-check m-0">
+                    <input class="form-check-input" type="checkbox" id="invoice-required" checked>
+                    <label class="form-check-label" for="invoice-required">
+                        Yêu cầu xuất hóa đơn
+                    </label>
+                </div>
+                <span class="text-decoration-underline cyber-link ms-auto" id="terms-link" role="button">
+                Chính sách điều khoản sử dụng
+            </span>
             </div>
+
+            <!-- Nút điều hướng -->
             <div class="step-navigation d-flex justify-content-between gap-3 mt-4">
                 <button type="button" class="btn btn-outline-primary flex-fill" onclick="showStep(1)">
                     Quay lại
@@ -149,10 +176,9 @@
                     Tiếp tục
                 </button>
             </div>
-
-
         </form>
     </div>
+
 
     <!-- Checkout Step: Payment -->
     <div class="checkout-step payment-step d-none" id="step-3">
@@ -209,21 +235,6 @@
         </div>
     </div>
 
-
-    <!-- Modal: No Invoice Warning -->
-    <div class="modal fade" id="modal-no-invoice">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content cyber-modal">
-                <h2>Cảnh báo!</h2>
-                <p>Bạn cần có hóa đơn thanh toán chi tiết để đối chiếu và khiếu nại đơn hàng. Nếu không có hóa đơn, chúng tôi không chịu trách nhiệm!</p>
-                <div class="modal-buttons d-flex gap-3">
-                    <button id="btn-confirm-no-invoice" class="modal-btn btn btn-success">Vẫn tiếp tục</button>
-                    <button id="btn-cancel-no-invoice" class="modal-btn btn btn-danger" data-bs-dismiss="modal">Hủy</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal: Loading -->
     <div class="modal fade" id="loading-overlay">
         <div class="modal-dialog modal-dialog-centered">
@@ -246,6 +257,32 @@
         </div>
     </div>
 
+    <!-- Modal: Terms and Conditions -->
+    <div class="modal fade" id="terms-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content cyber-modal text-light" style="background: rgba(10,10,30,0.95); backdrop-filter: blur(6px); border: 1px solid var(--cyber-primary);">
+                <h2 class="text-center mb-3">Chính sách và Điều khoản sử dụng</h2>
+                <div style="max-height: 400px; overflow-y: auto;" class="px-3">
+                    <p>
+                        Chúng tôi cam kết bảo mật thông tin cá nhân của bạn. Khi chọn xuất hóa đơn, thông tin sẽ được lưu lại để đối chiếu khi có khiếu nại. Việc sử dụng dịch vụ đồng nghĩa với việc bạn đồng ý với các điều khoản này.
+                    </p>
+                    <p>
+                        - Bạn cần cung cấp thông tin chính xác khi đặt hàng.<br>
+                        - Hóa đơn sẽ không được cấp lại nếu bạn không chọn yêu cầu lúc đầu.<br>
+                        - Mọi hành vi gian lận sẽ bị từ chối xử lý đơn hàng.
+                    </p>
+                    <p>
+                        Mọi thắc mắc vui lòng liên hệ bộ phận CSKH của chúng tôi qua email hoặc hotline hỗ trợ 24/7.
+                    </p>
+                </div>
+                <div class="modal-buttons d-flex justify-content-center mt-4">
+                    <button class="btn btn-success" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 <div id="footer-container"></div>
 <!-- Bootstrap 5 JS and Popper.js -->
@@ -255,6 +292,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 <!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- Tom Select CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet" />
+
+<!-- Tom Select JS -->
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
+
+
 <!-- Custom JS -->
 <script src="Script/js_header.js" defer></script>
 <script src="Script/js_resetcheckout.js" defer></script>

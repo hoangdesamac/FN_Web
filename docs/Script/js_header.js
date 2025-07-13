@@ -6,6 +6,22 @@ function initHeaderScrollEffect() {
         header.classList.toggle('scrolled', window.scrollY > 50);
     });
 }
+function initBannerHeaderWrapper() {
+    const wrapper = document.getElementById('header-wrapper');
+    if (!wrapper) return;
+
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            wrapper.classList.add('hide-banner');
+        } else {
+            wrapper.classList.remove('hide-banner');
+        }
+        lastScrollY = window.scrollY;
+    });
+}
+
 
 function initCartCountEffect() {
     updateCartCount();
@@ -117,6 +133,7 @@ function closeCyberModal() {
 // ✅ Hàm tổng chạy toàn bộ sau khi header đã load vào DOM
 function initHeader() {
     initHeaderScrollEffect();
+    initBannerHeaderWrapper();
     initCartCountEffect();
     updateOrderCount();
     initHexagonBackground();
