@@ -572,7 +572,7 @@ function renderOrderSummary() {
         total += itemTotal;
         productsHTML += `
             <div class="order-product d-flex align-items-center p-3 mb-2 rounded">
-                <img src="${item.image}" alt="${item.name}" class="me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                <img src="${item.image}" alt="${item.name}" class="me-3" style="width: 60px; height: 60px; object-fit: cover; background: white">
                 <div class="order-product-info flex-grow-1">
                     <h5 class="order-product-name">${item.name} (x${item.quantity})</h5>
                     <div class="price-section">

@@ -93,6 +93,7 @@
 .search-bar-lookup .form-select:focus {
     border-color: var(--cyber-accent);
     box-shadow: 0 0 10px var(--cyber-primary);
+    background: var(--cyber-purple);
 }
 
 .search-bar-lookup .form-control::placeholder {
@@ -285,6 +286,7 @@
     object-fit: cover;
     border-radius: var(--radius-sm);
     border: 2px solid var(--cyber-primary);
+    background: white;
 }
 
 .order-product-info {

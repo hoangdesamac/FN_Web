@@ -177,12 +177,46 @@ function renderOrders(ordersToRender) {
 
         if (ordersToRender.length === 0) {
             ordersContainer.innerHTML = '';
-            emptyOrders.classList.remove('d-none');
 
-            // Không cần update localStorage nhưng vẫn đảm bảo header đúng
+            const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            if (allOrders.length === 0) {
+                // Không có đơn hàng thật → Show emptyOrders
+                emptyOrders.classList.remove('d-none');
+                ordersContainer.classList.remove('d-none');
+            } else {
+                // Có đơn hàng nhưng lọc không khớp → Ẩn hết!
+                emptyOrders.classList.add('d-none');
+                ordersContainer.classList.add('d-none');
+
+                const productKeyword = document.getElementById('product-keyword')?.value.trim();
+                const statusFilter = document.getElementById('status-filter')?.value;
+                const startDate = document.getElementById('start-date')?.value;
+                const endDate = document.getElementById('end-date')?.value;
+
+                let message = 'Không tìm thấy đơn hàng phù hợp';
+                if (statusFilter && statusFilter !== 'all') {
+                    message += ` với trạng thái "${statusFilter}"`;
+                }
+                if (productKeyword) {
+                    message += `, tên chứa "${productKeyword}"`;
+                }
+                if (startDate || endDate) {
+                    message += ` trong khoảng `;
+                    if (startDate) message += `từ ${startDate} `;
+                    if (endDate) message += `đến ${endDate}`;
+                }
+                message += '.';
+                showToast(message);
+            }
+
             updateOrderCount();
             return;
+        } else {
+            // ✅ Khi tìm thấy → bật hiển thị lại!
+            ordersContainer.classList.remove('d-none');
+            emptyOrders.classList.add('d-none');
         }
+
 
         ordersContainer.innerHTML = '';
         const newOrder = ordersToRender.find(order => order.unseen === true);
