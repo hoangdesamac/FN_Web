@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm | Cyber Gaming</title>
+    <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Boxicons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <!-- LightGallery CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="HTML/Style/common.css">
+    <link rel="stylesheet" href="HTML/Style/resetproduct.css">
+</head>
+<body>
+<!-- Cyber Grid Background -->
+<div class="cyber-grid"></div>
+
+<!-- Header -->
+<div id="header-container"></div>
+
+<!-- Breadcrumb -->
+<nav class="breadcrumb">
+    <div class="container">
+        <a href="index.html"><i class="fas fa-home"></i> Trang chủ</a>
+        <span style="color: var(--text-muted); margin: 0 8px;">›</span>
+        <a href="#" id="productCategory"></a>
+        <span style="color: var(--text-muted); margin: 0 8px;">›</span>
+        <span id="productName" style="color: var(--text-secondary);"></span>
+    </div>
+</nav>
+
+<!-- Product Section -->
+<section class="product-section glass">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="product-images">
+                <div id="lightgallery" class="slideshow-wrapper">
+                    <a href="" data-lg-size="1406-1390">
+                        <div class="image-container">
+                            <img id="mainImage" src="" alt="Product Image" class="main-image">
+                        </div>
+                    </a>
+                </div>
+                <div class="thumbnails-wrapper">
+                    <button class="nav-btn nav-prev"><i class="fas fa-chevron-left"></i></button>
+                    <div id="thumbnailsList" class="thumbnails"></div>
+                    <button class="nav-btn nav-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+
+                <!-- Enhanced Bundle Products -->
+                <div class="bundle-products glass float-animation">
+                    <h3><i class="fas fa-gift"></i> Mua kèm combo tiết kiệm</h3>
+                    <div class="product-list-wrapper position-relative">
+                        <button class="nav-btn bundle-prev"><i class="fas fa-chevron-left"></i></button>
+                        <div id="bundleProductList" class="product-list d-flex gap-3 overflow-auto"></div>
+                        <button class="nav-btn bundle-next"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="subtotal">
+                            <span style="color: var(--text-muted);">Tạm tính:</span>
+                            <span id="bundleSubtotal" style="color: var(--secondary); font-weight: 700; margin-left: 8px;">0₫</span>
+                        </div>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="product-info glass">
+                <h1 id="productTitle" class="glitch-hover"></h1>
+                <div class="price-box">
+                    <span id="productPrice" class="price"></span>
+                    <span id="productOriginalPrice" class="original-price"></span>
+                    <span id="productDiscount" class="discount"></span>
+                </div>
+                <div class="rating mb-3">
+                    <span id="productRating" style="color: var(--warning);"></span>
+                </div>
+                <button class="buy-now glow" data-id="">
+                    <span class="main-text">MUA NGAY</span>
+                    <div class="sub-text">
+                        Hoặc mua combo để nhận ưu đãi
+                    </div>
+                </button>
+
+                <div class="promotion-box">
+                    <h4><i class="fas fa-star"></i> Ưu đãi đặc biệt</h4>
+                    <ul class="benefits">
+                        <li><i class="fas fa-percentage"></i> Giảm đến 34% cho combo mua kèm</li>
+                        <li><i class="fas fa-truck"></i> Miễn phí giao hàng toàn quốc</li>
+                        <li><i class="fas fa-credit-card"></i> Trả góp 0% qua thẻ Visa/Master/JCB</li>
+                    </ul>
+                </div>
+
+                <ul class="benefits mt-4">
+                    <li><i class="fas fa-shield-alt"></i> Bảo hành 36 tháng chính hãng</li>
+                    <li><i class="fas fa-shipping-fast"></i> Giao hàng tận nơi toàn quốc</li>
+                    <li><i class="fas fa-handshake"></i> Hỗ trợ trả góp qua thẻ</li>
+                    <li><i class="fas fa-sync-alt"></i> Đổi trả trong 7 ngày</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Tabs Section -->
+<section class="product-tabs glass">
+    <div class="tab-buttons">
+        <button class="tab-btn active" onclick="showTab('tab1', event)">
+            <i class="fas fa-info-circle"></i> Mô tả
+        </button>
+        <button class="tab-btn" onclick="showTab('tab2', event)">
+            <i class="fas fa-cog"></i> Thông số kỹ thuật
+        </button>
+        <button class="tab-btn" onclick="showTab('tab3', event)">
+            <i class="fas fa-star"></i> Đánh giá
+        </button>
+        <button class="tab-btn" onclick="showTab('tab4', event)">
+            <i class="fas fa-link"></i> Sản phẩm liên quan
+        </button>
+    </div>
+
+    <div id="tab1" class="tab-content active">
+        <div id="productDescription" style="color: var(--text-secondary); line-height: 1.8;"></div>
+    </div>
+
+    <div id="tab2" class="tab-content">
+        <div class="table-responsive">
+            <table class="table table-borderless">
+                <tbody id="productSpecs" style="color: var(--text-secondary);"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="tab3" class="tab-content">
+        <div class="rating-summary mb-4">
+            <h4 style="color: var(--primary);"><i class="fas fa-chart-bar"></i> Tổng quan đánh giá</h4>
+            <ul id="ratingSummary" style="color: var(--text-secondary);"></ul>
+        </div>
+        <div id="reviewList" class="mb-4"></div>
+        <div class="review-form">
+            <h4 style="color: var(--primary);"><i class="fas fa-pen"></i> Gửi đánh giá của bạn</h4>
+            <textarea class="form-control mb-3" placeholder="Viết đánh giá tại đây..." style="background: rgba(13, 13, 35, 0.5); border: 1px solid var(--border); color: var(--text-primary);"></textarea>
+            <button class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i> Gửi đánh giá
+            </button>
+        </div>
+    </div>
+
+    <div id="tab4" class="tab-content">
+        <div id="relatedProducts" class="row g-3"></div>
+    </div>
+</section>
+
+<!-- Enhanced Recently Viewed -->
+<section class="recently-viewed glass float-animation">
+    <h3>
+        <i class="fas fa-eye"></i> Đã xem gần đây
+    </h3>
+    <div class="position-relative mt-4">
+        <button class="nav-btn nav-prev"><i class="fas fa-chevron-left"></i></button>
+        <div id="recentlyViewedList" class="d-flex"></div>
+        <button class="nav-btn nav-next"><i class="fas fa-chevron-right"></i></button>
+    </div>
+</section>
+
+
+
+<!-- Enhanced Toast Notification -->
+<div id="toastNotification" class="toast-notification">
+    <div class="d-flex align-items-center gap-3">
+        <i class="fas fa-check-circle" style="color: var(--accent); font-size: 24px;"></i>
+        <div class="flex-grow-1">
+            <div class="toast-message" style="color: var(--text-primary);"></div>
+        </div>
+        <button class="btn-close btn-close-white" onclick="hideToast()"></button>
+    </div>
+</div>
+
+<!-- Footer -->
+<div id="footer-container"></div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/lightgallery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/thumbnail/lg-thumbnail.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="Script/js_header.js"></script>
+<script src="Script/js_resetproduct.js"></script>
+
+</body>
+</html>

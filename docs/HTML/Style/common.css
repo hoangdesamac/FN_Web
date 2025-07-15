@@ -1079,7 +1079,6 @@ body {
     box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
     max-width: 1360px;  /* Thu hẹp khung */
     margin: 0 auto;     /* Canh giữa */
-    position: relative; /* Đảm bảo mũi tên nằm trong */
 }
 
 
@@ -1090,7 +1089,6 @@ body {
     color: var(--primary);
     text-shadow: 0 0 10px var(--primary);
     letter-spacing: 1px;
-    border-left: 6px solid var(--secondary);
     padding-left: 10px;
 }
 

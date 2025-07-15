@@ -106,11 +106,25 @@ function initFlashSaleCarousel() {
     });
 }
 
+function initProductCardClickHandler() {
+    $(document).off('click', '.product-card.clickable').on('click', '.product-card.clickable', function(e) {
+        if ($(e.target).closest('.buy-button, .add-to-cart').length) return;
+
+        const productId = $(this).data('id');
+        console.log("Go to:", `resetproduct.html?id=${productId}`);
+        if (productId) {
+            window.location.href = `resetproduct.html?id=${productId}`;
+        }
+    });
+}
+
+
 // ✅ Hàm tổng để gọi lại sau khi load xong main content
 function initMainContent() {
     initMegaMenuHover();
     initSidebarHeightSync();
     initCountdownTimer();
     initFlashSaleCarousel();
+    initProductCardClickHandler();
 }
 

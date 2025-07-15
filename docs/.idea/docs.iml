@@ -12,5 +12,6 @@
     <orderEntry type="library" name="select2" level="application" />
     <orderEntry type="library" name="jquery-3.6.4" level="application" />
     <orderEntry type="library" name="tom-select" level="application" />
+    <orderEntry type="library" name="lightgallery" level="application" />
   </component>
 </module>
