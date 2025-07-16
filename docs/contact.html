@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liên Hệ - 3TD SHOP</title>
+    <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #ff00e6;
+            --accent: #ffcc00;
+            --dark: #080818;
+            --darker: #050510;
+            --bg-gradient: linear-gradient(135deg, #080818 0%, #101040 100%);
+            --neon-box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+            --header-bg: rgba(8, 8, 24, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                    radial-gradient(circle at 20% 20%, rgba(0, 242, 255, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(255, 0, 230, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 60%, rgba(255, 204, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Animated background particles */
+        .particle {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .particle:nth-child(2) {
+            background: var(--secondary);
+            animation-delay: -2s;
+        }
+
+        .particle:nth-child(3) {
+            background: var(--accent);
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 242, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px var(--primary)); }
+            to { filter: drop-shadow(0 0 20px var(--primary)); }
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: rgba(0, 242, 255, 0.8);
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .cyber-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+        }
+
+        .cyber-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cyber-btn:hover::before {
+            left: 100%;
+        }
+
+        .cyber-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--neon-box-shadow);
+        }
+
+        /* Contact grid */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
+        /* Contact info */
+        .contact-info {
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .contact-info h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+        }
+
+        .contact-info p {
+            font-size: 1.1rem;
+            color: rgba(0, 242, 255, 0.8);
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: rgba(0, 242, 255, 0.2);
+            transform: translateX(10px);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+        }
+
+        .contact-item i {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .contact-item span {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Contact form */
+        .contact-form {
+            border: 1px solid rgba(255, 0, 230, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .contact-form h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 0, 230, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 242, 255, 0.1);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            border-radius: 10px;
+            color: var(--primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(255, 0, 230, 0.3);
+            background: rgba(255, 0, 230, 0.1);
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(0, 242, 255, 0.5);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
+            color: var(--dark);
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 0, 230, 0.5);
+        }
+
+        /* Map section */
+        .map-section {
+            text-align: center;
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .map-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .map-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+        }
+
+        .map-container {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .contact-info,
+            .contact-form,
+            .map-section {
+                padding: 25px;
+            }
+
+            .contact-info h2,
+            .contact-form h2 {
+                font-size: 1.8rem;
+            }
+
+            .map-section h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 15px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .contact-info,
+            .contact-form,
+            .map-section {
+                padding: 20px;
+            }
+
+            .contact-info h2,
+            .contact-form h2 {
+                font-size: 1.5rem;
+            }
+
+            .map-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .map-placeholder {
+                height: 300px;
+            }
+        }
+
+        /* Glitch effect for special elements */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-1 2s infinite;
+            color: var(--secondary);
+            z-index: -1;
+        }
+
+        .glitch::after {
+            animation: glitch-2 2s infinite;
+            color: var(--accent);
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0%, 14%, 15%, 49%, 50%, 99%, 100% {
+                transform: translate(0);
+            }
+            15%, 49% {
+                transform: translate(-2px, 2px);
+            }
+        }
+
+        @keyframes glitch-2 {
+            0%, 20%, 21%, 62%, 63%, 99%, 100% {
+                transform: translate(0);
+            }
+            21%, 62% {
+                transform: translate(2px, -2px);
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Animated particles -->
+<div class="particle" style="left: 10%; top: 20%; animation-duration: 4s;"></div>
+<div class="particle" style="left: 20%; top: 80%; animation-duration: 6s;"></div>
+<div class="particle" style="left: 60%; top: 30%; animation-duration: 5s;"></div>
+<div class="particle" style="left: 80%; top: 70%; animation-duration: 7s;"></div>
+<div class="particle" style="left: 90%; top: 10%; animation-duration: 3s;"></div>
+
+<div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="glitch" data-text="LIÊN HỆ">LIÊN HỆ</h1>
+        <p>Kết nối với tương lai - 3TD SHOP luôn sẵn sàng hỗ trợ bạn 24/7</p>
+        <a href="index.html" class="cyber-btn">VỀ CỬA HÀNG</a>
+    </section>
+
+    <!-- Contact Grid -->
+    <div class="contact-grid">
+        <!-- Contact Info -->
+        <div class="contact-info">
+            <h2>THÔNG TIN LIÊN HỆ</h2>
+            <p>Đội ngũ hỗ trợ chuyên nghiệp của 3TD SHOP sẵn sàng giải đáp mọi thắc mắc và hỗ trợ bạn trong việc lựa chọn sản phẩm công nghệ, gaming gear và thiết bị điện tử tốt nhất.</p>
+
+            <div class="contact-details">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>0333 610 859</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>support@3tdshop.vn</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>470 Trần Đại Nghĩa, Trường CNTT-TT Việt-Hàn, HN</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-clock"></i>
+                    <span>8:00 - 22:00, Thứ 2 - Chủ Nhật</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form">
+            <h2>GỬI TIN NHẮN</h2>
+            <form>
+                <div class="form-group">
+                    <label for="name">Họ và Tên</label>
+                    <input type="text" id="name" name="name" placeholder="Nhập họ và tên" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Tin Nhắn</label>
+                    <textarea id="message" name="message" placeholder="Nhập tin nhắn của bạn" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">GỬI TIN NHẮN</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <h2>ĐỊA CHỈ CỬA HÀNG</h2>
+        <div class="map-container" style="text-align: center;">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3710.8727957627566!2d108.25065207491775!3d15.97526544194702!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142108997dc971f%3A0x1295cb3d313469c9!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBDw7RuZyBuZ2jhu4cgVGjDtG5nIHRpbiB2w6AgVHJ1eeG7gW4gdGjDtG5nIFZp4buHdCAtIEjDoG4sIMSQ4bqhaSBo4buNYyDEkMOgIE7hurVuZw!5e1!3m2!1svi!2s!4v1752685262960!5m2!1svi!2s"
+                    width="1240"
+                    height="620"
+                    style="border:0; border-radius: 12px;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // Add interactive form validation
+    document.querySelector('.contact-form form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form data
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+
+        // Simple validation
+        if (!name || !email || !message) {
+            alert('Vui lòng điền đầy đủ thông tin!');
+            return;
+        }
+
+        // Simulate form submission
+        const submitBtn = document.querySelector('.submit-btn');
+        const originalText = submitBtn.textContent;
+
+        submitBtn.textContent = 'ĐANG GỬI...';
+        submitBtn.disabled = true;
+
+        setTimeout(() => {
+            submitBtn.textContent = 'GỬI THÀNH CÔNG!';
+            setTimeout(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                // Reset form
+                this.reset();
+            }, 2000);
+        }, 1500);
+    });
+
+    // Add particle animation
+    function createParticles() {
+        const particles = document.querySelectorAll('.particle');
+        particles.forEach(particle => {
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+        });
+    }
+
+    // Initialize particles
+    createParticles();
+
+    // Recreate particles every 10 seconds
+    setInterval(createParticles, 10000);
+
+    // Add hover effects for contact items
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(15px) scale(1.05)';
+        });
+
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(10px) scale(1)';
+        });
+    });
+</script>
+</body>
+</html>
