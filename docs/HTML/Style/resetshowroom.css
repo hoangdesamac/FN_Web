@@ -18,6 +18,91 @@
     pointer-events: none;
 }
 
+.video-banner-container {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+            0 0 15px rgba(0, 242, 255, 0.2),
+            0 0 30px rgba(0, 242, 255, 0.1);
+    border: 1px solid rgba(0, 242, 255, 0.15);
+    backdrop-filter: blur(8px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.video-banner-container:hover {
+    transform: scale(1.01);
+    box-shadow:
+            0 0 20px rgba(0, 242, 255, 0.3),
+            0 0 50px rgba(255, 0, 230, 0.2),
+            0 0 70px rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 242, 255, 0.3);
+}
+
+.video-banner-container video {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: brightness(1.05) contrast(1.1) saturate(1.2);
+    transition: filter 0.3s ease;
+    border-radius: 20px;
+}
+
+.video-banner-container:hover video {
+    filter: brightness(1.2) contrast(1.2) saturate(1.5);
+}
+
+.video-overlay {
+    pointer-events: none;
+    border-radius: 20px;
+}
+.fade-in {
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.fade-in.show {
+    opacity: 1;
+}
+
+.fade-out {
+    opacity: 1;
+    transition: opacity 1.5s ease-in-out;
+}
+.fade-out {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+}
+
+.fade-out.d-none {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#showroomIntro {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+#showroomIntro.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-out.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+#showroomIntro {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+
+#showroomIntro.show {
+    opacity: 1;
+}
+
 .showroom-section-title {
     font-weight: 900;
     font-size: 3.5rem;
@@ -41,25 +126,6 @@
     height: 3px;
     background: linear-gradient(90deg, transparent, var(--primary), transparent);
     box-shadow: 0 0 10px var(--primary);
-}
-.breadcrumb-container {
-    background: transparent;
-    padding-left: 0;
-    margin-bottom: 20px;
-}
-
-.breadcrumb {
-    background: none;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 0;
-    margin: 0;
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-    content: ">";
-    padding: 0 8px;
-    color: #ccc;
 }
 
 .store-hours {

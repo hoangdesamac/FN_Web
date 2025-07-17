@@ -187,6 +187,59 @@ function initStoreCardAnimations() {
         $(this).css('animation-delay', (index * 0.2) + 's');
     });
 }
+
+function initIntroVideoLogic() {
+    const video = document.getElementById("introVideo");
+    const introContainer = document.querySelector(".video-banner-container");
+    const showroomIntro = document.getElementById("showroomIntro");
+
+    if (!video || !introContainer || !showroomIntro) return;
+
+    // Reset trạng thái ban đầu
+    introContainer.classList.remove("fade-out", "d-none");
+    showroomIntro.classList.add("d-none");
+    showroomIntro.classList.remove("show");
+
+    // Đặt lại video từ đầu
+    video.currentTime = 0;
+
+    // Thử autoplay video
+    setTimeout(() => {
+        video.play().catch((error) => {
+            console.warn("Autoplay bị chặn, chờ tương tác người dùng.", error);
+
+            const resumePlayback = () => {
+                video.play();
+                document.removeEventListener("click", resumePlayback);
+                document.removeEventListener("keydown", resumePlayback);
+            };
+
+            document.addEventListener("click", resumePlayback);
+            document.addEventListener("keydown", resumePlayback);
+        });
+    }, 300); // đảm bảo video đã ready
+
+    video.addEventListener("ended", function () {
+        // Fade out video
+        introContainer.classList.add("fade-out");
+
+        // Sau 1 giây, ẩn video và hiện showroom intro
+        setTimeout(() => {
+            introContainer.classList.add("d-none");
+
+            showroomIntro.classList.remove("d-none");
+            requestAnimationFrame(() => {
+                showroomIntro.classList.add("show");
+            });
+        }, 1000);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", initIntroVideoLogic);
+
+
+
+
 async function loadPagePart(url, containerId, callback = null) {
     try {
         const response = await fetch(url);
@@ -217,6 +270,7 @@ function initShowroomPage() {
     initNavigationButtonLogic();
     initMapToggleLogic();
     initStoreCardAnimations();
+    initIntroVideoLogic();
 }
 
 // Gọi khi DOM sẵn sàng
