@@ -629,7 +629,7 @@ function bindEventHandlers() {
 }
 
 // ==========================
-// MODULE: Subtotals
+// MODULE: Subtotal
 // ==========================
 function updateSubtotal() {
     let subtotal = 0;
