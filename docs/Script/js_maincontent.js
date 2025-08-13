@@ -56,20 +56,27 @@ function initSidebarHeightSync() {
 }
 
 function initCountdownTimer() {
-    // Khởi tạo biến endTime toàn cục, chỉ tính 1 lần!
-    const startTime = new Date();
-    const endTime = new Date(startTime.getTime() + 10 * 60 * 60 * 1000);
+    function setNewEndTime() {
+        const newEnd = Date.now() + 10 * 60 * 60 * 1000; // 10 giờ mới
+        localStorage.setItem("flashSaleEndTime", newEnd);
+        window.flashSaleEndTime = newEnd;
+    }
+
+    // Nếu chưa có thời gian kết thúc thì mới set
+    if (!localStorage.getItem("flashSaleEndTime")) {
+        setNewEndTime();
+    } else {
+        window.flashSaleEndTime = parseInt(localStorage.getItem("flashSaleEndTime"), 10);
+    }
 
     function updateTimer() {
-        const now = new Date();
-        const timeDiff = endTime - now;
+        const now = Date.now();
+        let timeDiff = window.flashSaleEndTime - now;
 
         if (timeDiff <= 0) {
-            document.getElementById('hours').textContent = '00';
-            document.getElementById('minutes').textContent = '00';
-            document.getElementById('seconds').textContent = '00';
-            clearInterval(timerInterval); // Dừng luôn interval
-            return;
+            // Khi hết giờ → set lại 10h mới
+            setNewEndTime();
+            timeDiff = 10 * 60 * 60 * 1000;
         }
 
         const hours = Math.floor(timeDiff / (1000 * 60 * 60));
@@ -81,9 +88,12 @@ function initCountdownTimer() {
         document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
     }
 
-    const timerInterval = setInterval(updateTimer, 1000);
+    setInterval(updateTimer, 1000);
     updateTimer();
 }
+
+
+
 
 function initFlashSaleCarousel() {
     const carouselEl = document.querySelector('#flashSaleCarousel');

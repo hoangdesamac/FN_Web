@@ -99,6 +99,97 @@ function initializeCartSystem() {
 
 let cartCache = null;
 let selectedItems = [];
+// ========== Gift Cart helpers ==========
+function getGiftCart() {
+    return (JSON.parse(localStorage.getItem('giftCart')) || []).map(g => ({
+        ...g,
+        quantity: parseInt(g.quantity) || 1 // fallback về 1 nếu undefined
+    }));
+}
+
+function saveGiftCart(giftCart) {
+    localStorage.setItem('giftCart', JSON.stringify(giftCart));
+}
+function addGiftToCart(gift) {
+    const gifts = getGiftCart();
+    if (gifts.some(g => g.id === gift.id)) return; // tránh trùng
+    // chuẩn hoá thành số (nếu gift.originalPrice là chuỗi)
+    const orig = typeof gift.originalPrice === 'string' ? parseInt(gift.originalPrice.replace(/\D/g, '')) || 0 : (gift.originalPrice||0);
+    const giftItem = {
+        id: gift.id,
+        name: gift.name,
+        image: gift.image,
+        originalPrice: orig,
+        salePrice: 0,           // quà => 0đ
+        discountPercent: 100,   // -100%
+        quantity: 1,
+        isGift: true,
+        addedAt: new Date().toISOString()
+    };
+    gifts.push(giftItem);
+    saveGiftCart(gifts);
+
+    // tự thêm vào selectedCart để luôn được thanh toán (nếu chưa có)
+    let selected = JSON.parse(localStorage.getItem('selectedCart')) || [];
+    if (!selected.some(i => i.id === giftItem.id)) {
+        selected.push(giftItem);
+        localStorage.setItem('selectedCart', JSON.stringify(selected));
+    }
+
+    updateCartCount();
+    renderCart();
+}
+function removeGiftFromCart(giftId) {
+    let gifts = getGiftCart();
+    gifts = gifts.filter(g => g.id !== giftId);
+    saveGiftCart(gifts);
+
+    // xóa khỏi selectedCart nếu có
+    let selected = JSON.parse(localStorage.getItem('selectedCart')) || [];
+    selected = selected.filter(i => i.id !== giftId);
+    localStorage.setItem('selectedCart', JSON.stringify(selected));
+
+    updateCartCount();
+    renderCart();
+}
+function validateGiftCartOnLoad() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
+    const requiredIds = JSON.parse(localStorage.getItem('giftRequirements')) || [];
+
+    if (giftCart.length && requiredIds.length) {
+        const hasAllRequired = requiredIds.every(id => cart.some(item => item.id === id));
+        if (!hasAllRequired) {
+            localStorage.removeItem('giftCart');
+            localStorage.removeItem('giftRequirements');
+        }
+    } else {
+        // Không có quà hoặc không có yêu cầu => xoá luôn cho sạch
+        localStorage.removeItem('giftCart');
+        localStorage.removeItem('giftRequirements');
+    }
+}
+
+function updateGiftVisibility() {
+    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
+    const requiredIds = JSON.parse(localStorage.getItem('giftRequirements')) || [];
+    const selected = JSON.parse(localStorage.getItem('selectedCart')) || [];
+
+    // Nếu không có quà hoặc không có yêu cầu → ẩn quà
+    if (!giftCart.length || !requiredIds.length) {
+        document.querySelectorAll('.gift-section').forEach(el => el.style.display = 'none');
+        return;
+    }
+
+    // Kiểm tra đủ điều kiện (mọi ID yêu cầu đều nằm trong selectedCart)
+    const hasAllRequired = requiredIds.every(id => selected.some(s => s.id === id));
+
+    // Hiển thị hoặc ẩn quà dựa trên kết quả
+    document.querySelectorAll('.gift-section').forEach(el => {
+        el.style.display = hasAllRequired ? '' : 'none';
+    });
+}
+
 
 function handleSelectItem(checkbox, index) {
     const cart = getCart();
@@ -118,6 +209,7 @@ function handleSelectItem(checkbox, index) {
     // ✅ Cập nhật selectedCart trong localStorage
     const selected = cart.filter(item => selectedItems.includes(item.id));
     localStorage.setItem('selectedCart', JSON.stringify(selected));
+    updateGiftVisibility();
 
     // ✅ Đồng bộ lại trạng thái của "Chọn tất cả"
     const selectAllCheckbox = document.getElementById('select-all-checkbox');
@@ -134,8 +226,9 @@ function handleSelectAllToggle(checked) {
 
     const selected = cart.filter(item => selectedItems.includes(item.id));
     localStorage.setItem('selectedCart', JSON.stringify(selected));
+    updateGiftVisibility();
 
-    document.querySelectorAll('.cart-item').forEach((itemDiv, index) => {
+    document.querySelectorAll('.normal-cart-item').forEach((itemDiv, index) => {
         const checkbox = itemDiv.querySelector('.select-checkbox');
         if (checkbox) checkbox.checked = checked;
 
@@ -145,6 +238,7 @@ function handleSelectAllToggle(checked) {
             itemDiv.classList.remove('selected-item');
         }
     });
+
 }
 
 function refreshCartCache() {
@@ -203,7 +297,12 @@ function animateCartIcon() {
 
 function updateCartCount() {
     const cart = getCart();
-    const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+    validateGiftCartOnLoad(); // Đảm bảo quà hợp lệ trước khi đếm
+    const giftCart = getGiftCart();
+    const normalCount = cart.reduce((total, item) => total + item.quantity, 0);
+    const giftCount = giftCart.reduce((total, g) => total + (g.quantity || 0), 0);
+    const cartCount = normalCount + giftCount;
+
     let cartCountElement = document.querySelector('.cart-count');
 
     if (!cartCountElement) {
@@ -228,6 +327,7 @@ function updateCartCount() {
         cartCountElement.style.display = cartCount > 0 ? 'inline-flex' : 'none';
     }
 }
+
 
 function createNotificationElement() {
     const oldNotification = document.getElementById('notification');
@@ -273,37 +373,52 @@ function showNotification(message = 'Đã thêm sản phẩm vào giỏ hàng!')
 function clearCart() {
     if (confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?')) {
         saveCart([]);
+        saveGiftCart([]);
+        localStorage.removeItem('selectedCart');
+        cartCache = [];
+        selectedItems = [];
         renderCart();
         updateCartCount();
         showNotification('Đã xóa tất cả sản phẩm khỏi giỏ hàng', 'success');
     }
 }
 
+
 function updateQuantity(index, change) {
     const cart = getCart();
 
-    if (cart[index]) {
-        const cartItems = document.querySelectorAll('.cart-item');
-        if (cartItems[index]) {
-            cartItems[index].classList.add('quantity-change');
-            setTimeout(() => {
-                cartItems[index].classList.remove('quantity-change');
-            }, 300);
-        }
+    if (!cart[index]) return;
 
-        cart[index].quantity += change;
-        cart[index].updatedAt = new Date().toISOString();
-
-        if (cart[index].quantity <= 0) {
-            removeItem(index);
-            return;
-        }
-
-        saveCart(cart);
-        renderCart();
-        updateCartCount();
+    // Nếu là quà tặng thì không cho thay đổi số lượng
+    if (cart[index].isGift) {
+        return;
     }
+
+    // Nếu đang là 1 và muốn giảm nữa thì bỏ qua
+    if (cart[index].quantity === 1 && change < 0) {
+        return;
+    }
+
+    // Hiệu ứng khi thay đổi số lượng
+    const cartItems = document.querySelectorAll('.cart-item');
+    if (cartItems[index]) {
+        cartItems[index].classList.add('quantity-change');
+        setTimeout(() => {
+            cartItems[index].classList.remove('quantity-change');
+        }, 300);
+    }
+
+    // Cập nhật số lượng
+    cart[index].quantity += change;
+    cart[index].updatedAt = new Date().toISOString();
+
+    saveCart(cart);
+    renderCart();
+    updateCartCount();
+    updateGiftVisibility(); // ✅ Cập nhật hiển thị quà tặng
 }
+
+
 
 function removeItem(index) {
     const cart = getCart();
@@ -326,10 +441,21 @@ function performRemoveItem(index, itemName) {
     const cart = getCart();
     cart.splice(index, 1);
     saveCart(cart);
+
+    // ❗ Kiểm tra điều kiện quà tặng, nếu không đủ thì xóa luôn
+    const requiredIds = JSON.parse(localStorage.getItem('giftRequirements')) || [];
+    const hasAllRequired = requiredIds.every(id => cart.some(s => s.id === id));
+
+    if (!hasAllRequired) {
+        saveGiftCart([]); // clear giftCart
+    }
+
     renderCart();
     updateCartCount();
     showNotification(`Đã xóa "${itemName}" khỏi giỏ hàng`, 'success');
+    updateGiftVisibility();
 }
+
 
 function cleanupExpiredItems(expiryHours = 72) {
     const cart = getCart();
@@ -361,20 +487,22 @@ function renderCart() {
     const proceedButton = document.getElementById('proceed-to-step-2');
     const clearCartBtn = document.getElementById('clear-cart');
     const continueBtn = document.getElementById('continue-shopping-btn');
-    let cart = getCart();
 
-    if (cart.length === 0) {
+    let cart = getCart();              // sản phẩm chính
+    validateGiftCartOnLoad();
+    let giftCart = getGiftCart();      // quà tặng riêng
+
+    // nếu không có cả 2 => empty
+    if ((cart.length === 0) && (giftCart.length === 0)) {
         if (emptyCart) emptyCart.classList.remove('d-none');
         if (cartItemsContainer) {
-            cartItemsContainer.classList.add('d-none'); // Ẩn khung sản phẩm
+            cartItemsContainer.classList.add('d-none');
             cartItemsContainer.innerHTML = '';
         }
         const selectAllWrapper = document.querySelector('.select-all-wrapper');
-        if (selectAllWrapper) {
-            selectAllWrapper.classList.add('d-none');
-        }
+        if (selectAllWrapper) selectAllWrapper.classList.add('d-none');
         const cartSummary = document.querySelector('.cart-summary');
-        if (cartSummary) cartSummary.classList.add('d-none'); // Ẩn khung tóm tắt
+        if (cartSummary) cartSummary.classList.add('d-none');
         if (proceedButton) proceedButton.classList.add('d-none');
         if (clearCartBtn) clearCartBtn.classList.add('d-none');
         if (continueBtn) continueBtn.classList.remove('d-none');
@@ -387,16 +515,18 @@ function renderCart() {
     if (clearCartBtn) clearCartBtn.classList.remove('d-none');
     if (continueBtn) continueBtn.classList.remove('d-none');
 
-
     let total = 0;
     let cartItemsHTML = '';
 
+    // --- render sản phẩm chính (normal) ---
     cart.forEach((item, index) => {
         const itemTotal = item.salePrice * item.quantity;
         total += itemTotal;
 
+        const minusDisabled = item.quantity <= 1 ? 'disabled' : '';
+
         cartItemsHTML += `
-    <div class="cart-item d-flex align-items-start p-3 mb-3 rounded position-relative" data-index="${index}">
+    <div class="cart-item normal-cart-item d-flex align-items-start p-3 mb-3 rounded position-relative" data-index="${index}">
         <input type="checkbox" class="form-check-input select-checkbox position-absolute" style="top: 10px; left: 10px;" onchange="handleSelectItem(this, ${index})">
         <img src="${item.image}" alt="${item.name}" class="cart-item__image me-3" style="width: 80px; height: 80px; object-fit: cover;">
         <div class="cart-item__info flex-grow-1">
@@ -404,11 +534,17 @@ function renderCart() {
             <div class="price-section">
                 <span class="original-price me-2">${formatCurrency(item.originalPrice)}</span>
                 <span class="sale-price">${formatCurrency(item.salePrice)}</span>
-                <span class="discount-badge badge bg-danger ms-2">-${item.discountPercent}%</span>
+                <span class="discount-badge badge bg-danger ms-2">
+                   -${item.discountPercent !== undefined
+            ? item.discountPercent
+            : Math.round(100 - (item.salePrice / item.originalPrice * 100))
+        }%
+                </span>
             </div>
         </div>
         <div class="cart-item__quantity d-flex align-items-center">
-            <button class="quantity-btn quantity-btn--decrease" onclick="updateQuantity(${index}, -1)">
+            <button class="quantity-btn quantity-btn--decrease ${minusDisabled}" 
+                    onclick="updateQuantity(${index}, -1)" ${minusDisabled ? 'disabled' : ''}>
                 <i class="fa fa-minus"></i>
             </button>
             <input type="number" class="quantity-input" value="${item.quantity}" readonly>
@@ -421,27 +557,58 @@ function renderCart() {
             <i class="fa fa-trash"></i>
         </button>
     </div>
-`;
-
+    `;
     });
+
+
+    // --- render phần Gift (không có checkbox, không có nút +/- hay remove) ---
+    if (giftCart.length) {
+        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🎁 Sản phẩm tặng kèm</h5>`;
+        giftCart.forEach((g, gi) => {
+            const safeQty = parseInt(g.quantity) || 1;
+            const safePrice = parseInt(g.salePrice) || 0;
+            total += safePrice * safeQty;
+            cartItemsHTML += `
+    <div class="cart-item gift-cart-item d-flex align-items-start p-3 mb-3 rounded position-relative" data-gift-index="${gi}" data-gift-id="${g.id}">
+        <img src="${g.image}" alt="${g.name}" class="cart-item__image me-3" style="width: 80px; height: 80px; object-fit: cover;">
+        <div class="cart-item__info flex-grow-1">
+            <h5 class="cart-item__name">${g.name}</h5>
+            <div class="price-section">
+                <span class="original-price me-2">${formatCurrency(g.originalPrice)}</span>
+                <span class="sale-price">${formatCurrency(0)}</span>
+                <span class="discount-badge badge bg-danger ms-2">-100%</span>
+            </div>
+        </div>
+        <div class="cart-item__quantity d-flex align-items-center">
+            <span class="gift-qty">x${safeQty}</span>
+        </div>
+        <div class="cart-item__total ms-3" style="margin-top: 6px;">${formatCurrency(0)}</div>
+        <!-- no remove button for gift -->
+    </div>
+            `;
+        });
+        cartItemsHTML += `</div>`;
+    }
 
     if (cartItemsContainer) {
         cartItemsContainer.innerHTML = cartItemsHTML;
     }
-    // ✅ Khôi phục trạng thái tick sau khi render lại
-    const savedSelected = JSON.parse(localStorage.getItem('selectedCart')) || [];
-    selectedItems = savedSelected.map(item => item.id);
 
-    document.querySelectorAll('.cart-item').forEach((itemDiv, index) => {
-        const cart = getCart();
+    // Khôi phục trạng thái tick của sản phẩm chính (chỉ cho normal-cart-item)
+    const savedSelected = JSON.parse(localStorage.getItem('selectedCart')) || [];
+    // chỉ lấy IDs của các sản phẩm không phải gift
+    selectedItems = savedSelected.filter(it => !it.isGift).map(item => item.id);
+
+    document.querySelectorAll('.normal-cart-item').forEach((itemDiv, index) => {
         const item = cart[index];
         const checkbox = itemDiv.querySelector('.select-checkbox');
-        if (selectedItems.includes(item.id)) {
+        if (checkbox && selectedItems.includes(item.id)) {
             checkbox.checked = true;
             itemDiv.classList.add('selected-item');
         }
     });
 
+    // Cập nhật tổng và chọn tất cả (chỉ xem xét sản phẩm chính)
     updateCartSummary(total);
     const selectAllCheckbox = document.getElementById('select-all-checkbox');
     if (selectAllCheckbox) {
@@ -449,6 +616,7 @@ function renderCart() {
         selectAllCheckbox.checked = allChecked;
     }
 }
+
 
 function updateCartSummary(total) {
     const summaryRows = document.querySelectorAll('.cart-summary__rows .currency-value');
@@ -578,7 +746,13 @@ function renderOrderSummary() {
                     <div class="price-section">
                         <span class="original-price me-2">${formatCurrency(item.originalPrice)}</span>
                         <span class="sale-price">${formatCurrency(item.salePrice)}</span>
-                        <span class="discount-badge badge bg-danger ms-2">-${item.discountPercent}%</span>
+                        <span class="discount-badge badge bg-danger ms-2">
+                          -${item.discountPercent !== undefined
+                          ? item.discountPercent
+                          : Math.round(100 - (item.salePrice / item.originalPrice * 100))
+                          }%
+                        </span>
+
                     </div>
                 </div>
             </div>
@@ -734,12 +908,14 @@ function processPayment() {
         localStorage.setItem('orders', JSON.stringify(orders));
         console.log('Đơn hàng mới được tạo từ checkout:', order);
 
-        let fullCart = JSON.parse(localStorage.getItem('cart')) || [];
-        const remaining = fullCart.filter(item => !cart.find(selected => selected.id === item.id));
-        localStorage.setItem('cart', JSON.stringify(remaining));
-        updateCartCount();
+        localStorage.removeItem('cart');
         localStorage.removeItem('selectedCart');
+        localStorage.removeItem('giftCart');
+        cartCache = [];
         selectedItems = [];
+
+        updateCartCount();
+        renderCart();
         updateOrderCount();
 
         const savedInfo = JSON.parse(localStorage.getItem('deliveryInfo')) || {};
@@ -837,6 +1013,7 @@ function setupPaymentMethodAnimations() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    validateGiftCartOnLoad(); // ✅ Xóa quà nếu không hợp lệ
     initializeCartSystem();
     loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {
         initHeader();
@@ -892,6 +1069,13 @@ document.addEventListener("DOMContentLoaded", function () {
         proceedStep2Btn.addEventListener('click', () => {
             const cart = getCart();
             const selected = cart.filter(item => selectedItems.includes(item.id));
+            const giftCart = getGiftCart();
+
+// gộp gift (nếu chưa có) vào selected
+            const merged = [...selected];
+            giftCart.forEach(g => {
+                if (!merged.some(m => m.id === g.id)) merged.push(g);
+            });
 
             if (selected.length === 0) {
                 showNotification('Vui lòng chọn ít nhất một sản phẩm để tiếp tục!', 'error');
@@ -899,7 +1083,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // ✅ Lưu danh sách sản phẩm đã chọn vào localStorage
-            localStorage.setItem('selectedCart', JSON.stringify(selected));
+            localStorage.setItem('selectedCart', JSON.stringify(merged));
 
             // Chuyển sang bước 2
             showStep(2);
@@ -959,6 +1143,10 @@ function selectMethod(method) {
 window.addEventListener('storage', function(e) {
     if (e.key === 'cart') {
         refreshCartCache();
+        updateCartCount();
+        renderCart();
+    }
+    if (e.key === 'giftCart') {
         updateCartCount();
         renderCart();
     }

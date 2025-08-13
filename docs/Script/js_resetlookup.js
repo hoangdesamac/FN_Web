@@ -246,7 +246,13 @@ function renderOrders(ordersToRender) {
               <div class="price-section">
                 <span class="original-price me-2">${formatCurrency(item.originalPrice)}</span>
                 <span class="sale-price">${formatCurrency(item.salePrice)}</span>
-                <span class="discount-badge badge bg-danger ms-2">-${item.discountPercent}%</span>
+                <span class="discount-badge badge bg-danger ms-2">
+                   -${item.discountPercent !== undefined
+                    ? item.discountPercent
+                    : Math.round(100 - (item.salePrice / item.originalPrice * 100))
+                }%
+                </span>
+
               </div>
             </div>
           </div>
@@ -504,7 +510,9 @@ function rebuyOrder(orderId) {
             name: item.name,
             originalPrice: item.originalPrice,
             salePrice: item.salePrice,
-            discountPercent: item.discountPercent,
+            discountPercent: item.discountPercent !== undefined
+                ? item.discountPercent
+                : Math.round(100 - (item.salePrice / item.originalPrice * 100)),
             image: item.image,
             quantity: item.quantity,
             addedAt: new Date().toISOString(),
@@ -697,7 +705,10 @@ async function exportToPDF(orderId) {
             { text: item.name, alignment: 'left' }, // Cột này bạn có thể alignment: 'left'
             { text: item.quantity.toString(), alignment: 'center' },
             { text: formatCurrency(item.originalPrice), alignment: 'center' },
-            { text: `${item.discountPercent}%`, alignment: 'center' },
+            { text: `${item.discountPercent !== undefined
+                    ? item.discountPercent
+                    : Math.round(100 - (item.salePrice / item.originalPrice * 100))
+                }%`, alignment: 'center' },
             { text: formatCurrency(item.salePrice), alignment: 'center' },
             { text: formatCurrency(item.quantity * item.salePrice), alignment: 'center' }
         ])
