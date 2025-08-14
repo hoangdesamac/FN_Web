@@ -1016,6 +1016,9 @@ window.products = [
         ]
 
 
+    },
+    {
+
     }
 
     // Thêm các sản phẩm khác từ resetmaincontent.html nếu cần
