@@ -1186,7 +1186,10 @@ window.products = [
                 rating: 0.0,
                 reviews: 0,
                 sold: 9,
-                tags: ["flash"]
+                tags: ["flash"]    
+
+
+                
             },
         ],
         gift: [
