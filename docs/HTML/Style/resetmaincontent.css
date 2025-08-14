@@ -594,3 +594,17 @@
     color: #fff;
     box-shadow: 0 0 10px var(--cyber-primary);
 }
+@media (max-width: 990px) {
+    .cyber-sidebar,
+    .mega-menu {
+        display: none !important;
+    }
+
+    /* Cho phần banner / nội dung chính full width */
+    .main-wrapper .col-lg-10,
+    .main-wrapper .col-md-9,
+    .main-wrapper .col-sm-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
