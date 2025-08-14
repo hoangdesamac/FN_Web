@@ -1217,6 +1217,7 @@ body {
         display: none !important;
     }
 }
+
 /* ===== Thanh actions cố định đáy trên mobile (Shopee-style) ===== */
 @media (max-width: 768px) {
     /* Ẩn bản actions trong header */
@@ -1279,12 +1280,15 @@ body {
         border-radius: 10px;
     }
 
-    /* Chừa khoảng trống cho thanh nav đáys */
+    /* Chừa khoảng trống cho thanh nav đáy */
     body {
         padding-bottom: calc(60px + env(safe-area-inset-bottom));
     }
 }
 
+.mobile-bottom-actions {
+    display: none;
+}
 
 
 
