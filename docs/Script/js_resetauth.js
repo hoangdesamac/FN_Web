@@ -20,7 +20,7 @@ if (registerForm) {
             if (data.success) {
                 alert('✅ Đăng ký thành công! Bạn có thể đăng nhập.');
                 if (typeof CyberModal !== "undefined") {
-                    CyberModal.showLogin(); // Chuyển sang form đăng nhập
+                    CyberModal.showLogin();
                 }
             } else {
                 alert('❌ ' + data.error);
@@ -49,9 +49,20 @@ if (loginForm) {
             const data = await res.json();
             if (data.success) {
                 localStorage.setItem('authToken', data.token);
+
+                // ✅ Lưu TÊN thôi (lastName)
+                if (data.user && data.user.lastName) {
+                    localStorage.setItem('userName', data.user.lastName.trim());
+                }
+
                 alert('✅ Đăng nhập thành công!');
                 if (typeof CyberModal !== "undefined") {
-                    CyberModal.close(); // Đóng modal sau đăng nhập
+                    CyberModal.close();
+                }
+
+                // ✅ Cập nhật tên ngay trên header
+                if (typeof updateUserDisplay === "function") {
+                    updateUserDisplay();
                 }
             } else {
                 alert('❌ ' + data.error);

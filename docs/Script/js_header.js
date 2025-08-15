@@ -130,6 +130,20 @@ function closeCyberModal() {
     CyberModal.close();
 }
 
+function updateUserDisplay() {
+    const userName = localStorage.getItem('userName');
+    const userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
+
+    if (userName && userAction) {
+        const shortName = userName.length > 10 ? userName.slice(0, 10) + "..." : userName;
+        userAction.querySelector('.action-text').innerHTML = `
+            <div style="font-size: 10px; opacity: 0.8;">Xin chào</div>
+            <div style="font-size: 12px; font-weight: 600;" title="${userName}">${shortName}</div>
+        `;
+    }
+}
+
+
 // ✅ Hàm tổng chạy toàn bộ sau khi header đã load vào DOM
 function initHeader() {
     initHeaderScrollEffect();
@@ -140,4 +154,6 @@ function initHeader() {
     initCategoryDropdown();
     initResponsiveHandler();
     initLoginModalTrigger();
+    updateUserDisplay();
+
 }
