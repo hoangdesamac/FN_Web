@@ -1,5 +1,7 @@
 {
-  "generated": "2025-08-15T11:47:48.126Z",
+  "generated": "2025-08-15T15:33:35.544Z",
+  "strict": false,
+  "usdToVnd": 25000,
   "counts": {
     "cpu": 961,
     "mainboard": 4956,
@@ -16,7 +18,7 @@
     "mouse": 2103,
     "headphones": 2511,
     "speakers": 281,
-    "os": 50
+    "os": 17
   },
   "estimated": {
     "cpu": 490,
@@ -35,5 +37,9 @@
     "os": 39,
     "soundcard": 63,
     "network": 297
+  },
+  "sources": {
+    "rawBase": "D:\\FE_Web\\docs\\pc-part-dataset\\pc-part-dataset-c52a04ca9465c83997ed335f7767b09a2005dd26\\data",
+    "cpuScraped": false
   }
 }

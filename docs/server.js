@@ -5,6 +5,7 @@ const cors = require('cors');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const fetch = require('node-fetch');
 
 const app = express();
 app.use(express.json());
@@ -213,6 +214,49 @@ async function connectToDatabase() {
             } catch (error) {
                 console.error('Lỗi đặt lại mật khẩu:', error.message, error.stack);
                 res.status(500).json({ message: 'Lỗi server', error: error.message });
+            }
+        });
+
+        // --- PCPartPicker list import ---
+        app.post('/api/import-pcpartpicker', async (req,res)=>{
+            const { url } = req.body || {};
+            if(!url || !/^https?:\/\/pcpartpicker\.com\/list\//i.test(url)) return res.status(400).json({ message:'URL không hợp lệ' });
+            try{
+                const r = await fetch(url, { headers:{ 'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36' } });
+                const html = await r.text();
+                // Simple extraction: table rows containing part names and categories
+                // Categories appear as h2 / h3 or table captions, items inside list rows with data-component
+                const result = { url, items:[] };
+                // Very rough parse (no external lib). We'll split lines.
+                const lines = html.split(/\n/);
+                const partRegex = /data-type="([^"]+)"[^>]*>\s*<a[^>]*>([^<]+)<\/a>/i;
+                const priceRegex = /\$([0-9]+(?:\.[0-9]+)?)/;
+                lines.forEach(l=>{
+                    const m = l.match(partRegex);
+                    if(m){
+                        const type = m[1].toLowerCase();
+                        const name = m[2].trim();
+                        const priceMatch = l.match(priceRegex);
+                        const priceUSD = priceMatch? parseFloat(priceMatch[1]): null;
+                        result.items.push({ type, name, priceUSD });
+                    }
+                });
+                // Map to internal categories (best-effort)
+                const mapType = t => {
+                    if(/cpu/.test(t)) return 'cpu';
+                    if(/mother|board|mb/.test(t)) return 'mainboard';
+                    if(/memory|ram/.test(t)) return 'ram';
+                    if(/video|gpu|graphics/.test(t)) return 'gpu';
+                    if(/storage|drive|ssd|hard/.test(t)) return 'storage';
+                    if(/power|psu/.test(t)) return 'psu';
+                    if(/case/.test(t)) return 'case';
+                    if(/cooler|heatsink|fan/.test(t)) return 'cooler';
+                    return null;
+                };
+                result.items.forEach(it=> it.category = mapType(it.type));
+                res.json(result);
+            }catch(e){
+                res.status(500).json({ message:'Import lỗi', error:e.message });
             }
         });
 
