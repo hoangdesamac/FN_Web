@@ -5,9 +5,22 @@ const path = require('path');
 // Allow overriding the raw dataset directory (so we can point to an external clone like docyx/pc-part-dataset)
 // Usage (PowerShell): $env:PART_DATASET_DIR="external/pc-part-dataset"; node scripts/build-dataset.js
 // Expected structure under PART_DATASET_DIR: ./data/{csv,jsonl,json}
-const RAW_BASE = process.env.PART_DATASET_DIR ? path.resolve(process.env.PART_DATASET_DIR,'data') : path.resolve('pc-part-dataset','data');
+let RAW_BASE = process.env.PART_DATASET_DIR ? path.resolve(process.env.PART_DATASET_DIR,'data') : path.resolve('pc-part-dataset','data');
+// Fallback: if RAW_BASE doesn't exist (likely because submodule/vendor folder missing) try to auto-detect a snapshot under docs/pc-part-dataset/*/data
+if(!fs.existsSync(RAW_BASE)){
+  try{
+    const snapshotRoot = path.resolve('docs','pc-part-dataset');
+    if(fs.existsSync(snapshotRoot)){
+      const cand = fs.readdirSync(snapshotRoot).find(d=> fs.existsSync(path.join(snapshotRoot,d,'data','jsonl')));
+      if(cand){
+        RAW_BASE = path.join(snapshotRoot,cand,'data');
+        console.log('[build-dataset] Using snapshot raw base:', RAW_BASE);
+      }
+    }
+  }catch(e){ console.warn('[build-dataset] snapshot detection failed', e.message); }
+}
 const CSV_DIR = path.join(RAW_BASE,'csv');
-const JSONL_DIR = path.join(RAW_BASE,'jsonl');
+let JSONL_DIR = path.join(RAW_BASE,'jsonl');
 const OUT_DIR = path.resolve('pc-part-dataset','processed');
 const USD_TO_VND = 25000;
 
@@ -213,4 +226,17 @@ Object.keys(categories).forEach(cat=>{
   fs.writeFileSync(path.join(OUT_DIR, cat + '.json'), JSON.stringify(arr, null, 0));
 });
 fs.writeFileSync(path.join(OUT_DIR,'manifest.json'), JSON.stringify(manifest,null,2));
+
+// Mirror processed output into docs/ for static hosting (GitHub Pages) so frontend fetch('pc-part-dataset/processed/*.json') works.
+try {
+  const DOCS_PROCESSED = path.resolve('docs','pc-part-dataset','processed');
+  fs.mkdirSync(DOCS_PROCESSED,{recursive:true});
+  for(const f of fs.readdirSync(OUT_DIR)){
+    const src = path.join(OUT_DIR,f);
+    const dest = path.join(DOCS_PROCESSED,f);
+    fs.copyFileSync(src,dest);
+  }
+  console.log('[build-dataset] Mirrored processed dataset to', DOCS_PROCESSED);
+} catch(e){ console.warn('[build-dataset] Mirror to docs failed:', e.message); }
+
 console.log('Dataset built:', manifest);
