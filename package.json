@@ -1,0 +1,12 @@
+{
+  "name": "fe_web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+  "build:dataset": "node scripts/build-dataset.js",
+  "gen:synthetic": "node scripts/generate-synthetic.js"
+  },
+  "dependencies": {
+    "apify-client": "^2.15.0"
+  }
+}
