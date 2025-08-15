@@ -1,0 +1,134 @@
+{
+  "timestamp": "2025-08-15T15:32:51.408Z",
+  "categories": {
+    "cpu": {
+      "total": 961,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {
+        "socket": 952
+      },
+      "noSocket": 952,
+      "noCores": 0
+    },
+    "mainboard": {
+      "total": 4956,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {}
+    },
+    "ram": {
+      "total": 3478,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {
+        "type": 4,
+        "speed": 4
+      },
+      "noSize": 0,
+      "noSpeed": 4
+    },
+    "gpu": {
+      "total": 3549,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {},
+      "noVram": 0,
+      "badVramType": 0
+    },
+    "storage": {
+      "total": 2061,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {
+        "size": 186
+      },
+      "typeBreakdown": {
+        "NVMe SSD": 748,
+        "HDD": 488,
+        "SATA SSD": 616,
+        "SSD": 23,
+        "External": 149,
+        "External HDD": 25,
+        "External SSD": 12
+      },
+      "misclassified": 0,
+      "zeroSize": 186,
+      "missingInterface": 180
+    },
+    "psu": {
+      "total": 2128,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {}
+    },
+    "monitor": {
+      "total": 4788,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {
+        "hz": 833
+      },
+      "noRes": 0,
+      "noHz": 833,
+      "aspectMissing": 0
+    },
+    "case": {
+      "total": 4210,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {}
+    },
+    "cooler": {
+      "total": 2313,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {
+        "type": 1684
+      }
+    },
+    "keyboard": {
+      "total": 2346,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {}
+    },
+    "mouse": {
+      "total": 2103,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {}
+    },
+    "headphones": {
+      "total": 2511,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {}
+    },
+    "speakers": {
+      "total": 281,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {}
+    },
+    "os": {
+      "total": 50,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {}
+    },
+    "soundcard": {
+      "total": 75,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {}
+    },
+    "network": {
+      "total": 517,
+      "missingPrice": 0,
+      "missingName": 0,
+      "requiredMissing": {}
+    }
+  },
+  "errors": []
+}

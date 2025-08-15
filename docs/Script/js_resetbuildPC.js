@@ -10,7 +10,7 @@ const PART_CATEGORIES = [
     { key:'mainboard', label:'Mainboard' },
     { key:'ram', label:'RAM' },
     { key:'gpu', label:'GPU' },
-    { key:'storage', label:'Lưu trữ' },
+    { key:'storage', label:'Ổ cứng' },
     { key:'psu', label:'Nguồn' },
     { key:'case', label:'Case' },
     { key:'cooler', label:'Tản nhiệt' },
@@ -30,7 +30,13 @@ let PART_LIBRARY = {
     mainboard:[ { id:'mb_b650', name:'MSI B650 Tomahawk WIFI', price:4790000, socket:'AM5', chipset:'B650', form:'ATX' }, { id:'mb_x670', name:'ASUS ROG Strix X670E-E', price:11990000, socket:'AM5', chipset:'X670E', form:'ATX' }, { id:'mb_z790', name:'Gigabyte Z790 Aorus Elite AX', price:6990000, socket:'LGA1700', chipset:'Z790', form:'ATX' } ],
     ram:[ { id:'ram_ddr5_32_6000', name:'DDR5 32GB (2x16) 6000MHz CL32', price:2590000, type:'DDR5', size:32, sticks:2, speed:6000 } ],
     gpu:[ { id:'gpu_4070', name:'RTX 4070 12GB', price:13490000, power:200, vram:12 } ],
-    storage:[ { id:'nvme_1tb_gen4', name:'SSD NVMe 1TB Gen4', price:1590000, type:'NVMe', size:1000 } ],
+    storage:[
+        { id:'ssd_nvme_sn770_1tb', name:'WD Black SN770 1TB NVMe Gen4', price:1590000, type:'NVMe', interface:'PCIe 4.0 x4', size:1000, read:5150, write:4900, nand:'TLC', dram:'HMB' },
+        { id:'ssd_nvme_980pro_1tb', name:'Samsung 980 PRO 1TB NVMe Gen4', price:1990000, type:'NVMe', interface:'PCIe 4.0 x4', size:1000, read:7000, write:5000, nand:'TLC', dram:'Yes' },
+        { id:'ssd_sata_870evo_1tb', name:'Samsung 870 EVO 1TB SATA', price:1690000, type:'SATA SSD', interface:'SATA III', size:1000, read:560, write:530, nand:'TLC', dram:'Yes' },
+        { id:'hdd_wd_blue_1tb', name:'WD Blue 1TB HDD 7200rpm', price:1050000, type:'HDD', interface:'SATA III', size:1000, rpm:7200, cache:64 },
+        { id:'hdd_seagate_barracuda_2tb', name:'Seagate Barracuda 2TB HDD 7200rpm', price:1390000, type:'HDD', interface:'SATA III', size:2000, rpm:7200, cache:256 }
+    ],
     psu:[ { id:'psu_750_gold', name:'PSU 750W 80+ Gold', price:1990000, watt:750 } ],
     case:[ { id:'case_mesh', name:'Mid Tower Mesh RGB', price:1590000, type:'Mid' } ],
     cooler:[ { id:'cooler_360_aio', name:'AIO 360mm ARGB', price:2890000, type:'AIO360', tdp:250 } ],
@@ -38,14 +44,372 @@ let PART_LIBRARY = {
 };
 
 // Precompute simple search index to avoid repeated toLowerCase operations when filtering
+let _globalItemCounter=0; // for stable sort
 function indexItem(cat, it){
     const fields=[it.name,it.socket,it.type,it.chipset,it.form,it.res,it.aspect,it.panel];
     if(it.vram) fields.push(it.vram+'gb');
     if(it.size && it.type) fields.push(it.size+'gb');
     it._search = fields.filter(Boolean).map(s=>String(s).toLowerCase()).join(' ');
+    if(it._order===undefined) it._order=_globalItemCounter++;
     return it;
 }
 Object.keys(PART_LIBRARY).forEach(cat=>{ PART_LIBRARY[cat] = PART_LIBRARY[cat].map(it=> indexItem(cat,it)); });
+
+// --- Generic sorting state (per category) & column definitions ---
+const sortState = {};
+function ensureSortState(cat){ if(!sortState[cat]) sortState[cat]={ field:null, dir:1 }; return sortState[cat]; }
+
+// Column definition map per category (excluding action column). Dynamic pruning hides empty columns.
+const CATEGORY_COLUMNS = {
+    cpu: [
+        { field:'name', label:'Tên' },
+        { field:'socket', label:'Socket' },
+        { field:'cores', label:'Nhân' },
+        { field:'threads', label:'Luồng', value:p=>p.threads },
+        { field:'pCores', label:'P-Cores', value:p=>p.pCores },
+        { field:'eCores', label:'E-Cores', value:p=>p.eCores },
+        { field:'baseClock', label:'Xung cơ bản', value:p=> p.baseClock||p.base||p.clockBase },
+        { field:'boostClock', label:'Xung boost', value:p=> p.boostClock||p.boost||p.clockBoost },
+        { field:'microarch', label:'Vi kiến trúc', value:p=> p.microarch||p.arch },
+        { field:'l3', label:'L3 (MB)', value:p=>p.l3||p.cacheL3 },
+        { field:'l2', label:'L2 (MB)', value:p=>p.l2||p.cacheL2 },
+        { field:'l1', label:'L1 (KB)', value:p=>p.l1||p.cacheL1 },
+        { field:'process', label:'Tiến trình (nm)', value:p=>p.process },
+        { field:'basePower', label:'Base Power (W)', value:p=>p.basePower },
+        { field:'tdp', label:'TDP', value:p=> p.tdp },
+        { field:'igpu', label:'iGPU', value:p=> p.igpu||p.iGPU||p.graphics },
+        { field:'igpuClock', label:'iGPU Clock (MHz)', value:p=>p.igpuClock },
+        { field:'igpuEUs', label:'iGPU EU/CU', value:p=>p.igpuEUs||p.igpuCUs },
+        { field:'pcieLanes', label:'PCIe Lanes', value:p=>p.pcieLanes },
+        { field:'pcieVersion', label:'PCIe Ver', value:p=>p.pcieVersion },
+        { field:'memSupport', label:'Hỗ trợ RAM', value:p=>p.memSupport },
+        { field:'memChannels', label:'Kênh RAM', value:p=>p.memChannels },
+        { field:'maxMemorySpeed', label:'Max RAM MHz', value:p=>p.maxMemorySpeed },
+        { field:'releaseDate', label:'Ngày ra mắt', value:p=>p.releaseDate },
+        { field:'pricePerCore', label:'₫/Core', value:p=> p.pricePerCore },
+        { field:'price', label:'Giá' }
+    ],
+    mainboard: [
+        { field:'name', label:'Tên' },
+        { field:'socket', label:'Socket' },
+        { field:'form', label:'Form' },
+        { field:'maxMemory', label:'Max RAM', value:p=>p.maxMemory },
+        { field:'memorySlots', label:'Khe RAM', value:p=>p.memorySlots },
+        { field:'m2Slots', label:'M.2', value:p=>p.m2Slots },
+        { field:'pciSlots', label:'PCIe Slots', value:p=>p.pciSlots },
+        { field:'pcieVersion', label:'PCIe', value:p=>p.pcieVersion },
+        { field:'lan', label:'LAN', value:p=>p.lan },
+        { field:'wifi', label:'WiFi', value:p=>p.wifi },
+        { field:'bios', label:'BIOS', value:p=>p.bios },
+        { field:'vrm', label:'VRM phases', value:p=>p.vrm },
+        { field:'audio', label:'Audio', value:p=>p.audio },
+        { field:'usb', label:'USB Ports', value:p=>p.usb },
+        { field:'sata', label:'SATA', value:p=>p.sata },
+        { field:'thunderbolt', label:'Thunderbolt', value:p=>p.thunderbolt },
+        { field:'rearIO', label:'Rear I/O', value:p=>p.rearIO },
+        { field:'releaseDate', label:'Ngày ra mắt', value:p=>p.releaseDate },
+        { field:'color', label:'Màu', value:p=>p.color },
+        { field:'price', label:'Giá' }
+    ],
+    ram: [
+        { field:'name', label:'Tên' },
+        { field:'type', label:'Loại' },
+        { field:'size', label:'Dung lượng', value:p=>p.size },
+        { field:'speed', label:'Tốc độ', value:p=>p.speed },
+        { field:'sticks', label:'Số thanh', value:p=>p.sticks },
+        { field:'latency', label:'CL', value:p=>p.latency||p.cl },
+        { field:'voltage', label:'Điện áp', value:p=>p.voltage },
+        { field:'ecc', label:'ECC', value:p=>p.ecc },
+        { field:'rgb', label:'RGB', value:p=>p.rgb },
+        { field:'timings', label:'Timing', value:p=>p.timings },
+        { field:'profile', label:'XMP/EXPO', value:p=>p.profile },
+        { field:'ranks', label:'Ranks', value:p=>p.ranks },
+        { field:'height', label:'Chiều cao (mm)', value:p=>p.height },
+        { field:'pricePerGB', label:'₫/GB', value:p=>p.pricePerGB },
+        { field:'price', label:'Giá' }
+    ],
+    gpu: [
+        { field:'name', label:'Tên' },
+        { field:'chipset', label:'Chipset' },
+        { field:'vram', label:'VRAM', value:p=>p.vram },
+        { field:'memoryType', label:'Bộ nhớ', value:p=>p.memoryType },
+        { field:'bus', label:'Bus (bit)', value:p=>p.bus },
+        { field:'bandwidth', label:'Băng thông GB/s', value:p=>p.bandwidth },
+        { field:'core', label:'Core', value:p=>p.core },
+        { field:'boost', label:'Boost', value:p=>p.boost },
+        { field:'memoryClock', label:'Mem Clock', value:p=>p.memoryClock },
+        { field:'length', label:'Dài (mm)', value:p=>p.length },
+        { field:'slotWidth', label:'Chiếm slot', value:p=>p.slotWidth },
+        { field:'estPower', label:'Công suất ước', value:p=>p.estPower||p.power },
+        { field:'recommendedPsu', label:'PSU khuyến nghị', value:p=>p.recommendedPsu },
+        { field:'connectors', label:'Nguồn vào', value:p=>p.connectors },
+        { field:'process', label:'Tiến trình (nm)', value:p=>p.process },
+        { field:'cudaCores', label:'CUDA', value:p=>p.cudaCores },
+        { field:'rtCores', label:'RT Cores', value:p=>p.rtCores },
+        { field:'tensorCores', label:'Tensor', value:p=>p.tensorCores },
+        { field:'transistors', label:'Transistors (B)', value:p=>p.transistors },
+        { field:'outputs', label:'Cổng xuất', value:p=>p.outputs },
+        { field:'architecture', label:'Kiến trúc', value:p=>p.architecture },
+        { field:'releaseDate', label:'Ngày ra mắt', value:p=>p.releaseDate },
+        { field:'tgp', label:'TGP (W)', value:p=>p.tgp },
+        { field:'tbp', label:'TBP (W)', value:p=>p.tbp },
+        { field:'tier', label:'Tier', value:p=>p.tier },
+        { field:'price', label:'Giá' }
+    ],
+    storage: [
+        { field:'name', label:'Tên' },
+        { field:'type', label:'Loại' },
+        { field:'interface', label:'Kết nối', value:p=>p.interface },
+        { field:'form', label:'Form', value:p=>p.form },
+        { field:'size', label:'Dung lượng', value:p=>p.size },
+        { field:'read', label:'Đọc MB/s', value:p=>p.read },
+        { field:'write', label:'Ghi MB/s', value:p=>p.write },
+        { field:'rpm', label:'RPM', value:p=>p.rpm },
+        { field:'cache', label:'Cache MB', value:p=>p.cache },
+        { field:'nand', label:'NAND', value:p=>p.nand },
+        { field:'dram', label:'DRAM', value:p=>p.dram },
+        { field:'controller', label:'Controller', value:p=>p.controller },
+        { field:'tbw', label:'TBW', value:p=>p.tbw },
+        { field:'iopsRead', label:'IOPS đọc', value:p=>p.iopsRead },
+        { field:'iopsWrite', label:'IOPS ghi', value:p=>p.iopsWrite },
+        { field:'mtbf', label:'MTBF (h)', value:p=>p.mtbf },
+        { field:'endurance', label:'Endurance (PBW)', value:p=>p.endurance },
+        { field:'temp', label:'Nhiệt độ', value:p=>p.temp },
+        { field:'dimensions', label:'Kích thước', value:p=>p.dimensions },
+        { field:'weight', label:'Trọng lượng (g)', value:p=>p.weight },
+        { field:'warranty', label:'Bảo hành', value:p=>p.warranty },
+        { field:'pricePerGB', label:'₫/GB', value:p=>p.pricePerGB },
+        { field:'price', label:'Giá' }
+    ],
+    psu: [
+        { field:'name', label:'Tên' },
+        { field:'watt', label:'Công suất', value:p=>p.watt },
+        { field:'efficiency', label:'Chuẩn', value:p=>p.efficiency },
+        { field:'modular', label:'Modular', value:p=>p.modular },
+        { field:'type', label:'Loại', value:p=>p.type },
+        { field:'atx', label:'ATX Ver', value:p=>p.atx },
+        { field:'pcie5', label:'PCIe 5.0', value:p=>p.pcie5 },
+        { field:'protections', label:'Bảo vệ', value:p=>p.protections },
+        { field:'length', label:'Dài (mm)', value:p=>p.length },
+        { field:'fanSize', label:'Quạt (mm)', value:p=>p.fanSize },
+        { field:'fanType', label:'Loại quạt', value:p=>p.fanType },
+        { field:'bearing', label:'Bạc đạn', value:p=>p.bearing },
+        { field:'rails12V', label:'Số rail 12V', value:p=>p.rails12V },
+        { field:'current12V', label:'Dòng 12V (A)', value:p=>p.current12V },
+        { field:'holdUp', label:'Hold-up (ms)', value:p=>p.holdUp },
+        { field:'warranty', label:'Bảo hành', value:p=>p.warranty },
+        { field:'pricePerWatt', label:'₫/W', value:p=>p.pricePerWatt },
+        { field:'price', label:'Giá' }
+    ],
+    monitor: [
+        { field:'name', label:'Tên' },
+        { field:'size', label:'Kích thước', value:p=>p.size },
+        { field:'res', label:'Độ phân giải', value:p=>p.res },
+        { field:'hz', label:'Tần số', value:p=>p.hz },
+        { field:'panel', label:'Panel', value:p=>p.panel },
+        { field:'aspect', label:'Tỉ lệ', value:p=>p.aspect },
+        { field:'brightness', label:'Độ sáng (nits)', value:p=>p.brightness },
+        { field:'contrast', label:'Tương phản', value:p=>p.contrast },
+        { field:'response', label:'Response (ms)', value:p=>p.response },
+        { field:'gamut', label:'Gamut', value:p=>p.gamut },
+        { field:'hdr', label:'HDR', value:p=>p.hdr },
+        { field:'sync', label:'Sync', value:p=>p.sync },
+        { field:'colorDepth', label:'Màu (bit)', value:p=>p.colorDepth },
+        { field:'srgb', label:'sRGB %', value:p=>p.srgb },
+        { field:'adobeRGB', label:'AdobeRGB %', value:p=>p.adobeRGB },
+        { field:'dciP3', label:'DCI-P3 %', value:p=>p.dciP3 },
+        { field:'viewAngle', label:'Góc nhìn', value:p=>p.viewAngle },
+        { field:'pixelPitch', label:'Pixel pitch', value:p=>p.pixelPitch },
+        { field:'curve', label:'Độ cong', value:p=>p.curve },
+        { field:'panelMaker', label:'Panel maker', value:p=>p.panelMaker },
+        { field:'warranty', label:'Bảo hành', value:p=>p.warranty },
+        { field:'price', label:'Giá' }
+    ],
+    cooler: [
+        { field:'name', label:'Tên' },
+        { field:'type', label:'Loại' },
+        { field:'tdp', label:'TDP', value:p=>p.tdp },
+        { field:'height', label:'Cao (mm)', value:p=>p.height },
+        { field:'fans', label:'Số quạt', value:p=>p.fans },
+        { field:'fanSize', label:'Fan (mm)', value:p=>p.fanSize },
+        { field:'rpm', label:'RPM', value:p=>p.rpm },
+        { field:'noise', label:'Độ ồn dB', value:p=>p.noise },
+        { field:'pump', label:'Pump RPM', value:p=>p.pump },
+        { field:'heatpipes', label:'Ống dẫn nhiệt', value:p=>p.heatpipes },
+        { field:'radiator', label:'Radiator', value:p=>p.radiator },
+        { field:'tubeLength', label:'Ống (mm)', value:p=>p.tubeLength },
+        { field:'socketSupport', label:'Socket hỗ trợ', value:p=>p.socketSupport },
+        { field:'baseMaterial', label:'Đế tản', value:p=>p.baseMaterial },
+        { field:'price', label:'Giá' }
+    ],
+    case: [
+        { field:'name', label:'Tên' },
+        { field:'type', label:'Loại', value:p=>p.type },
+        { field:'formSupport', label:'Hỗ trợ main', value:p=>p.formSupport },
+        { field:'gpuMax', label:'GPU tối đa (mm)', value:p=>p.gpuMax },
+        { field:'coolerMax', label:'Tản CPU max (mm)', value:p=>p.coolerMax },
+        { field:'psuMax', label:'PSU max (mm)', value:p=>p.psuMax },
+        { field:'fansIncluded', label:'Quạt kèm', value:p=>p.fansIncluded },
+        { field:'fanFront', label:'Fan trước', value:p=>p.fanFront },
+        { field:'fanTop', label:'Fan trên', value:p=>p.fanTop },
+        { field:'fanRear', label:'Fan sau', value:p=>p.fanRear },
+        { field:'radiator', label:'Radiator', value:p=>p.radiator },
+        { field:'color', label:'Màu', value:p=>p.color },
+        { field:'dimensions', label:'Kích thước', value:p=>p.dimensions },
+        { field:'weight', label:'Trọng lượng (kg)', value:p=>p.weight },
+        { field:'materials', label:'Vật liệu', value:p=>p.materials },
+        { field:'driveBays35', label:'Khay 3.5"', value:p=>p.driveBays35 },
+        { field:'driveBays25', label:'Khay 2.5"', value:p=>p.driveBays25 },
+        { field:'frontIO', label:'Front I/O', value:p=>p.frontIO },
+        { field:'sidePanel', label:'Hông', value:p=>p.sidePanel },
+        { field:'dustFilters', label:'Lọc bụi', value:p=>p.dustFilters },
+        { field:'price', label:'Giá' }
+    ],
+    keyboard: [
+        { field:'name', label:'Tên' },
+        { field:'price', label:'Giá' },
+        { field:'type', label:'Loại', value:p=>p.type },
+        { field:'switch', label:'Switch', value:p=>p.switch },
+        { field:'layout', label:'Layout', value:p=>p.layout },
+        { field:'connection', label:'Kết nối', value:p=>p.connection },
+        { field:'keyRollover', label:'Key rollover', value:p=>p.keyRollover },
+        { field:'rgb', label:'RGB', value:p=>p.rgb },
+        { field:'hotSwap', label:'Hot-swap', value:p=>p.hotSwap },
+        { field:'keycapMaterial', label:'Keycap', value:p=>p.keycapMaterial },
+        { field:'wireless', label:'Wireless', value:p=>p.wireless },
+        { field:'battery', label:'Pin (mAh)', value:p=>p.battery },
+        { field:'software', label:'Phần mềm', value:p=>p.software }
+    ],
+    mouse: [
+        { field:'name', label:'Tên' },
+        { field:'price', label:'Giá' },
+        { field:'sensor', label:'Sensor', value:p=>p.sensor },
+        { field:'dpi', label:'DPI', value:p=>p.dpi },
+        { field:'weight', label:'Trọng lượng (g)', value:p=>p.weight },
+        { field:'connection', label:'Kết nối', value:p=>p.connection },
+        { field:'switch', label:'Switch', value:p=>p.switch },
+        { field:'polling', label:'Polling Hz', value:p=>p.polling },
+        { field:'sensorModel', label:'Model sensor', value:p=>p.sensorModel },
+        { field:'accel', label:'Gia tốc (G)', value:p=>p.accel },
+        { field:'maxSpeed', label:'Tốc độ tối đa', value:p=>p.maxSpeed },
+        { field:'battery', label:'Pin (mAh)', value:p=>p.battery },
+        { field:'liftOff', label:'Lift-off (mm)', value:p=>p.liftOff }
+    ],
+    headphones: [
+        { field:'name', label:'Tên' },
+        { field:'price', label:'Giá' },
+        { field:'type', label:'Loại', value:p=>p.type },
+        { field:'driver', label:'Driver (mm)', value:p=>p.driver },
+        { field:'freq', label:'Tần số', value:p=>p.freq },
+        { field:'impedance', label:'Trở kháng (Ω)', value:p=>p.impedance },
+        { field:'sensitivity', label:'Độ nhạy (dB)', value:p=>p.sensitivity },
+        { field:'mic', label:'Mic', value:p=>p.mic },
+        { field:'connection', label:'Kết nối', value:p=>p.connection },
+        { field:'wireless', label:'Wireless', value:p=>p.wireless },
+        { field:'battery', label:'Pin (h)', value:p=>p.battery },
+        { field:'codec', label:'Codec', value:p=>p.codec },
+        { field:'noiseCancel', label:'Chống ồn', value:p=>p.noiseCancel },
+        { field:'weight', label:'Trọng lượng (g)', value:p=>p.weight },
+        { field:'cableLength', label:'Dài dây (m)', value:p=>p.cableLength }
+    ],
+    speakers: [
+        { field:'name', label:'Tên' },
+        { field:'price', label:'Giá' },
+        { field:'channels', label:'Kênh', value:p=>p.channels },
+        { field:'powerRms', label:'Công suất RMS', value:p=>p.powerRms },
+        { field:'freq', label:'Tần số', value:p=>p.freq },
+        { field:'connection', label:'Kết nối', value:p=>p.connection },
+        { field:'subwoofer', label:'Sub', value:p=>p.subwoofer },
+        { field:'totalPower', label:'Tổng công suất', value:p=>p.totalPower },
+        { field:'bluetooth', label:'Bluetooth', value:p=>p.bluetooth },
+        { field:'inputs', label:'Ngõ vào', value:p=>p.inputs },
+        { field:'warranty', label:'Bảo hành', value:p=>p.warranty }
+    ],
+    os: [
+        { field:'name', label:'Tên' },
+        { field:'price', label:'Giá' },
+        { field:'version', label:'Version', value:p=>p.version },
+        { field:'license', label:'License', value:p=>p.license },
+        { field:'arch', label:'Arch', value:p=>p.arch },
+        { field:'build', label:'Build', value:p=>p.build },
+        { field:'edition', label:'Edition', value:p=>p.edition },
+        { field:'oemRetail', label:'OEM/Retail', value:p=>p.oemRetail },
+        { field:'activation', label:'Kích hoạt', value:p=>p.activation },
+        { field:'supportEnd', label:'Hết hỗ trợ', value:p=>p.supportEnd }
+    ],
+    soundcard: [
+        { field:'name', label:'Tên' },
+        { field:'price', label:'Giá' },
+        { field:'chipset', label:'Chipset', value:p=>p.chipset },
+        { field:'channels', label:'Kênh', value:p=>p.channels },
+        { field:'snr', label:'SNR (dB)', value:p=>p.snr },
+        { field:'sample', label:'Sample kHz', value:p=>p.sample },
+        { field:'bitDepth', label:'Bit', value:p=>p.bitDepth },
+        { field:'interface', label:'Kết nối', value:p=>p.interface },
+        { field:'sampleRateMax', label:'Sample tối đa', value:p=>p.sampleRateMax },
+        { field:'dsd', label:'DSD', value:p=>p.dsd },
+        { field:'opAmps', label:'Op-amps', value:p=>p.opAmps },
+        { field:'outputs', label:'Ngõ ra', value:p=>p.outputs },
+        { field:'inputs', label:'Ngõ vào', value:p=>p.inputs }
+    ],
+    network: [
+        { field:'name', label:'Tên' },
+        { field:'price', label:'Giá' },
+        { field:'speed', label:'Tốc độ', value:p=>p.speed },
+        { field:'interface', label:'Kết nối', value:p=>p.interface },
+        { field:'chipset', label:'Chipset', value:p=>p.chipset },
+        { field:'wifi', label:'WiFi', value:p=>p.wifi },
+        { field:'bt', label:'Bluetooth', value:p=>p.bt },
+        { field:'antennas', label:'Ăng-ten', value:p=>p.antennas },
+        { field:'standard', label:'Chuẩn', value:p=>p.standard },
+        { field:'mimo', label:'MIMO', value:p=>p.mimo },
+        { field:'latency', label:'Độ trễ', value:p=>p.latency },
+        { field:'warranty', label:'Bảo hành', value:p=>p.warranty }
+    ]
+};
+// Sets for table categories & wide layout
+const TABLE_CATS = new Set(Object.keys(CATEGORY_COLUMNS));
+const WIDE_TABLE_CATS = new Set(['cpu','mainboard','ram','gpu','psu','monitor','storage','case','cooler','keyboard','mouse','headphones','speakers','os','soundcard','network']);
+function getSortValue(cat, obj, field){
+    if(field==='price') return obj.price ?? 0;
+    if(field==='name') return obj.name || '';
+    // custom lookups
+    switch(field){
+        case 'cores': return obj.cores ?? 0;
+        case 'baseClock': return parseFloat(obj.baseClock||obj.base||obj.clockBase)||0;
+        case 'boostClock': return parseFloat(obj.boostClock||obj.boost||obj.clockBoost)||0;
+        case 'microarch': return obj.microarch||obj.arch||'';
+        case 'tdp': return obj.tdp ?? 0;
+        case 'igpu': return obj.igpu||obj.iGPU||obj.graphics||'';
+        case 'rating': return typeof obj.rating==='number'? obj.rating : (Array.isArray(obj.rating)? obj.rating[0]:0);
+        case 'socket': return obj.socket||'';
+        case 'chipset': return obj.chipset||'';
+        case 'form': return obj.form||'';
+        case 'maxMemory': return obj.maxMemory||0;
+        case 'type': return obj.type||'';
+        case 'size': return obj.size||0;
+        case 'speed': return obj.speed||0;
+        case 'sticks': return obj.sticks||0;
+        case 'vram': return obj.vram||0;
+        case 'core': return obj.core||0;
+        case 'boost': return obj.boost||0;
+        case 'estPower': return obj.estPower||obj.power||0;
+        case 'watt': return obj.watt||0;
+        case 'efficiency': return obj.efficiency||'';
+        case 'modular': return obj.modular||'';
+        case 'hz': return obj.hz||0;
+        case 'panel': return obj.panel||'';
+    case 'length': return obj.length||0;
+    case 'aspect': return obj.aspect||'';
+    case 'color': return obj.color||'';
+    case 'pricePerGB': return obj.pricePerGB||0;
+    case 'pricePerCore': return obj.pricePerCore||0;
+    case 'pricePerWatt': return obj.pricePerWatt||0;
+    case 'originalPriceUSD': return obj.originalPriceUSD||0;
+    case 'tier': return obj.tier||'';
+        default: return obj[field];
+    }
+}
 
 const state = { selected:{}, total:0, power:0, loadedExternal:false };
 // Format price: show 'Liên hệ' when price missing/zero
@@ -85,6 +449,19 @@ function buildMeta(p){ const meta=[]; if(p.socket)meta.push('Socket '+p.socket);
 function buildFacetOptions(category){
     const sel=document.getElementById('part-filter-socket');
     if(!sel) return;
+    // Brand filter visibility (Intel / AMD) - only meaningful for CPU & Mainboard
+    const brandBox=document.getElementById('brand-filter');
+    if(brandBox){
+        if(category==='cpu' || category==='mainboard'){
+            brandBox.style.display='block';
+        } else {
+            brandBox.style.display='none';
+            // Uncheck all when hidden to avoid impacting other categories
+            brandBox.querySelectorAll('input[type="checkbox"]').forEach(cb=> cb.checked=false);
+        }
+    }
+    const facetGroup=document.getElementById('group-facet');
+    const facetTitle=document.getElementById('facet-title');
     // Determine facet key per category
     const mapKey = {
         cpu:'socket',
@@ -96,15 +473,17 @@ function buildFacetOptions(category){
         monitor:'res'
     };
     const key = mapKey[category];
-    if(!key){ sel.classList.add('hidden'); sel.innerHTML=''; return; }
+    if(!key){ sel.classList.add('hidden'); sel.innerHTML=''; if(facetGroup) facetGroup.style.display='none'; return; }
     const list = PART_LIBRARY[category]||[];
     const values = new Set();
     list.forEach(it=>{ const v = it[key]; if(v!==undefined && v!=='' && v!==null) values.add(String(v)); });
-    if(values.size <= 1){ sel.classList.add('hidden'); sel.innerHTML=''; return; }
+    if(values.size <= 1){ sel.classList.add('hidden'); sel.innerHTML=''; if(facetGroup) facetGroup.style.display='none'; return; }
     const labelMap={ socket:'Socket', type:'Loại', vram:'VRAM', efficiency:'Chuẩn hiệu suất', res:'Độ phân giải' };
     sel.classList.remove('hidden');
     sel.innerHTML = `<option value="">${labelMap[key]}: Tất cả</option>` + Array.from(values).sort((a,b)=> a.localeCompare(b, 'vi', {numeric:true})).map(v=>`<option value="${v}">${v}</option>`).join('');
     sel.dataset.facetKey = key; // store which field we're filtering on
+    if(facetGroup){ facetGroup.style.display='block'; }
+    if(facetTitle){ facetTitle.textContent = labelMap[key] || 'Thuộc tính'; }
 }
 function openPartModal(category){
     const modal=document.getElementById('part-modal');
@@ -112,8 +491,29 @@ function openPartModal(category){
     modal.dataset.category=category;
     currentModalLimit = MODAL_PAGE_SIZE; // reset mỗi lần mở
     buildFacetOptions(category);
+    initPriceFilter(category);
     renderPartModalList();
     modal.style.display='flex';
+    const modalContent = modal.querySelector('.builder-modal-content');
+    if(modalContent){
+        if(WIDE_TABLE_CATS.has(category)) modalContent.classList.add('cpu-mode'); else modalContent.classList.remove('cpu-mode');
+    }
+}
+function initPriceFilter(category){
+    const box=document.getElementById('price-filter'); if(!box) return;
+    const list=PART_LIBRARY[category]||[]; const prices=list.map(p=>p.price||0).filter(v=>v>0);
+    if(!prices.length){ box.style.display='none'; return; }
+    const min=Math.min(...prices); const max=Math.max(...prices);
+    const maxSlider=document.getElementById('pf-range-max');
+    const pfMin=document.getElementById('pf-min'); const pfMax=document.getElementById('pf-max');
+    maxSlider.min=String(min);
+    maxSlider.max=String(max);
+    maxSlider.value=String(max);
+    pfMin.textContent=formatPrice(min);
+    pfMax.textContent=formatPrice(max);
+    const updateTrack=()=>{ const b=parseInt(maxSlider.value)||max; pfMax.textContent=formatPrice(b); renderPartModalList(); };
+    maxSlider.oninput=updateTrack;
+    box.style.display='block';
 }
 function renderPartModalList(){
     const modal=document.getElementById('part-modal');
@@ -123,11 +523,132 @@ function renderPartModalList(){
     const facetSelect=document.getElementById('part-filter-socket');
     const facetKey=facetSelect?.dataset?.facetKey;
     const facetValue = facetSelect && !facetSelect.classList.contains('hidden') ? facetSelect.value : '';
+    // Brand filter collection
+    const brandBox=document.getElementById('brand-filter');
+    let brandSelected=[];
+    if(brandBox && brandBox.style.display!=='none'){
+        brandSelected = Array.from(brandBox.querySelectorAll('input[type="checkbox"]:checked')).map(cb=>cb.value.toLowerCase());
+    }
     grid.innerHTML='';
     let list=PART_LIBRARY[category]||[];
     if(q){ list=list.filter(p=> p._search && p._search.includes(q)); }
     if(facetValue && facetKey){ list=list.filter(p=> String(p[facetKey])===facetValue); }
-    // Tăng giới hạn nếu người dùng đã bấm tải thêm
+    if(brandSelected.length){
+        // Heuristic: check name starts with / contains brand keyword
+        list=list.filter(p=>{
+            const name=(p.name||'').toLowerCase();
+            return brandSelected.some(b=> name.includes(b));
+        });
+    }
+    // Simple price filter (slider)
+    const maxSlider=document.getElementById('pf-range-max');
+    if(maxSlider){
+        const maxV=parseInt(maxSlider.value)||0;
+        if(maxV>0){ list=list.filter(p=> (p.price||0)<=maxV); }
+    }
+    if(TABLE_CATS.has(category)){
+        const s=ensureSortState(category);
+        if(s.field){
+            list=[...list].sort((a,b)=>{
+                const va=getSortValue(category,a,s.field);
+                const vb=getSortValue(category,b,s.field);
+                if(typeof va==='number' && typeof vb==='number'){
+                    if(va!==vb) return (va-vb)*s.dir;
+                } else {
+                    const sa=String(va??'').toLowerCase();
+                    const sb=String(vb??'').toLowerCase();
+                    const cmp=sa.localeCompare(sb,'vi',{numeric:true});
+                    if(cmp!==0) return cmp*s.dir;
+                }
+                return (a._order - b._order);
+            });
+        }
+        // Start with configured columns
+        const baseCols = CATEGORY_COLUMNS[category] || [];
+        // Dynamic prune: drop columns (except name/price) that are entirely empty across the full dataset for this category
+        const fullData = PART_LIBRARY[category] || [];
+        const cols = baseCols.filter(c=>{
+            if(c.field==='name' || c.field==='price') return true;
+            return fullData.some(p=>{
+                const v = (typeof c.value==='function') ? c.value(p) : p[c.field];
+                return v!==undefined && v!==null && v!=='';
+            });
+        });
+        const table=document.createElement('table');
+        table.className='cpu-table';
+        table.innerHTML='<thead><tr>' + cols.map(c=>`<th data-field="${c.field}">${c.label}</th>`).join('') + '<th></th></tr></thead><tbody></tbody>';
+        const tbody=table.querySelector('tbody');
+        const end=Math.min(currentModalLimit, list.length);
+        list.slice(0,end).forEach(p=>{
+            const tr=document.createElement('tr');
+            const tds = cols.map(c=>{
+                let raw = c.value? c.value(p) : p[c.field];
+                if(raw===undefined || raw===null) raw='';
+                if(['baseClock','boostClock'].includes(c.field) && raw!=='') raw=raw+' GHz';
+                if(['tdp','watt'].includes(c.field) && raw!=='') raw=raw+'W';
+                if(c.field==='size' && raw!=='') {
+                    // Contextual size unit formatting
+                    if(category==='monitor') {
+                        raw = raw + ' inch';
+                    } else if(category==='ram') {
+                        raw = raw + 'GB';
+                    } else if(category==='storage') {
+                        // storage handled in category-specific block below
+                    } else {
+                        // default keep raw (no unit) to avoid misleading GB label
+                    }
+                }
+                if(c.field==='vram' && raw!=='') raw=raw+'GB';
+                if(c.field==='microarch' && raw && p.microarchSource==='inferred') raw = `<span class=\"inferred\" title=\"Suy luận từ tên, chưa xác thực nguồn gốc\">${raw}</span>`;
+                if(c.field==='price'){
+                    const cls = p._estimated? 'price estimated':'price';
+                    const usd = (p.originalPriceUSD && p.originalPriceUSD>0)? ` (USD $${p.originalPriceUSD})` : '';
+                    const titleParts=[];
+                    if(p.originalPriceUSD) titleParts.push('Giá gốc USD: $'+p.originalPriceUSD);
+                    if(p._estimated) titleParts.push('Giá VND ước tính');
+                    if(!titleParts.length && usd) titleParts.push('Giá gốc');
+                    const titleAttr = titleParts.length? ` title="${titleParts.join(' | ')}"` : '';
+                    raw = `<span class="${cls}"${titleAttr}>${formatPrice(p.price)}${p.originalPriceUSD?'<sup style=\"opacity:.6;font-size:10px;margin-left:2px;\">$'+p.originalPriceUSD+'</sup>':''}</span>`;
+                }
+                if(['pricePerGB','pricePerCore','pricePerWatt'].includes(c.field) && raw){ raw = raw.toLocaleString('vi-VN'); }
+                if(category==='storage'){
+                    if(c.field==='size' && raw){
+                        const v=parseInt(p.size,10); if(v>=1024){ raw=(v/1024)+'TB'; } else raw=v+'GB';
+                    }
+                    if(c.field==='type' && raw){
+                        const t=String(raw).toLowerCase();
+                        if(/nvme/.test(t)) raw='NVMe SSD';
+                        else if(/sata/.test(t) && /ssd/.test(t)) raw='SATA SSD';
+                        else if(/hdd|rpm/.test(t)) raw='HDD';
+                    }
+                }
+                return `<td>${raw}</td>`;
+            }).join('');
+            tr.innerHTML = tds + '<td><button class="mini-add">Chọn</button></td>';
+            tr.querySelector('.mini-add').addEventListener('click',()=>{ selectPart(category,p); closeModal(); });
+            tbody.appendChild(tr);
+        });
+        if(list.length>end){
+            const trMore=document.createElement('tr');
+            const td=document.createElement('td');
+            td.colSpan=cols.length+1; td.className='more-row';
+            td.textContent=`Hiển thị ${end}/${list.length} kết quả. Nhấn để tải thêm...`;
+            td.addEventListener('click',()=>{ currentModalLimit+=MODAL_PAGE_SIZE; renderPartModalList(); });
+            trMore.appendChild(td); tbody.appendChild(trMore);
+        }
+        grid.appendChild(table);
+        table.querySelectorAll('th[data-field]').forEach(th=>{
+            th.classList.remove('sort-asc','sort-desc');
+            if(s.field===th.dataset.field){ th.classList.add(s.dir===1?'sort-asc':'sort-desc'); }
+            th.addEventListener('click',()=>{
+                const f=th.dataset.field;
+                if(s.field===f) s.dir=-s.dir; else { s.field=f; s.dir=1; }
+                renderPartModalList();
+            });
+        });
+        return; // table path
+    }
+    // Card layout for other categories
     const end = Math.min(currentModalLimit, list.length);
     list.slice(0,end).forEach(p=>{
         const div=document.createElement('div');
@@ -173,7 +694,7 @@ function renderSelected(category){
 }
 
 function recalcTotals(){ let total=0,power=0; Object.values(state.selected).forEach(p=>{ total+=p.price||0; power+=(p.tdp||p.power||0); }); state.total=total; state.power=power; document.getElementById('total-price').textContent=formatPrice(total); document.getElementById('total-power').textContent=power+'W'; compatibilityCheck(); }
-function compatibilityCheck(){ const cpu=state.selected.cpu, mb=state.selected.mainboard, ram=state.selected.ram, psu=state.selected.psu, gpu=state.selected.gpu; const box=document.getElementById('compat-status'); const warnBox=document.getElementById('warning-box'); warnBox.style.display='none'; warnBox.innerHTML=''; const problems=[]; if(cpu&&mb&&cpu.socket&&mb.socket&&cpu.socket!==mb.socket) problems.push('CPU & Mainboard khác socket'); if(ram&&mb&&ram.type&&mb.chipset && ram.type.startsWith('DDR5') && mb.chipset.match(/b550|x570/i)) problems.push('RAM DDR5 không chạy trên chipset AM4'); if(psu && state.power && psu.watt < state.power * 1.4) problems.push('Nguồn có thể thiếu (khuyến nghị >140%)'); if(problems.length){ box.className='compatibility-status error'; box.textContent='Không tương thích'; warnBox.style.display='block'; warnBox.innerHTML='<strong>Vấn đề:</strong><br>'+problems.map(p=>'• '+p).join('<br>'); } else if(cpu && mb){ box.className='compatibility-status ok'; box.textContent='Tương thích'; } else { box.className='compatibility-status warn'; box.textContent='Chọn thêm linh kiện'; } }
+function compatibilityCheck(){ const cpu=state.selected.cpu, mb=state.selected.mainboard, ram=state.selected.ram, psu=state.selected.psu, gpu=state.selected.gpu; const box=document.getElementById('compat-status'); const warnBox=document.getElementById('warning-box'); warnBox.style.display='none'; warnBox.innerHTML=''; const problems=[]; if(cpu&&mb&&cpu.socket&&mb.socket&&cpu.socket!==mb.socket) problems.push('CPU & Mainboard khác socket'); if(psu && state.power && psu.watt < state.power * 1.4) problems.push('Nguồn có thể thiếu (khuyến nghị >140%)'); if(problems.length){ box.className='compatibility-status error'; box.textContent='Không tương thích'; warnBox.style.display='block'; warnBox.innerHTML='<strong>Vấn đề:</strong><br>'+problems.map(p=>'• '+p).join('<br>'); } else if(cpu && mb){ box.className='compatibility-status ok'; box.textContent='Tương thích'; } else { box.className='compatibility-status warn'; box.textContent='Chọn thêm linh kiện'; } }
 function updateSummary(){ const list=document.getElementById('summary-list'); list.innerHTML=''; Object.keys(state.selected).forEach(k=>{ const p=state.selected[k]; const div=document.createElement('div'); div.className='summary-item'; div.innerHTML=`<div class="label">${(PART_CATEGORIES.find(c=>c.key===k)||{}).label||k}</div><div class="value">${p.name}</div>`; list.appendChild(div); }); buildRecommendation(); }
 function buildRecommendation(){ const box=document.getElementById('recommend-box'); const cpu=state.selected.cpu, gpu=state.selected.gpu, ram=state.selected.ram; let txt=''; if(cpu&&gpu){ if((cpu.cores||0)>=12 && (gpu.power||0)>=250) txt+='Cấu hình mạnh cho Streaming / 4K Gaming.<br>'; else if((gpu.power||0)<=200) txt+='Phù hợp chơi game eSports / văn phòng.<br>'; } if(ram && (ram.size||0)>=64) txt+='Đa nhiệm nặng & dựng video.<br>'; if(!txt) txt='Chọn thêm linh kiện để nhận gợi ý.'; box.innerHTML='<strong>Gợi ý:</strong><br>'+txt; }
 
@@ -202,6 +723,8 @@ async function ensureCategory(cat){
         }
     }catch(e){ console.warn('Processed parse fail', cat, e); }
     loadedCats.add(cat);
+    // After loading CPU dataset, enrich with microarchitecture & rating if missing
+    if(cat==='cpu') enrichCpuDerivedData();
     updateCategoryCount(cat);
 }
 async function preloadCore(){ ['cpu','mainboard','ram','gpu'].forEach(c=> ensureCategory(c)); }
@@ -228,6 +751,9 @@ async function initProcessed(){
     }
     const facet=document.getElementById('part-filter-socket');
     if(facet){ facet.addEventListener('change', ()=>{ currentModalLimit = MODAL_PAGE_SIZE; renderPartModalList(); }); }
+    // Brand filter listeners
+    const brandBox=document.getElementById('brand-filter');
+    if(brandBox){ brandBox.querySelectorAll('input[type="checkbox"]').forEach(cb=> cb.addEventListener('change', ()=>{ currentModalLimit = MODAL_PAGE_SIZE; renderPartModalList(); })); }
     document.getElementById('close-modal')?.addEventListener('click', closeModal);
     document.getElementById('part-modal')?.addEventListener('click', e=>{ if(e.target.id==='part-modal') closeModal(); });
     document.getElementById('clear-config')?.addEventListener('click', clearConfig);
@@ -237,3 +763,94 @@ async function initProcessed(){
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{ loadPagePart('HTML/Layout/resetheader.html','header-container', ()=>{ if(typeof initHeader==='function') initHeader(); }); loadPagePart('HTML/Layout/resetfooter.html','footer-container'); initProcessed(); });
+
+// ===== PCPartPicker List Import =====
+async function importPcPartPickerList(url){
+    try{
+        const res = await fetch('/api/import-pcpartpicker', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ url }) });
+        if(!res.ok) throw new Error('Import thất bại');
+        const data = await res.json();
+        if(!data.items) return;
+        // Ensure categories loaded before matching
+        const catsToLoad = ['cpu','mainboard','ram','gpu','storage','psu','case','cooler'];
+        await Promise.all(catsToLoad.map(c=> ensureCategory(c)));
+        // Simple fuzzy name match: choose first dataset item whose normalized name contains main token(s)
+        function norm(s){ return (s||'').toLowerCase().replace(/[^a-z0-9]+/g,' '); }
+        data.items.forEach(it=>{
+            if(!it.category) return;
+            const list = PART_LIBRARY[it.category]||[];
+            const targetTokens = norm(it.name).split(' ').filter(t=>t.length>2);
+            let best=null, bestScore=0;
+            list.forEach(p=>{
+                const base = norm(p.name);
+                let score=0;
+                targetTokens.forEach(t=>{ if(base.includes(t)) score++; });
+                if(score>bestScore){ bestScore=score; best=p; }
+            });
+            if(best && bestScore>=2){ // require at least 2 token matches to reduce false positives
+                selectPart(it.category, best);
+            }
+        });
+        recalcTotals(); updateSummary();
+    }catch(e){ console.warn('Import list error', e); }
+}
+
+// Bind UI
+document.addEventListener('DOMContentLoaded', ()=>{
+    const btn=document.getElementById('import-pp-btn');
+    const input=document.getElementById('pp-list-url');
+    if(btn && input){
+        btn.addEventListener('click', ()=>{ const url=input.value.trim(); if(url) importPcPartPickerList(url); });
+        input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ const url=input.value.trim(); if(url) importPcPartPickerList(url); }});
+    }
+});
+
+// ===== CPU derived data (microarchitecture + synthetic rating) =====
+function enrichCpuDerivedData(){
+    const list = PART_LIBRARY.cpu||[];
+    if(!list.length) return;
+    // Only add microarch when pattern clearly matches; do NOT fabricate rating for accuracy.
+    list.forEach(c=>{
+        if(!c.microarch){
+            const m=guessMicroArch(c.name);
+            if(m) c.microarch=m; // only set if confidently guessed
+        }
+        // Do not generate rating; leave blank if source dataset lacks it
+        indexItem('cpu', c);
+    });
+}
+function guessMicroArch(name){
+    if(!name) return '';
+    const n=name.toLowerCase();
+    // AMD Ryzen pattern
+    if(n.includes('ryzen')){
+        const m = n.match(/ryzen\s+\d+\s*(?:pro|x3d|g)?\s*(\d{4,5})?/); // fallback
+        // Extract 4-digit model code
+        let codeMatch = n.match(/\b(\d{4,5})x?3?d?\b/);
+        let code = codeMatch? parseInt(codeMatch[1],10): null;
+        if(code){
+            if(code>=9000) return 'Zen 5';
+            if(code>=7000) return 'Zen 4';
+            if(code>=5000) return 'Zen 3';
+            if(code>=3000) return 'Zen 2';
+            if(code>=2000) return 'Zen+';
+            if(code>=1000) return 'Zen 1';
+        }
+        return 'Zen';
+    }
+    if(n.includes('threadripper')) return 'Zen HEDT';
+    // Intel Core gen detection (look for i3/i5/i7/i9 & model number)
+    if(/core\s+i[3579]/.test(n)){
+    const genMatch = n.match(/\b(\d{4,5})[a-z]{0,2}\b/); // e.g. 14700K -> 14700
+        if(genMatch){
+            const num = parseInt(genMatch[1],10);
+            const gen = Math.floor(num/1000); // 14700 -> 14
+            if(gen>=15) return gen + 'th Gen';
+            const intelMap={12:'Alder Lake',13:'Raptor Lake',14:'Raptor Lake R',11:'Rocket Lake',10:'Comet Lake',9:'Coffee Lake R',8:'Coffee Lake'};
+            if(intelMap[gen]) return intelMap[gen];
+            return gen + 'th Gen';
+        }
+        return 'Intel Core';
+    }
+    return '';
+}

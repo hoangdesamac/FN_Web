@@ -41,6 +41,10 @@
         <!-- Config table -->
         <section class="builder-config">
             <h2 class="builder-title">Tự Build PC</h2>
+            <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+                <input type="text" id="pp-list-url" placeholder="Dán URL pcpartpicker list..." style="flex:1; min-width:260px; background:rgba(0,0,0,.35); border:1px solid var(--panel-border); color:#fff; padding:6px 10px; border-radius:8px; font-size:.7rem;" />
+                <button class="neon-btn" id="import-pp-btn" style="flex:0 0 auto;">Nhập List</button>
+            </div>
             <div class="compatibility-status" id="compat-status"></div>
             <table class="config-table">
                 <thead>
@@ -88,11 +92,35 @@
         <h3 id="modal-title">Chọn linh kiện</h3>
         <button class="modal-close" id="close-modal">×</button>
     </div>
-    <div class="modal-toolbar">
-        <input type="text" id="part-search" placeholder="Tìm theo tên / socket / chuẩn..." />
-        <select id="part-filter-socket" class="hidden"></select>
+    <div class="modal-body-split">
+        <aside class="filter-panel">
+            <div class="filter-scroll">
+                <div class="filter-group">
+                    <div class="fg-title">Tìm kiếm</div>
+                    <input type="text" id="part-search" placeholder="Tìm theo tên / socket / chuẩn..." />
+                </div>
+                <div class="filter-group" id="group-facet" style="display:none;">
+                    <div class="fg-title" id="facet-title">Thuộc tính</div>
+                    <select id="part-filter-socket" class="hidden"></select>
+                </div>
+                <div class="filter-group brand-filter" id="brand-filter" style="display:none;">
+                    <div class="fg-title">Hãng</div>
+                    <label class="chk"><input type="checkbox" value="AMD"> <span>AMD</span></label>
+                    <label class="chk"><input type="checkbox" value="Intel"> <span>Intel</span></label>
+                </div>
+                <div class="filter-group price-filter" id="price-filter" style="display:none;">
+                    <div class="fg-title">Giá tối đa</div>
+                    <div class="pf-labels"><span id="pf-min">0₫</span><span id="pf-max">0₫</span></div>
+                    <div class="pf-sliders single">
+                        <input type="range" id="pf-range-max" min="0" max="0" value="0" step="50000">
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <div class="parts-area">
+            <div class="parts-grid" id="parts-grid"></div>
+        </div>
     </div>
-    <div class="parts-grid" id="parts-grid"></div>
   </div>
 </div>
 

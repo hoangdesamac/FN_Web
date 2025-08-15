@@ -2,11 +2,22 @@
   "name": "fe_web",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-  "build:dataset": "node scripts/build-dataset.js",
-  "gen:synthetic": "node scripts/generate-synthetic.js"
-  },
   "dependencies": {
-    "apify-client": "^2.15.0"
+    "apify-client": "^2.15.0",
+    "puppeteer": "^22.15.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "scripts": {
+    "build:dataset": "node scripts/build-dataset.js",
+    "build:dataset:strict": "cross-env STRICT_MODE=1 node scripts/build-dataset.js",
+    "gen:synthetic": "node scripts/generate-synthetic.js",
+    "scrape:cpu": "node scripts/scrape-cpu.js",
+    "scrape:cpu:full": "node scripts/scrape-cpu.js full",
+  "scrape:cpu:stealth": "node scripts/scrape-cpu-stealth.js full:details",
+  "validate:dataset": "node scripts/validate-dataset.js"
+  },
+  "devDependencies": {
+    "cross-env": "^10.0.0"
   }
 }
