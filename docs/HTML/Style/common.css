@@ -1280,7 +1280,7 @@ body {
         border-radius: 10px;
     }
 
-    /* Chừa khoảng trống cho thanh nav đáy */
+    /* Chừa khoảng trống cho thanh nav đáysss */
     body {
         padding-bottom: calc(60px + env(safe-area-inset-bottom));
     }
