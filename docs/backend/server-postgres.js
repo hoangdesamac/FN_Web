@@ -6,7 +6,7 @@ const { Pool } = require('pg');
 const app = express();
 app.use(express.json());
 
-// CORS cho frontend GitHub Pages
+// CORS cho frontend GitHub Page
 app.use(cors({
     origin: ['https://3tdshop.id.vn'], // Thay link GitHub Pages của bạn
     credentials: true
