@@ -1,4 +1,3 @@
-// auth.js
 const API_BASE = "https://fn-web.onrender.com"; // Link Render backend
 
 /* ========== Đăng ký ========== */
@@ -18,7 +17,7 @@ document.querySelector('#auth-register form').addEventListener('submit', async (
         const data = await res.json();
         if (data.success) {
             alert('✅ Đăng ký thành công! Bạn có thể đăng nhập.');
-            switchToLogin();
+            CyberModal.showLogin(); // ✅ Dùng hàm của header.js
         } else {
             alert('❌ ' + data.error);
         }
@@ -44,7 +43,7 @@ document.querySelector('#auth-login form').addEventListener('submit', async (e) 
         if (data.success) {
             localStorage.setItem('authToken', data.token);
             alert('✅ Đăng nhập thành công!');
-            closeCyberModal();
+            CyberModal.close(); // ✅ Dùng hàm của header.js
             // Có thể load lại trang hoặc hiển thị thông tin người dùng
         } else {
             alert('❌ ' + data.error);
@@ -54,25 +53,3 @@ document.querySelector('#auth-login form').addEventListener('submit', async (e) 
         alert('❌ Lỗi kết nối server!');
     }
 });
-
-/* ========== Chuyển qua lại giữa các form ========== */
-function switchToLogin() {
-    document.getElementById('auth-login').classList.remove('d-none');
-    document.getElementById('auth-register').classList.add('d-none');
-    document.getElementById('auth-forgot').classList.add('d-none');
-}
-function switchToRegister() {
-    document.getElementById('auth-login').classList.add('d-none');
-    document.getElementById('auth-register').classList.remove('d-none');
-    document.getElementById('auth-forgot').classList.add('d-none');
-}
-function switchToForgot() {
-    document.getElementById('auth-login').classList.add('d-none');
-    document.getElementById('auth-register').classList.add('d-none');
-    document.getElementById('auth-forgot').classList.remove('d-none');
-}
-
-/* ========== Đóng modal ========== */
-function closeCyberModal() {
-    document.getElementById('cyber-auth-modal').style.display = 'none';
-}
