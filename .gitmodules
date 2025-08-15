@@ -1,0 +1,3 @@
+[submodule "pc-part-dataset"]
+	path = pc-part-dataset
+	url = https://github.com/docyx/pc-part-dataset.git
