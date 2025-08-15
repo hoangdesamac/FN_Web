@@ -499,8 +499,32 @@ function openPartModal(category){
     buildFacetOptions(category);
     renderPartModalList();
     modal.style.display='flex';
+    // Chặn scroll nền khi mở modal
+    document.body.classList.add('no-scroll');
     const modalContent = modal.querySelector('.builder-modal-content');
     if(modalContent){
+        // Thêm overlay fade nếu chưa có
+        if(!modalContent.querySelector('.scroll-fade-top')){
+            const fadeTop=document.createElement('div');
+            fadeTop.className='scroll-fade-top';
+            modalContent.prepend(fadeTop);
+        }
+        if(!modalContent.querySelector('.scroll-fade-bottom')){
+            const fadeBottom=document.createElement('div');
+            fadeBottom.className='scroll-fade-bottom';
+            modalContent.appendChild(fadeBottom);
+        }
+        const checkScroll=()=>{
+            const st = modalContent.scrollTop;
+            const maxScroll = modalContent.scrollHeight - modalContent.clientHeight - 1;
+            if(st>8) modalContent.classList.add('has-scroll-top'); else modalContent.classList.remove('has-scroll-top');
+            if(st < maxScroll-8) modalContent.classList.add('has-scroll-bottom'); else modalContent.classList.remove('has-scroll-bottom');
+        };
+        modalContent.removeEventListener('scroll', modalContent._scrollFadeHandler||(()=>{}));
+        modalContent._scrollFadeHandler = checkScroll;
+        modalContent.addEventListener('scroll', checkScroll);
+        // init state
+        requestAnimationFrame(checkScroll);
         if(WIDE_TABLE_CATS.has(category)) modalContent.classList.add('cpu-mode'); else modalContent.classList.remove('cpu-mode');
     }
 }
@@ -687,6 +711,12 @@ function loadFromLocal(){ try{ const saved=JSON.parse(localStorage.getItem('pcBu
 function clearConfig(){ state.selected={}; buildConfigRows(); recalcTotals(); updateSummary(); saveToLocal(); }
 function exportJSON(){ const data=JSON.stringify({ parts:state.selected, total:state.total, power:state.power },null,2); const blob=new Blob([data],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='pc_config.json'; a.click(); }
 function closeModal(){ document.getElementById('part-modal').style.display='none'; }
+// Gỡ class no-scroll khi đóng modal
+const _closeModalRef = closeModal;
+closeModal = function(){
+    _closeModalRef();
+    document.body.classList.remove('no-scroll');
+};
 
 // ===== Processed dataset (lazy) =====
 const DATA_BASES=[ '../pc-part-dataset/processed', 'pc-part-dataset/processed', '../../pc-part-dataset/processed' ];
