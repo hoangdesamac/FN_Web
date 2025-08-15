@@ -22,7 +22,6 @@ function initBannerHeaderWrapper() {
     });
 }
 
-
 function initCartCountEffect() {
     updateCartCount();
 }
@@ -34,7 +33,6 @@ function updateOrderCount() {
         orderCountElement.style.display = orders.length > 0 ? 'inline-flex' : 'none';
     }
 }
-
 
 function initHexagonBackground() {
     const hexContainer = document.querySelector('.hex-container');
@@ -117,32 +115,79 @@ const CyberModal = {
 function switchToRegister() {
     CyberModal.showRegister();
 }
-
 function switchToLogin() {
     CyberModal.showLogin();
 }
-
 function switchToForgot() {
     CyberModal.showForgot();
 }
-
 function closeCyberModal() {
     CyberModal.close();
 }
 
+// ====== API gọi để lấy tên user ======
+async function fetchUserInfo() {
+    try {
+        const res = await fetch(`${API_BASE}/api/me`, {
+            method: "GET",
+            credentials: "include"
+        });
+        const data = await res.json();
+        if (data.loggedIn) {
+            localStorage.setItem('userName', data.user.lastName.trim());
+        } else {
+            localStorage.removeItem('userName');
+        }
+    } catch (err) {
+        console.error("Lỗi lấy thông tin user:", err);
+    }
+}
+
+// ====== Cập nhật hiển thị tên và menu ======
 function updateUserDisplay() {
     const userName = localStorage.getItem('userName');
     const userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
 
     if (userName && userAction) {
-        const shortName = userName.length > 10 ? userName.slice(0, 10) + "..." : userName;
-        userAction.querySelector('.action-text').innerHTML = `
-            <div style="font-size: 10px; opacity: 0.8;">Xin chào</div>
-            <div style="font-size: 12px; font-weight: 600;" title="${userName}">${shortName}</div>
+        const shortName = userName.length > 12 ? userName.slice(0, 12) + "..." : userName;
+        userAction.innerHTML = `
+            <div class="user-menu">
+                <div class="user-info">
+                    <div style="font-size: 10px; opacity: 0.8;">Xin chào</div>
+                    <div style="font-size: 12px; font-weight: 600;" title="${userName}">${shortName}</div>
+                </div>
+                <div class="user-dropdown">
+                    <button id="logoutBtn" class="logout-btn">Đăng xuất</button>
+                </div>
+            </div>
         `;
+
+        // Hover dropdown
+        const userMenu = userAction.querySelector('.user-menu');
+        userMenu.addEventListener('mouseenter', () => {
+            userMenu.classList.add('show');
+        });
+        userMenu.addEventListener('mouseleave', () => {
+            userMenu.classList.remove('show');
+        });
+
+        // Logout click
+        document.getElementById("logoutBtn").addEventListener("click", async () => {
+            await fetch(`${API_BASE}/api/logout`, {
+                method: "POST",
+                credentials: "include"
+            });
+            localStorage.removeItem("userName");
+            location.reload();
+        });
     }
 }
 
+// ✅ Khi trang load thì kiểm tra và cập nhật ngay
+document.addEventListener("DOMContentLoaded", async () => {
+    await fetchUserInfo();
+    updateUserDisplay();
+});
 
 // ✅ Hàm tổng chạy toàn bộ sau khi header đã load vào DOM
 function initHeader() {
@@ -155,5 +200,4 @@ function initHeader() {
     initResponsiveHandler();
     initLoginModalTrigger();
     updateUserDisplay();
-
 }

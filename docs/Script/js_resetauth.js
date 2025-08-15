@@ -1,6 +1,27 @@
-const API_BASE = "https://fn-web.onrender.com"; // Link Render backend
+const API_BASE = "https://fn-web.onrender.com"; // Backend
 
-/* ========== Đăng ký ========== */
+// ====== Hàm kiểm tra trạng thái đăng nhập ======
+async function checkLoginStatus() {
+    try {
+        const res = await fetch(`${API_BASE}/api/me`, {
+            method: "GET",
+            credentials: "include" // Gửi cookie
+        });
+        const data = await res.json();
+        if (data.loggedIn) {
+            localStorage.setItem("userName", data.user.lastName.trim());
+        } else {
+            localStorage.removeItem("userName");
+        }
+        if (typeof updateUserDisplay === "function") {
+            updateUserDisplay();
+        }
+    } catch (err) {
+        console.error("Lỗi kiểm tra đăng nhập:", err);
+    }
+}
+
+// ========== Đăng ký ==========
 const registerForm = document.querySelector('#auth-register form');
 if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
@@ -14,6 +35,7 @@ if (registerForm) {
             const res = await fetch(`${API_BASE}/api/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: "include",
                 body: JSON.stringify({ email, firstName, lastName, password })
             });
             const data = await res.json();
@@ -32,7 +54,7 @@ if (registerForm) {
     });
 }
 
-/* ========== Đăng nhập ========== */
+// ========== Đăng nhập ==========
 const loginForm = document.querySelector('#auth-login form');
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
@@ -44,26 +66,16 @@ if (loginForm) {
             const res = await fetch(`${API_BASE}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: "include", // Nhận cookie session
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
             if (data.success) {
-                localStorage.setItem('authToken', data.token);
-
-                // ✅ Lưu TÊN thôi (lastName)
-                if (data.user && data.user.lastName) {
-                    localStorage.setItem('userName', data.user.lastName.trim());
-                }
-
                 alert('✅ Đăng nhập thành công!');
                 if (typeof CyberModal !== "undefined") {
                     CyberModal.close();
                 }
-
-                // ✅ Cập nhật tên ngay trên header
-                if (typeof updateUserDisplay === "function") {
-                    updateUserDisplay();
-                }
+                await checkLoginStatus(); // Cập nhật tên ngay
             } else {
                 alert('❌ ' + data.error);
             }
@@ -73,3 +85,6 @@ if (loginForm) {
         }
     });
 }
+
+// ✅ Kiểm tra khi load trang
+document.addEventListener("DOMContentLoaded", checkLoginStatus);
