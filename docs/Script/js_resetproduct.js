@@ -1017,6 +1017,199 @@ window.products = [
 
 
     },
+{
+        id: "pc-gvn-i5-14400f-rtx-5060",
+        category: "PC BÁN CHẠY NHẤT",
+        name: "PC GVN Intel i5-14400F/ VGA RTX 5060 (DDR5)",
+        originalPrice: "27.720.000₫",
+        salePrice: "24.590.000₫",
+        image: "https://product.hstatic.net/200000722513/product/pc_case_xigmatek_-_26_2cb0da60a679425680247ca67c42721e_master.png",
+        sold: 80,
+        rating: 0.0,
+        reviews: 0,
+        thumbnails: [
+            "https://product.hstatic.net/200000722513/product/pc_case_xigmatek_-_26_2cb0da60a679425680247ca67c42721e_master.png",
+            "https://cdn.hstatic.net/products/200000722513/web__4_of_80__a7e18bbf607c4e6fb86dd03f9c08ebee_master.jpg",
+            "https://cdn.hstatic.net/products/200000722513/web__8_of_80__9e20594552dd4db4b0f3fcd82f9412a1_master.jpg",
+            "https://cdn.hstatic.net/products/200000722513/web__13_of_80__692daf44395346c2ae27d9fc6d49bd61_master.jpg",
+            "https://cdn.hstatic.net/products/200000722513/web__14_of_80__c0beb9de19794283a9f3629c01ce3c29_master.jpg",
+            "https://cdn.hstatic.net/products/200000722513/web__17_of_80__f26e7fa750c74d1da307fc868a63ebac_master.jpg",
+            "https://cdn.hstatic.net/products/200000722513/web__18_of_80__36303d2484e84f0b8540ecbbe16bd7bb_master.jpg",
+            "https://cdn.hstatic.net/products/200000722513/web__23_of_80__97c8b7ac4715443f8bbc08b9b03da6c0_master.jpg",
+        ],
+        description: `
+        <p><strong>Bộ PC Gaming Core I5 14400F – RTX 5060</strong> là sự kết hợp mạnh mẽ và mức giá phải chăng, hứa hẹn đưa bạn đến thế giới game sống động, chân thực. Ngoài gaming, cấu hình này còn xử lý mượt các tác vụ render video, chỉnh sửa ảnh chuyên nghiệp.</p>
+
+    <h4>Mainboard Asus Gaming B760</h4>
+    <img src="https://product.hstatic.net/200000722513/product/1024__5__ae6d71b490224ffc8b9035e928b5e6ea_master.jpg" >
+    <ul>
+        <li>Hỗ trợ PCIe 5.0, RAM DDR4, tốc độ cao.</li>
+        <li>Khe M.2 PCIe 4.0, cổng USB 3.2 Gen 2, HDMI, DP.</li>
+        <li>VRM ổn định, BIOS UEFI dễ dùng.</li>
+    </ul>
+
+    <h4>CPU Intel Core i5-14400F (4.70GHz)</h4>
+    <img src="https://product.hstatic.net/200000722513/product/n22561-001-i5f-_univ_2e1135c9919d46ce97e95d2e19cb74f3_master.png" >
+    <ul>
+        <li>Hiệu năng tốt, đơn nhân mạnh mẽ, đa nhiệm ổn.</li>
+        <li>Không có iGPU, ép xung hạn chế.</li>
+    </ul>
+
+    <h4>RAM 16GB 3200MHz</h4>
+    <ul>
+        <li>Dung lượng tiêu chuẩn cho gaming &amp; làm việc.</li>
+        <li>Tốc độ cao, nhưng ép xung không nhiều.</li>
+    </ul>
+
+    <h4>Case DARKFLASH TH285M</h4>
+    <img src="https://product.hstatic.net/200000722513/product/image_20240621094047_f2f9063fcfb24f41839e1d1b198c77ae_master.jpg" >
+    <ul>
+        <li>Thiết kế trắng sang trọng, kính cường lực.</li>
+        <li>Hỗ trợ nhiều quạt, dễ quản lý cáp.</li>
+        <li>Nhược điểm: dễ bám vân tay.</li>
+    </ul>
+
+    <h4>VGA Colorful GeForce RTX 5060 EX 8GB</h4>
+    <img src="https://product.hstatic.net/200000722513/product/geforce_rtx__5060_windforce_oc_8g-01_068c4900c0bc4ccf9673d722c18c1299_master.png" >
+    <ul>
+        <li>Chơi game mượt ở 1440p, ép xung nhẹ.</li>
+        <li>Hỗ trợ HDMI 2.1a, DP 1.4a, kích thước gọn.</li>
+    </ul>
+
+    <h4>Nguồn Centaur CT – 850W</h4>
+    <img src="https://product.hstatic.net/200000722513/product/nguon_fsp_hv_pro_650w_-_9_c83eecc17d7247cbb2a882ebaaf9041c_8ab94aaa9c25486cb3ebfe1c8476d5ef_master.png" >
+    <ul>
+        <li>Công suất đủ cho cấu hình tầm trung/cao cấp.</li>
+        <li>Có bảo vệ cơ bản, giá rẻ.</li>
+        <li>Nhược điểm: ồn khi tải cao.</li>
+    </ul>
+
+    <p><strong>Kết luận:</strong> PC Core I5 14400F + RTX 5060 8GB mang lại hiệu năng cân bằng cho cả công việc và giải trí. Lựa chọn đáng cân nhắc trong phân khúc tầm trung.</p>
+    `,
+        specs: [
+            { key: "Mainboard", value: "Bo mạch chủ MSI MAG B760M MORTAR II WIFI DDR5" },
+            { key: "CPU", value: "Bộ vi xử lý Intel Core i5-14400F" },
+            { key: "RAM", value: "Ram Corsair Vengeance RGB 32GB 5600 DDR5" },
+            { key: "VGA ", value: "Card màn hình Gigabyte GeForce RTX 5060 Windforce OC 8GB" },
+            { key: "HDD", value: "Có thể tùy chọn Nâng cấp" },
+            { key: "SSD", value: "	Ổ cứng SSD Kingston NV3 500GB M.2 PCIe NVMe Gen4" },
+            { key: "PSU", value: "Nguồn FSP HV PRO 650W - 80 Plus Bronze" },
+            { key: "Case", value: "	Vỏ máy tính Xigmatek QUANTUM 3GF" },
+            { key: "Tản nhiệt", value: "	Cooler Master Hyper 212 Spectrum V3 ARGB" },
+            { key: "Bảo hành", value: "36 tháng" },
+        ]
+        ,
+        reviews: [],
+        bundle: [
+            {
+                id: "asus-tuf-m4-wireless",
+                name: "Chuột Gaming Asus TUF M4 Wireless",
+                image: "https://product.hstatic.net/200000722513/product/tuf-gaming-m4-wireless-02_56fe3b15890748738508eb07f20c43c5_large_thumb_d7bfc6df9d2d4aeb9fc22906a8fee7ae_master.jpg",
+                originalPrice: "1.190.000₫",
+                salePrice: "710.000₫",
+                description: "Pin rời / Không dây / DPI - 12.000",
+                rating: 0.0,
+                reviews: 0
+            },
+            {
+                id: "edra-ek375w-ek398w",
+                name: "Bàn phím E-Dra EK375W EK398W (White + Black + Green)",
+                image: "https://cdn.hstatic.net/products/200000722513/imgi_3_594_ek398w_black_white_green_1__fd6be6580b244eb38d0ad895cc97d764_master.jpg",
+                originalPrice: "1.090.000₫",
+                salePrice: "820.000₫",
+                description: "Layout độc đáo, phối màu nổi bật, kết nối không dây tiện dụng",
+                rating: 0.0,
+                reviews: 0
+            },
+            {
+                id: "dahua-lm25e231",
+                name: "Màn hình Dahua DHI-LM25-E231 25\" IPS 180Hz chuyên game",
+                image: "https://product.hstatic.net/200000722513/product/thit-k-cha-c-tn-_4__d80b68c7123a41b89bf213ffadb4d43f_master.png",
+                category: "Flash Sale",
+                originalPrice: "3.990.000₫",
+                salePrice: "2.390.000₫",
+                description: "Màn hình gaming 25 inch, tấm nền IPS, tần số quét cao 180Hz, thích hợp chơi game mượt mà.",
+                rating: 0.0,
+                reviews: 0,
+                sold: 1,
+                tags: ["flash"]
+            }
+        ],
+        related: [
+            {
+                id: "pc-gvn-i5-12400f-rtx-5060-main-h",
+                name: "PC GVN Intel i5-12400F/ VGA RTX 5060 (Main H)",
+                image: "https://product.hstatic.net/200000722513/product/pc_case_xigmatek_-_26_8cc60d3205d446d89294340c40b09d62_master.png",
+                category: "PC BÁN CHẠY NHẤT",
+                originalPrice: "21.120.000₫",
+                salePrice: "18.990.000₫",
+                description: "Màn hình gaming 25 inch, tấm nền IPS, tần số quét cao 180Hz, thích hợp chơi game mượt mà.",
+                rating: 0.0,
+                reviews: 0,
+                sold: 1,
+                tags: ["flash"]
+            },
+            {
+                id: "pc-gvn-i7-14700f-rtx-5060",
+                name: "PC GVN Intel i7-14700F/ VGA RTX 5060",
+                image: "https://product.hstatic.net/200000722513/product/smart_5f512d33804f42a980a0997f3ef5b007_master.png",
+                category: "PC BÁN CHẠY NHẤT",
+                originalPrice: "35.920.000₫",
+                salePrice: "34.790.000₫",
+                description: "Màn hình gaming ViewSonic 24 inch, IPS, tần số quét cao 180Hz, thiết kế hiện đại, viền mỏng.",
+                rating: 0.0,
+                reviews: 0,
+                sold: 5,
+                tags: ["flash"]
+            },
+            {
+                id: "pc-gvn-i5-12400f-rx-7600",
+                name: "PC GVN Intel i5-12400F/ VGA RX 7600",
+                image: "https://product.hstatic.net/200000722513/product/pc_gvn_rx6500xt_-_3_79097d10e652493cb4319978c296271e_master.png",
+                category: "PC BÁN CHẠY NHẤT",
+                originalPrice: "19.420.000₫",
+                salePrice: "17.190.000₫",
+                description: "Màn hình TUF Gaming 24 inch IPS, tần số quét 146Hz, thiết kế mạnh mẽ, phù hợp chơi game tốc độ cao.",
+                rating: 0.0,
+                reviews: 0,
+                sold: 3,
+                tags: ["flash"]
+            },
+            {
+                id: "pc-gvn-i5-12400f-rtx-3060",
+                name: "PC GVN Intel i5-12400F/ VGA RTX 3060 (Main H)",
+                image: "https://product.hstatic.net/200000722513/product/pc_case_xigmatek_-_26_82498939d3bc46308cf3b15fd293d616_master.png",
+                category: "PC BÁN CHẠY NHẤT",
+                originalPrice: "18.420.000₫",
+                salePrice: "16.190.000₫",
+                description: "Màn hình Acer 24 inch tấm nền IPS, tần số quét siêu cao 200Hz, hỗ trợ G-Sync, cực kỳ mượt khi chơi game.",
+                rating: 0.0,
+                reviews: 0,
+                sold: 9,
+                tags: ["flash"]    
+
+
+                
+            },
+        ],
+        gift: [
+            {
+                id: "north-bayou-dual-monitor-nb-p160",
+                name: "Giá treo màn hình máy tính North Bayou Dual Monitor NB-P160",
+                image: "https://product.hstatic.net/200000722513/product/nb-p160_gearvn_f943c1ef5d8a4973b555cc6086b90ce1_master.jpg",
+                originalPrice: "990.000₫",
+                salePrice: "0₫", // Vì là quà tặng
+                discount: 100, // Giảm 100% khi mua đủ combo
+                qty: 1
+            }
+
+        ]
+
+
+    },
+    {
+
+    },
     {
 
     }
