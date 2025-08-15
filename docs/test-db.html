@@ -9,6 +9,18 @@
 <button id="testBtn">Gửi yêu cầu tests</button>
 <pre id="result"></pre>
 
+<script>
+    const API_BASE = "https://fn-web.onrender.com"; // Thay link Render backend
 
+    document.getElementById("testBtn").addEventListener("click", async () => {
+        try {
+            const res = await fetch(`${API_BASE}/api/test-db`);
+            const data = await res.json();
+            document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+            document.getElementById("result").textContent = "❌ Lỗi kết nối: " + err;
+        }
+    });
+</script>
 </body>
 </html>
