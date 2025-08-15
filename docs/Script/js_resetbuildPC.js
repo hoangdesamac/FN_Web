@@ -57,7 +57,11 @@ Object.keys(PART_LIBRARY).forEach(cat=>{ PART_LIBRARY[cat] = PART_LIBRARY[cat].m
 
 // --- Generic sorting state (per category) & column definitions ---
 const sortState = {};
-function ensureSortState(cat){ if(!sortState[cat]) sortState[cat]={ field:null, dir:1 }; return sortState[cat]; }
+// Initialize each category with default sorting: price descending
+function ensureSortState(cat){
+    if(!sortState[cat]) sortState[cat]={ field:'price', dir:-1 }; // dir -1 => descending for numeric comparator
+    return sortState[cat];
+}
 
 // Column definition map per category (excluding action column). Dynamic pruning hides empty columns.
 const CATEGORY_COLUMNS = {
@@ -415,6 +419,8 @@ const state = { selected:{}, total:0, power:0, loadedExternal:false };
 // Format price: show 'Liên hệ' when price missing/zero
 function formatPrice(v){ if(v===undefined||v===null||v<=0) return 'Liên hệ'; return v.toLocaleString('vi-VN') + '₫'; }
 
+// (Đã bỏ logic làm tròn giá tối đa theo yêu cầu)
+
 // ===== Modal pagination settings =====
 const MODAL_PAGE_SIZE = 400; // số lượng tải mỗi lần
 let currentModalLimit = MODAL_PAGE_SIZE; // giới hạn hiện tại
@@ -491,29 +497,12 @@ function openPartModal(category){
     modal.dataset.category=category;
     currentModalLimit = MODAL_PAGE_SIZE; // reset mỗi lần mở
     buildFacetOptions(category);
-    initPriceFilter(category);
     renderPartModalList();
     modal.style.display='flex';
     const modalContent = modal.querySelector('.builder-modal-content');
     if(modalContent){
         if(WIDE_TABLE_CATS.has(category)) modalContent.classList.add('cpu-mode'); else modalContent.classList.remove('cpu-mode');
     }
-}
-function initPriceFilter(category){
-    const box=document.getElementById('price-filter'); if(!box) return;
-    const list=PART_LIBRARY[category]||[]; const prices=list.map(p=>p.price||0).filter(v=>v>0);
-    if(!prices.length){ box.style.display='none'; return; }
-    const min=Math.min(...prices); const max=Math.max(...prices);
-    const maxSlider=document.getElementById('pf-range-max');
-    const pfMin=document.getElementById('pf-min'); const pfMax=document.getElementById('pf-max');
-    maxSlider.min=String(min);
-    maxSlider.max=String(max);
-    maxSlider.value=String(max);
-    pfMin.textContent=formatPrice(min);
-    pfMax.textContent=formatPrice(max);
-    const updateTrack=()=>{ const b=parseInt(maxSlider.value)||max; pfMax.textContent=formatPrice(b); renderPartModalList(); };
-    maxSlider.oninput=updateTrack;
-    box.style.display='block';
 }
 function renderPartModalList(){
     const modal=document.getElementById('part-modal');
@@ -540,12 +529,7 @@ function renderPartModalList(){
             return brandSelected.some(b=> name.includes(b));
         });
     }
-    // Simple price filter (slider)
-    const maxSlider=document.getElementById('pf-range-max');
-    if(maxSlider){
-        const maxV=parseInt(maxSlider.value)||0;
-        if(maxV>0){ list=list.filter(p=> (p.price||0)<=maxV); }
-    }
+    // (Đã xóa lọc giá tối đa)
     if(TABLE_CATS.has(category)){
         const s=ensureSortState(category);
         if(s.field){

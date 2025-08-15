@@ -1,14 +1,14 @@
 {
-  "timestamp": "2025-08-15T15:32:51.408Z",
+  "timestamp": "2025-08-15T15:47:16.370Z",
   "categories": {
     "cpu": {
       "total": 961,
       "missingPrice": 0,
       "missingName": 0,
       "requiredMissing": {
-        "socket": 952
+        "socket": 160
       },
-      "noSocket": 952,
+      "noSocket": 160,
       "noCores": 0
     },
     "mainboard": {
@@ -21,12 +21,9 @@
       "total": 3478,
       "missingPrice": 0,
       "missingName": 0,
-      "requiredMissing": {
-        "type": 4,
-        "speed": 4
-      },
+      "requiredMissing": {},
       "noSize": 0,
-      "noSpeed": 4
+      "noSpeed": 0
     },
     "gpu": {
       "total": 3549,
@@ -40,9 +37,7 @@
       "total": 2061,
       "missingPrice": 0,
       "missingName": 0,
-      "requiredMissing": {
-        "size": 186
-      },
+      "requiredMissing": {},
       "typeBreakdown": {
         "NVMe SSD": 748,
         "HDD": 488,
@@ -53,8 +48,8 @@
         "External SSD": 12
       },
       "misclassified": 0,
-      "zeroSize": 186,
-      "missingInterface": 180
+      "zeroSize": 0,
+      "missingInterface": 143
     },
     "psu": {
       "total": 2128,
@@ -67,10 +62,10 @@
       "missingPrice": 0,
       "missingName": 0,
       "requiredMissing": {
-        "hz": 833
+        "hz": 733
       },
       "noRes": 0,
-      "noHz": 833,
+      "noHz": 733,
       "aspectMissing": 0
     },
     "case": {
@@ -84,7 +79,7 @@
       "missingPrice": 0,
       "missingName": 0,
       "requiredMissing": {
-        "type": 1684
+        "type": 1020
       }
     },
     "keyboard": {
@@ -112,7 +107,7 @@
       "requiredMissing": {}
     },
     "os": {
-      "total": 50,
+      "total": 17,
       "missingPrice": 0,
       "missingName": 0,
       "requiredMissing": {}

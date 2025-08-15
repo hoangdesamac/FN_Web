@@ -1,7 +1,8 @@
 {
-  "generated": "2025-08-15T15:33:35.544Z",
+  "generated": "2025-08-15T16:25:41.608Z",
   "strict": false,
   "usdToVnd": 25000,
+  "discountRate": 0.2,
   "counts": {
     "cpu": 961,
     "mainboard": 4956,
