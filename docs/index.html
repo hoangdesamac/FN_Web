@@ -42,7 +42,6 @@
 <!-- ✅ JS riêng cho main content -->
 <script src="Script/js_maincontent.js" defer></script>
 <script src="Script/js_resetcheckout.js" defer></script>
-<script src="Script/js_resetauth.js" defer></script>
 
 
 <!-- ✅ Script load động -->
@@ -51,7 +50,13 @@
         loadSection("HTML/Layout/resetheader.html", "#header-container", function() {
             if (typeof initHeader === 'function') initHeader();
 
+            // ✅ Load auth.js sau khi header đã vào DOM
+            const script = document.createElement('script');
+            script.src = "Script/js_resetauth.js";
+            script.defer = true;
+            document.body.appendChild(script);
         });
+
         loadSection("HTML/Layout/resetmaincontent.html", "#maincontent-container", function() {
             initializeCartSystem(); // Gọi lại để gắn sự kiện cho nút "Mua ngay"
             if (typeof initMainContent === 'function') initMainContent();
