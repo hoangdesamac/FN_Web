@@ -1,0 +1,39 @@
+{
+  "generated": "2025-08-15T11:47:48.126Z",
+  "counts": {
+    "cpu": 961,
+    "mainboard": 4956,
+    "ram": 3478,
+    "gpu": 3549,
+    "psu": 2128,
+    "monitor": 4788,
+    "case": 4210,
+    "cooler": 2313,
+    "storage": 2061,
+    "soundcard": 75,
+    "network": 517,
+    "keyboard": 2346,
+    "mouse": 2103,
+    "headphones": 2511,
+    "speakers": 281,
+    "os": 50
+  },
+  "estimated": {
+    "cpu": 490,
+    "gpu": 2987,
+    "ram": 2449,
+    "mainboard": 4008,
+    "storage": 1322,
+    "psu": 1738,
+    "monitor": 3493,
+    "case": 3557,
+    "cooler": 1613,
+    "keyboard": 1800,
+    "mouse": 1511,
+    "headphones": 1982,
+    "speakers": 167,
+    "os": 39,
+    "soundcard": 63,
+    "network": 297
+  }
+}
