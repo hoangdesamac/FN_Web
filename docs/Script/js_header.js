@@ -125,10 +125,11 @@ function closeCyberModal() {
     CyberModal.close();
 }
 
+const API_BASE = window.API_BASE || "https://fn-web.onrender.com";
 // ====== API gọi để lấy tên user ======
 async function fetchUserInfo() {
     try {
-        const res = await fetch(`${window.API_BASE}/api/me`, {
+        const res = await fetch(`${API_BASE}/api/me`, {
             method: "GET",
             credentials: "include"
         });
