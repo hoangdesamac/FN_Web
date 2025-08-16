@@ -5,14 +5,13 @@ async function checkLoginStatus() {
     try {
         const res = await fetch(`${API_BASE}/api/me`, {
             method: "GET",
-            credentials: "include"
+            credentials: "include" // Gửi cookie
         });
         const data = await res.json();
         if (data.loggedIn) {
             localStorage.setItem("userName", data.user.lastName.trim());
         } else {
             localStorage.removeItem("userName");
-            // Không mở modal tự động
         }
         if (typeof updateUserDisplay === "function") {
             updateUserDisplay();
@@ -21,7 +20,6 @@ async function checkLoginStatus() {
         console.error("Lỗi kiểm tra đăng nhập:", err);
     }
 }
-
 
 // ========== Đăng ký ==========
 const registerForm = document.querySelector('#auth-register form');

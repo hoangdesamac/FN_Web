@@ -149,8 +149,10 @@ function updateUserDisplay() {
     const userName = localStorage.getItem('userName');
     const userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
 
-    if (userName && userAction) {
-        // Hiển thị menu user
+    if (!userAction) return;
+
+    if (userName) {
+        // ✅ Đã đăng nhập → hiển thị "Xin chào"
         const shortName = userName.length > 12 ? userName.slice(0, 12) + "..." : userName;
         userAction.innerHTML = `
             <div class="user-menu">
@@ -164,10 +166,16 @@ function updateUserDisplay() {
             </div>
         `;
 
+        // Hover dropdown
         const userMenu = userAction.querySelector('.user-menu');
-        userMenu.addEventListener('mouseenter', () => userMenu.classList.add('show'));
-        userMenu.addEventListener('mouseleave', () => userMenu.classList.remove('show'));
+        userMenu.addEventListener('mouseenter', () => {
+            userMenu.classList.add('show');
+        });
+        userMenu.addEventListener('mouseleave', () => {
+            userMenu.classList.remove('show');
+        });
 
+        // Logout click
         document.getElementById("logoutBtn").addEventListener("click", async () => {
             await fetch(`${API_BASE}/api/logout`, {
                 method: "POST",
@@ -175,18 +183,38 @@ function updateUserDisplay() {
             });
             localStorage.removeItem("userName");
 
-            // Đóng modal nếu đang mở
-            if (document.getElementById("cyber-auth-modal")) {
-                document.getElementById("cyber-auth-modal").style.display = "none";
-            }
+            // 🔄 Trả về giao diện gốc (icon + text "Đăng nhập")
+            userAction.innerHTML = `
+                <i class="bx bx-user-circle action-icon"></i>
+                <div class="action-text">
+                    <div style="font-size: 10px; opacity: 0.8;">Đăng</div>
+                    <div style="font-size: 12px; font-weight: 600;">nhập</div>
+                </div>
+            `;
 
-            // Reload page ngay lập tức
-            location.reload();
+            // mở modal khi click
+            userAction.addEventListener("click", () => {
+                if (typeof CyberModal !== "undefined") {
+                    CyberModal.open();
+                }
+            });
         });
-    } else if (userAction) {
-        // Người dùng chưa login, hiển thị icon login bình thường, không mở modal tự động
-        userAction.innerHTML = `<i class="bx bx-user-circle"></i>`;
-        initLoginModalTrigger(); // vẫn có thể click để mở modal
+
+    } else {
+        // ❌ Chưa đăng nhập → giữ nguyên giao diện gốc
+        userAction.innerHTML = `
+            <i class="bx bx-user-circle action-icon"></i>
+            <div class="action-text">
+                <div style="font-size: 10px; opacity: 0.8;">Đăng</div>
+                <div style="font-size: 12px; font-weight: 600;">nhập</div>
+            </div>
+        `;
+
+        userAction.addEventListener("click", () => {
+            if (typeof CyberModal !== "undefined") {
+                CyberModal.open();
+            }
+        });
     }
 }
 
