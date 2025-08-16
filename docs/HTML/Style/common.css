@@ -1369,16 +1369,18 @@ body {
     }
 }
 /* ✅ Xóa outline / border mặc định khi focus */
-.user-menu:focus,
-.user-menu:active,
+/* ✅ Xóa outline viền xanh focus trong user menu */
+.cyber-action:focus,
+.cyber-action:focus-visible,
+.cyber-action a:focus,
+.cyber-action a:focus-visible,
 .user-info:focus,
-.user-info:active,
-.logout-btn:focus,
-.logout-btn:active {
+.user-info:focus-visible {
     outline: none !important;
-    border: none !important;
     box-shadow: none !important;
+    border: none !important;
 }
+
 
 
 
