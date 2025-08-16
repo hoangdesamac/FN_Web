@@ -75,7 +75,7 @@ body.no-scroll { overflow:hidden; } /* Ngăn cuộn nền khi modal mở */
 
 /* Modal */
 .builder-modal { position:fixed; inset:0; background:rgba(5,8,25,.72); backdrop-filter: blur(6px); display:flex; align-items:flex-start; justify-content:center; padding:60px 20px; z-index:1500; overflow:hidden; }
-.builder-modal-content { width: min(1100px,100%); background: var(--panel-bg); border:1px solid var(--panel-border); box-shadow: var(--shadow); border-radius:20px; padding:20px 22px 30px; position:relative; animation:pop .35s ease; display:flex; flex-direction:column; gap:18px; max-height:calc(100vh - 120px); overflow:auto; }
+.builder-modal-content { width: min(1100px,100%); background: var(--panel-bg); border:1px solid var(--panel-border); box-shadow: var(--shadow); border-radius:20px; padding:20px 22px 30px; position:relative; animation:pop .35s ease; display:flex; flex-direction:column; gap:18px; max-height:calc(100vh - 120px); overflow:hidden; }
 .builder-modal-content .scroll-fade-top{ position:sticky; top:0; left:0; right:0; height:34px; margin:-20px -22px 0; /* extend to modal padding */ background:linear-gradient(180deg,rgba(5,8,25,.92),rgba(5,8,25,0)); pointer-events:none; opacity:0; transition:opacity .25s; z-index:5; }
 .builder-modal-content.has-scrolled .scroll-fade-top{ opacity:1; }
 @keyframes pop { from { transform:translateY(14px); opacity:0;} to { transform:translateY(0); opacity:1;} }
@@ -83,7 +83,7 @@ body.no-scroll { overflow:hidden; } /* Ngăn cuộn nền khi modal mở */
 .modal-header h3 { margin:0; font-size:1rem; font-family:'Orbitron',sans-serif; letter-spacing:1px; color:var(--primary); }
 .modal-close { background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; line-height:1; }
 .modal-close:hover { color:var(--secondary); }
-.modal-body-split { display:grid; grid-template-columns: 240px 1fr; gap:20px; }
+.modal-body-split { display:grid; grid-template-columns: 240px 1fr; gap:20px; flex:1 1 auto; min-height:0; }
 @media (max-width: 860px){ .modal-body-split { grid-template-columns: 1fr; } .filter-panel { order:2; } }
 .filter-panel { border-right:1px solid rgba(255,255,255,.08); padding-right:12px; }
 .filter-scroll { /* dùng scroll của modal-content */ display:flex; flex-direction:column; gap:18px; padding-right:4px; }
@@ -97,7 +97,14 @@ body.no-scroll { overflow:hidden; } /* Ngăn cuộn nền khi modal mở */
 .pf-labels { display:flex; justify-content:space-between; font-size:.65rem; opacity:.8; }
 .pf-sliders { display:flex; flex-direction:column; gap:6px; }
 .pf-sliders.single input[type=range]{ width:100%; }
-.parts-area { min-height:520px; display:flex; flex-direction:column; }
+.parts-area { min-height:0; display:flex; flex-direction:column; overflow:auto; flex:1 1 auto; }
+/* Header sticky để đứng yên khi cuộn */
+.modal-header { position:sticky; top:0; background:linear-gradient(180deg,rgba(5,8,25,.95),rgba(5,8,25,.85)); z-index:10; padding-top:4px; margin-top:-4px; }
+/* Bảo đảm body grid chiếm phần còn lại để vùng dưới cuộn tự nhiên */
+/* override earlier: allow body split to grow & enable scroll area */
+.modal-body-split { flex:1 1 auto; min-height:0; }
+/* vùng danh sách cuộn chiếm phần còn lại */
+.parts-area { max-height:calc(100% - 0px); }
 
 /* CPU full-width mode: filters on top */
 .builder-modal-content.cpu-mode .modal-body-split { display:flex; flex-direction:column; }

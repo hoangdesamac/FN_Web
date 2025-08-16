@@ -168,15 +168,6 @@ const CATEGORY_COLUMNS = {
         { field:'size', label:'Dung lượng', value:p=>p.size },
         { field:'read', label:'Đọc MB/s', value:p=>p.read },
         { field:'write', label:'Ghi MB/s', value:p=>p.write },
-        { field:'rpm', label:'RPM', value:p=>p.rpm },
-        { field:'cache', label:'Cache MB', value:p=>p.cache },
-        { field:'nand', label:'NAND', value:p=>p.nand },
-        { field:'dram', label:'DRAM', value:p=>p.dram },
-        { field:'controller', label:'Controller', value:p=>p.controller },
-        { field:'tbw', label:'TBW', value:p=>p.tbw },
-        { field:'iopsRead', label:'IOPS đọc', value:p=>p.iopsRead },
-        { field:'iopsWrite', label:'IOPS ghi', value:p=>p.iopsWrite },
-        { field:'mtbf', label:'MTBF (h)', value:p=>p.mtbf },
         { field:'endurance', label:'Endurance (PBW)', value:p=>p.endurance },
         { field:'temp', label:'Nhiệt độ', value:p=>p.temp },
         { field:'dimensions', label:'Kích thước', value:p=>p.dimensions },
@@ -232,7 +223,6 @@ const CATEGORY_COLUMNS = {
     cooler: [
         { field:'name', label:'Tên' },
         { field:'type', label:'Loại' },
-        { field:'tdp', label:'TDP', value:p=>p.tdp },
         { field:'height', label:'Cao (mm)', value:p=>p.height },
         { field:'fans', label:'Số quạt', value:p=>p.fans },
         { field:'fanSize', label:'Fan (mm)', value:p=>p.fanSize },
@@ -514,15 +504,18 @@ function openPartModal(category){
             fadeBottom.className='scroll-fade-bottom';
             modalContent.appendChild(fadeBottom);
         }
+                                                const scrollContainer = modalContent.querySelector('.parts-area') || modalContent; // chỉ cuộn phần danh sách
         const checkScroll=()=>{
-            const st = modalContent.scrollTop;
-            const maxScroll = modalContent.scrollHeight - modalContent.clientHeight - 1;
+            const st = scrollContainer.scrollTop;
+            const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight - 1;
             if(st>8) modalContent.classList.add('has-scroll-top'); else modalContent.classList.remove('has-scroll-top');
             if(st < maxScroll-8) modalContent.classList.add('has-scroll-bottom'); else modalContent.classList.remove('has-scroll-bottom');
         };
-        modalContent.removeEventListener('scroll', modalContent._scrollFadeHandler||(()=>{}));
+        // Remove previous listeners
+        if(modalContent._scrollFadeHandler && modalContent._scrollFadeEl){ modalContent._scrollFadeEl.removeEventListener('scroll', modalContent._scrollFadeHandler); }
         modalContent._scrollFadeHandler = checkScroll;
-        modalContent.addEventListener('scroll', checkScroll);
+        modalContent._scrollFadeEl = scrollContainer;
+        scrollContainer.addEventListener('scroll', checkScroll);
         // init state
         requestAnimationFrame(checkScroll);
         if(WIDE_TABLE_CATS.has(category)) modalContent.classList.add('cpu-mode'); else modalContent.classList.remove('cpu-mode');

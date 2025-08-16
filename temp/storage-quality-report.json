@@ -1,0 +1,315 @@
+{
+  "total": 2061,
+  "fieldPresence": {
+    "id": {
+      "filled": 2061,
+      "percent": 100
+    },
+    "name": {
+      "filled": 2061,
+      "percent": 100
+    },
+    "type": {
+      "filled": 2061,
+      "percent": 100
+    },
+    "interface": {
+      "filled": 1920,
+      "percent": 93.16
+    },
+    "form": {
+      "filled": 1894,
+      "percent": 91.9
+    },
+    "size": {
+      "filled": 2061,
+      "percent": 100
+    },
+    "read": {
+      "filled": 1994,
+      "percent": 96.75
+    },
+    "write": {
+      "filled": 1994,
+      "percent": 96.75
+    },
+    "rpm": {
+      "filled": 497,
+      "percent": 24.11
+    },
+    "cache": {
+      "filled": 560,
+      "percent": 27.17
+    },
+    "iopsRead": {
+      "filled": 1364,
+      "percent": 66.18
+    },
+    "iopsWrite": {
+      "filled": 1364,
+      "percent": 66.18
+    },
+    "warranty": {
+      "filled": 2061,
+      "percent": 100
+    },
+    "dimensions": {
+      "filled": 1975,
+      "percent": 95.83
+    },
+    "weight": {
+      "filled": 1975,
+      "percent": 95.83
+    },
+    "price": {
+      "filled": 2061,
+      "percent": 100
+    },
+    "pricePerGB": {
+      "filled": 2061,
+      "percent": 100
+    },
+    "originalPriceUSD": {
+      "filled": 739,
+      "percent": 35.86
+    },
+    "rawPricePerGB": {
+      "filled": 739,
+      "percent": 35.86
+    },
+    "_pricing": {
+      "filled": 739,
+      "percent": 35.86
+    },
+    "_specSource": {
+      "filled": 2061,
+      "percent": 100
+    },
+    "_estimated": {
+      "filled": 1322,
+      "percent": 64.14
+    }
+  },
+  "duplicateIds": [],
+  "anomaliesCount": {
+    "pricePerGBMismatch": 0,
+    "rawPricePerGBMismatch": 0,
+    "sizeInvalid": 0,
+    "readWriteSuspicious": 0,
+    "iopsSuspicious": 0,
+    "warrantyOutOfRange": 0,
+    "negativeValues": 0,
+    "missingCritical": 50
+  },
+  "sampleAnomalies": {
+    "pricePerGBMismatch": [],
+    "rawPricePerGBMismatch": [],
+    "sizeInvalid": [],
+    "readWriteSuspicious": [],
+    "iopsSuspicious": [],
+    "warrantyOutOfRange": [],
+    "negativeValues": [],
+    "missingCritical": [
+      {
+        "id": "stor_i_samsung_9100_pro",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_western_digital_wd_black_sn8100",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_samsung_990_evo",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_samsung_9100_pro_w_heatsink",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_crucial_p510",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_pny_cs2150",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_teamgroup_t_force_ga_pro",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_sk_hynix_platinum_p51",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_teamgroup_t_force_gc_pro",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_adata_mars_980_blade",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_crucial_t710",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_patriot_viper_pv553",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_msi_spatium_m580_frozr",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_intel_optane_905p",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_western_digital_wd_black_sn8100_w_heatsink",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_lexar_professional_nm1090_pro",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_msi_spatium_m570_hs",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_crucial_p510_w_heatsink",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_msi_spatium_m570_frozr",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_seagate_firecuda_540",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_teamgroup_t_force_cardea_z540",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_biwin_black_opal_x570_pro",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_kioxia_exceria_plus_g4",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_lexar_nm1090_w_heatsink",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_corsair_mp700",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_teamgroup_t_force_ge_pro_graphene",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_msi_spatium_m560",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_pny_cs3150_rgb",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_teamgroup_t_force_ge_pro_airflow",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_lexar_nm990",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_seagate_pulsar_2",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_adata_legend_970",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_micron_9300_pro",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_seagate_nytro_enterprise",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_goodram_irdm_pro_gen_5",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_gigabyte_aorus_gen5_12000",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_adata_xpg_mars_980_storm",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_intel_dc_p4510",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_kingspec_vp101",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_gigabyte_aorus_gen5_10000",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_hitachi_s800_s846",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_addlink_g55",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_addlink_g55h",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_inland_td510",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_seagate_firecuda_540_w_heatsink",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_kingston_dc1500m",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_transcend_ts8gpsd520",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_pny_cs3150",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_seagate_1200_2",
+        "field": "read"
+      },
+      {
+        "id": "stor_i_intel_optane_905",
+        "field": "read"
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "pricePerGBMismatch": 0,
+  "rawPricePerGBMismatch": 0,
+  "sizeInvalid": 0,
+  "readWriteSuspicious": 0,
+  "iopsSuspicious": 0,
+  "warrantyOutOfRange": 0,
+  "negativeValues": 0,
+  "missingCritical": 50
+}
