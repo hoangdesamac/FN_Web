@@ -77,8 +77,8 @@ function initResponsiveHandler() {
     window.addEventListener('resize', updateLayout);
 }
 
+// ❌ Chỉ gắn click mở modal nếu chưa đăng nhập
 function initLoginModalTrigger() {
-    // ❌ Chỉ gắn click mở modal nếu chưa đăng nhập
     const userName = localStorage.getItem('userName');
     if (userName) return; // đã đăng nhập → bỏ qua
 
@@ -143,8 +143,13 @@ async function fetchUserInfo() {
 // ====== Cập nhật hiển thị tên và menu ======
 function updateUserDisplay() {
     const userName = localStorage.getItem('userName');
-    const userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
+    let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
+
+    // 🚨 Xóa toàn bộ listener cũ bằng cách clone node
+    const newUserAction = userAction.cloneNode(false);
+    userAction.parentNode.replaceChild(newUserAction, userAction);
+    userAction = newUserAction;
 
     if (userName) {
         // ✅ Nếu đã đăng nhập
