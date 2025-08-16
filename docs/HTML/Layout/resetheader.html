@@ -182,18 +182,27 @@
     </div>
 </header>
 </div>
+
 <!-- Cyberpunk Login/Register Modal -->
 <div id="cyber-auth-modal" class="cyber-modal-overlay">
     <div class="cyber-modal">
         <button class="modal-close-btn" onclick="closeCyberModal()">
             <i class="fas fa-times"></i>
         </button>
+
+        <!-- Login -->
         <div id="auth-login" class="auth-section">
             <h2 class="modal-title">ĐĂNG NHẬP TÀI KHOẢN</h2>
-            <form>
+            <form id="loginForm">
                 <input type="text" class="cyber-input" placeholder="Email">
                 <input type="password" class="cyber-input" placeholder="Mật khẩu">
-                <div class="text-end mb-2"><a href="#" class="small-link" style="text-decoration: underline;" onclick="switchToForgot()">Quên mật khẩu?</a></div>
+
+                <!-- Thông báo lỗi -->
+                <div id="login-error" class="error-box"></div>
+
+                <div class="text-end mb-2">
+                    <a href="#" class="small-link" style="text-decoration: underline;" onclick="switchToForgot()">Quên mật khẩu?</a>
+                </div>
                 <button type="submit" class="cyber-button auth-button w-100">ĐĂNG NHẬP</button>
                 <div class="cyber-divider">hoặc đăng nhập bằng</div>
                 <div class="social-login">
@@ -203,13 +212,19 @@
                 <div class="text-switch">Bạn chưa có tài khoản? <a href="#" onclick="switchToRegister()">Đăng ký ngay!</a></div>
             </form>
         </div>
+
+        <!-- Register -->
         <div id="auth-register" class="auth-section d-none">
             <h2 class="modal-title">ĐĂNG KÝ TÀI KHOẢN</h2>
-            <form>
+            <form id="registerForm">
                 <input type="email" class="cyber-input" placeholder="Email">
                 <input type="text" class="cyber-input" placeholder="Họ">
                 <input type="text" class="cyber-input" placeholder="Tên">
                 <input type="password" class="cyber-input" placeholder="Mật khẩu">
+
+                <!-- Thông báo lỗi -->
+                <div id="register-error" class="error-box"></div>
+
                 <button type="submit" class="cyber-button auth-button w-100">TẠO TÀI KHOẢN</button>
                 <div class="cyber-divider">hoặc đăng ký bằng</div>
                 <div class="social-login">
@@ -219,13 +234,19 @@
                 <div class="text-switch">Đã có tài khoản? <a href="#" onclick="switchToLogin()">Đăng nhập!</a></div>
             </form>
         </div>
+
+        <!-- Forgot -->
         <div id="auth-forgot" class="auth-section d-none">
             <h2 class="modal-title">QUÊN MẬT KHẨU</h2>
-            <form>
+            <form id="forgotForm">
                 <div class="text-end mb-2">
                     <a href="#" class="small-link" onclick="switchToLogin()" style="text-decoration: underline">Quay lại</a>
                 </div>
                 <input type="email" class="cyber-input" placeholder="Email">
+
+                <!-- Thông báo lỗi -->
+                <div id="forgot-error" class="error-box"></div>
+
                 <button type="submit" class="cyber-button auth-button w-100">KHÔI PHỤC</button>
                 <div class="cyber-divider">hoặc đăng nhập bằng</div>
                 <div class="social-login">
@@ -240,6 +261,7 @@
 
     </div>
 </div>
+
 <!-- Thanh actions cố định đáy cho mobile -->
 <div class="cyber-actions mobile-bottom-actions">
     <div class="cyber-action">

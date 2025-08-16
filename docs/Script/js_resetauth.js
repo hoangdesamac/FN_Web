@@ -1,4 +1,4 @@
-window.API_BASE = "https://fn-web.onrender.com";// Backend
+window.API_BASE = "https://fn-web.onrender.com"; // Backend
 
 // ====== Hàm kiểm tra trạng thái đăng nhập ======
 async function checkLoginStatus() {
@@ -31,6 +31,17 @@ if (registerForm) {
         const lastName = e.target.querySelector('input[placeholder="Tên"]').value.trim();
         const password = e.target.querySelector('input[placeholder="Mật khẩu"]').value.trim();
 
+        let errorBox = document.getElementById("register-error");
+        if (!errorBox) {
+            errorBox = document.createElement("div");
+            errorBox.id = "register-error";
+            errorBox.style.color = "red";
+            errorBox.style.fontSize = "12px";
+            errorBox.style.marginTop = "5px";
+            registerForm.appendChild(errorBox);
+        }
+        errorBox.textContent = "";
+
         try {
             const res = await fetch(`${API_BASE}/api/register`, {
                 method: 'POST',
@@ -40,16 +51,22 @@ if (registerForm) {
             });
             const data = await res.json();
             if (data.success) {
-                alert('✅ Đăng ký thành công! Bạn có thể đăng nhập.');
-                if (typeof CyberModal !== "undefined") {
-                    CyberModal.showLogin();
-                }
+                errorBox.style.color = "green";
+                errorBox.textContent = "✅ Đăng ký thành công! Vui lòng đăng nhập.";
+                setTimeout(() => {
+                    if (typeof CyberModal !== "undefined") {
+                        CyberModal.showLogin();
+                    }
+                    errorBox.style.color = "red";
+                    errorBox.textContent = "";
+                }, 1500);
             } else {
-                alert('❌ ' + data.error);
+                errorBox.style.color = "red";
+                errorBox.textContent = data.error || "❌ Đăng ký thất bại!";
             }
         } catch (err) {
             console.error(err);
-            alert('❌ Lỗi kết nối server!');
+            errorBox.textContent = "❌ Lỗi kết nối server!";
         }
     });
 }
@@ -62,6 +79,17 @@ if (loginForm) {
         const email = e.target.querySelector('input[placeholder="Email"]').value.trim();
         const password = e.target.querySelector('input[placeholder="Mật khẩu"]').value.trim();
 
+        let errorBox = document.getElementById("login-error");
+        if (!errorBox) {
+            errorBox = document.createElement("div");
+            errorBox.id = "login-error";
+            errorBox.style.color = "red";
+            errorBox.style.fontSize = "12px";
+            errorBox.style.marginTop = "5px";
+            loginForm.insertBefore(errorBox, loginForm.querySelector(".text-end"));
+        }
+        errorBox.textContent = "";
+
         try {
             const res = await fetch(`${API_BASE}/api/login`, {
                 method: 'POST',
@@ -70,19 +98,19 @@ if (loginForm) {
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
+
             if (data.success) {
-                alert('✅ Đăng nhập thành công!');
+                localStorage.setItem("userName", data.user.lastName.trim());
                 if (typeof CyberModal !== "undefined") {
                     CyberModal.close();
                 }
-                // 🔄 Reload ngay để cập nhật giao diện header
                 window.location.reload();
             } else {
-                alert('❌ ' + data.error);
+                errorBox.textContent = data.error || "Sai email hoặc mật khẩu!";
             }
         } catch (err) {
             console.error(err);
-            alert('❌ Lỗi kết nối server!');
+            errorBox.textContent = "❌ Lỗi kết nối server!";
         }
     });
 }
