@@ -88,7 +88,7 @@ if (loginForm) {
             const res = await fetch(`${API_BASE}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: "include",
+                credentials: "include", // để lưu cookie session
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
@@ -97,7 +97,7 @@ if (loginForm) {
                 localStorage.setItem("userName", data.user.lastName.trim());
                 if (typeof CyberModal !== "undefined") CyberModal.close();
 
-                // ✅ Đợi cookie set xong, confirm login trước khi reload
+                // ✅ Chờ cookie set xong rồi confirm login
                 setTimeout(async () => {
                     try {
                         const check = await fetch(`${API_BASE}/api/me`, {
