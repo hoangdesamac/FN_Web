@@ -1308,11 +1308,6 @@ body {
     font-family: 'Rajdhani', sans-serif;
 }
 
-.user-menu:hover .user-info {
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 8px var(--primary);
-}
-
 /* Dropdown box neon */
 .user-dropdown {
     position: absolute;
@@ -1368,6 +1363,7 @@ body {
         left: 0;
     }
 }
+
 
 
 

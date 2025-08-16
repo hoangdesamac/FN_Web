@@ -125,7 +125,8 @@ function closeCyberModal() {
     CyberModal.close();
 }
 
-// ====== API gọi để lấy tên user ======
+const API_BASE = window.API_BASE || "https://fn-web.onrender.com";
+// ====== API gọi để lấy tên users ======
 async function fetchUserInfo() {
     try {
         const res = await fetch(`${API_BASE}/api/me`, {
@@ -148,7 +149,10 @@ function updateUserDisplay() {
     const userName = localStorage.getItem('userName');
     const userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
 
-    if (userName && userAction) {
+    if (!userAction) return;
+
+    if (userName) {
+        // ✅ Đã đăng nhập → hiển thị "Xin chào"
         const shortName = userName.length > 12 ? userName.slice(0, 12) + "..." : userName;
         userAction.innerHTML = `
             <div class="user-menu">
@@ -178,10 +182,42 @@ function updateUserDisplay() {
                 credentials: "include"
             });
             localStorage.removeItem("userName");
-            location.reload();
+
+            // 🔄 Trả về giao diện gốc (icon + text "Đăng nhập")
+            userAction.innerHTML = `
+                <i class="bx bx-user-circle action-icon"></i>
+                <div class="action-text">
+                    <div style="font-size: 10px; opacity: 0.8;">Đăng</div>
+                    <div style="font-size: 12px; font-weight: 600;">nhập</div>
+                </div>
+            `;
+
+            // mở modal khi click
+            userAction.addEventListener("click", () => {
+                if (typeof CyberModal !== "undefined") {
+                    CyberModal.open();
+                }
+            });
+        });
+
+    } else {
+        // ❌ Chưa đăng nhập → giữ nguyên giao diện gốc
+        userAction.innerHTML = `
+            <i class="bx bx-user-circle action-icon"></i>
+            <div class="action-text">
+                <div style="font-size: 10px; opacity: 0.8;">Đăng</div>
+                <div style="font-size: 12px; font-weight: 600;">nhập</div>
+            </div>
+        `;
+
+        userAction.addEventListener("click", () => {
+            if (typeof CyberModal !== "undefined") {
+                CyberModal.open();
+            }
         });
     }
 }
+
 
 // ✅ Khi trang load thì kiểm tra và cập nhật ngay
 document.addEventListener("DOMContentLoaded", async () => {

@@ -1,4 +1,4 @@
-const API_BASE = "https://fn-web.onrender.com"; // Backend
+window.API_BASE = "https://fn-web.onrender.com";// Backend
 
 // ====== Hàm kiểm tra trạng thái đăng nhập ======
 async function checkLoginStatus() {
