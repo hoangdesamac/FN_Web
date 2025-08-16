@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-08-16T07:00:19.200Z",
+  "fillDefaults": false,
+  "dryRun": false,
+  "files": [
+    {
+      "file": "D:\\FE_Web\\pc-part-dataset\\processed\\storage.json",
+      "stats": {
+        "total": 2061,
+        "placeholdersRemoved": 1,
+        "factualApplied": 1,
+        "defaultsFilled": 0,
+        "unrealisticCleared": 0,
+        "stillMissing": 264
+      }
+    },
+    {
+      "file": "D:\\FE_Web\\docs\\pc-part-dataset\\processed\\storage.json",
+      "stats": {
+        "total": 2061,
+        "placeholdersRemoved": 1,
+        "factualApplied": 1,
+        "defaultsFilled": 0,
+        "unrealisticCleared": 0,
+        "stillMissing": 264
+      }
+    }
+  ]
+}

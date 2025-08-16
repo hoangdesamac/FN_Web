@@ -622,6 +622,8 @@ function renderPartModalList(){
                         else if(/sata/.test(t) && /ssd/.test(t)) raw='SATA SSD';
                         else if(/hdd|rpm/.test(t)) raw='HDD';
                     }
+                    // Hiển thị 'none' cho ô trống (ngoại trừ giá đã xử lý riêng)
+                    if(raw==='') raw='none';
                 }
                 return `<td>${raw}</td>`;
             }).join('');
@@ -679,7 +681,7 @@ function renderSelected(category){
     const part=state.selected[category];
     if(!cell) return;
     if(!part){
-        cell.innerHTML=`<button class="part-select-btn" data-key="${category}"><i class="fa fa-plus"></i> Chọn ${(PART_CATEGORIES.find(c=>c.key===category)||{}).label||category}</button>`;
+        cell.innerHTML=`<button class=\"part-select-btn\" data-key=\"${category}\"><i class=\"fa fa-plus\"></i> Chọn ${(PART_CATEGORIES.find(c=>c.key===category)||{}).label||category}</button>`;
         priceCell.textContent='-';
         actCell.innerHTML='';
         cell.querySelector('button').addEventListener('click',()=> openPartModal(category));
@@ -696,7 +698,7 @@ function renderSelected(category){
 
 function recalcTotals(){ let total=0,power=0; Object.values(state.selected).forEach(p=>{ total+=p.price||0; power+=(p.tdp||p.power||0); }); state.total=total; state.power=power; document.getElementById('total-price').textContent=formatPrice(total); document.getElementById('total-power').textContent=power+'W'; compatibilityCheck(); }
 function compatibilityCheck(){ const cpu=state.selected.cpu, mb=state.selected.mainboard, ram=state.selected.ram, psu=state.selected.psu, gpu=state.selected.gpu; const box=document.getElementById('compat-status'); const warnBox=document.getElementById('warning-box'); warnBox.style.display='none'; warnBox.innerHTML=''; const problems=[]; if(cpu&&mb&&cpu.socket&&mb.socket&&cpu.socket!==mb.socket) problems.push('CPU & Mainboard khác socket'); if(psu && state.power && psu.watt < state.power * 1.4) problems.push('Nguồn có thể thiếu (khuyến nghị >140%)'); if(problems.length){ box.className='compatibility-status error'; box.textContent='Không tương thích'; warnBox.style.display='block'; warnBox.innerHTML='<strong>Vấn đề:</strong><br>'+problems.map(p=>'• '+p).join('<br>'); } else if(cpu && mb){ box.className='compatibility-status ok'; box.textContent='Tương thích'; } else { box.className='compatibility-status warn'; box.textContent='Chọn thêm linh kiện'; } }
-function updateSummary(){ const list=document.getElementById('summary-list'); list.innerHTML=''; Object.keys(state.selected).forEach(k=>{ const p=state.selected[k]; const div=document.createElement('div'); div.className='summary-item'; div.innerHTML=`<div class="label">${(PART_CATEGORIES.find(c=>c.key===k)||{}).label||k}</div><div class="value">${p.name}</div>`; list.appendChild(div); }); buildRecommendation(); }
+function updateSummary(){ const list=document.getElementById('summary-list'); list.innerHTML=''; Object.keys(state.selected).forEach(k=>{ const p=state.selected[k]; const div=document.createElement('div'); div.className='summary-item'; div.innerHTML=`<div class=\"label\">${(PART_CATEGORIES.find(c=>c.key===k)||{}).label||k}</div><div class=\"value\">${p.name}</div>`; list.appendChild(div); }); buildRecommendation(); }
 function buildRecommendation(){ const box=document.getElementById('recommend-box'); const cpu=state.selected.cpu, gpu=state.selected.gpu, ram=state.selected.ram; let txt=''; if(cpu&&gpu){ if((cpu.cores||0)>=12 && (gpu.power||0)>=250) txt+='Cấu hình mạnh cho Streaming / 4K Gaming.<br>'; else if((gpu.power||0)<=200) txt+='Phù hợp chơi game eSports / văn phòng.<br>'; } if(ram && (ram.size||0)>=64) txt+='Đa nhiệm nặng & dựng video.<br>'; if(!txt) txt='Chọn thêm linh kiện để nhận gợi ý.'; box.innerHTML='<strong>Gợi ý:</strong><br>'+txt; }
 
 function saveToLocal(){ localStorage.setItem('pcBuilderConfig', JSON.stringify(state.selected)); }

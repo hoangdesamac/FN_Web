@@ -1,0 +1,54 @@
+[
+  {"id":"stor_i_samsung_990_pro","read":7450,"write":6900,"iopsRead":1400000,"iopsWrite":1550000,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_samsung_990_pro_w_heatsink","read":7450,"write":6900,"iopsRead":1400000,"iopsWrite":1550000,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_samsung_990_evo_plus","read":3500,"write":3300,"interface":"PCIe 3.0 x4"},
+  {"id":"stor_i_samsung_980_pro","read":7000,"write":5000,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_samsung_980","read":3500,"write":3000,"interface":"PCIe 3.0 x4"},
+
+  {"id":"stor_i_western_digital_wd_black_sn850x","read":7300,"write":6600,"iopsRead":1200000,"iopsWrite":1200000,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_western_digital_wd_black_sn850x_w_heatsink","read":7300,"write":6600,"iopsRead":1200000,"iopsWrite":1200000,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_western_digital_black_sn850","read":7000,"write":5300,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_western_digital_black_sn850_w_heatsink","read":7000,"write":5300,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_western_digital_black_sn850_call_of_duty_edition","read":7000,"write":5300,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_western_digital_wd_black_sn850p_for_ps5","read":7300,"write":6600,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_western_digital_black_sn770","read":5150,"write":4900,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_western_digital_wd_black_sn770m","read":5150,"write":4900,"interface":"PCIe 4.0 x4"},
+
+  {"id":"stor_i_kingston_kc3000","read":7000,"write":7000,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_kingston_nv2","read":3500,"write":2800,"interface":"PCIe 3.0 x4"},
+
+  {"id":"stor_i_corsair_mp700","read":10000,"write":9500,"interface":"PCIe 5.0 x4"},
+  {"id":"stor_i_corsair_mp700_elite","read":10000,"write":9500,"interface":"PCIe 5.0 x4"},
+  {"id":"stor_i_corsair_mp700_elite_w_heatsink","read":10000,"write":9500,"interface":"PCIe 5.0 x4"},
+  {"id":"stor_i_corsair_mp700_pro","read":12400,"write":11800,"interface":"PCIe 5.0 x4"},
+  {"id":"stor_i_corsair_mp700_pro_w_heatsink","read":12400,"write":11800,"interface":"PCIe 5.0 x4"},
+  {"id":"stor_i_corsair_mp700_pro_se","read":12400,"write":11800,"interface":"PCIe 5.0 x4"},
+  {"id":"stor_i_corsair_mp700_pro_se_with_air_cooler","read":12400,"write":11800,"interface":"PCIe 5.0 x4"},
+
+  {"id":"stor_i_sabrent_rocket_4_plus","read":7100,"write":6600,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_sabrent_rocket_4_plus_g","read":7300,"write":6900,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_sabrent_rocket_4_0","read":5000,"write":4400,"interface":"PCIe 4.0 x4"},
+  {"id":"stor_i_sabrent_rocket_4_0_htsk","read":5000,"write":4400,"interface":"PCIe 4.0 x4"},
+
+  {"id":"stor_i_crucial_t700","read":12400,"write":11800,"iopsRead":1500000,"iopsWrite":1500000,"interface":"PCIe 5.0 x4"}
+  ,{"id":"stor_i_samsung_970_evo_plus","read":3500,"write":3300,"interface":"PCIe 3.0 x4"}
+  ,{"id":"stor_i_intel_670p","read":3500,"write":2700,"interface":"PCIe 3.0 x4"}
+  ,{"id":"stor_i_netac_nv2000","read":3500,"write":2800,"interface":"PCIe 3.0 x4"}
+  ,{"id":"stor_i_sabrent_rocket_4_plus","read":7100,"write":6600,"interface":"PCIe 4.0 x4"}
+  ,{"id":"stor_i_sabrent_rocket_4_plus_g","read":7300,"write":6900,"interface":"PCIe 4.0 x4"}
+  ,{"id":"stor_i_sabrent_rocket_4_0","read":5000,"write":4400,"interface":"PCIe 4.0 x4"}
+  ,{"id":"stor_i_sabrent_rocket_4_0_htsk","read":5000,"write":4400,"interface":"PCIe 4.0 x4"}
+  ,{"id":"stor_i_samsung_870_evo","read":560,"write":530,"interface":"SATA III 6Gb/s"}
+  ,{"id":"stor_i_samsung_870_qvo","read":560,"write":530,"interface":"SATA III 6Gb/s"}
+  ,{"id":"stor_i_crucial_mx500","read":560,"write":510,"interface":"SATA III 6Gb/s"}
+  ,{"id":"stor_i_wd_blue_sn570","read":3500,"write":3000,"interface":"PCIe 3.0 x4"}
+  ,{"id":"stor_i_wd_blue_sn580","read":4150,"write":4150,"interface":"PCIe 4.0 x4"}
+  ,{"id":"stor_i_crucial_p3","read":3500,"write":3000,"interface":"PCIe 3.0 x4"}
+  ,{"id":"stor_i_crucial_p5_plus","read":6600,"write":5000,"interface":"PCIe 4.0 x4"}
+  ,{"id":"stor_i_adata_sx8200_pro","read":3500,"write":3000,"interface":"PCIe 3.0 x4"}
+  ,{"id":"stor_i_seagate_firecuda_530","read":7300,"write":6900,"interface":"PCIe 4.0 x4"}
+  ,{"id":"stor_i_teamgroup_mp34","read":3400,"write":3000,"interface":"PCIe 3.0 x4"}
+  ,{"id":"stor_i_kingston_a400","read":500,"write":450,"interface":"SATA III 6Gb/s"}
+  ,{"id":"stor_i_kingston_snv2s","read":3500,"write":2800,"interface":"PCIe 3.0 x4"}
+  ,{"id":"stor_i_wd_blue_870","read":560,"write":530,"interface":"SATA III 6Gb/s"}
+]

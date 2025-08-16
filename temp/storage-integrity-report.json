@@ -1,0 +1,1007 @@
+{
+  "timestamp": "2025-08-16T07:18:53.975Z",
+  "files": [
+    {
+      "file": "D:\\FE_Web\\pc-part-dataset\\processed\\storage.json",
+      "counts": {
+        "total": 2061,
+        "invalidSpeedRanges": 0,
+        "missingCritical": 0,
+        "inconsistentConfidence": 0,
+        "suspiciousPrice": 114
+      },
+      "invalidSpeedRanges": [],
+      "missingCritical": [],
+      "inconsistentConfidence": [],
+      "suspiciousPrice": [
+        {
+          "id": "stor_i_samsung_850_pro",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_samsung_840_evo",
+          "ppg": 12115
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_v300",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts32gssd370s",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_v200",
+          "ppg": 12497
+        },
+        {
+          "id": "stor_i_intel_710",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_mts800",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_545s",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_hp_691862_b21",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_agility_3",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mydigitalssd_super_boot_drive",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_s100",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts64gssd370s",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_320",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_520",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_730",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_premier_pro_sp900",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_200",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_transcend_slc",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_330",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_mts400",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_x25_m",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_x25_v",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_seagate_600_pro",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_e50_enterprise",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_hyperx",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_313",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_sandisk_readycache",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_corsair_force_series_ls",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_dc_s3520",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts32gmsa370",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_plextor_m8vc",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_limited",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_s50",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_335",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_535",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_pro_5400s",
+          "ppg": 12242
+        },
+        {
+          "id": "stor_i_intel_x25_e",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_2_pro",
+          "ppg": 12461
+        },
+        {
+          "id": "stor_i_corsair_nova",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mushkin_callisto_dx2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_wintec_industrial_grade_i_temp",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_ssdsckjw180h601",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_xpg_sx930",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_silicon_power_s60",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_2_ex",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_agility_2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_v",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_corsair_nova_series_2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mushkin_chronos_deluxe",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_synapse_cache",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_corsair_accelerator",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_xpg_sx910",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_deneva_2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_kc300",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_hp_value_endurance_sff",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_x25_m_mainstream",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_pny_prevail",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_samsung_845dc_pro",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mydigitalssd_super_cache_2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts16gssd500",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_525",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_nocti",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_ex",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_turbo",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_solid_2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_onyx",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_e",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_g_skill_phoenix",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_patriot_inferno",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_patriot_torqx_trb",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_corsair_performance_3",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_g_skill_phoenix_evo",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_wintec_filemate",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_s592",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_plextor_px_m2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_s511",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_plus_r2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ssd720",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mushkin_catalyst",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_pny_performance",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_310",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_xm13",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mushkin_atlas",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_strata",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_sms200",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_450_series_128",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_720_msata",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_plextor_m6m_px_64m6m",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_micron_enterprise",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_sandisk_u110",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_plextor_m6m",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_axiom_axi_ssd25m3400b",
+          "ppg": 12461
+        },
+        {
+          "id": "stor_i_visiontek_900610",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts32gssd370",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssd_now_ms200",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_visiontek_dlx",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mydigitalssd_super_boot_eco",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mydigitalssd_bullet_proof_4",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_ssdmceac060b3",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts512gmsa370",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts64gmsa370",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_ssdsc2bb080g601",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_ssdsc2bb240g601",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_patriot_torch",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_sandisk_cloudspeed_ultra_gen_ii",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_qnap_m2080",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_ssdsc2ba400g4p",
+          "ppg": 12461
+        },
+        {
+          "id": "stor_i_hitachi_ultrastar_dc_sa620",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_apacer_as510s_proii",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_isss333_064gd",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_isss333_064gp",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_integral_industrial_mo_300",
+          "ppg": 12620
+        }
+      ],
+      "catStats": {
+        "OTHER": {
+          "count": 717,
+          "missingPerf": 1,
+          "factual": 667,
+          "heuristic": 3,
+          "default": 47
+        },
+        "HDD": {
+          "count": 488,
+          "missingPerf": 0,
+          "factual": 17,
+          "heuristic": 461,
+          "default": 0
+        },
+        "SATA": {
+          "count": 670,
+          "missingPerf": 0,
+          "factual": 670,
+          "heuristic": 0,
+          "default": 0
+        },
+        "EXT": {
+          "count": 186,
+          "missingPerf": 0,
+          "factual": 160,
+          "heuristic": 25,
+          "default": 1
+        }
+      }
+    },
+    {
+      "file": "D:\\FE_Web\\docs\\pc-part-dataset\\processed\\storage.json",
+      "counts": {
+        "total": 2061,
+        "invalidSpeedRanges": 0,
+        "missingCritical": 0,
+        "inconsistentConfidence": 0,
+        "suspiciousPrice": 114
+      },
+      "invalidSpeedRanges": [],
+      "missingCritical": [],
+      "inconsistentConfidence": [],
+      "suspiciousPrice": [
+        {
+          "id": "stor_i_samsung_850_pro",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_samsung_840_evo",
+          "ppg": 12115
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_v300",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts32gssd370s",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_v200",
+          "ppg": 12497
+        },
+        {
+          "id": "stor_i_intel_710",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_mts800",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_545s",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_hp_691862_b21",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_agility_3",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mydigitalssd_super_boot_drive",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_s100",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts64gssd370s",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_320",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_520",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_730",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_premier_pro_sp900",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_200",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_transcend_slc",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_330",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_mts400",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_x25_m",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_x25_v",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_seagate_600_pro",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_e50_enterprise",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_hyperx",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_313",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_sandisk_readycache",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_corsair_force_series_ls",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_dc_s3520",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts32gmsa370",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_plextor_m8vc",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_limited",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_s50",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_335",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_535",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_pro_5400s",
+          "ppg": 12242
+        },
+        {
+          "id": "stor_i_intel_x25_e",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_2_pro",
+          "ppg": 12461
+        },
+        {
+          "id": "stor_i_corsair_nova",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mushkin_callisto_dx2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_wintec_industrial_grade_i_temp",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_ssdsckjw180h601",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_xpg_sx930",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_silicon_power_s60",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_2_ex",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_agility_2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_v",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_corsair_nova_series_2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mushkin_chronos_deluxe",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_synapse_cache",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_corsair_accelerator",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_xpg_sx910",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_deneva_2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_kc300",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_hp_value_endurance_sff",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_x25_m_mainstream",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_pny_prevail",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_samsung_845dc_pro",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mydigitalssd_super_cache_2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts16gssd500",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_525",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_nocti",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_ex",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_turbo",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_solid_2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_onyx",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssdnow_e",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_g_skill_phoenix",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_patriot_inferno",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_patriot_torqx_trb",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_corsair_performance_3",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_g_skill_phoenix_evo",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_wintec_filemate",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_s592",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_plextor_px_m2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_s511",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_plus_r2",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ssd720",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mushkin_catalyst",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_pny_performance",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_310",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_xm13",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mushkin_atlas",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_strata",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_sms200",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_ocz_vertex_450_series_128",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_720_msata",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_plextor_m6m_px_64m6m",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_micron_enterprise",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_sandisk_u110",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_plextor_m6m",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_axiom_axi_ssd25m3400b",
+          "ppg": 12461
+        },
+        {
+          "id": "stor_i_visiontek_900610",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts32gssd370",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_kingston_ssd_now_ms200",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_visiontek_dlx",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mydigitalssd_super_boot_eco",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_mydigitalssd_bullet_proof_4",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_ssdmceac060b3",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts512gmsa370",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_transcend_ts64gmsa370",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_ssdsc2bb080g601",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_ssdsc2bb240g601",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_patriot_torch",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_sandisk_cloudspeed_ultra_gen_ii",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_qnap_m2080",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_intel_ssdsc2ba400g4p",
+          "ppg": 12461
+        },
+        {
+          "id": "stor_i_hitachi_ultrastar_dc_sa620",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_apacer_as510s_proii",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_isss333_064gd",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_adata_isss333_064gp",
+          "ppg": 12620
+        },
+        {
+          "id": "stor_i_integral_industrial_mo_300",
+          "ppg": 12620
+        }
+      ],
+      "catStats": {
+        "OTHER": {
+          "count": 717,
+          "missingPerf": 1,
+          "factual": 667,
+          "heuristic": 3,
+          "default": 47
+        },
+        "HDD": {
+          "count": 488,
+          "missingPerf": 0,
+          "factual": 17,
+          "heuristic": 461,
+          "default": 0
+        },
+        "SATA": {
+          "count": 670,
+          "missingPerf": 0,
+          "factual": 670,
+          "heuristic": 0,
+          "default": 0
+        },
+        "EXT": {
+          "count": 186,
+          "missingPerf": 0,
+          "factual": 160,
+          "heuristic": 25,
+          "default": 1
+        }
+      }
+    }
+  ]
+}

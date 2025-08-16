@@ -21,7 +21,21 @@ const targets=[
   path.join(__dirname,'..','pc-part-dataset','processed','storage.json'),
   path.join(__dirname,'..','docs','pc-part-dataset','processed','storage.json')
 ];
-function cat(o){const iface=(o.interface||'').toLowerCase();if(/hdd/.test((o.type||'').toLowerCase()))return 'HDD';if(/sata/.test(iface))return 'SATA';if(/pci[e ]5\.0/.test(iface))return 'NVME5';if(/pci[e ]4\.0/.test(iface))return 'NVME4';if(/pci[e ]3\.0|pci[e ]2\.0/.test(iface))return 'NVME3';return 'OTHER';}
+function cat(o){
+  const iface=(o.interface||'').toLowerCase();
+  const type=(o.type||'').toLowerCase();
+  const name=(o.name||'').toLowerCase();
+  if(/hdd/.test(type)) return 'HDD';
+  if(/external/.test(type)){
+    if(/aegis|fortress|padlock|ironkey/.test(name)) return 'SECURE_EXT';
+    return 'EXT';
+  }
+  if(/sata/.test(iface))return 'SATA';
+  if(/pci[e ]5\.0/.test(iface))return 'NVME5';
+  if(/pci[e ]4\.0/.test(iface))return 'NVME4';
+  if(/pci[e ]3\.0|pci[e ]2\.0/.test(iface))return 'NVME3';
+  return 'OTHER';
+}
 function trimmedMedian(arr,trim=0.1){ if(!arr.length) return null; const a=[...arr].sort((x,y)=>x-y); const cut=Math.floor(a.length*trim); const sliced=a.slice(cut,a.length-cut||a.length); const n=sliced.length; if(!n) return null; return n%2? sliced[(n-1)/2] : (sliced[n/2-1]+sliced[n/2])/2; }
 for(const file of targets){ if(!fs.existsSync(file)) continue; const data=JSON.parse(fs.readFileSync(file,'utf8'));
   const missingPerf=[], genericPlaceholder=[], lowSata=[], suspiciousNVMe4=[], gen5Missing=[], cappedPrices=[], extremePriceResidual=[], heuristicDominant=[], duplicateNames=[]; const nameMap={};
@@ -30,7 +44,8 @@ for(const file of targets){ if(!fs.existsSync(file)) continue; const data=JSON.p
     const c=cat(d);
     const isSSD=/ssd/i.test(d.type||'')||/nvme/i.test(d.type||'');
     if(isSSD && (d.read==null||d.write==null)) missingPerf.push(d.id);
-    if(d.read===3500 && d.write===3000) genericPlaceholder.push(d.id);
+  // Treat 3500/3000 as placeholder ONLY if not already validated factual.
+  if(d.read===3500 && d.write===3000 && d._confidence!=='factual') genericPlaceholder.push(d.id);
     if(c==='SATA' && d.read!=null && d.write!=null && (d.read<480 || d.write<420)) lowSata.push({id:d.id,read:d.read,write:d.write});
     if(c==='NVME4' && d.read!=null && d.write!=null && (d.read<4500 || d.write<3500 || d.read>8000 || d.write>7500)) suspiciousNVMe4.push({id:d.id,read:d.read,write:d.write});
     if(c==='NVME5' && (d.read==null || d.write==null || d.read<8500 || d.read>15000 || d.write<8000 || d.write>13500)) gen5Missing.push({id:d.id,read:d.read,write:d.write});

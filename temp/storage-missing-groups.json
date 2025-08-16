@@ -1,0 +1,129 @@
+{
+  "summary": {
+    "OTHER": 264
+  },
+  "samples": {
+    "OTHER": [
+      {
+        "id": "stor_i_crucial_p3",
+        "name": "Crucial P3",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_silicon_power_a60",
+        "name": "Silicon Power A60",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_western_digital_green_sn350",
+        "name": "Western Digital Green SN350",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_lexar_nm620",
+        "name": "Lexar NM620",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_silicon_power_p34a60",
+        "name": "Silicon Power P34A60",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_corsair_mp400",
+        "name": "Corsair MP400",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_western_digital_blue_sn570",
+        "name": "Western Digital Blue SN570",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_western_digital_blue_sn550",
+        "name": "Western Digital Blue SN550",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_msi_spatium_m371",
+        "name": "MSI SPATIUM M371",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_patriot_p320",
+        "name": "Patriot P320",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_timetec_35ttfp6pcie",
+        "name": "Timetec 35TTFP6PCIE",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_adata_legend_710",
+        "name": "ADATA Legend 710",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_kioxia_exceria_g2",
+        "name": "KIOXIA EXCERIA G2",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_adata_xpg_sx8200_pro",
+        "name": "ADATA XPG SX8200 Pro",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      },
+      {
+        "id": "stor_i_intel_660p",
+        "name": "Intel 660p",
+        "interface": "M.2 PCIe 3.0 X4",
+        "read": null,
+        "write": null,
+        "_confidence": "default"
+      }
+    ]
+  }
+}
