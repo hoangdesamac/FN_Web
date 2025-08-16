@@ -150,6 +150,7 @@ function updateUserDisplay() {
     const userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
 
     if (userName && userAction) {
+        // Hiển thị menu user
         const shortName = userName.length > 12 ? userName.slice(0, 12) + "..." : userName;
         userAction.innerHTML = `
             <div class="user-menu">
@@ -163,26 +164,32 @@ function updateUserDisplay() {
             </div>
         `;
 
-        // Hover dropdown
         const userMenu = userAction.querySelector('.user-menu');
-        userMenu.addEventListener('mouseenter', () => {
-            userMenu.classList.add('show');
-        });
-        userMenu.addEventListener('mouseleave', () => {
-            userMenu.classList.remove('show');
-        });
+        userMenu.addEventListener('mouseenter', () => userMenu.classList.add('show'));
+        userMenu.addEventListener('mouseleave', () => userMenu.classList.remove('show'));
 
-        // Logout click
         document.getElementById("logoutBtn").addEventListener("click", async () => {
             await fetch(`${API_BASE}/api/logout`, {
                 method: "POST",
                 credentials: "include"
             });
             localStorage.removeItem("userName");
+
+            // Đóng modal nếu đang mở
+            if (document.getElementById("cyber-auth-modal")) {
+                document.getElementById("cyber-auth-modal").style.display = "none";
+            }
+
+            // Reload page ngay lập tức
             location.reload();
         });
+    } else if (userAction) {
+        // Người dùng chưa login, hiển thị icon login bình thường, không mở modal tự động
+        userAction.innerHTML = `<i class="bx bx-user-circle"></i>`;
+        initLoginModalTrigger(); // vẫn có thể click để mở modal
     }
 }
+
 
 // ✅ Khi trang load thì kiểm tra và cập nhật ngay
 document.addEventListener("DOMContentLoaded", async () => {
