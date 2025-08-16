@@ -6,6 +6,7 @@ function initHeaderScrollEffect() {
         header.classList.toggle('scrolled', window.scrollY > 50);
     });
 }
+
 function initBannerHeaderWrapper() {
     const wrapper = document.getElementById('header-wrapper');
     if (!wrapper) return;
@@ -22,6 +23,7 @@ function initBannerHeaderWrapper() {
 function initCartCountEffect() {
     updateCartCount();
 }
+
 function updateOrderCount() {
     const orders = JSON.parse(localStorage.getItem('orders')) || [];
     const orderCountElement = document.querySelector('.order-count');
@@ -76,6 +78,10 @@ function initResponsiveHandler() {
 }
 
 function initLoginModalTrigger() {
+    // ❌ Chỉ gắn click mở modal nếu chưa đăng nhập
+    const userName = localStorage.getItem('userName');
+    if (userName) return; // đã đăng nhập → bỏ qua
+
     const loginAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (loginAction) {
         loginAction.addEventListener('click', () => CyberModal.open());
@@ -145,6 +151,7 @@ function updateUserDisplay() {
         const shortName = userName.length > 12 ? userName.slice(0, 12) + "..." : userName;
         userAction.innerHTML = `
             <div class="user-menu">
+                <i class="bx bx-user-circle action-icon"></i>
                 <div class="user-info">
                     <div style="font-size: 10px; opacity: 0.8;">Xin chào</div>
                     <div style="font-size: 12px; font-weight: 600;" title="${userName}">${shortName}</div>
@@ -193,7 +200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateUserDisplay();
 });
 
-// ✅ Hàm tổng chạy toàn bộ sau khi header đã load vào DOMs
+// ✅ Hàm tổng chạy toàn bộ sau khi header đã load vào DOM
 function initHeader() {
     initHeaderScrollEffect();
     initBannerHeaderWrapper();
@@ -202,6 +209,6 @@ function initHeader() {
     initHexagonBackground();
     initCategoryDropdown();
     initResponsiveHandler();
-    initLoginModalTrigger();
+    initLoginModalTrigger(); // sẽ không gắn nếu đã login
     updateUserDisplay();
 }
