@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateUserDisplay();
 });
 
-// ✅ Hàm tổng chạy toàn bộ sau khi header đã load vào DOM
+// ✅ Hàm tổng chạy toàn bộ sau khi header đã load vào DOMs
 function initHeader() {
     initHeaderScrollEffect();
     initBannerHeaderWrapper();
