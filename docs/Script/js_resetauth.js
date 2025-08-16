@@ -75,7 +75,8 @@ if (loginForm) {
                 if (typeof CyberModal !== "undefined") {
                     CyberModal.close();
                 }
-                await checkLoginStatus(); // Cập nhật tên ngay
+                // 🔄 Reload ngay để cập nhật giao diện header
+                window.location.reload();
             } else {
                 alert('❌ ' + data.error);
             }

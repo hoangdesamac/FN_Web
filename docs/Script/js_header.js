@@ -10,15 +10,12 @@ function initBannerHeaderWrapper() {
     const wrapper = document.getElementById('header-wrapper');
     if (!wrapper) return;
 
-    let lastScrollY = window.scrollY;
-
     window.addEventListener('scroll', () => {
         if (window.scrollY > 100) {
             wrapper.classList.add('hide-banner');
         } else {
             wrapper.classList.remove('hide-banner');
         }
-        lastScrollY = window.scrollY;
     });
 }
 
@@ -112,21 +109,14 @@ const CyberModal = {
     }
 };
 
-function switchToRegister() {
-    CyberModal.showRegister();
-}
-function switchToLogin() {
-    CyberModal.showLogin();
-}
-function switchToForgot() {
-    CyberModal.showForgot();
-}
-function closeCyberModal() {
-    CyberModal.close();
-}
+function switchToRegister() { CyberModal.showRegister(); }
+function switchToLogin() { CyberModal.showLogin(); }
+function switchToForgot() { CyberModal.showForgot(); }
+function closeCyberModal() { CyberModal.close(); }
 
 const API_BASE = window.API_BASE || "https://fn-web.onrender.com";
-// ====== API gọi để lấy tên users ======
+
+// ====== Lấy thông tin user ======
 async function fetchUserInfo() {
     try {
         const res = await fetch(`${API_BASE}/api/me`, {
@@ -148,11 +138,10 @@ async function fetchUserInfo() {
 function updateUserDisplay() {
     const userName = localStorage.getItem('userName');
     const userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
-
     if (!userAction) return;
 
     if (userName) {
-        // ✅ Đã đăng nhập → hiển thị "Xin chào"
+        // ✅ Nếu đã đăng nhập
         const shortName = userName.length > 12 ? userName.slice(0, 12) + "..." : userName;
         userAction.innerHTML = `
             <div class="user-menu">
@@ -168,40 +157,20 @@ function updateUserDisplay() {
 
         // Hover dropdown
         const userMenu = userAction.querySelector('.user-menu');
-        userMenu.addEventListener('mouseenter', () => {
-            userMenu.classList.add('show');
-        });
-        userMenu.addEventListener('mouseleave', () => {
-            userMenu.classList.remove('show');
-        });
+        userMenu.addEventListener('mouseenter', () => userMenu.classList.add('show'));
+        userMenu.addEventListener('mouseleave', () => userMenu.classList.remove('show'));
 
-        // Logout click
+        // ✅ Logout click → chỉ reload
         document.getElementById("logoutBtn").addEventListener("click", async () => {
             await fetch(`${API_BASE}/api/logout`, {
                 method: "POST",
                 credentials: "include"
             });
             localStorage.removeItem("userName");
-
-            // 🔄 Trả về giao diện gốc (icon + text "Đăng nhập")
-            userAction.innerHTML = `
-                <i class="bx bx-user-circle action-icon"></i>
-                <div class="action-text">
-                    <div style="font-size: 10px; opacity: 0.8;">Đăng</div>
-                    <div style="font-size: 12px; font-weight: 600;">nhập</div>
-                </div>
-            `;
-
-            // mở modal khi click
-            userAction.addEventListener("click", () => {
-                if (typeof CyberModal !== "undefined") {
-                    CyberModal.open();
-                }
-            });
+            window.location.reload(); // 🔄 reload để reset giao diện
         });
-
     } else {
-        // ❌ Chưa đăng nhập → giữ nguyên giao diện gốc
+        // ❌ Nếu chưa đăng nhập → giữ nguyên icon login
         userAction.innerHTML = `
             <i class="bx bx-user-circle action-icon"></i>
             <div class="action-text">
@@ -217,7 +186,6 @@ function updateUserDisplay() {
         });
     }
 }
-
 
 // ✅ Khi trang load thì kiểm tra và cập nhật ngay
 document.addEventListener("DOMContentLoaded", async () => {
