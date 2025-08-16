@@ -43,6 +43,52 @@ let PART_LIBRARY = {
     monitor:[ { id:'monitor_2k_165', name:'27" 2K 165Hz IPS', price:5390000, hz:165, res:'2560x1440' } ]
 };
 
+// === Apply price overrides (supports number or object {price,source,updatedAt,currency,fx}) ===
+(async function applyPriceOverrides(){
+    try{
+        const bases=['../pc-part-dataset','pc-part-dataset','../../pc-part-dataset'];
+        let res=null;
+        for(const b of bases){ try{ const r=await fetch(b+'/price-overrides.json'); if(r.ok){ res=r; break; } }catch{} }
+        if(!res) return;
+        const overrides=await res.json();
+        const today=new Date().toISOString().slice(0,10);
+        Object.keys(PART_LIBRARY).forEach(cat=>{
+            PART_LIBRARY[cat].forEach(it=>{
+                const ov=overrides[it.id];
+                if(!ov) return;
+                let newPrice=null, meta={};
+                if(typeof ov==='number') newPrice=ov; else if(typeof ov==='object'){ if(typeof ov.price==='number') newPrice=ov.price; if(ov.source) meta.source=ov.source; meta.updatedAt=ov.updatedAt||today; if(ov.currency&&ov.fx){ meta.currency=ov.currency; meta.fx=ov.fx; } }
+                if(newPrice){ it._oldPrice=it.price; it.price=newPrice; if(Object.keys(meta).length) it._priceMeta=meta; }
+            });
+        });
+        // If selections already loaded, refresh their prices
+        if(document.readyState!=='loading'){
+            Object.keys(state.selected||{}).forEach(k=>{
+                const sel=state.selected[k];
+                if(sel && overrides[sel.id]){
+                    const ov=overrides[sel.id];
+                    if(typeof ov==='number'){
+                        sel.price=ov; sel._priceMeta=undefined;
+                    } else if(typeof ov==='object'){
+                        if(ov.price) sel.price=ov.price;
+                        sel._priceMeta={
+                            source: ov.source||sel._priceMeta?.source,
+                            updatedAt: ov.updatedAt||today,
+                            currency: ov.currency,
+                            fx: ov.fx
+                        };
+                    }
+                    renderSelected(k);
+                }
+            });
+            recalcTotals();
+        } else {
+            document.addEventListener('DOMContentLoaded', ()=>{ Object.keys(state.selected||{}).forEach(k=>{ const sel=state.selected[k]; if(sel && overrides[sel.id]){ const ov=overrides[sel.id]; if(typeof ov==='number'){ sel.price=ov; } else if(typeof ov==='object' && ov.price){ sel.price=ov.price; } } }); });
+        }
+        console.log('[PRICE] Overrides applied');
+    }catch(e){ console.warn('Price override failed', e); }
+})();
+
 // Precompute simple search index to avoid repeated toLowerCase operations when filtering
 let _globalItemCounter=0; // for stable sort
 function indexItem(cat, it){

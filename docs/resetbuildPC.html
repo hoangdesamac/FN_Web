@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Audiowide&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="HTML/Style/common.css">
     <link rel="stylesheet" href="HTML/Style/resetbuildPC.css">
+    <link rel="stylesheet" href="HTML/Style/resetChatbox.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="Script/js_header.js"></script>
     <script src="Script/js_resetbuildPC.js" defer></script>
@@ -41,9 +42,7 @@
         <!-- Config table -->
         <section class="builder-config">
             <h2 class="builder-title">Tự Build PC</h2>
-            <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
-                <input type="text" id="pp-list-url" placeholder="Dán URL pcpartpicker list..." style="flex:1; min-width:260px; background:rgba(0,0,0,.35); border:1px solid var(--panel-border); color:#fff; padding:6px 10px; border-radius:8px; font-size:.7rem;" />
-                <button class="neon-btn" id="import-pp-btn" style="flex:0 0 auto;">Nhập List</button>
+            <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">          
             </div>
             <div class="compatibility-status" id="compat-status"></div>
             <table class="config-table">
@@ -126,5 +125,57 @@
 
 <!-- Footer -->
 <div id="footer-container"></div>
+
+<!-- Floating mini summary bar -->
+<div class="builder-float-bar" id="builder-float-bar">
+    <div class="bf-left">
+        <span id="float-total">Tổng: 0₫</span>
+        <span id="float-power">• Công suất: 0W</span>
+    </div>
+    <div class="bf-actions">
+        <button id="toggle-compact" type="button" class="bf-btn" aria-label="Chuyển chế độ compact">Compact</button>
+        <button id="scroll-top" type="button" class="bf-btn" aria-label="Lên đầu trang">Lên đầu</button>
+    </div>
+</div>
+
+<!-- Minimal Chatbox -->
+<button id="openChatbox" class="chat-launch-bar sunken" aria-label="Mở chat tư vấn" title="Chat tư vấn">
+    <span class="clb-icon"><i class="fa fa-comments"></i></span>
+    <span class="clb-label">Chat tư vấn - Giải đáp mọi thắc mắc</span>
+</button>
+<div id="chat-backdrop" class="chat-backdrop" aria-hidden="true"></div>
+<div class="chat-wrapper minimal" id="chatDrawer" role="dialog" aria-label="Chat hỗ trợ" aria-hidden="true">
+    <div class="chat-header minimal">
+        <div class="ch-left">
+            <img src="Image_Showroom/Slogan_w_logo.png" alt="logo" class="chat-logo" />
+            <div class="ch-meta"><strong>3TD Chat</strong><br><small>Chat với chúng tôi</small></div>
+        </div>
+        <button id="closeChatbox" class="close-btn minimal" aria-label="Đóng">✕</button>
+    </div>
+    <div id="chatMessages" class="chat-messages" role="log"></div>
+    <form id="chatForm" class="chat-input minimal" autocomplete="off">
+        <input id="chatInput" type="text" placeholder="Nhập nội dung..." aria-label="Nhập nội dung" />
+        <button type="submit" class="send-btn" aria-label="Gửi">➤</button>
+    </form>
+</div>
+<script src="Script/resetChatbox.js"></script>
+<script>
+// Align chat bar just above builder float bar dynamically
+function positionChatLaunch(){
+    const floatBar=document.getElementById('builder-float-bar');
+    const launchBtn=document.getElementById('openChatbox');
+    const root=document.documentElement;
+    if(floatBar){
+        const h=floatBar.offsetHeight||56;
+        // đặt đúng bằng chiều cao thanh dưới -> sát không có khoảng trống
+        root.style.setProperty('--chat-launch-bottom', h+'px');
+    }
+    if(launchBtn){
+        root.style.setProperty('--chat-launch-height', launchBtn.offsetHeight+'px');
+    }
+}
+window.addEventListener('resize', positionChatLaunch);
+document.addEventListener('DOMContentLoaded', positionChatLaunch);
+</script>
 </body>
 </html>
