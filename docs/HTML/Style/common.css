@@ -1368,6 +1368,17 @@ body {
         left: 0;
     }
 }
+/* ✅ Xóa outline / border mặc định khi focus */
+.user-menu:focus,
+.user-menu:active,
+.user-info:focus,
+.user-info:active,
+.logout-btn:focus,
+.logout-btn:active {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
 
 
 
