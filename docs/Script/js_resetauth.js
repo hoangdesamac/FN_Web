@@ -94,29 +94,16 @@ if (loginForm) {
             const data = await res.json();
 
             if (data.success) {
-                localStorage.setItem("userName", data.user.lastName.trim());
+                // ✅ Lưu tên nếu có
+                if (data.user && data.user.lastName) {
+                    localStorage.setItem("userName", data.user.lastName.trim());
+                }
+
+                // ✅ Đóng modal
                 if (typeof CyberModal !== "undefined") CyberModal.close();
 
-                // ✅ Chờ cookie set xong rồi confirm login
-                setTimeout(async () => {
-                    try {
-                        const check = await fetch(`${API_BASE}/api/me`, {
-                            method: "GET",
-                            credentials: "include"
-                        });
-                        const me = await check.json();
-                        if (me.loggedIn) {
-                            window.location.reload();
-                        } else {
-                            errorBox.textContent = "❌ Không xác thực được phiên đăng nhập!";
-                            errorBox.classList.add("error");
-                        }
-                    } catch (err) {
-                        console.error("Lỗi xác thực sau login:", err);
-                        errorBox.textContent = "❌ Lỗi xác thực sau login!";
-                        errorBox.classList.add("error");
-                    }
-                }, 300);
+                // ✅ Reload ngay lập tức
+                window.location.reload();
 
             } else {
                 errorBox.textContent = data.error || "Sai email hoặc mật khẩu!";
