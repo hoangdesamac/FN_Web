@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Chatbox Build PC</title>
+	<link rel="stylesheet" href="HTML/Style/resetChatbox.css" />
+</head>
+<body>
+	<button id="openChatbox" class="chat-fab" aria-label="Mở chat hỗ trợ build PC">💬</button>
+	<div class="chat-wrapper" aria-live="polite">
+		<div class="chat-header">
+			<div>
+				<strong>Trợ lý Build PC</strong><br><small>3TD Assistant</small>
+			</div>
+			<button id="closeChatbox" class="close-btn" aria-label="Đóng">✕</button>
+		</div>
+		<div id="chatMessages" class="chat-messages" role="log"></div>
+		<div class="quick-row">
+			<button onclick="quickReply('Ngân sách 15 triệu chơi game')">15tr Game</button>
+			<button onclick="quickReply('20 triệu văn phòng')">20tr VP</button>
+			<button onclick="quickReply('30 triệu đồ họa')">30tr Design</button>
+			<button onclick="quickReply('50 triệu AI')">50tr AI</button>
+		</div>
+		<form id="chatForm" class="chat-input" autocomplete="off">
+			<textarea id="chatInput" rows="1" placeholder="Gõ câu hỏi: 'Mình có 25 triệu muốn build PC chơi game'..."></textarea>
+			<button type="submit" class="send-btn" aria-label="Gửi">➤</button>
+		</form>
+	</div>
+	<script src="Script/resetChatbox.js"></script>
+</body>
+</html>

@@ -43,6 +43,52 @@ let PART_LIBRARY = {
     monitor:[ { id:'monitor_2k_165', name:'27" 2K 165Hz IPS', price:5390000, hz:165, res:'2560x1440' } ]
 };
 
+// === Apply price overrides (supports number or object {price,source,updatedAt,currency,fx}) ===
+(async function applyPriceOverrides(){
+    try{
+        const bases=['../pc-part-dataset','pc-part-dataset','../../pc-part-dataset'];
+        let res=null;
+        for(const b of bases){ try{ const r=await fetch(b+'/price-overrides.json'); if(r.ok){ res=r; break; } }catch{} }
+        if(!res) return;
+        const overrides=await res.json();
+        const today=new Date().toISOString().slice(0,10);
+        Object.keys(PART_LIBRARY).forEach(cat=>{
+            PART_LIBRARY[cat].forEach(it=>{
+                const ov=overrides[it.id];
+                if(!ov) return;
+                let newPrice=null, meta={};
+                if(typeof ov==='number') newPrice=ov; else if(typeof ov==='object'){ if(typeof ov.price==='number') newPrice=ov.price; if(ov.source) meta.source=ov.source; meta.updatedAt=ov.updatedAt||today; if(ov.currency&&ov.fx){ meta.currency=ov.currency; meta.fx=ov.fx; } }
+                if(newPrice){ it._oldPrice=it.price; it.price=newPrice; if(Object.keys(meta).length) it._priceMeta=meta; }
+            });
+        });
+        // If selections already loaded, refresh their prices
+        if(document.readyState!=='loading'){
+            Object.keys(state.selected||{}).forEach(k=>{
+                const sel=state.selected[k];
+                if(sel && overrides[sel.id]){
+                    const ov=overrides[sel.id];
+                    if(typeof ov==='number'){
+                        sel.price=ov; sel._priceMeta=undefined;
+                    } else if(typeof ov==='object'){
+                        if(ov.price) sel.price=ov.price;
+                        sel._priceMeta={
+                            source: ov.source||sel._priceMeta?.source,
+                            updatedAt: ov.updatedAt||today,
+                            currency: ov.currency,
+                            fx: ov.fx
+                        };
+                    }
+                    renderSelected(k);
+                }
+            });
+            recalcTotals();
+        } else {
+            document.addEventListener('DOMContentLoaded', ()=>{ Object.keys(state.selected||{}).forEach(k=>{ const sel=state.selected[k]; if(sel && overrides[sel.id]){ const ov=overrides[sel.id]; if(typeof ov==='number'){ sel.price=ov; } else if(typeof ov==='object' && ov.price){ sel.price=ov.price; } } }); });
+        }
+        console.log('[PRICE] Overrides applied');
+    }catch(e){ console.warn('Price override failed', e); }
+})();
+
 // Precompute simple search index to avoid repeated toLowerCase operations when filtering
 let _globalItemCounter=0; // for stable sort
 function indexItem(cat, it){
@@ -488,6 +534,7 @@ function openPartModal(category){
     currentModalLimit = MODAL_PAGE_SIZE; // reset mỗi lần mở
     buildFacetOptions(category);
     renderPartModalList();
+    buildAdvancedFilters(category);
     modal.style.display='flex';
     // Chặn scroll nền khi mở modal
     document.body.classList.add('no-scroll');
@@ -526,6 +573,9 @@ function renderPartModalList(){
     const category=modal.dataset.category;
     const grid=document.getElementById('parts-grid');
     const q=(document.getElementById('part-search').value||'').toLowerCase();
+    // Advanced filter state (persist in memory between renders within modal)
+    const advState = window._advFilterState || (window._advFilterState={});
+    const catState = advState[category] || {};
     const facetSelect=document.getElementById('part-filter-socket');
     const facetKey=facetSelect?.dataset?.facetKey;
     const facetValue = facetSelect && !facetSelect.classList.contains('hidden') ? facetSelect.value : '';
@@ -546,6 +596,8 @@ function renderPartModalList(){
             return brandSelected.some(b=> name.includes(b));
         });
     }
+    // Apply advanced numeric / option filters
+    list = list.filter(p=> applyAdvancedFilter(category, p));
     // (Đã xóa lọc giá tối đa)
     if(TABLE_CATS.has(category)){
         const s=ensureSortState(category);
@@ -672,6 +724,110 @@ function renderPartModalList(){
     // (Đã ước tính giá cho mọi sản phẩm => không cần ghi chú ẩn giá 0)
 }
 
+// ===== Advanced Filters =====
+function buildAdvancedFilters(category){
+    const wrap=document.getElementById('dynamic-filters');
+    if(!wrap) return;
+    wrap.innerHTML='';
+    const data = PART_LIBRARY[category]||[];
+    if(!data.length){ wrap.innerHTML=''; return; }
+    const add=(html)=>{ const div=document.createElement('div'); div.className='filter-group dyn'; div.innerHTML=html; wrap.appendChild(div); };
+    // Helper builds
+    const numberRange=(id,label,min,max,step=1)=>{
+        if(min===Infinity||max===-Infinity||min===max) return;
+        add(`<div class="fg-title">${label}</div><div class="range-line"><input type="number" id="af-${id}-min" class="af-num" placeholder="Min" value=""><span>→</span><input type="number" id="af-${id}-max" class="af-num" placeholder="Max" value=""></div>`);
+    };
+    const multiSelect=(id,label,values)=>{
+        if(!values.length) return;
+        add(`<div class="fg-title">${label}</div><div class="chk-col">${values.slice(0,30).map(v=>`<label class="chk"><input type="checkbox" data-af-multi="${id}" value="${v}"> <span>${v}</span></label>`).join('')}</div>`);
+    };
+    // Derive stats
+    const collect = (field)=> data.map(p=>p[field]).filter(v=> v!==undefined && v!==null && v!=='');
+    const numericStats=(field)=>{ const nums=collect(field).map(Number).filter(n=>!isNaN(n)); return {min:Math.min(...nums), max:Math.max(...nums)}; };
+    switch(category){
+        case 'cpu':{
+            multiSelect('socket','Socket', Array.from(new Set(collect('socket'))));
+            numberRange('cores','Số nhân', ...Object.values(numericStats('cores')) );
+            numberRange('tdp','TDP (W)', ...Object.values(numericStats('tdp')) );
+            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),100000 );
+            break; }
+        case 'gpu':{
+            numberRange('vram','VRAM (GB)', ...Object.values(numericStats('vram')) );
+            numberRange('power','Công suất (W)', ...Object.values(numericStats('power')) );
+            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),100000 );
+            break; }
+        case 'ram':{
+            numberRange('size','Dung lượng (GB)', ...Object.values(numericStats('size')) );
+            numberRange('speed','Tốc độ (MHz)', ...Object.values(numericStats('speed')) );
+            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),50000 );
+            break; }
+        case 'storage':{
+            multiSelect('type','Loại', Array.from(new Set(collect('type'))));
+            numberRange('size','Dung lượng (GB)', ...Object.values(numericStats('size')) );
+            numberRange('read','Đọc MB/s', ...Object.values(numericStats('read')) );
+            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),50000 );
+            break; }
+        case 'psu':{
+            numberRange('watt','Công suất (W)', ...Object.values(numericStats('watt')) );
+            multiSelect('efficiency','Chuẩn', Array.from(new Set(collect('efficiency'))));
+            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),50000 );
+            break; }
+        case 'monitor':{
+            numberRange('size','Kích thước (inch)', ...Object.values(numericStats('size')) );
+            numberRange('hz','Tần số (Hz)', ...Object.values(numericStats('hz')) );
+            multiSelect('res','Độ phân giải', Array.from(new Set(collect('res'))));
+            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),100000 );
+            break; }
+        default: {
+            // Generic price filter if variety
+            if(data.some(p=>p.price)) numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),50000 );
+        }
+    }
+    // Attach listeners for inputs
+    wrap.querySelectorAll('input').forEach(el=>{
+        el.addEventListener('input', debounce(()=> renderPartModalList(), 250));
+        el.addEventListener('change', ()=> renderPartModalList());
+    });
+}
+
+function getAdvancedFilterValues(category){
+    const wrap=document.getElementById('dynamic-filters');
+    if(!wrap) return {};
+    const vals={ multis:{} };
+    wrap.querySelectorAll('input[type="number"]').forEach(inp=>{
+        const id=inp.id.replace(/^af-/,'');
+        const [field,kind] = id.split('-').slice(0,2);
+        if(!vals[field]) vals[field]={};
+        const v=parseFloat(inp.value);
+        if(!isNaN(v)) vals[field][kind]=v;
+    });
+    wrap.querySelectorAll('input[data-af-multi]:checked').forEach(cb=>{
+        const f=cb.getAttribute('data-af-multi');
+        if(!vals.multis[f]) vals.multis[f]=[];
+        vals.multis[f].push(cb.value);
+    });
+    return vals;
+}
+
+function applyAdvancedFilter(category, p){
+    const vals=getAdvancedFilterValues(category);
+    // Range checks
+    for(const field in vals){
+        if(field==='multis') continue;
+        const cond=vals[field];
+        if(cond.min!==undefined && p[field]!==undefined && p[field] < cond.min) return false;
+        if(cond.max!==undefined && p[field]!==undefined && p[field] > cond.max) return false;
+    }
+    // Multi select
+    for(const f in vals.multis){
+        const arr=vals.multis[f];
+        if(arr.length && !arr.includes(String(p[f]))) return false;
+    }
+    return true;
+}
+
+function debounce(fn,delay){ let t; return function(){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,arguments),delay); }; }
+
 function selectPart(category,part){ state.selected[category]=part; renderSelected(category); recalcTotals(); updateSummary(); saveToLocal(); }
 function removePart(category){ delete state.selected[category]; renderSelected(category); recalcTotals(); updateSummary(); saveToLocal(); }
 function renderSelected(category){
@@ -688,12 +844,47 @@ function renderSelected(category){
     } else {
         cell.innerHTML=`<div class="selected-part"><div class="name">${part.name}</div><div class="meta">${buildMeta(part)}</div></div>`;
         priceCell.textContent=formatPrice(part.price);
-        actCell.innerHTML=`<button class="remove-part-btn" onclick="removePart('${category}')">×</button>`;
+        actCell.innerHTML=`<div class="row-actions"><button class="add-part-cart" title="Thêm vào giỏ" onclick="addSinglePart('${category}')"><i class="fa fa-cart-plus"></i></button><button class="remove-part-btn" title="Xóa linh kiện" onclick="removePart('${category}')">×</button></div>`;
     }
     // Update category list item visual state (without altering the count which reflects dataset size)
     const li=document.querySelector(`.builder-categories li[data-key="${category}"]`);
     if(li){ if(part) li.classList.add('has-selected'); else li.classList.remove('has-selected'); }
     updateCategoryCount(category);
+}
+
+// Thêm 1 linh kiện đơn lẻ vào giỏ hàng
+function addSinglePart(category){
+    const part=state.selected[category];
+    if(!part){ showNotification?.('Chưa chọn linh kiện','error'); return; }
+    let cart = JSON.parse(localStorage.getItem('cart')||'[]');
+    const price = part.price||0;
+    const idx = cart.findIndex(it=> it.id===part.id);
+    if(idx!==-1){
+        cart[idx].quantity = (cart[idx].quantity||1)+1;
+        if(cart[idx].price && !cart[idx].originalPrice){
+            // migrate legacy item to new schema
+            cart[idx].originalPrice = cart[idx].price;
+            cart[idx].salePrice = cart[idx].price;
+            cart[idx].discountPercent = 0;
+        }
+    } else {
+        cart.push({
+            id: part.id,
+            name: part.name,
+            originalPrice: price,
+            salePrice: price,
+            discountPercent: 0,
+            price: price, // giữ tương thích cũ
+            image: part.image||'Images/Logo.jpg',
+            quantity:1,
+            addedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    if(typeof refreshCartCache==='function') refreshCartCache();
+    if(typeof updateCartCount==='function') updateCartCount(); else scheduleCartCountRefresh();
+    showNotification?.(`Đã thêm \"${part.name}\" vào giỏ hàng!`,'success');
 }
 
 function recalcTotals(){ let total=0,power=0; Object.values(state.selected).forEach(p=>{ total+=p.price||0; power+=(p.tdp||p.power||0); }); state.total=total; state.power=power; document.getElementById('total-price').textContent=formatPrice(total); document.getElementById('total-power').textContent=power+'W'; compatibilityCheck(); }
@@ -772,6 +963,66 @@ async function initProcessed(){
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{ loadPagePart('HTML/Layout/resetheader.html','header-container', ()=>{ if(typeof initHeader==='function') initHeader(); }); loadPagePart('HTML/Layout/resetfooter.html','footer-container'); initProcessed(); });
+
+// ==== Thêm vào giỏ hàng từ trang Build PC ====
+function addCurrentSelectionToCart(options={bundle:false}){
+    const parts = Object.values(state.selected||{});
+    if(!parts.length){ showNotification?.('Chưa chọn linh kiện nào','error'); return; }
+    let cart = JSON.parse(localStorage.getItem('cart')||'[]');
+    const bundleId='build_'+Date.now();
+    parts.forEach(p=>{
+        const pid = options.bundle? (p.id+'__'+bundleId):p.id;
+        const price=p.price||0;
+        const idx=cart.findIndex(it=>it.id===pid);
+        if(idx!==-1){
+            cart[idx].quantity=(cart[idx].quantity||1)+1;
+            if(cart[idx].price && !cart[idx].originalPrice){
+                cart[idx].originalPrice=cart[idx].price;
+                cart[idx].salePrice=cart[idx].price;
+                cart[idx].discountPercent=0;
+            }
+        } else {
+            cart.push({
+                id:pid,
+                name:p.name,
+                originalPrice:price,
+                salePrice:price,
+                discountPercent:0,
+                price:price,
+                image:p.image||'Images/Logo.jpg',
+                quantity:1,
+                addedAt:new Date().toISOString(),
+                updatedAt:new Date().toISOString()
+            });
+        }
+    });
+    localStorage.setItem('cart', JSON.stringify(cart));
+    if(typeof refreshCartCache==='function') refreshCartCache();
+    if(typeof updateCartCount==='function') updateCartCount(); else scheduleCartCountRefresh();
+    showNotification?.(options.bundle? 'Đã thêm trọn bộ ('+parts.length+' sp) vào giỏ hàng':'Đã thêm '+parts.length+' linh kiện vào giỏ hàng');
+}
+
+// Trường hợp header/cart script load chậm -> thử cập nhật lại nhiều lần
+function scheduleCartCountRefresh(){
+    let attempts=0;
+    const max=10;
+    const timer=setInterval(()=>{
+        attempts++;
+        if(typeof updateCartCount==='function'){
+            updateCartCount();
+            clearInterval(timer);
+        } else if(attempts>=max){
+            clearInterval(timer);
+        }
+    },300);
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+    const btnAddParts = document.getElementById('add-selected-to-cart');
+    const btnAddBundle = document.getElementById('add-build-to-cart');
+    if(btnAddParts){ btnAddParts.addEventListener('click', ()=> addCurrentSelectionToCart({bundle:false})); }
+    if(btnAddBundle){ btnAddBundle.addEventListener('click', ()=> addCurrentSelectionToCart({bundle:true})); }
+});
 
 // ===== PCPartPicker List Import =====
 async function importPcPartPickerList(url){

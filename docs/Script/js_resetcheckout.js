@@ -482,6 +482,21 @@ function cleanupExpiredItems(expiryHours = 72) {
 }
 
 function renderCart() {
+    // Migration: chuẩn hoá item cũ (chỉ có price) sang schema mới (originalPrice/salePrice)
+    let raw = JSON.parse(localStorage.getItem('cart')||'[]');
+    let migrated=false;
+    raw.forEach(it=>{
+        if(it.price!==undefined && (it.salePrice===undefined || it.originalPrice===undefined)){
+            const p = parseInt(it.price)||0;
+            if(it.originalPrice===undefined) it.originalPrice=p;
+            if(it.salePrice===undefined) it.salePrice=p;
+            if(it.discountPercent===undefined) it.discountPercent=0;
+            migrated=true;
+        }
+    });
+    if(migrated){ localStorage.setItem('cart', JSON.stringify(raw)); }
+    // refresh cache so downstream uses normalized
+    cartCache = raw;
     const cartItemsContainer = document.getElementById('cart-items-container');
     const emptyCart = document.getElementById('empty-cart');
     const proceedButton = document.getElementById('proceed-to-step-2');
