@@ -1,3 +1,4 @@
+// ================= Hiệu ứng header khi scroll =================
 function initHeaderScrollEffect() {
     const header = document.querySelector('.cyber-header');
     if (!header) return;
@@ -20,6 +21,7 @@ function initBannerHeaderWrapper() {
     });
 }
 
+// ================= Giỏ hàng & đơn hàng =================
 function initCartCountEffect() {
     updateCartCount();
 }
@@ -33,6 +35,7 @@ function updateOrderCount() {
     }
 }
 
+// ================= Nền hexagon động =================
 function initHexagonBackground() {
     const hexContainer = document.querySelector('.hex-container');
     if (!hexContainer) return;
@@ -48,6 +51,7 @@ function initHexagonBackground() {
     }
 }
 
+// ================= Dropdown danh mục =================
 function initCategoryDropdown() {
     const categoryBtn = document.querySelector('.cyber-category-btn');
     const categoriesDropdown = document.querySelector('.cyber-categories-dropdown');
@@ -65,6 +69,7 @@ function initCategoryDropdown() {
     });
 }
 
+// ================= Responsive search =================
 function initResponsiveHandler() {
     const searchContainer = document.querySelector('.cyber-search');
     if (!searchContainer) return;
@@ -77,7 +82,7 @@ function initResponsiveHandler() {
     window.addEventListener('resize', updateLayout);
 }
 
-// ❌ Chỉ gắn click mở modal nếu chưa đăng nhập
+// ================= Modal login/register/forgot =================
 function initLoginModalTrigger() {
     const userName = localStorage.getItem('userName');
     if (userName) return; // đã đăng nhập → bỏ qua
@@ -120,9 +125,9 @@ function switchToLogin() { CyberModal.showLogin(); }
 function switchToForgot() { CyberModal.showForgot(); }
 function closeCyberModal() { CyberModal.close(); }
 
+// ================= User login state =================
 const API_BASE = window.API_BASE || "https://fn-web.onrender.com";
 
-// ====== Lấy thông tin user ======
 async function fetchUserInfo() {
     try {
         const res = await fetch(`${API_BASE}/api/me`, {
@@ -140,19 +145,19 @@ async function fetchUserInfo() {
     }
 }
 
-// ====== Cập nhật hiển thị tên và menu ======
+// ================= Update hiển thị user =================
 function updateUserDisplay() {
     const userName = localStorage.getItem('userName');
     let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
 
-    // 🚨 Xóa toàn bộ listener cũ bằng cách clone node
+    // 🚨 Reset event listener bằng cách clone node
     const newUserAction = userAction.cloneNode(false);
     userAction.parentNode.replaceChild(newUserAction, userAction);
     userAction = newUserAction;
 
     if (userName) {
-        // ✅ Nếu đã đăng nhập
+        // ✅ Đã login
         const shortName = userName.length > 12 ? userName.slice(0, 12) + "..." : userName;
         userAction.innerHTML = `
             <div class="user-menu">
@@ -172,17 +177,18 @@ function updateUserDisplay() {
         userMenu.addEventListener('mouseenter', () => userMenu.classList.add('show'));
         userMenu.addEventListener('mouseleave', () => userMenu.classList.remove('show'));
 
-        // ✅ Logout click → chỉ reload
+        // ✅ Logout
         document.getElementById("logoutBtn").addEventListener("click", async () => {
             await fetch(`${API_BASE}/api/logout`, {
                 method: "POST",
                 credentials: "include"
             });
             localStorage.removeItem("userName");
-            window.location.reload(); // 🔄 reload để reset giao diện
+            window.location.reload(); // 🔄 reload lại ngay
         });
+
     } else {
-        // ❌ Nếu chưa đăng nhập → giữ nguyên icon login
+        // ❌ Chưa login
         userAction.innerHTML = `
             <i class="bx bx-user-circle action-icon"></i>
             <div class="action-text">
@@ -190,22 +196,19 @@ function updateUserDisplay() {
                 <div style="font-size: 12px; font-weight: 600;">nhập</div>
             </div>
         `;
-
         userAction.addEventListener("click", () => {
-            if (typeof CyberModal !== "undefined") {
-                CyberModal.open();
-            }
+            if (typeof CyberModal !== "undefined") CyberModal.open();
         });
     }
 }
 
-// ✅ Khi trang load thì kiểm tra và cập nhật ngay
+// ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchUserInfo();
     updateUserDisplay();
 });
 
-// ✅ Hàm tổng chạy toàn bộ sau khi header đã load vào DOM
+// ================= Init toàn bộ header =================
 function initHeader() {
     initHeaderScrollEffect();
     initBannerHeaderWrapper();
@@ -214,6 +217,6 @@ function initHeader() {
     initHexagonBackground();
     initCategoryDropdown();
     initResponsiveHandler();
-    initLoginModalTrigger(); // sẽ không gắn nếu đã login
+    initLoginModalTrigger(); // chỉ chạy nếu chưa login
     updateUserDisplay();
 }

@@ -5,7 +5,7 @@ async function checkLoginStatus() {
     try {
         const res = await fetch(`${API_BASE}/api/me`, {
             method: "GET",
-            credentials: "include" // Gửi cookie
+            credentials: "include"
         });
         const data = await res.json();
         if (data.loggedIn) {
@@ -28,16 +28,14 @@ if (registerForm) {
         e.preventDefault();
         const email = e.target.querySelector('input[placeholder="Email"]').value.trim();
         const firstName = e.target.querySelector('input[placeholder="Họ"]').value.trim();
-        const lastName = e.target.querySelector('input[placeholder="Tên"]').value.trim();
-        const password = e.target.querySelector('input[placeholder="Mật khẩu"]').value.trim();
+        const lastName  = e.target.querySelector('input[placeholder="Tên"]').value.trim();
+        const password  = e.target.querySelector('input[placeholder="Mật khẩu"]').value.trim();
 
         let errorBox = document.getElementById("register-error");
         if (!errorBox) {
             errorBox = document.createElement("div");
             errorBox.id = "register-error";
-            errorBox.style.color = "red";
-            errorBox.style.fontSize = "12px";
-            errorBox.style.marginTop = "5px";
+            errorBox.className = "form-message";
             registerForm.appendChild(errorBox);
         }
         errorBox.textContent = "";
@@ -51,22 +49,20 @@ if (registerForm) {
             });
             const data = await res.json();
             if (data.success) {
-                errorBox.style.color = "green";
                 errorBox.textContent = "✅ Đăng ký thành công! Vui lòng đăng nhập.";
+                errorBox.classList.add("success");
                 setTimeout(() => {
-                    if (typeof CyberModal !== "undefined") {
-                        CyberModal.showLogin();
-                    }
-                    errorBox.style.color = "red";
+                    if (typeof CyberModal !== "undefined") CyberModal.showLogin();
                     errorBox.textContent = "";
-                }, 1500);
+                }, 1200);
             } else {
-                errorBox.style.color = "red";
                 errorBox.textContent = data.error || "❌ Đăng ký thất bại!";
+                errorBox.classList.add("error");
             }
         } catch (err) {
             console.error(err);
             errorBox.textContent = "❌ Lỗi kết nối server!";
+            errorBox.classList.add("error");
         }
     });
 }
@@ -83,9 +79,7 @@ if (loginForm) {
         if (!errorBox) {
             errorBox = document.createElement("div");
             errorBox.id = "login-error";
-            errorBox.style.color = "red";
-            errorBox.style.fontSize = "12px";
-            errorBox.style.marginTop = "5px";
+            errorBox.className = "form-message";
             loginForm.insertBefore(errorBox, loginForm.querySelector(".text-end"));
         }
         errorBox.textContent = "";
@@ -94,23 +88,23 @@ if (loginForm) {
             const res = await fetch(`${API_BASE}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: "include", // Nhận cookie session
+                credentials: "include",
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
-
             if (data.success) {
                 localStorage.setItem("userName", data.user.lastName.trim());
-                if (typeof CyberModal !== "undefined") {
-                    CyberModal.close();
-                }
+                if (typeof CyberModal !== "undefined") CyberModal.close();
+                // 🔄 Reload ngay để mọi thứ đồng bộ
                 window.location.reload();
             } else {
                 errorBox.textContent = data.error || "Sai email hoặc mật khẩu!";
+                errorBox.classList.add("error");
             }
         } catch (err) {
             console.error(err);
             errorBox.textContent = "❌ Lỗi kết nối server!";
+            errorBox.classList.add("error");
         }
     });
 }
