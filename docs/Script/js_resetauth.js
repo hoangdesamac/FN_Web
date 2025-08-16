@@ -92,11 +92,32 @@ if (loginForm) {
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
+
             if (data.success) {
                 localStorage.setItem("userName", data.user.lastName.trim());
                 if (typeof CyberModal !== "undefined") CyberModal.close();
-                // 🔄 Reload ngay để mọi thứ đồng bộ
-                window.location.reload();
+
+                // ✅ Đợi cookie set xong, confirm login trước khi reload
+                setTimeout(async () => {
+                    try {
+                        const check = await fetch(`${API_BASE}/api/me`, {
+                            method: "GET",
+                            credentials: "include"
+                        });
+                        const me = await check.json();
+                        if (me.loggedIn) {
+                            window.location.reload();
+                        } else {
+                            errorBox.textContent = "❌ Không xác thực được phiên đăng nhập!";
+                            errorBox.classList.add("error");
+                        }
+                    } catch (err) {
+                        console.error("Lỗi xác thực sau login:", err);
+                        errorBox.textContent = "❌ Lỗi xác thực sau login!";
+                        errorBox.classList.add("error");
+                    }
+                }, 300);
+
             } else {
                 errorBox.textContent = data.error || "Sai email hoặc mật khẩu!";
                 errorBox.classList.add("error");
