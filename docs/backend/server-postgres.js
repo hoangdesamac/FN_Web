@@ -182,7 +182,7 @@ app.post('/api/logout', (_req, res) => {
 app.get('/api/test-email', async (req, res) => {
     try {
         await sendMail(
-            "test@example.com",
+            "dqdbs06@gmail.com",
             "Test SendGrid từ 3TDShop",
             "<h1>Xin chào!</h1><p>Đây là email test gửi từ server 3TDShop.</p>"
         );
