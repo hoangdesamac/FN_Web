@@ -6,18 +6,19 @@ const cookieParser = require('cookie-parser');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const sgMail = require('@sendgrid/mail'); // ✅ Thêm SendGrid
 
 const app = express();
 
-// Nếu deploy sau proxy (Render/NGINX), nên bật để cookie secure hoạt động mượt
+// ===== Trust Proxy =====
+// Nếu deploy qua proxy (Render/NGINX), cần bật để cookie secure hoạt động đúng
 app.set('trust proxy', 1);
 
 app.use(express.json());
 app.use(cookieParser());
 
-// ===== CORS (rất quan trọng cho cookie cross-site) =====
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'https://3tdshop.id.vn';
-
+// ===== CORS =====
+const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'https://3tdshop.id.vn';
 const corsOptions = {
     origin: FRONTEND_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -25,8 +26,7 @@ const corsOptions = {
     credentials: true
 };
 app.use(cors(corsOptions));
-// Preflight
-app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions)); // Preflight
 
 // ===== PostgreSQL (Render) =====
 const pool = new Pool({
@@ -42,14 +42,31 @@ const pool = new Pool({
 const COOKIE_NAME = 'authToken';
 const COOKIE_OPTS = {
     httpOnly: true,
-    secure: true,       // bắt buộc khi dùng HTTPS + cross-site
-    sameSite: 'None',   // cho phép gửi cookie cross-site
+    secure: true,       // bắt buộc nếu dùng HTTPS
+    sameSite: 'None',
     path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 ngày
 };
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
-// ====== Health / Debug ======
+// ===== SendGrid =====
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+async function sendMail(to, subject, htmlContent) {
+    try {
+        const msg = {
+            to,
+            from: process.env.SMTP_FROM, // "3TDShop <email@domain.com>"
+            subject,
+            html: htmlContent
+        };
+        await sgMail.send(msg);
+        console.log("✅ Email đã gửi:", subject, "->", to);
+    } catch (err) {
+        console.error("❌ Lỗi gửi email:", err.response?.body || err.message);
+    }
+}
+
+// ===== Debug / Health =====
 app.get('/api/test-db', async (_req, res) => {
     try {
         const result = await pool.query('SELECT NOW() AS current_time');
@@ -64,7 +81,7 @@ app.get('/api/debug-cookie', (req, res) => {
     res.json({ cookies: req.cookies || {} });
 });
 
-// ====== Auth APIs ======
+// ===== Auth APIs =====
 
 // Đăng ký
 app.post('/api/register', async (req, res) => {
@@ -82,8 +99,8 @@ app.post('/api/register', async (req, res) => {
 
         const hash = await bcrypt.hash(password, 10);
         const q = `INSERT INTO users (email, first_name, last_name, password_hash)
-               VALUES ($1,$2,$3,$4)
-               RETURNING id, email, first_name, last_name, created_at`;
+                   VALUES ($1,$2,$3,$4)
+                   RETURNING id, email, first_name, last_name, created_at`;
         const { rows } = await pool.query(q, [email, firstName, lastName, hash]);
 
         res.json({
@@ -127,7 +144,6 @@ app.post('/api/login', async (req, res) => {
 
         res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
 
-        // 🔴 Quan trọng: trả về user để frontend dùng ngay (tránh lỗi data.user undefined)
         res.json({
             success: true,
             message: 'Đăng nhập thành công',
@@ -160,6 +176,20 @@ app.get('/api/me', (req, res) => {
 app.post('/api/logout', (_req, res) => {
     res.clearCookie(COOKIE_NAME, COOKIE_OPTS);
     res.json({ success: true });
+});
+
+// ===== Test gửi email (dùng tạm để check SendGrid) =====
+app.get('/api/test-email', async (req, res) => {
+    try {
+        await sendMail(
+            "test@example.com",
+            "Test SendGrid từ 3TDShop",
+            "<h1>Xin chào!</h1><p>Đây là email test gửi từ server 3TDShop.</p>"
+        );
+        res.json({ success: true, message: "Đã gửi email test!" });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
 // ===== Start =====
