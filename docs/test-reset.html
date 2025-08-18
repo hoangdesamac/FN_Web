@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Reset Password</title>
+</head>
+<body>
+<h2>🔑 Test Reset Password</h2>
+<form id="resetForm">
+    <label>Token: <input type="text" id="token" required></label><br><br>
+    <label>Mật khẩu mới: <input type="password" id="newPassword" required></label><br><br>
+    <button type="submit">Gửi</button>
+</form>
+
+<pre id="result"></pre>
+
+<script>
+    const API_BASE = "https://fn-web.onrender.com";
+
+    document.getElementById("resetForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const token = document.getElementById("token").value.trim();
+        const newPassword = document.getElementById("newPassword").value.trim();
+
+        try {
+            const res = await fetch(`${API_BASE}/api/reset-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token, newPassword })
+            });
+
+            const data = await res.json();
+            document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+        } catch (err) {
+            document.getElementById("result").textContent = "❌ Lỗi: " + err.message;
+        }
+    });
+</script>
+</body>
+</html>
