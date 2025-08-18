@@ -83,16 +83,6 @@ function initResponsiveHandler() {
 }
 
 // ================= Modal login/register/forgot =================
-function initLoginModalTrigger() {
-    const userName = localStorage.getItem('userName');
-    if (userName) return; // đã đăng nhập → bỏ qua
-
-    const loginAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
-    if (loginAction) {
-        loginAction.addEventListener('click', () => CyberModal.open());
-    }
-}
-
 const CyberModal = {
     open() {
         document.getElementById("cyber-auth-modal").style.display = "flex";
@@ -151,8 +141,9 @@ function updateUserDisplay() {
     let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
 
-    // 🚨 Reset event listener bằng cách clone node
+    // Giữ nguyên class cũ khi clone
     const newUserAction = userAction.cloneNode(false);
+    newUserAction.className = userAction.className;
     userAction.parentNode.replaceChild(newUserAction, userAction);
     userAction = newUserAction;
 
@@ -184,7 +175,7 @@ function updateUserDisplay() {
                 credentials: "include"
             });
             localStorage.removeItem("userName");
-            window.location.reload(); // 🔄 reload lại ngay
+            window.location.reload();
         });
 
     } else {
@@ -196,9 +187,7 @@ function updateUserDisplay() {
                 <div style="font-size: 12px; font-weight: 600;">nhập</div>
             </div>
         `;
-        userAction.addEventListener("click", () => {
-            if (typeof CyberModal !== "undefined") CyberModal.open();
-        });
+        userAction.addEventListener("click", () => CyberModal.open());
     }
 }
 
@@ -217,6 +206,4 @@ function initHeader() {
     initHexagonBackground();
     initCategoryDropdown();
     initResponsiveHandler();
-    initLoginModalTrigger(); // chỉ chạy nếu chưa login
-    updateUserDisplay();
 }

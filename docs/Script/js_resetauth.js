@@ -1,6 +1,16 @@
 window.API_BASE = "https://fn-web.onrender.com"; // Backend
 
-// ====== Hàm kiểm tra trạng thái đăng nhập ======
+// ==================== HÀM HỖ TRỢ ====================
+// Hiển thị lỗi hoặc thông báo
+function showMessage(elementId, message, type = "error") {
+    const box = document.getElementById(elementId);
+    if (box) {
+        box.textContent = message;
+        box.className = type === "success" ? "form-message success" : "form-message error";
+    }
+}
+
+// ==================== KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP ====================
 async function checkLoginStatus() {
     try {
         const res = await fetch(`${API_BASE}/api/me`, {
@@ -21,101 +31,105 @@ async function checkLoginStatus() {
     }
 }
 
-// ========== Đăng ký ==========
-const registerForm = document.querySelector('#auth-register form');
+// ==================== ĐĂNG KÝ ====================
+const registerForm = document.getElementById("registerForm");
 if (registerForm) {
-    registerForm.addEventListener('submit', async (e) => {
+    registerForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const email = e.target.querySelector('input[placeholder="Email"]').value.trim();
-        const firstName = e.target.querySelector('input[placeholder="Họ"]').value.trim();
-        const lastName  = e.target.querySelector('input[placeholder="Tên"]').value.trim();
-        const password  = e.target.querySelector('input[placeholder="Mật khẩu"]').value.trim();
+        const email = document.getElementById("register-email").value.trim();
+        const firstName = document.getElementById("register-firstname").value.trim();
+        const lastName  = document.getElementById("register-lastname").value.trim();
+        const password  = document.getElementById("register-password").value.trim();
 
-        let errorBox = document.getElementById("register-error");
-        if (!errorBox) {
-            errorBox = document.createElement("div");
-            errorBox.id = "register-error";
-            errorBox.className = "form-message";
-            registerForm.appendChild(errorBox);
-        }
-        errorBox.textContent = "";
+        showMessage("register-error", "");
 
         try {
             const res = await fetch(`${API_BASE}/api/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 credentials: "include",
                 body: JSON.stringify({ email, firstName, lastName, password })
             });
             const data = await res.json();
             if (data.success) {
-                errorBox.textContent = "✅ Đăng ký thành công! Vui lòng đăng nhập.";
-                errorBox.classList.add("success");
+                showMessage("register-error", "✅ Đăng ký thành công! Vui lòng đăng nhập.", "success");
                 setTimeout(() => {
                     if (typeof CyberModal !== "undefined") CyberModal.showLogin();
-                    errorBox.textContent = "";
-                }, 1200);
+                    showMessage("register-error", "");
+                }, 1500);
             } else {
-                errorBox.textContent = data.error || "❌ Đăng ký thất bại!";
-                errorBox.classList.add("error");
+                showMessage("register-error", data.error || "❌ Đăng ký thất bại!");
             }
         } catch (err) {
             console.error(err);
-            errorBox.textContent = "❌ Lỗi kết nối server!";
-            errorBox.classList.add("error");
+            showMessage("register-error", "❌ Lỗi kết nối server!");
         }
     });
 }
 
-// ========== Đăng nhập ==========
-const loginForm = document.querySelector('#auth-login form');
+// ==================== ĐĂNG NHẬP ====================
+const loginForm = document.getElementById("loginForm");
 if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
+    loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const email = e.target.querySelector('input[placeholder="Email"]').value.trim();
-        const password = e.target.querySelector('input[placeholder="Mật khẩu"]').value.trim();
+        const email = document.getElementById("login-email").value.trim();
+        const password = document.getElementById("login-password").value.trim();
 
-        let errorBox = document.getElementById("login-error");
-        if (!errorBox) {
-            errorBox = document.createElement("div");
-            errorBox.id = "login-error";
-            errorBox.className = "form-message";
-            loginForm.insertBefore(errorBox, loginForm.querySelector(".text-end"));
-        }
-        errorBox.textContent = "";
+        showMessage("login-error", "");
 
         try {
             const res = await fetch(`${API_BASE}/api/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: "include", // để lưu cookie session
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
 
             if (data.success) {
-                // ✅ Lưu tên nếu có
                 if (data.user && data.user.lastName) {
                     localStorage.setItem("userName", data.user.lastName.trim());
                 }
-
-                // ✅ Đóng modal
                 if (typeof CyberModal !== "undefined") CyberModal.close();
-
-                // ✅ Reload ngay lập tức
-                window.location.reload();
-
+                window.location.reload(); // reload lại để cập nhật UI
             } else {
-                errorBox.textContent = data.error || "Sai email hoặc mật khẩu!";
-                errorBox.classList.add("error");
+                showMessage("login-error", data.error || "❌ Sai email hoặc mật khẩu!");
             }
         } catch (err) {
             console.error(err);
-            errorBox.textContent = "❌ Lỗi kết nối server!";
-            errorBox.classList.add("error");
+            showMessage("login-error", "❌ Lỗi kết nối server!");
         }
     });
 }
 
-// ✅ Kiểm tra khi load trang
+// ==================== QUÊN MẬT KHẨU ====================
+const forgotForm = document.getElementById("forgotForm");
+if (forgotForm) {
+    forgotForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("forgot-email").value.trim();
+
+        showMessage("forgot-error", "");
+
+        try {
+            const res = await fetch(`${API_BASE}/api/forgot-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                showMessage("forgot-error", "✅ Vui lòng kiểm tra email để đặt lại mật khẩu!", "success");
+            } else {
+                showMessage("forgot-error", data.error || "❌ Không thể gửi yêu cầu!");
+            }
+        } catch (err) {
+            console.error(err);
+            showMessage("forgot-error", "❌ Lỗi kết nối server!");
+        }
+    });
+}
+
+// ==================== AUTO CHECK LOGIN ====================
 document.addEventListener("DOMContentLoaded", checkLoginStatus);
