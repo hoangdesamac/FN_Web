@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Forgot Password</title>
+</head>
+<body>
+<h2>Forgot Password Test</h2>
+<form id="forgotForm">
+    <input type="email" id="email" placeholder="Nhập email đã đăng ký" required>
+    <button type="submit">Gửi yêu cầu</button>
+</form>
+
+<p id="result"></p>
+
+<script>
+    const API_BASE = "https://fn-web.onrender.com"; // server backend của bạn
+
+    document.getElementById("forgotForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value.trim();
+        const resultBox = document.getElementById("result");
+        resultBox.textContent = "⏳ Đang gửi yêu cầu...";
+
+        try {
+            const res = await fetch(`${API_BASE}/api/forgot-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            if (data.success) {
+                resultBox.textContent = "✅ " + data.message;
+            } else {
+                resultBox.textContent = "❌ " + (data.error || "Có lỗi xảy ra!");
+            }
+        } catch (err) {
+            console.error(err);
+            resultBox.textContent = "❌ Lỗi kết nối server!";
+        }
+    });
+</script>
+</body>
+</html>
