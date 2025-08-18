@@ -181,5 +181,39 @@ function positionChatLaunch(){
 window.addEventListener('resize', positionChatLaunch);
 document.addEventListener('DOMContentLoaded', positionChatLaunch);
 </script>
+<div id="webchat-container" style="position: relative; width: 100%; height: 100%;">
+  
+    
+    <script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/08/17/15/20250817153751-NPWG92P6.js" defer></script>
+    
+  <script>
+    window.botpress.on('webchat:initialized', () => {
+      window.botpress.open()
+    })
+
+    // Paste your Webchat config snippet here
+  </script>
+  <style>
+    #webchat-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .bpFab {
+      display: flex;
+    }
+    .bpWebchat {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100% !important;
+    }
+  </style>
+</div>
 </body>
 </html>
