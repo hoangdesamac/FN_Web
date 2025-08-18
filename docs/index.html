@@ -54,8 +54,18 @@
             const script = document.createElement('script');
             script.src = "Script/js_resetauth.js";
             script.defer = true;
+            script.onload = () => {
+                // 🔥 Sau khi auth.js đã load, kiểm tra flag mở modal
+                if (localStorage.getItem("showLoginAfterReset") === "true") {
+                    localStorage.removeItem("showLoginAfterReset");
+                    if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+                        CyberModal.open();
+                    }
+                }
+            };
             document.body.appendChild(script);
         });
+
 
         loadSection("HTML/Layout/resetmaincontent.html", "#maincontent-container", function() {
             initializeCartSystem(); // Gọi lại để gắn sự kiện cho nút "Mua ngay"
