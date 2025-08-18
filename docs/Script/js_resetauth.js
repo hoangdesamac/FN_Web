@@ -131,5 +131,22 @@ if (forgotForm) {
     });
 }
 
-// ==================== AUTO CHECK LOGIN ====================
-document.addEventListener("DOMContentLoaded", checkLoginStatus);
+// ==================== AUTO CHECK LOGIN + TỰ MỞ MODAL SAU RESET ====================
+document.addEventListener("DOMContentLoaded", () => {
+    checkLoginStatus();
+
+    // ✅ Nếu vừa reset mật khẩu xong → tự mở modal đăng nhập
+    if (localStorage.getItem("showLoginAfterReset") === "true") {
+        localStorage.removeItem("showLoginAfterReset");
+
+        const openLoginModal = () => {
+            if (typeof CyberModal !== "undefined" && typeof CyberModal.showLogin === "function") {
+                CyberModal.showLogin();
+            } else {
+                // nếu header/modal chưa sẵn sàng, thử lại một nhịp
+                setTimeout(openLoginModal, 200);
+            }
+        };
+        openLoginModal();
+    }
+});
