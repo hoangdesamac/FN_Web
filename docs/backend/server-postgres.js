@@ -1,4 +1,3 @@
-// server.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -6,12 +5,12 @@ const cookieParser = require('cookie-parser');
 const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const sgMail = require('@sendgrid/mail'); // ✅ Thêm SendGrid
+const sgMail = require('@sendgrid/mail');
+const crypto = require('crypto');
 
 const app = express();
 
 // ===== Trust Proxy =====
-// Nếu deploy qua proxy (Render/NGINX), cần bật để cookie secure hoạt động đúng
 app.set('trust proxy', 1);
 
 app.use(express.json());
@@ -26,15 +25,15 @@ const corsOptions = {
     credentials: true
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Preflight
+app.options('*', cors(corsOptions));
 
 // ===== PostgreSQL (Render) =====
 const pool = new Pool({
-    host: process.env.PGHOST || "dpg-d2fei03e5dus73aku96g-a.oregon-postgres.render.com",
+    host: process.env.PGHOST,
     port: +(process.env.PGPORT || 5432),
-    database: process.env.PGDATABASE || "bwdchampion",
-    user: process.env.PGUSER || "bwduser",
-    password: process.env.PGPASSWORD || "2Z7DtU7YpoTLUs0mONQeogFHAUelVDNj",
+    database: process.env.PGDATABASE,
+    user: process.env.PGUSER,
+    password: process.env.PGPASSWORD,
     ssl: { rejectUnauthorized: false }
 });
 
@@ -42,7 +41,7 @@ const pool = new Pool({
 const COOKIE_NAME = 'authToken';
 const COOKIE_OPTS = {
     httpOnly: true,
-    secure: true,       // bắt buộc nếu dùng HTTPS
+    secure: true,
     sameSite: 'None',
     path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 ngày
@@ -55,7 +54,7 @@ async function sendMail(to, subject, htmlContent) {
     try {
         const msg = {
             to,
-            from: process.env.SMTP_FROM, // "3TDShop <email@domain.com>"
+            from: process.env.SMTP_FROM,
             subject,
             html: htmlContent
         };
@@ -63,6 +62,7 @@ async function sendMail(to, subject, htmlContent) {
         console.log("✅ Email đã gửi:", subject, "->", to);
     } catch (err) {
         console.error("❌ Lỗi gửi email:", err.response?.body || err.message);
+        throw err;
     }
 }
 
@@ -178,7 +178,79 @@ app.post('/api/logout', (_req, res) => {
     res.json({ success: true });
 });
 
-// ===== Test gửi email (dùng tạm để check SendGrid) =====
+// ===== Quên mật khẩu =====
+app.post('/api/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ success: false, error: "Thiếu email" });
+
+        const { rows } = await pool.query('SELECT id, email FROM users WHERE email = $1', [email]);
+        if (!rows.length) {
+            return res.json({ success: true, message: "Nếu email tồn tại, bạn sẽ nhận được link reset." });
+        }
+
+        const user = rows[0];
+        const token = crypto.randomBytes(32).toString("hex");
+        const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 phút
+
+        await pool.query(
+            `INSERT INTO reset_tokens (user_id, token, expires_at) VALUES ($1,$2,$3)`,
+            [user.id, token, expiresAt]
+        );
+
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+        await sendMail(
+            user.email,
+            "Đặt lại mật khẩu - 3TDShop",
+            `<p>Xin chào,</p>
+             <p>Bạn đã yêu cầu đặt lại mật khẩu. Nhấn vào link dưới đây để đặt lại:</p>
+             <a href="${resetLink}">${resetLink}</a>
+             <p>Link có hiệu lực trong 30 phút.</p>`
+        );
+
+        res.json({ success: true, message: "Nếu email tồn tại, link reset đã được gửi." });
+
+    } catch (err) {
+        console.error("Lỗi forgot-password:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
+// ===== Đặt lại mật khẩu =====
+app.post('/api/reset-password', async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        if (!token || !newPassword) {
+            return res.status(400).json({ success: false, error: "Thiếu dữ liệu" });
+        }
+
+        const { rows } = await pool.query(
+            `SELECT * FROM reset_tokens WHERE token = $1 AND expires_at > NOW()`,
+            [token]
+        );
+        if (!rows.length) {
+            return res.status(400).json({ success: false, error: "Token không hợp lệ hoặc đã hết hạn" });
+        }
+
+        const reset = rows[0];
+        const hash = await bcrypt.hash(newPassword, 10);
+
+        await pool.query(
+            `UPDATE users SET password_hash = $1 WHERE id = $2`,
+            [hash, reset.user_id]
+        );
+
+        await pool.query(`DELETE FROM reset_tokens WHERE token = $1`, [token]);
+
+        res.json({ success: true, message: "Mật khẩu đã được cập nhật!" });
+
+    } catch (err) {
+        console.error("Lỗi reset-password:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
+// ===== Test gửi email =====
 app.get('/api/test-email', async (req, res) => {
     try {
         await sendMail(
