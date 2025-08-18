@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '/etc/secrets/.env' });
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
