@@ -198,7 +198,7 @@ app.post('/api/forgot-password', async (req, res) => {
             [user.id, token, expiresAt]
         );
 
-        const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+        const resetLink = `${process.env.FRONTEND_URL}/resetpassword.html?token=${token}`;
         await sendMail(
             user.email,
             "Đặt lại mật khẩu - 3TDShop",
