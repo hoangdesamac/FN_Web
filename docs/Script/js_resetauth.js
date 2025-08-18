@@ -140,13 +140,13 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("showLoginAfterReset");
 
         const openLoginModal = () => {
-            if (typeof CyberModal !== "undefined" && typeof CyberModal.showLogin === "function") {
-                CyberModal.showLogin();
+            if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+                CyberModal.open(); // ✅ mở modal + show login luôn
             } else {
-                // nếu header/modal chưa sẵn sàng, thử lại một nhịp
                 setTimeout(openLoginModal, 200);
             }
         };
         openLoginModal();
     }
 });
+
