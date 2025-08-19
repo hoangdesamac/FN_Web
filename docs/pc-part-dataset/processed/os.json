@@ -1,1 +1,167 @@
-[{"id":"os_microsoft_windows_11_home_oem_dvd_64_bit","name":"Microsoft Windows 11 Home OEM - DVD 64-bit","originalPriceUSD":109.99,"price":2199800,"_pricing":{"usd":109.99,"rate":25000,"discount":0.2,"baseVnd":2749750,"finalVnd":2199800}},{"id":"os_microsoft_windows_11_pro_oem_dvd_64_bit","name":"Microsoft Windows 11 Pro OEM - DVD 64-bit","originalPriceUSD":146.18,"price":2923600,"_pricing":{"usd":146.18,"rate":25000,"discount":0.2,"baseVnd":3654500,"finalVnd":2923600}},{"id":"os_microsoft_windows_11_home_retail_usb_64_bit","name":"Microsoft Windows 11 Home Retail - USB 64-bit","originalPriceUSD":134.99,"price":2699800,"_pricing":{"usd":134.99,"rate":25000,"discount":0.2,"baseVnd":3374750,"finalVnd":2699800}},{"id":"os_microsoft_windows_11_pro_retail_download_64_bit","name":"Microsoft Windows 11 Pro Retail - Download 64-bit","originalPriceUSD":189.99,"price":3799800,"_pricing":{"usd":189.99,"rate":25000,"discount":0.2,"baseVnd":4749750,"finalVnd":3799800}},{"id":"os_microsoft_windows_11_home_retail_download_64_bit","name":"Microsoft Windows 11 Home Retail - Download 64-bit","originalPriceUSD":138.99,"price":2779800,"_pricing":{"usd":138.99,"rate":25000,"discount":0.2,"baseVnd":3474750,"finalVnd":2779800}},{"id":"os_microsoft_windows_11_pro_retail_usb_64_bit","name":"Microsoft Windows 11 Pro Retail - USB 64-bit","originalPriceUSD":198.99,"price":3979800,"_pricing":{"usd":198.99,"rate":25000,"discount":0.2,"baseVnd":4974750,"finalVnd":3979800}},{"id":"os_microsoft_windows_10_home_oem_dvd_64_bit","name":"Microsoft Windows 10 Home OEM - DVD 64-bit","price":2999800,"_estimated":true},{"id":"os_microsoft_windows_10_pro_retail_usb_32_64_bit","name":"Microsoft Windows 10 Pro Retail - USB 32/64-bit","price":2999800,"_estimated":true},{"id":"os_microsoft_windows_10_home_retail_usb_32_64_bit","name":"Microsoft Windows 10 Home Retail - USB 32/64-bit","originalPriceUSD":229.99,"price":4599800,"_pricing":{"usd":229.99,"rate":25000,"discount":0.2,"baseVnd":5749750,"finalVnd":4599800}},{"id":"os_microsoft_windows_10_pro_oem_dvd_64_bit","name":"Microsoft Windows 10 Pro OEM - DVD 64-bit","originalPriceUSD":149.99,"price":2999800,"_pricing":{"usd":149.99,"rate":25000,"discount":0.2,"baseVnd":3749750,"finalVnd":2999800}},{"id":"os_microsoft_windows_10_home_retail_download_32_64_bit","name":"Microsoft Windows 10 Home Retail - Download 32/64-bit","price":2999800,"_estimated":true},{"id":"os_microsoft_windows_10_pro_retail_download_32_64_bit","name":"Microsoft Windows 10 Pro Retail - Download 32/64-bit","price":2999800,"_estimated":true},{"id":"os_microsoft_windows_10_home_oem_dvd_32_bit","name":"Microsoft Windows 10 Home OEM - DVD 32-bit","originalPriceUSD":143.46,"price":2869200,"_pricing":{"usd":143.46,"rate":25000,"discount":0.2,"baseVnd":3586500,"finalVnd":2869200}},{"id":"os_microsoft_windows_10_pro_oem_dvd_32_bit","name":"Microsoft Windows 10 Pro OEM - DVD 32-bit","price":2999800,"_estimated":true},{"id":"os_microsoft_windows_10_pro_french_cdn_retail_dvd_64_bit","name":"Microsoft Windows 10 Pro French CDN - Retail - DVD 64-bit","price":2999800,"_estimated":true},{"id":"os_microsoft_windows_10_home_french_usb_32_64_bit","name":"Microsoft Windows 10 Home French - USB 32/64-bit","price":2999800,"_estimated":true},{"id":"os_microsoft_windows_10_home_french_oem_dvd_64_bit","name":"Microsoft Windows 10 Home French OEM - DVD 64-bit","price":2999800,"_estimated":true}]
+[
+    {
+        "id": "os_microsoft_windows_11_home_oem_dvd_64_bit",
+        "name": "Microsoft Windows 11 Home OEM - DVD 64-bit",
+        "originalPriceUSD": 109.99,
+        "price": 2199800,
+        "_pricing": {
+            "usd": 109.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2749750,
+            "finalVnd": 2199800
+        }
+    },
+    {
+        "id": "os_microsoft_windows_11_pro_oem_dvd_64_bit",
+        "name": "Microsoft Windows 11 Pro OEM - DVD 64-bit",
+        "originalPriceUSD": 146.18,
+        "price": 2923600,
+        "_pricing": {
+            "usd": 146.18,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3654500,
+            "finalVnd": 2923600
+        }
+    },
+    {
+        "id": "os_microsoft_windows_11_home_retail_usb_64_bit",
+        "name": "Microsoft Windows 11 Home Retail - USB 64-bit",
+        "originalPriceUSD": 134.99,
+        "price": 2699800,
+        "_pricing": {
+            "usd": 134.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3374750,
+            "finalVnd": 2699800
+        }
+    },
+    {
+        "id": "os_microsoft_windows_11_pro_retail_download_64_bit",
+        "name": "Microsoft Windows 11 Pro Retail - Download 64-bit",
+        "originalPriceUSD": 189.99,
+        "price": 3799800,
+        "_pricing": {
+            "usd": 189.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 4749750,
+            "finalVnd": 3799800
+        }
+    },
+    {
+        "id": "os_microsoft_windows_11_home_retail_download_64_bit",
+        "name": "Microsoft Windows 11 Home Retail - Download 64-bit",
+        "originalPriceUSD": 138.99,
+        "price": 2779800,
+        "_pricing": {
+            "usd": 138.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3474750,
+            "finalVnd": 2779800
+        }
+    },
+    {
+        "id": "os_microsoft_windows_11_pro_retail_usb_64_bit",
+        "name": "Microsoft Windows 11 Pro Retail - USB 64-bit",
+        "originalPriceUSD": 198.99,
+        "price": 3979800,
+        "_pricing": {
+            "usd": 198.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 4974750,
+            "finalVnd": 3979800
+        }
+    },
+    {
+        "id": "os_microsoft_windows_10_home_oem_dvd_64_bit",
+        "name": "Microsoft Windows 10 Home OEM - DVD 64-bit",
+        "price": 2999800,
+        "_estimated": true
+    },
+    {
+        "id": "os_microsoft_windows_10_pro_retail_usb_32_64_bit",
+        "name": "Microsoft Windows 10 Pro Retail - USB 32/64-bit",
+        "price": 2999800,
+        "_estimated": true
+    },
+    {
+        "id": "os_microsoft_windows_10_home_retail_usb_32_64_bit",
+        "name": "Microsoft Windows 10 Home Retail - USB 32/64-bit",
+        "originalPriceUSD": 229.99,
+        "price": 4599800,
+        "_pricing": {
+            "usd": 229.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 5749750,
+            "finalVnd": 4599800
+        }
+    },
+    {
+        "id": "os_microsoft_windows_10_pro_oem_dvd_64_bit",
+        "name": "Microsoft Windows 10 Pro OEM - DVD 64-bit",
+        "originalPriceUSD": 149.99,
+        "price": 2999800,
+        "_pricing": {
+            "usd": 149.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3749750,
+            "finalVnd": 2999800
+        }
+    },
+    {
+        "id": "os_microsoft_windows_10_home_retail_download_32_64_bit",
+        "name": "Microsoft Windows 10 Home Retail - Download 32/64-bit",
+        "price": 2999800,
+        "_estimated": true
+    },
+    {
+        "id": "os_microsoft_windows_10_pro_retail_download_32_64_bit",
+        "name": "Microsoft Windows 10 Pro Retail - Download 32/64-bit",
+        "price": 2999800,
+        "_estimated": true
+    },
+    {
+        "id": "os_microsoft_windows_10_home_oem_dvd_32_bit",
+        "name": "Microsoft Windows 10 Home OEM - DVD 32-bit",
+        "originalPriceUSD": 143.46,
+        "price": 2869200,
+        "_pricing": {
+            "usd": 143.46,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3586500,
+            "finalVnd": 2869200
+        }
+    },
+    {
+        "id": "os_microsoft_windows_10_pro_oem_dvd_32_bit",
+        "name": "Microsoft Windows 10 Pro OEM - DVD 32-bit",
+        "price": 2999800,
+        "_estimated": true
+    },
+    {
+        "id": "os_microsoft_windows_10_pro_french_cdn_retail_dvd_64_bit",
+        "name": "Microsoft Windows 10 Pro French CDN - Retail - DVD 64-bit",
+        "price": 2999800,
+        "_estimated": true
+    },
+    {
+        "id": "os_microsoft_windows_10_home_french_usb_32_64_bit",
+        "name": "Microsoft Windows 10 Home French - USB 32/64-bit",
+        "price": 2999800,
+        "_estimated": true
+    },
+    {
+        "id": "os_microsoft_windows_10_home_french_oem_dvd_64_bit",
+        "name": "Microsoft Windows 10 Home French OEM - DVD 64-bit",
+        "price": 2999800,
+        "_estimated": true
+    }
+]

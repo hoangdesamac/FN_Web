@@ -224,7 +224,7 @@ function showNotification(message, type = 'success') {
     if (type === 'success' && message.includes('Đã thêm')) {
         actionButton = `
             <div class="notification-actions">
-                <a href="../HTML/Layout/cart.html" class="view-cart-btn">Xem giỏ hàng</a>
+                <a href="resetcheckout.html" class="view-cart-btn">Xem giỏ hàng</a>
                 <button class="continue-btn" onclick="hideNotification()">
                     Tiếp tục mua sắm
                 </button>

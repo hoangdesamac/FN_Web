@@ -452,6 +452,7 @@ function getSortValue(cat, obj, field){
 }
 
 const state = { selected:{}, total:0, power:0, loadedExternal:false };
+window.state = state;
 // Format price: show 'Liên hệ' when price missing/zero
 function formatPrice(v){ if(v===undefined||v===null||v<=0) return 'Liên hệ'; return v.toLocaleString('vi-VN') + '₫'; }
 
@@ -484,7 +485,7 @@ function updateCategoryCount(cat){
     if(total && total>loaded) el.textContent = loaded + '/' + total;
     else el.textContent = loaded;
 }
-function buildConfigRows(){ const tbody=document.getElementById('config-rows'); tbody.innerHTML=''; PART_CATEGORIES.forEach(c=>{ const tr=document.createElement('tr'); tr.id='row-'+c.key; tr.innerHTML=`<td style="width:140px;font-weight:600;">${c.label}</td><td class="part-cell" id="cell-${c.key}"><button class="part-select-btn" data-key="${c.key}"><i class="fa fa-plus"></i> Chọn ${c.label}</button></td><td id="price-${c.key}">-</td><td id="act-${c.key}"></td>`; tbody.appendChild(tr); }); tbody.querySelectorAll('.part-select-btn').forEach(btn=> btn.addEventListener('click',()=> openPartModal(btn.dataset.key))); }
+function buildConfigRows(){ const tbody=document.getElementById('config-rows'); tbody.innerHTML=''; PART_CATEGORIES.forEach(c=>{ const tr=document.createElement('tr'); tr.id='row-'+c.key; tr.innerHTML=`<td style="width:140px;font-weight:600;">${c.label}</td><td class="part-cell" id="cell-${c.key}"><button class="part-select-btn" data-key="${c.key}"><i class="fa fa-plus"></i> Chọn ${c.label}</button></td><td id="price-${c.key}">-</td><td id="act-${c.key}"></td>`; tbody.appendChild(tr); }); tbody.querySelectorAll('.part-select-btn').forEach(btn=> btn.addEventListener('click',()=> openPartModal(btn.dataset.key))); if(window.updateFloatBar) window.updateFloatBar(); }
 
 function buildMeta(p){ const meta=[]; if(p.socket)meta.push('Socket '+p.socket); if(p.chipset)meta.push(p.chipset); if(p.tdp)meta.push(p.tdp+'W'); if(p.power)meta.push(p.power+'W'); if(p.size && p.type)meta.push(p.size+'GB'); if(p.speed)meta.push(p.speed+'MHz'); if(p.vram)meta.push(p.vram+'GB VRAM'); if(p.watt)meta.push(p.watt+'W'); if(p.res)meta.push(p.res+(p.hz?('@'+p.hz+'Hz'):'')); if(p._estimated) meta.push('ước tính'); return meta.join(' • '); }
 
@@ -828,8 +829,30 @@ function applyAdvancedFilter(category, p){
 
 function debounce(fn,delay){ let t; return function(){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,arguments),delay); }; }
 
-function selectPart(category,part){ state.selected[category]=part; renderSelected(category); recalcTotals(); updateSummary(); saveToLocal(); }
-function removePart(category){ delete state.selected[category]; renderSelected(category); recalcTotals(); updateSummary(); saveToLocal(); }
+function selectPart(category,part){
+    // Ép key về chữ thường và đúng chuẩn required
+    var validKeys = ['cpu','gpu','mainboard','ram','storage','psu','case','cooler'];
+    var key = (category+'').toLowerCase();
+    if(!validKeys.includes(key)) {
+        console.warn('Linh kiện chọn không hợp lệ:', category, part);
+    }
+    state.selected[key]=part;
+    renderSelected(key);
+    recalcTotals();
+    updateSummary();
+    saveToLocal();
+    if(window.updateFloatBar) window.updateFloatBar();
+    // Debug sau khi chọn linh kiện
+    console.log('DEBUG selectPart:', key, state.selected);
+}
+function removePart(category){
+    delete state.selected[category];
+    renderSelected(category);
+    recalcTotals();
+    updateSummary();
+    saveToLocal();
+    if(window.updateFloatBar) window.updateFloatBar();
+}
 function renderSelected(category){
     const cell=document.getElementById('cell-'+category);
     const priceCell=document.getElementById('price-'+category);
@@ -844,7 +867,43 @@ function renderSelected(category){
     } else {
         cell.innerHTML=`<div class="selected-part"><div class="name">${part.name}</div><div class="meta">${buildMeta(part)}</div></div>`;
         priceCell.textContent=formatPrice(part.price);
-        actCell.innerHTML=`<div class="row-actions"><button class="add-part-cart" title="Thêm vào giỏ" onclick="addSinglePart('${category}')"><i class="fa fa-cart-plus"></i></button><button class="remove-part-btn" title="Xóa linh kiện" onclick="removePart('${category}')">×</button></div>`;
+    actCell.innerHTML=`<div class="row-actions"><button class="add-part-cart" title="Thêm vào giỏ" onclick="handleAddToCart('${category}')"><i class="fa fa-cart-plus"></i></button><button class="remove-part-btn" title="Xóa linh kiện" onclick="removePart('${category}')">×</button></div>`;
+// Hàm xử lý thêm vào giỏ hàng với popup xác nhận lắp ráp sẵn
+function handleAddToCart(category) {
+    if (!window.confirm('Bạn có muốn chúng tôi tiến hành lắp ráp sẵn cho bạn không?\n\nChọn OK để lắp ráp sẵn (thêm 1 sản phẩm tổng),\nChọn Cancel để thêm từng linh kiện riêng lẻ.')) {
+        // Thêm từng linh kiện riêng lẻ
+        addSinglePart(category);
+        return;
+    }
+    // Thêm 1 sản phẩm "Build PC trọn bộ" vào giỏ hàng
+    const parts = Object.values(state.selected||{});
+    if (!parts.length) {
+        showNotification?.('Chưa chọn linh kiện nào','error');
+        return;
+    }
+    let cart = JSON.parse(localStorage.getItem('cart')||'[]');
+    const bundleId = 'build_' + Date.now();
+    const totalPrice = parts.reduce((sum,p)=>sum+(p.price||0),0);
+    const name = 'Build PC trọn bộ ('+parts.map(p=>p.name).join(', ')+')';
+    cart.push({
+        id: bundleId,
+        name: name,
+        originalPrice: totalPrice,
+        salePrice: totalPrice,
+        discountPercent: 0,
+        price: totalPrice,
+        image: 'Images/Logo.jpg',
+        quantity: 1,
+        addedAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        isBundle: true,
+        parts: parts.map(p=>({id:p.id,name:p.name,price:p.price}))
+    });
+    localStorage.setItem('cart', JSON.stringify(cart));
+    if(typeof refreshCartCache==='function') refreshCartCache();
+    if(typeof updateCartCount==='function') updateCartCount(); else scheduleCartCountRefresh();
+    showNotification?.('Đã thêm Build PC trọn bộ vào giỏ hàng!','success');
+}
     }
     // Update category list item visual state (without altering the count which reflects dataset size)
     const li=document.querySelector(`.builder-categories li[data-key="${category}"]`);
@@ -855,7 +914,11 @@ function renderSelected(category){
 // Thêm 1 linh kiện đơn lẻ vào giỏ hàng
 function addSinglePart(category){
     const part=state.selected[category];
-    if(!part){ showNotification?.('Chưa chọn linh kiện','error'); return; }
+    if(!part){
+        console.error('DEBUG addSinglePart thiếu part:', category, state.selected);
+        showNotification?.('Chưa chọn linh kiện','error');
+        return;
+    }
     let cart = JSON.parse(localStorage.getItem('cart')||'[]');
     const price = part.price||0;
     const idx = cart.findIndex(it=> it.id===part.id);
@@ -887,15 +950,44 @@ function addSinglePart(category){
     showNotification?.(`Đã thêm \"${part.name}\" vào giỏ hàng!`,'success');
 }
 
-function recalcTotals(){ let total=0,power=0; Object.values(state.selected).forEach(p=>{ total+=p.price||0; power+=(p.tdp||p.power||0); }); state.total=total; state.power=power; document.getElementById('total-price').textContent=formatPrice(total); document.getElementById('total-power').textContent=power+'W'; compatibilityCheck(); }
+function recalcTotals(){
+    let total=0, power=0;
+    Object.values(state.selected).forEach(p=>{ total+=p.price||0; power+=(p.tdp||p.power||0); });
+    state.total=total;
+    state.power=power;
+    document.getElementById('total-price').textContent=formatPrice(total);
+    // Nếu không còn phần tử total-power thì bỏ qua dòng này
+    var el = document.getElementById('total-power');
+    if(el) el.textContent = power+'W';
+    compatibilityCheck();
+    if(window.updateFloatBar) window.updateFloatBar();
+}
 function compatibilityCheck(){ const cpu=state.selected.cpu, mb=state.selected.mainboard, ram=state.selected.ram, psu=state.selected.psu, gpu=state.selected.gpu; const box=document.getElementById('compat-status'); const warnBox=document.getElementById('warning-box'); warnBox.style.display='none'; warnBox.innerHTML=''; const problems=[]; if(cpu&&mb&&cpu.socket&&mb.socket&&cpu.socket!==mb.socket) problems.push('CPU & Mainboard khác socket'); if(psu && state.power && psu.watt < state.power * 1.4) problems.push('Nguồn có thể thiếu (khuyến nghị >140%)'); if(problems.length){ box.className='compatibility-status error'; box.textContent='Không tương thích'; warnBox.style.display='block'; warnBox.innerHTML='<strong>Vấn đề:</strong><br>'+problems.map(p=>'• '+p).join('<br>'); } else if(cpu && mb){ box.className='compatibility-status ok'; box.textContent='Tương thích'; } else { box.className='compatibility-status warn'; box.textContent='Chọn thêm linh kiện'; } }
 function updateSummary(){ const list=document.getElementById('summary-list'); list.innerHTML=''; Object.keys(state.selected).forEach(k=>{ const p=state.selected[k]; const div=document.createElement('div'); div.className='summary-item'; div.innerHTML=`<div class=\"label\">${(PART_CATEGORIES.find(c=>c.key===k)||{}).label||k}</div><div class=\"value\">${p.name}</div>`; list.appendChild(div); }); buildRecommendation(); }
 function buildRecommendation(){ const box=document.getElementById('recommend-box'); const cpu=state.selected.cpu, gpu=state.selected.gpu, ram=state.selected.ram; let txt=''; if(cpu&&gpu){ if((cpu.cores||0)>=12 && (gpu.power||0)>=250) txt+='Cấu hình mạnh cho Streaming / 4K Gaming.<br>'; else if((gpu.power||0)<=200) txt+='Phù hợp chơi game eSports / văn phòng.<br>'; } if(ram && (ram.size||0)>=64) txt+='Đa nhiệm nặng & dựng video.<br>'; if(!txt) txt='Chọn thêm linh kiện để nhận gợi ý.'; box.innerHTML='<strong>Gợi ý:</strong><br>'+txt; }
 
 function saveToLocal(){ localStorage.setItem('pcBuilderConfig', JSON.stringify(state.selected)); }
-function loadFromLocal(){ try{ const saved=JSON.parse(localStorage.getItem('pcBuilderConfig')||'{}'); Object.keys(saved).forEach(k=> state.selected[k]=saved[k]); }catch(e){} }
-function clearConfig(){ state.selected={}; buildConfigRows(); recalcTotals(); updateSummary(); saveToLocal(); }
-function exportJSON(){ const data=JSON.stringify({ parts:state.selected, total:state.total, power:state.power },null,2); const blob=new Blob([data],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='pc_config.json'; a.click(); }
+function loadFromLocal(){
+        try{
+            const saved=JSON.parse(localStorage.getItem('pcBuilderConfig')||'{}');
+            const validKeys = ['cpu','gpu','mainboard','ram','storage','psu','case','cooler'];
+            // Xóa sạch mọi key cũ
+            state.selected = {};
+            Object.keys(saved).forEach(k=>{
+                var key = (k+'').toLowerCase();
+                if(validKeys.includes(key)) state.selected[key]=saved[k];
+            });
+        }catch(e){}
+}
+function clearConfig(){
+        // Xóa sạch mọi key cũ
+        state.selected={};
+        buildConfigRows();
+        recalcTotals();
+        updateSummary();
+        saveToLocal();
+        if(window.updateFloatBar) window.updateFloatBar();
+}
 function closeModal(){ document.getElementById('part-modal').style.display='none'; }
 // Gỡ class no-scroll khi đóng modal
 const _closeModalRef = closeModal;
@@ -957,7 +1049,6 @@ async function initProcessed(){
     document.getElementById('close-modal')?.addEventListener('click', closeModal);
     document.getElementById('part-modal')?.addEventListener('click', e=>{ if(e.target.id==='part-modal') closeModal(); });
     document.getElementById('clear-config')?.addEventListener('click', clearConfig);
-    document.getElementById('export-json')?.addEventListener('click', exportJSON);
     document.getElementById('save-config')?.addEventListener('click', saveToLocal);
     document.getElementById('load-config')?.addEventListener('click', ()=>{ loadFromLocal(); Object.keys(state.selected).forEach(k=> renderSelected(k)); recalcTotals(); updateSummary(); });
 }
@@ -969,9 +1060,55 @@ function addCurrentSelectionToCart(options={bundle:false}){
     const parts = Object.values(state.selected||{});
     if(!parts.length){ showNotification?.('Chưa chọn linh kiện nào','error'); return; }
     let cart = JSON.parse(localStorage.getItem('cart')||'[]');
-    const bundleId='build_'+Date.now();
+    if(options.bundle) {
+        // Kiểm tra đủ các bộ phận cần thiết
+        const required = ['cpu','gpu','mainboard','ram','storage','psu','case','cooler'];
+        const missing = required.filter(key => !state.selected[key]);
+        if(missing.length) {
+            const labels = {
+                cpu: 'CPU', gpu: 'GPU', mainboard: 'Mainboard', ram: 'RAM', storage: 'Ổ cứng', psu: 'Nguồn', case: 'Case', cooler: 'Tản nhiệt'
+            };
+            const msg = 'Vui lòng chọn đủ các bộ phận: ' + missing.map(k=>labels[k]||k).join(', ');
+            showNotification?.(msg,'error');
+            return;
+        }
+        // Thêm 1 sản phẩm duy nhất, tên là CPU + GPU + RAM + Ổ cứng
+        const cpu = state.selected['cpu'];
+        const gpu = state.selected['gpu'];
+        const ram = state.selected['ram'];
+        const storage = state.selected['storage'];
+        const ramSize = ram?.size ? ram.size + 'GB' : '';
+        let storageSize = '';
+        if(storage?.size) {
+          if(storage.size>=1000) storageSize = (storage.size/1000)+ 'TB';
+          else if(storage.size>0) storageSize = storage.size + 'GB';
+        }
+        const name = 'PC ' + (cpu?.name||'CPU') + ' + ' + (gpu?.name||'GPU') + (ramSize?(' + '+ramSize):'') + (storageSize?(' + '+storageSize):'');
+        const totalPrice = Object.values(state.selected).reduce((sum,p)=>sum+(p.price||0),0);
+        const bundleId = 'build_' + Date.now();
+        cart.push({
+            id: bundleId,
+            name: name,
+            originalPrice: totalPrice,
+            salePrice: totalPrice,
+            discountPercent: 0,
+            price: totalPrice,
+            image: cpu?.image||gpu?.image||'Images/Logo.jpg',
+            quantity: 1,
+            addedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            isBundle: true,
+            parts: Object.values(state.selected).map(p=>({id:p.id,name:p.name,price:p.price}))
+        });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        if(typeof refreshCartCache==='function') refreshCartCache();
+        if(typeof updateCartCount==='function') updateCartCount(); else scheduleCartCountRefresh();
+        showNotification?.('Đã thêm cấu hình ('+name+') vào giỏ hàng!','success');
+        return;
+    }
+    // Thêm từng linh kiện riêng lẻ như cũ
     parts.forEach(p=>{
-        const pid = options.bundle? (p.id+'__'+bundleId):p.id;
+        const pid = p.id;
         const price=p.price||0;
         const idx=cart.findIndex(it=>it.id===pid);
         if(idx!==-1){
@@ -999,7 +1136,7 @@ function addCurrentSelectionToCart(options={bundle:false}){
     localStorage.setItem('cart', JSON.stringify(cart));
     if(typeof refreshCartCache==='function') refreshCartCache();
     if(typeof updateCartCount==='function') updateCartCount(); else scheduleCartCountRefresh();
-    showNotification?.(options.bundle? 'Đã thêm trọn bộ ('+parts.length+' sp) vào giỏ hàng':'Đã thêm '+parts.length+' linh kiện vào giỏ hàng');
+    showNotification?.('Đã thêm '+parts.length+' linh kiện vào giỏ hàng');
 }
 
 // Trường hợp header/cart script load chậm -> thử cập nhật lại nhiều lần

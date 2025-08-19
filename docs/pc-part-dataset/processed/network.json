@@ -1,1 +1,4644 @@
-[{"originalPriceUSD":14.99,"price":299800,"id":"net_tp_link_tg_3468","name":"TP-Link TG-3468","_pricing":{"usd":14.99,"rate":25000,"discount":0.2,"baseVnd":374750,"finalVnd":299800}},{"originalPriceUSD":452.97,"price":9059400,"id":"net_startech_st10gpexndpi","name":"StarTech ST10GPEXNDPI","_pricing":{"usd":452.97,"rate":25000,"discount":0.2,"baseVnd":11324250,"finalVnd":9059400}},{"originalPriceUSD":99.99,"price":1999800,"id":"net_asus_xg_c100c","name":"Asus XG-C100C","_pricing":{"usd":99.99,"rate":25000,"discount":0.2,"baseVnd":2499750,"finalVnd":1999800}},{"originalPriceUSD":87,"price":1740000,"id":"net_intel_x540_t2","name":"Intel X540-T2","_pricing":{"usd":87,"rate":25000,"discount":0.2,"baseVnd":2175000,"finalVnd":1740000}},{"originalPriceUSD":24.99,"price":499800,"id":"net_tp_link_tx201","name":"TP-Link TX201","_pricing":{"usd":24.99,"rate":25000,"discount":0.2,"baseVnd":624750,"finalVnd":499800}},{"originalPriceUSD":99.99,"price":1999800,"id":"net_tp_link_tx401","name":"TP-Link TX401","_pricing":{"usd":99.99,"rate":25000,"discount":0.2,"baseVnd":2499750,"finalVnd":1999800}},{"originalPriceUSD":116.72,"price":2334400,"id":"net_intel_x550_t2","name":"Intel X550-T2","_pricing":{"usd":116.72,"rate":25000,"discount":0.2,"baseVnd":2918000,"finalVnd":2334400}},{"originalPriceUSD":420.79,"price":8415800,"id":"net_startech_st1000spex42","name":"StarTech ST1000SPEX42","_pricing":{"usd":420.79,"rate":25000,"discount":0.2,"baseVnd":10519750,"finalVnd":8415800}},{"originalPriceUSD":256.99,"price":5139800,"id":"net_intel_x710_t2l","name":"Intel X710-T2L","_pricing":{"usd":256.99,"rate":25000,"discount":0.2,"baseVnd":6424750,"finalVnd":5139800}},{"originalPriceUSD":129,"price":2580000,"id":"net_intel_x540t1","name":"Intel X540T1","_pricing":{"usd":129,"rate":25000,"discount":0.2,"baseVnd":3225000,"finalVnd":2580000}},{"originalPriceUSD":99,"price":1980000,"id":"net_intel_x520_da1","name":"Intel X520-DA1","_pricing":{"usd":99,"rate":25000,"discount":0.2,"baseVnd":2475000,"finalVnd":1980000}},{"originalPriceUSD":54.24,"price":1084800,"id":"net_intel_expi9301ctblk","name":"Intel EXPI9301CTBLK","_pricing":{"usd":54.24,"rate":25000,"discount":0.2,"baseVnd":1356000,"finalVnd":1084800}},{"originalPriceUSD":74.98,"price":1499600,"id":"net_trendnet_trendnet_teg_10gectx_10_gigabit_pcie_network_adapte","name":"TRENDnet TRENDnet TEG-10GECTX 10 Gigabit PCIe Network Adapter","_pricing":{"usd":74.98,"rate":25000,"discount":0.2,"baseVnd":1874500,"finalVnd":1499600}},{"price":792100,"id":"net_gigabyte_gc_aqc107","name":"Gigabyte GC-AQC107","_estimated":true},{"originalPriceUSD":30.47,"price":609400,"id":"net_syba_sd_pex24066","name":"Syba SD-PEX24066","_pricing":{"usd":30.47,"rate":25000,"discount":0.2,"baseVnd":761750,"finalVnd":609400}},{"originalPriceUSD":51,"price":1020000,"id":"net_intel_e1g42etblk","name":"Intel E1G42ETBLK","_pricing":{"usd":51,"rate":25000,"discount":0.2,"baseVnd":1275000,"finalVnd":1020000}},{"originalPriceUSD":287.99,"price":5759800,"id":"net_startech_st10gspexndp2","name":"StarTech ST10GSPEXNDP2","_pricing":{"usd":287.99,"rate":25000,"discount":0.2,"baseVnd":7199750,"finalVnd":5759800}},{"originalPriceUSD":11.99,"price":239800,"id":"net_tp_link_ue306","name":"TP-Link UE306","_pricing":{"usd":11.99,"rate":25000,"discount":0.2,"baseVnd":299750,"finalVnd":239800}},{"originalPriceUSD":149.94,"price":2998800,"id":"net_startech_st10gspexnb2","name":"StarTech ST10GSPEXNB2","_pricing":{"usd":149.94,"rate":25000,"discount":0.2,"baseVnd":3748500,"finalVnd":2998800}},{"originalPriceUSD":92.04,"price":1840800,"id":"net_intel_e1g44htblk","name":"Intel E1G44HTBLK","_pricing":{"usd":92.04,"rate":25000,"discount":0.2,"baseVnd":2301000,"finalVnd":1840800}},{"originalPriceUSD":9.97,"price":199400,"id":"net_tp_link_ue300","name":"TP-Link UE300","_pricing":{"usd":9.97,"rate":25000,"discount":0.2,"baseVnd":249250,"finalVnd":199400}},{"originalPriceUSD":74.73,"price":1494600,"id":"net_intel_i226t1","name":"Intel I226T1","_pricing":{"usd":74.73,"rate":25000,"discount":0.2,"baseVnd":1868250,"finalVnd":1494600}},{"originalPriceUSD":29.99,"price":599800,"id":"net_asus_usb_c2500","name":"Asus USB-C2500","_pricing":{"usd":29.99,"rate":25000,"discount":0.2,"baseVnd":749750,"finalVnd":599800}},{"originalPriceUSD":99,"price":1980000,"id":"net_qnap_qxg5g1t111c","name":"QNAP QXG5G1T111C","_pricing":{"usd":99,"rate":25000,"discount":0.2,"baseVnd":2475000,"finalVnd":1980000}},{"originalPriceUSD":19.98,"price":399600,"id":"net_trendnet_teg_25gectx","name":"TRENDnet TEG-25GECTX","_pricing":{"usd":19.98,"rate":25000,"discount":0.2,"baseVnd":499500,"finalVnd":399600}},{"originalPriceUSD":6.99,"price":139800,"id":"net_belkin_f5d5000","name":"Belkin F5D5000","_pricing":{"usd":6.99,"rate":25000,"discount":0.2,"baseVnd":174750,"finalVnd":139800}},{"originalPriceUSD":82.31,"price":1646200,"id":"net_syba_sd_pex24055","name":"Syba SD-PEX24055","_pricing":{"usd":82.31,"rate":25000,"discount":0.2,"baseVnd":2057750,"finalVnd":1646200}},{"originalPriceUSD":63.06,"price":1261200,"id":"net_startech_usb32000spt","name":"StarTech USB32000SPT","_pricing":{"usd":63.06,"rate":25000,"discount":0.2,"baseVnd":1576500,"finalVnd":1261200}},{"originalPriceUSD":37.97,"price":759400,"id":"net_syba_si_pex24042","name":"Syba SI-PEX24042","_pricing":{"usd":37.97,"rate":25000,"discount":0.2,"baseVnd":949250,"finalVnd":759400}},{"originalPriceUSD":57.93,"price":1158600,"id":"net_intel_expi9301ct","name":"Intel EXPI9301CT","_pricing":{"usd":57.93,"rate":25000,"discount":0.2,"baseVnd":1448250,"finalVnd":1158600}},{"originalPriceUSD":79,"price":1580000,"id":"net_qnap_qxg2g2ti225","name":"QNAP QXG2G2TI225","_pricing":{"usd":79,"rate":25000,"discount":0.2,"baseVnd":1975000,"finalVnd":1580000}},{"originalPriceUSD":59.99,"price":1199800,"id":"net_syba_sy_pex24045","name":"Syba SY-PEX24045","_pricing":{"usd":59.99,"rate":25000,"discount":0.2,"baseVnd":1499750,"finalVnd":1199800}},{"price":792100,"id":"net_intel_x520_t2","name":"Intel X520-T2","_estimated":true},{"originalPriceUSD":196.95,"price":3939000,"id":"net_startech_st10gspexnb","name":"StarTech ST10GSPEXNB","_pricing":{"usd":196.95,"rate":25000,"discount":0.2,"baseVnd":4923750,"finalVnd":3939000}},{"originalPriceUSD":355.2,"price":7104000,"id":"net_intel_e1g44et2blk","name":"Intel E1G44ET2BLK","_pricing":{"usd":355.2,"rate":25000,"discount":0.2,"baseVnd":8880000,"finalVnd":7104000}},{"originalPriceUSD":139,"price":2780000,"id":"net_qnap_qxg_10g1t","name":"QNAP QXG-10G1T","_pricing":{"usd":139,"rate":25000,"discount":0.2,"baseVnd":3475000,"finalVnd":2780000}},{"price":792100,"id":"net_intel_expi9404ptlblk","name":"Intel EXPI9404PTLBLK","_estimated":true},{"originalPriceUSD":157.99,"price":3159800,"id":"net_startech_st2000pexpse","name":"StarTech ST2000PEXPSE","_pricing":{"usd":157.99,"rate":25000,"discount":0.2,"baseVnd":3949750,"finalVnd":3159800}},{"originalPriceUSD":24.14,"price":482800,"id":"net_startech_st1000spex2","name":"StarTech ST1000SPEX2","_pricing":{"usd":24.14,"rate":25000,"discount":0.2,"baseVnd":603500,"finalVnd":482800}},{"originalPriceUSD":9.99,"price":199800,"id":"net_syba_sy_ada24029","name":"Syba SY-ADA24029","_pricing":{"usd":9.99,"rate":25000,"discount":0.2,"baseVnd":249750,"finalVnd":199800}},{"price":792100,"id":"net_monoprice_112909","name":"Monoprice 112909","_estimated":true},{"originalPriceUSD":39.7,"price":794000,"id":"net_tripp_lite_u436_06n_2p5","name":"Tripp Lite U436-06N-2P5","_pricing":{"usd":39.7,"rate":25000,"discount":0.2,"baseVnd":992500,"finalVnd":794000}},{"originalPriceUSD":218.5,"price":4370000,"id":"net_siig_lb_ge0311_s1","name":"SIIG LB-GE0311-S1","_pricing":{"usd":218.5,"rate":25000,"discount":0.2,"baseVnd":5462500,"finalVnd":4370000}},{"price":792100,"id":"net_qlogic_qle3242_cu_ck","name":"QLogic QLE3242-CU-CK","_estimated":true},{"originalPriceUSD":112.5,"price":2250000,"id":"net_lenovo_7zt7a00482","name":"Lenovo 7ZT7A00482","_pricing":{"usd":112.5,"rate":25000,"discount":0.2,"baseVnd":2812500,"finalVnd":2250000}},{"originalPriceUSD":35.51,"price":710200,"id":"net_startech_st2gpex","name":"StarTech ST2GPEX","_pricing":{"usd":35.51,"rate":25000,"discount":0.2,"baseVnd":887750,"finalVnd":710200}},{"price":792100,"id":"net_d_link_dxe_820t","name":"D-Link DXE-820T","_estimated":true},{"originalPriceUSD":152.88,"price":3057600,"id":"net_siig_lb_ge0211_s1","name":"SIIG LB-GE0211-S1","_pricing":{"usd":152.88,"rate":25000,"discount":0.2,"baseVnd":3822000,"finalVnd":3057600}},{"price":792100,"id":"net_intel_expi9404ptlblk_1pk","name":"Intel EXPI9404PTLBLK-1PK","_estimated":true},{"price":792100,"id":"net_intel_e10g42bt","name":"Intel E10G42BT","_estimated":true},{"price":792100,"id":"net_gigabyte_gc_aqc113c_10g","name":"Gigabyte GC-AQC113C 10G","_estimated":true},{"originalPriceUSD":69.61,"price":1392200,"id":"net_intel_expi9402ptg2p20","name":"Intel EXPI9402PTG2P20","_pricing":{"usd":69.61,"rate":25000,"discount":0.2,"baseVnd":1740250,"finalVnd":1392200}},{"originalPriceUSD":106,"price":2120000,"id":"net_intel_e1g44ht","name":"Intel E1G44HT","_pricing":{"usd":106,"rate":25000,"discount":0.2,"baseVnd":2650000,"finalVnd":2120000}},{"price":792100,"id":"net_intel_e1g42et","name":"Intel E1G42ET","_estimated":true},{"originalPriceUSD":69,"price":1380000,"id":"net_qnap_qxg_2g1t_i225","name":"QNAP QXG-2G1T-I225","_pricing":{"usd":69,"rate":25000,"discount":0.2,"baseVnd":1725000,"finalVnd":1380000}},{"price":792100,"id":"net_asus_rog_areion","name":"Asus ROG AREION","_estimated":true},{"originalPriceUSD":12.99,"price":259800,"id":"net_tp_link_ue300c","name":"TP-Link UE300C","_pricing":{"usd":12.99,"rate":25000,"discount":0.2,"baseVnd":324750,"finalVnd":259800}},{"originalPriceUSD":21.99,"price":439800,"id":"net_trendnet_tuc_et2g","name":"TRENDnet TUC-ET2G","_pricing":{"usd":21.99,"rate":25000,"discount":0.2,"baseVnd":549750,"finalVnd":439800}},{"originalPriceUSD":92.87,"price":1857400,"id":"net_syba_sy_pex24028","name":"Syba SY-PEX24028","_pricing":{"usd":92.87,"rate":25000,"discount":0.2,"baseVnd":2321750,"finalVnd":1857400}},{"price":792100,"id":"net_intel_expi9404ptl","name":"Intel EXPI9404PTL","_estimated":true},{"originalPriceUSD":32,"price":640000,"id":"net_intel_pwla8391gtblk","name":"Intel PWLA8391GTBLK","_pricing":{"usd":32,"rate":25000,"discount":0.2,"baseVnd":800000,"finalVnd":640000}},{"originalPriceUSD":21.82,"price":436400,"id":"net_startech_st1000spex2l","name":"StarTech ST1000SPEX2L","_pricing":{"usd":21.82,"rate":25000,"discount":0.2,"baseVnd":545500,"finalVnd":436400}},{"originalPriceUSD":18.63,"price":372600,"id":"net_d_link_dge_560t","name":"D-Link DGE-560T","_pricing":{"usd":18.63,"rate":25000,"discount":0.2,"baseVnd":465750,"finalVnd":372600}},{"price":792100,"id":"net_intel_e1g44et2","name":"Intel E1G44ET2","_estimated":true},{"originalPriceUSD":42.99,"price":859800,"id":"net_startech_us2gc30","name":"StarTech US2GC30","_pricing":{"usd":42.99,"rate":25000,"discount":0.2,"baseVnd":1074750,"finalVnd":859800}},{"originalPriceUSD":375.99,"price":7519800,"id":"net_startech_st1000spex4","name":"StarTech ST1000SPEX4","_pricing":{"usd":375.99,"rate":25000,"discount":0.2,"baseVnd":9399750,"finalVnd":7519800}},{"originalPriceUSD":20.99,"price":419800,"id":"net_belkin_f2cu040btblk","name":"Belkin F2CU040btBLK","_pricing":{"usd":20.99,"rate":25000,"discount":0.2,"baseVnd":524750,"finalVnd":419800}},{"price":792100,"id":"net_edup_ep_9602gs","name":"EDUP EP-9602GS","_estimated":true},{"originalPriceUSD":23.23,"price":464600,"id":"net_startech_usb31000s2","name":"StarTech USB31000S2","_pricing":{"usd":23.23,"rate":25000,"discount":0.2,"baseVnd":580750,"finalVnd":464600}},{"originalPriceUSD":19.99,"price":399800,"id":"net_syba_sd_pex24009","name":"Syba SD-PEX24009","_pricing":{"usd":19.99,"rate":25000,"discount":0.2,"baseVnd":499750,"finalVnd":399800}},{"price":792100,"id":"net_visiontek_bigfoot_killer_2100","name":"VisionTek Bigfoot Killer 2100","_estimated":true},{"originalPriceUSD":42.1,"price":842000,"id":"net_startech_st3300u3s","name":"StarTech ST3300U3S","_pricing":{"usd":42.1,"rate":25000,"discount":0.2,"baseVnd":1052500,"finalVnd":842000}},{"originalPriceUSD":18.95,"price":379000,"id":"net_plugable_usbc_e1000","name":"Plugable USBC-E1000","_pricing":{"usd":18.95,"rate":25000,"discount":0.2,"baseVnd":473750,"finalVnd":379000}},{"originalPriceUSD":56.86,"price":1137200,"id":"net_syba_sy_hub24047","name":"Syba SY-HUB24047","_pricing":{"usd":56.86,"rate":25000,"discount":0.2,"baseVnd":1421500,"finalVnd":1137200}},{"price":792100,"id":"net_rosewill_rc_nic416dual","name":"Rosewill RC-NIC416Dual","_estimated":true},{"price":792100,"id":"net_supermicro_aoc_stg_i2t","name":"Supermicro AOC-STG-i2T","_estimated":true},{"originalPriceUSD":114.99,"price":2299800,"id":"net_siig_lb_ge0014_s1","name":"SIIG LB-GE0014-S1","_pricing":{"usd":114.99,"rate":25000,"discount":0.2,"baseVnd":2874750,"finalVnd":2299800}},{"originalPriceUSD":30.99,"price":619800,"id":"net_startech_pex100s","name":"StarTech PEX100S","_pricing":{"usd":30.99,"rate":25000,"discount":0.2,"baseVnd":774750,"finalVnd":619800}},{"price":792100,"id":"net_intel_pwla8490mtblk","name":"Intel PWLA8490MTBLK","_estimated":true},{"price":792100,"id":"net_supermicro_aoc_sg_i2","name":"Supermicro AOC-SG-i2","_estimated":true},{"originalPriceUSD":22.65,"price":453000,"id":"net_syba_sy_pex24030","name":"Syba SY-PEX24030","_pricing":{"usd":22.65,"rate":25000,"discount":0.2,"baseVnd":566250,"finalVnd":453000}},{"price":792100,"id":"net_intel_expi9402pt","name":"Intel EXPI9402PT","_estimated":true},{"originalPriceUSD":92,"price":1840000,"id":"net_intel_pwla8492mt","name":"Intel PWLA8492MT","_pricing":{"usd":92,"rate":25000,"discount":0.2,"baseVnd":2300000,"finalVnd":1840000}},{"price":792100,"id":"net_acer_np_oth11_005","name":"Acer NP.OTH11.005","_estimated":true},{"price":792100,"id":"net_tp_link_tg_3269","name":"TP-Link TG-3269","_estimated":true},{"price":792100,"id":"net_tp_link_tf_3239dl","name":"TP-Link TF-3239DL","_estimated":true},{"price":792100,"id":"net_edimax_en_9130txl","name":"Edimax EN-9130TXL","_estimated":true},{"originalPriceUSD":15.26,"price":305200,"id":"net_plugable_usb3_e1000","name":"Plugable USB3-E1000","_pricing":{"usd":15.26,"rate":25000,"discount":0.2,"baseVnd":381500,"finalVnd":305200}},{"originalPriceUSD":44.17,"price":883400,"id":"net_d_link_dub_1312","name":"D-Link DUB-1312","_pricing":{"usd":44.17,"rate":25000,"discount":0.2,"baseVnd":1104250,"finalVnd":883400}},{"price":792100,"id":"net_supermicro_sgp_i4","name":"Supermicro SGP-i4","_estimated":true},{"price":792100,"id":"net_edimax_en_9320tx_e","name":"Edimax EN-9320TX-E","_estimated":true},{"price":792100,"id":"net_asus_pce_c2500","name":"Asus PCE-C2500","_estimated":true},{"price":792100,"id":"net_tp_link_ue305","name":"TP-Link UE305","_estimated":true},{"price":792100,"id":"net_startech_st10gspexndp","name":"StarTech ST10GSPEXNDP","_estimated":true},{"originalPriceUSD":14.66,"price":293200,"id":"net_trendnet_teg_pcitxr","name":"TRENDnet TEG-PCITXR","_pricing":{"usd":14.66,"rate":25000,"discount":0.2,"baseVnd":366500,"finalVnd":293200}},{"originalPriceUSD":50,"price":1000000,"id":"net_intel_pwla8391gtlblk","name":"Intel PWLA8391GTLBLK","_pricing":{"usd":50,"rate":25000,"discount":0.2,"baseVnd":1250000,"finalVnd":1000000}},{"price":792100,"id":"net_rosewill_rc_400_lx","name":"Rosewill RC-400-LX","_estimated":true},{"originalPriceUSD":19.95,"price":399000,"id":"net_syba_sy_ada24027","name":"Syba SY-ADA24027","_pricing":{"usd":19.95,"rate":25000,"discount":0.2,"baseVnd":498750,"finalVnd":399000}},{"price":792100,"id":"net_asus_nx1101","name":"Asus NX1101","_estimated":true},{"originalPriceUSD":34.9,"price":698000,"id":"net_netgear_ga311","name":"Netgear GA311","_pricing":{"usd":34.9,"rate":25000,"discount":0.2,"baseVnd":872500,"finalVnd":698000}},{"price":792100,"id":"net_startech_st10000spex","name":"StarTech ST10000SPEX","_estimated":true},{"originalPriceUSD":24.74,"price":494800,"id":"net_belkin_b2b145_blk","name":"Belkin B2B145-BLK","_pricing":{"usd":24.74,"rate":25000,"discount":0.2,"baseVnd":618500,"finalVnd":494800}},{"price":792100,"id":"net_v7_v7ucrj45_blk_1n","name":"V7 V7UCRJ45-BLK-1N","_estimated":true},{"price":792100,"id":"net_hp_e0x95aa","name":"HP E0X95AA","_estimated":true},{"price":792100,"id":"net_syba_sd_pex24065","name":"Syba SD-PEX24065","_estimated":true},{"price":792100,"id":"net_rosewill_rc_20001","name":"Rosewill RC-20001","_estimated":true},{"originalPriceUSD":25.79,"price":515800,"id":"net_startech_usb31000s","name":"StarTech USB31000S","_pricing":{"usd":25.79,"rate":25000,"discount":0.2,"baseVnd":644750,"finalVnd":515800}},{"originalPriceUSD":43.9,"price":878000,"id":"net_intel_pwla8391gt","name":"Intel PWLA8391GT","_pricing":{"usd":43.9,"rate":25000,"discount":0.2,"baseVnd":1097500,"finalVnd":878000}},{"price":792100,"id":"net_rosewill_rc_400","name":"Rosewill RC-400","_estimated":true},{"price":792100,"id":"net_rosewill_rc_404","name":"Rosewill RC-404","_estimated":true},{"price":792100,"id":"net_rosewill_rnf_405u","name":"Rosewill RNF-405U","_estimated":true},{"price":792100,"id":"net_rosewill_rng_406u","name":"Rosewill RNG-406U","_estimated":true},{"originalPriceUSD":27.98,"price":559600,"id":"net_startech_st1000bt32","name":"StarTech ST1000BT32","_pricing":{"usd":27.98,"rate":25000,"discount":0.2,"baseVnd":699500,"finalVnd":559600}},{"price":792100,"id":"net_startech_st100s","name":"StarTech ST100S","_estimated":true},{"price":792100,"id":"net_startech_usb21000s2","name":"StarTech USB21000S2","_estimated":true},{"price":792100,"id":"net_syba_sy_ada24024","name":"Syba SY-ADA24024","_estimated":true},{"price":792100,"id":"net_trendnet_te100_pciwn","name":"TRENDnet TE100-PCIWN","_estimated":true},{"price":792100,"id":"net_intel_expi9402ptblk_1pk","name":"Intel EXPI9402PTBLK-1PK","_estimated":true},{"price":792100,"id":"net_intel_pwla8391gtblk_1pk","name":"Intel PWLA8391GTBLK-1PK","_estimated":true},{"price":792100,"id":"net_intel_pwla8492mtblk5","name":"Intel PWLA8492MTBLK5","_estimated":true},{"price":792100,"id":"net_siig_cn_gp1011_s3","name":"SIIG CN-GP1011-S3","_estimated":true},{"price":792100,"id":"net_startech_st1000spexd2","name":"StarTech ST1000SPEXD2","_estimated":true},{"price":792100,"id":"net_syba_sy_ada24005","name":"Syba SY-ADA24005","_estimated":true},{"price":792100,"id":"net_startech_st1000spex","name":"StarTech ST1000SPEX","_estimated":true},{"price":792100,"id":"net_siig_cn_gp2011_s1","name":"SIIG CN-GP2011-S1","_estimated":true},{"originalPriceUSD":32.99,"price":659800,"id":"net_siig_cn_gp1021_s3","name":"SIIG CN-GP1021-S3","_pricing":{"usd":32.99,"rate":25000,"discount":0.2,"baseVnd":824750,"finalVnd":659800}},{"price":792100,"id":"net_belkin_f4u047_rs","name":"Belkin F4U047-RS","_estimated":true},{"price":792100,"id":"net_rosewill_rc_401_ex","name":"Rosewill RC-401-EX","_estimated":true},{"price":792100,"id":"net_rosewill_rc_402","name":"Rosewill RC-402","_estimated":true},{"originalPriceUSD":11,"price":220000,"id":"net_d_link_dfe530tx_","name":"D-Link DFE530TX+","_pricing":{"usd":11,"rate":25000,"discount":0.2,"baseVnd":275000,"finalVnd":220000}},{"originalPriceUSD":22.99,"price":459800,"id":"net_d_link_dge_530t","name":"D-Link DGE-530T","_pricing":{"usd":22.99,"rate":25000,"discount":0.2,"baseVnd":574750,"finalVnd":459800}},{"price":792100,"id":"net_d_link_dub_e100","name":"D-Link DUB-E100","_estimated":true},{"originalPriceUSD":11.99,"price":239800,"id":"net_edimax_eu_4208","name":"Edimax EU-4208","_pricing":{"usd":11.99,"rate":25000,"discount":0.2,"baseVnd":299750,"finalVnd":239800}},{"price":792100,"id":"net_edimax_eu_4306","name":"Edimax EU-4306","_estimated":true},{"price":792100,"id":"net_rosewill_rc_411","name":"Rosewill RC-411","_estimated":true},{"price":792100,"id":"net_rosewill_rng_407_dual","name":"Rosewill RNG-407-Dual","_estimated":true},{"price":792100,"id":"net_siig_cn_gp4011_s1","name":"SIIG CN-GP4011-S1","_estimated":true},{"price":792100,"id":"net_startech_st1000spexd3","name":"StarTech ST1000SPEXD3","_estimated":true},{"originalPriceUSD":32.99,"price":659800,"id":"net_startech_usb31000nds","name":"StarTech USB31000NDS","_pricing":{"usd":32.99,"rate":25000,"discount":0.2,"baseVnd":824750,"finalVnd":659800}},{"originalPriceUSD":21.99,"price":439800,"id":"net_startech_usb31000sw","name":"StarTech USB31000SW","_pricing":{"usd":21.99,"rate":25000,"discount":0.2,"baseVnd":549750,"finalVnd":439800}},{"price":792100,"id":"net_syba_sd_ada24032","name":"Syba SD-ADA24032","_estimated":true},{"price":792100,"id":"net_cisco_n2xx_abpci03_m3_","name":"Cisco N2XX-ABPCI03-M3=","_estimated":true},{"price":792100,"id":"net_siig_ju_ne0511_s1","name":"SIIG JU-NE0511-S1","_estimated":true},{"originalPriceUSD":33.99,"price":679800,"id":"net_startech_usb31000sptb","name":"StarTech USB31000SPTB","_pricing":{"usd":33.99,"rate":25000,"discount":0.2,"baseVnd":849750,"finalVnd":679800}},{"originalPriceUSD":35.99,"price":719800,"id":"net_startech_usb31000sptw","name":"StarTech USB31000SPTW","_pricing":{"usd":35.99,"rate":25000,"discount":0.2,"baseVnd":899750,"finalVnd":719800}},{"price":792100,"id":"net_syba_si_ada24037","name":"Syba SI-ADA24037","_estimated":true},{"price":792100,"id":"net_siig_cn_gp1111_s1","name":"SIIG CN-GP1111-S1","_estimated":true},{"originalPriceUSD":31.54,"price":630800,"id":"net_lenovo_4x90e51405","name":"Lenovo 4X90E51405","_pricing":{"usd":31.54,"rate":25000,"discount":0.2,"baseVnd":788500,"finalVnd":630800}},{"price":792100,"id":"net_siig_cn_gp4111_s1","name":"SIIG CN-GP4111-S1","_estimated":true},{"price":792100,"id":"net_syba_sy_ada24040","name":"Syba SY-ADA24040","_estimated":true},{"price":792100,"id":"net_siig_ju_ne0711_s1","name":"SIIG JU-NE0711-S1","_estimated":true},{"price":792100,"id":"net_linksys_usb3gig","name":"Linksys USB3GIG","_estimated":true},{"price":792100,"id":"net_syba_sy_pex24056","name":"Syba SY-PEX24056","_estimated":true},{"price":792100,"id":"net_rosewill_rng_408u","name":"Rosewill RNG-408U","_estimated":true},{"originalPriceUSD":25.8,"price":516000,"id":"net_tripp_lite_u436_000_gb","name":"Tripp Lite U436-000-GB","_pricing":{"usd":25.8,"rate":25000,"discount":0.2,"baseVnd":645000,"finalVnd":516000}},{"price":792100,"id":"net_siig_ju_ne0621_s2","name":"SIIG JU-NE0621-S2","_estimated":true},{"originalPriceUSD":49.99,"price":999800,"id":"net_siig_lb_ge0611_s1","name":"SIIG LB-GE0611-S1","_pricing":{"usd":49.99,"rate":25000,"discount":0.2,"baseVnd":1249750,"finalVnd":999800}},{"originalPriceUSD":36.99,"price":739800,"id":"net_gigabyte_gc_wbax210","name":"Gigabyte GC-WBAX210","_pricing":{"usd":36.99,"rate":25000,"discount":0.2,"baseVnd":924750,"finalVnd":739800}},{"originalPriceUSD":79.98,"price":1599600,"id":"net_tp_link_archer_tbe550e","name":"TP-Link Archer TBE550E","_pricing":{"usd":79.98,"rate":25000,"discount":0.2,"baseVnd":1999500,"finalVnd":1599600}},{"originalPriceUSD":31.99,"price":639800,"id":"net_tp_link_archer_tx3000e","name":"TP-Link Archer TX3000E","_pricing":{"usd":31.99,"rate":25000,"discount":0.2,"baseVnd":799750,"finalVnd":639800}},{"originalPriceUSD":14.85,"price":297000,"id":"net_tp_link_archer_t2u_plus","name":"TP-Link ARCHER T2U PLUS","_pricing":{"usd":14.85,"rate":25000,"discount":0.2,"baseVnd":371250,"finalVnd":297000}},{"originalPriceUSD":26.99,"price":539800,"id":"net_tp_link_archertx20e","name":"TP-Link ArcherTX20E","_pricing":{"usd":26.99,"rate":25000,"discount":0.2,"baseVnd":674750,"finalVnd":539800}},{"originalPriceUSD":49.99,"price":999800,"id":"net_asus_pce_ax3000","name":"Asus PCE-AX3000","_pricing":{"usd":49.99,"rate":25000,"discount":0.2,"baseVnd":1249750,"finalVnd":999800}},{"originalPriceUSD":14.99,"price":299800,"id":"net_tp_link_tl_wn881nd","name":"TP-Link TL-WN881ND","_pricing":{"usd":14.99,"rate":25000,"discount":0.2,"baseVnd":374750,"finalVnd":299800}},{"originalPriceUSD":16.48,"price":329600,"id":"net_intel_ax210","name":"Intel AX210","_pricing":{"usd":16.48,"rate":25000,"discount":0.2,"baseVnd":412000,"finalVnd":329600}},{"originalPriceUSD":170.67,"price":3413400,"id":"net_belkin_ae6000","name":"Belkin AE6000","_pricing":{"usd":170.67,"rate":25000,"discount":0.2,"baseVnd":4266750,"finalVnd":3413400}},{"originalPriceUSD":29,"price":580000,"id":"net_tp_link_archer_tx55e","name":"TP-Link Archer TX55E","_pricing":{"usd":29,"rate":25000,"discount":0.2,"baseVnd":725000,"finalVnd":580000}},{"originalPriceUSD":49.99,"price":999800,"id":"net_msi_herald_be_wifi_7_max","name":"MSI HERALD-BE WIFI 7 MAX","_pricing":{"usd":49.99,"rate":25000,"discount":0.2,"baseVnd":1249750,"finalVnd":999800}},{"originalPriceUSD":19.98,"price":399600,"id":"net_tp_link_archer_t3u_plus","name":"TP-Link Archer T3U Plus","_pricing":{"usd":19.98,"rate":25000,"discount":0.2,"baseVnd":499500,"finalVnd":399600}},{"price":792100,"id":"net_tp_link_archer_tx50e","name":"TP-Link Archer TX50E","_estimated":true},{"originalPriceUSD":29.99,"price":599800,"id":"net_asus_pce_ax1800","name":"Asus PCE-AX1800","_pricing":{"usd":29.99,"rate":25000,"discount":0.2,"baseVnd":749750,"finalVnd":599800}},{"originalPriceUSD":64.98,"price":1299600,"id":"net_asus_pce_be92bt","name":"Asus PCE-BE92BT","_pricing":{"usd":64.98,"rate":25000,"discount":0.2,"baseVnd":1624500,"finalVnd":1299600}},{"originalPriceUSD":25.5,"price":510000,"id":"net_ziyituod_zyt_ax210s","name":"Ziyituod ZYT-AX210S","_pricing":{"usd":25.5,"rate":25000,"discount":0.2,"baseVnd":637500,"finalVnd":510000}},{"originalPriceUSD":9.99,"price":199800,"id":"net_tp_link_tl_wn725n","name":"TP-Link TL-WN725N","_pricing":{"usd":9.99,"rate":25000,"discount":0.2,"baseVnd":249750,"finalVnd":199800}},{"originalPriceUSD":19.98,"price":399600,"id":"net_tp_link_archer_t4e","name":"TP-Link Archer T4E","_pricing":{"usd":19.98,"rate":25000,"discount":0.2,"baseVnd":499500,"finalVnd":399600}},{"originalPriceUSD":50.48,"price":1009600,"id":"net_asus_pce_axe5400","name":"Asus PCE-AXE5400","_pricing":{"usd":50.48,"rate":25000,"discount":0.2,"baseVnd":1262000,"finalVnd":1009600}},{"originalPriceUSD":26.95,"price":539000,"id":"net_edup_ep_9651","name":"EDUP EP-9651","_pricing":{"usd":26.95,"rate":25000,"discount":0.2,"baseVnd":673750,"finalVnd":539000}},{"originalPriceUSD":29.99,"price":599800,"id":"net_tp_link_archer_tx20u_plus","name":"TP-Link Archer TX20U plus","_pricing":{"usd":29.99,"rate":25000,"discount":0.2,"baseVnd":749750,"finalVnd":599800}},{"originalPriceUSD":39.99,"price":799800,"id":"net_tp_link_archer_txe72e","name":"TP-Link Archer TXE72E","_pricing":{"usd":39.99,"rate":25000,"discount":0.2,"baseVnd":999750,"finalVnd":799800}},{"originalPriceUSD":14.99,"price":299800,"id":"net_tp_link_archer_t2e","name":"TP-Link ARCHER T2E","_pricing":{"usd":14.99,"rate":25000,"discount":0.2,"baseVnd":374750,"finalVnd":299800}},{"originalPriceUSD":49.95,"price":999000,"id":"net_intel_ax200","name":"Intel AX200","_pricing":{"usd":49.95,"rate":25000,"discount":0.2,"baseVnd":1248750,"finalVnd":999000}},{"originalPriceUSD":129.99,"price":2599800,"id":"net_netgear_wna3100m_100ens","name":"Netgear WNA3100M-100ENS","_pricing":{"usd":129.99,"rate":25000,"discount":0.2,"baseVnd":3249750,"finalVnd":2599800}},{"originalPriceUSD":44.99,"price":899800,"id":"net_tp_link_archer_txe75e","name":"TP-Link Archer TXE75E","_pricing":{"usd":44.99,"rate":25000,"discount":0.2,"baseVnd":1124750,"finalVnd":899800}},{"originalPriceUSD":99.79,"price":1995800,"id":"net_tp_link_tl_wdn4800","name":"TP-Link TL-WDN4800","_pricing":{"usd":99.79,"rate":25000,"discount":0.2,"baseVnd":2494750,"finalVnd":1995800}},{"originalPriceUSD":44.75,"price":895000,"id":"net_intel_killer_ax1675","name":"Intel Killer AX1675","_pricing":{"usd":44.75,"rate":25000,"discount":0.2,"baseVnd":1118750,"finalVnd":895000}},{"originalPriceUSD":55.99,"price":1119800,"id":"net_asus_pce_ax58bt","name":"Asus PCE-AX58BT","_pricing":{"usd":55.99,"rate":25000,"discount":0.2,"baseVnd":1399750,"finalVnd":1119800}},{"originalPriceUSD":69,"price":1380000,"id":"net_netgear_nighthawk_axe3000","name":"Netgear Nighthawk AXE3000","_pricing":{"usd":69,"rate":25000,"discount":0.2,"baseVnd":1725000,"finalVnd":1380000}},{"originalPriceUSD":23.77,"price":475400,"id":"net_intel_ax210_w_vpro","name":"Intel AX210 w/vPro","_pricing":{"usd":23.77,"rate":25000,"discount":0.2,"baseVnd":594250,"finalVnd":475400}},{"price":792100,"id":"net_ziyituod_zyt_ax200","name":"Ziyituod ZYT-AX200","_estimated":true},{"originalPriceUSD":9.27,"price":185400,"id":"net_startech_usb150wn1x1","name":"StarTech USB150WN1X1","_pricing":{"usd":9.27,"rate":25000,"discount":0.2,"baseVnd":231750,"finalVnd":185400}},{"originalPriceUSD":49.99,"price":999800,"id":"net_msi_herald_be_ncm865_wi_fi_7","name":"MSI HERALD-BE NCM865 WI-FI 7","_pricing":{"usd":49.99,"rate":25000,"discount":0.2,"baseVnd":1249750,"finalVnd":999800}},{"originalPriceUSD":27.98,"price":559600,"id":"net_asus_pce_ac56","name":"Asus PCE-AC56","_pricing":{"usd":27.98,"rate":25000,"discount":0.2,"baseVnd":699500,"finalVnd":559600}},{"price":792100,"id":"net_gigabyte_gc_wbax200","name":"Gigabyte GC-WBAX200","_estimated":true},{"originalPriceUSD":23.99,"price":479800,"id":"net_tp_link_archer_t5e","name":"TP-Link Archer T5E","_pricing":{"usd":23.99,"rate":25000,"discount":0.2,"baseVnd":599750,"finalVnd":479800}},{"originalPriceUSD":28.99,"price":579800,"id":"net_edup_ep_9636gs_bl","name":"EDUP EP-9636GS-BL","_pricing":{"usd":28.99,"rate":25000,"discount":0.2,"baseVnd":724750,"finalVnd":579800}},{"originalPriceUSD":59.99,"price":1199800,"id":"net_asus_pce_axe58bt","name":"Asus PCE-AXE58BT","_pricing":{"usd":59.99,"rate":25000,"discount":0.2,"baseVnd":1499750,"finalVnd":1199800}},{"price":792100,"id":"net_asus_pce_ac68","name":"Asus PCE-AC68","_estimated":true},{"originalPriceUSD":129.79,"price":2595800,"id":"net_tp_link_archer_t9uh","name":"TP-Link Archer T9UH","_pricing":{"usd":129.79,"rate":25000,"discount":0.2,"baseVnd":3244750,"finalVnd":2595800}},{"originalPriceUSD":19.98,"price":399600,"id":"net_tp_link_archer_t2ub_nano","name":"TP-Link Archer T2UB Nano","_pricing":{"usd":19.98,"rate":25000,"discount":0.2,"baseVnd":499500,"finalVnd":399600}},{"originalPriceUSD":34.99,"price":699800,"id":"net_msi_ax905c","name":"MSI AX905C","_pricing":{"usd":34.99,"rate":25000,"discount":0.2,"baseVnd":874750,"finalVnd":699800}},{"originalPriceUSD":34.99,"price":699800,"id":"net_asus_usb_ax55_nano","name":"Asus USB-AX55 Nano","_pricing":{"usd":34.99,"rate":25000,"discount":0.2,"baseVnd":874750,"finalVnd":699800}},{"originalPriceUSD":31.99,"price":639800,"id":"net_cudy_we3000","name":"Cudy WE3000","_pricing":{"usd":31.99,"rate":25000,"discount":0.2,"baseVnd":799750,"finalVnd":639800}},{"originalPriceUSD":70.98,"price":1419600,"id":"net_gigabyte_gc_wb867d_i","name":"Gigabyte GC-WB867D-I","_pricing":{"usd":70.98,"rate":25000,"discount":0.2,"baseVnd":1774500,"finalVnd":1419600}},{"price":792100,"id":"net_asus_pce_ac88","name":"Asus PCE-AC88","_estimated":true},{"price":792100,"id":"net_tp_link_tl_wn781nd","name":"TP-Link TL-WN781ND","_estimated":true},{"originalPriceUSD":86.8,"price":1736000,"id":"net_tp_link_archer_t6e_ac1300","name":"TP-Link Archer T6E AC1300","_pricing":{"usd":86.8,"rate":25000,"discount":0.2,"baseVnd":2170000,"finalVnd":1736000}},{"price":792100,"id":"net_gigabyte_gc_wb1733d_i","name":"Gigabyte GC-WB1733D-I","_estimated":true},{"originalPriceUSD":54.43,"price":1088600,"id":"net_intel_ax200_ngwg_nv","name":"Intel AX200.NGWG.NV","_pricing":{"usd":54.43,"rate":25000,"discount":0.2,"baseVnd":1360750,"finalVnd":1088600}},{"originalPriceUSD":19.98,"price":399600,"id":"net_tp_link_archer_t3u","name":"TP-Link Archer T3U","_pricing":{"usd":19.98,"rate":25000,"discount":0.2,"baseVnd":499500,"finalVnd":399600}},{"price":792100,"id":"net_ubit_ax210","name":"Ubit AX210","_estimated":true},{"price":792100,"id":"net_tp_link_tl_wn821n","name":"TP-Link TL-WN821N","_estimated":true},{"originalPriceUSD":39.99,"price":799800,"id":"net_msi_ax1800","name":"MSI AX1800","_pricing":{"usd":39.99,"rate":25000,"discount":0.2,"baseVnd":999750,"finalVnd":799800}},{"originalPriceUSD":14.99,"price":299800,"id":"net_tp_link_archer_t2u_nano","name":"TP-Link Archer T2U Nano","_pricing":{"usd":14.99,"rate":25000,"discount":0.2,"baseVnd":374750,"finalVnd":299800}},{"originalPriceUSD":23.99,"price":479800,"id":"net_tp_link_archer_t4u_plus","name":"TP-Link Archer T4U Plus","_pricing":{"usd":23.99,"rate":25000,"discount":0.2,"baseVnd":599750,"finalVnd":479800}},{"price":792100,"id":"net_edup_ep_9651gs","name":"EDUP EP-9651GS","_estimated":true},{"originalPriceUSD":110,"price":2200000,"id":"net_intel_7260hmwdtx1","name":"Intel 7260HMWDTX1","_pricing":{"usd":110,"rate":25000,"discount":0.2,"baseVnd":2750000,"finalVnd":2200000}},{"originalPriceUSD":29,"price":580000,"id":"net_asus_usb_ac53_nano","name":"Asus USB-AC53 NANO","_pricing":{"usd":29,"rate":25000,"discount":0.2,"baseVnd":725000,"finalVnd":580000}},{"originalPriceUSD":69.99,"price":1399800,"id":"net_asus_pce_axe59bt","name":"Asus PCE-AXE59BT","_pricing":{"usd":69.99,"rate":25000,"discount":0.2,"baseVnd":1749750,"finalVnd":1399800}},{"price":792100,"id":"net_brostrend_ac5","name":"BrosTrend AC5","_estimated":true},{"price":792100,"id":"net_d_link_dwa_582","name":"D-Link DWA-582","_estimated":true},{"originalPriceUSD":18.98,"price":379600,"id":"net_tp_link_tl_wn823n","name":"TP-Link TL-WN823N","_pricing":{"usd":18.98,"rate":25000,"discount":0.2,"baseVnd":474500,"finalVnd":379600}},{"originalPriceUSD":83.94,"price":1678800,"id":"net_belkin_f9l1101","name":"Belkin F9L1101","_pricing":{"usd":83.94,"rate":25000,"discount":0.2,"baseVnd":2098500,"finalVnd":1678800}},{"originalPriceUSD":50.04,"price":1000800,"id":"net_asus_pce_ac51","name":"Asus PCE-AC51","_pricing":{"usd":50.04,"rate":25000,"discount":0.2,"baseVnd":1251000,"finalVnd":1000800}},{"originalPriceUSD":16.21,"price":324200,"id":"net_rosewill_rnx_n250pce","name":"Rosewill RNX-N250PCe","_pricing":{"usd":16.21,"rate":25000,"discount":0.2,"baseVnd":405250,"finalVnd":324200}},{"originalPriceUSD":89.99,"price":1799800,"id":"net_tp_link_archer_t9e","name":"TP-Link Archer T9E","_pricing":{"usd":89.99,"rate":25000,"discount":0.2,"baseVnd":2249750,"finalVnd":1799800}},{"originalPriceUSD":59.09,"price":1181800,"id":"net_netgear_nighthawk_ac1900_a7000_10000s","name":"Netgear Nighthawk AC1900 A7000-10000S","_pricing":{"usd":59.09,"rate":25000,"discount":0.2,"baseVnd":1477250,"finalVnd":1181800}},{"price":792100,"id":"net_ubit_g10h_ax210s","name":"Ubit G10H-AX210S","_estimated":true},{"originalPriceUSD":45.59,"price":911800,"id":"net_fenvi_fv_t919","name":"fenvi FV-T919","_pricing":{"usd":45.59,"rate":25000,"discount":0.2,"baseVnd":1139750,"finalVnd":911800}},{"price":792100,"id":"net_fenvi_fv_ax3000","name":"fenvi FV-AX3000","_estimated":true},{"originalPriceUSD":61.72,"price":1234400,"id":"net_netgear_a6100_100pas","name":"Netgear A6100-100PAS","_pricing":{"usd":61.72,"rate":25000,"discount":0.2,"baseVnd":1543000,"finalVnd":1234400}},{"price":792100,"id":"net_asus_pce_ac55bt_b1","name":"Asus PCE-AC55BT B1","_estimated":true},{"originalPriceUSD":66.03,"price":1320600,"id":"net_asus_usb_ax56","name":"Asus USB-AX56","_pricing":{"usd":66.03,"rate":25000,"discount":0.2,"baseVnd":1650750,"finalVnd":1320600}},{"price":792100,"id":"net_tp_link_tl_wn722n","name":"TP-Link TL-WN722N","_estimated":true},{"originalPriceUSD":34.95,"price":699000,"id":"net_fenvi_fv_hb1200","name":"fenvi FV-HB1200","_pricing":{"usd":34.95,"rate":25000,"discount":0.2,"baseVnd":873750,"finalVnd":699000}},{"price":792100,"id":"net_asus_pce_n15","name":"Asus PCE-N15","_estimated":true},{"originalPriceUSD":39.99,"price":799800,"id":"net_d_link_dwa_140","name":"D-Link DWA-140","_pricing":{"usd":39.99,"rate":25000,"discount":0.2,"baseVnd":999750,"finalVnd":799800}},{"originalPriceUSD":23,"price":460000,"id":"net_rosewill_rnx_ac1300pcev2","name":"Rosewill RNX-AC1300PCEv2","_pricing":{"usd":23,"rate":25000,"discount":0.2,"baseVnd":575000,"finalVnd":460000}},{"originalPriceUSD":44.09,"price":881800,"id":"net_netgear_wnda4100_100nas","name":"Netgear WNDA4100-100NAS","_pricing":{"usd":44.09,"rate":25000,"discount":0.2,"baseVnd":1102250,"finalVnd":881800}},{"originalPriceUSD":17.98,"price":359600,"id":"net_tp_link_archer_t3u_nano","name":"TP-Link Archer T3U Nano","_pricing":{"usd":17.98,"rate":25000,"discount":0.2,"baseVnd":449500,"finalVnd":359600}},{"price":792100,"id":"net_asus_pce_ac58bt","name":"Asus PCE-AC58BT","_estimated":true},{"originalPriceUSD":48.87,"price":977400,"id":"net_d_link_dwa_552","name":"D-Link DWA-552","_pricing":{"usd":48.87,"rate":25000,"discount":0.2,"baseVnd":1221750,"finalVnd":977400}},{"originalPriceUSD":19.98,"price":399600,"id":"net_edimax_ew_7811uac","name":"Edimax EW-7811UAC","_pricing":{"usd":19.98,"rate":25000,"discount":0.2,"baseVnd":499500,"finalVnd":399600}},{"price":792100,"id":"net_gigabyte_gc_wb867d_i_rev_4_2","name":"Gigabyte GC-WB867D-I REV 4.2","_estimated":true},{"price":792100,"id":"net_intel_8265_ngwmg_s","name":"Intel 8265.NGWMG.S","_estimated":true},{"originalPriceUSD":39.99,"price":799800,"id":"net_tp_link_archer_tx21uh","name":"TP-Link Archer TX21UH","_pricing":{"usd":39.99,"rate":25000,"discount":0.2,"baseVnd":999750,"finalVnd":799800}},{"originalPriceUSD":34.99,"price":699800,"id":"net_tp_link_archer_t4u","name":"TP-Link Archer T4U","_pricing":{"usd":34.99,"rate":25000,"discount":0.2,"baseVnd":874750,"finalVnd":699800}},{"price":792100,"id":"net_asus_pce_ac55bt","name":"Asus PCE-AC55BT","_estimated":true},{"price":792100,"id":"net_d_link_dwa_x1850","name":"D-Link DWA-X1850","_estimated":true},{"originalPriceUSD":29.29,"price":585800,"id":"net_tp_link_archer_t2u","name":"TP-Link Archer T2U","_pricing":{"usd":29.29,"rate":25000,"discount":0.2,"baseVnd":732250,"finalVnd":585800}},{"originalPriceUSD":39.9,"price":798000,"id":"net_intel_62205anhmwdtx1","name":"Intel 62205ANHMWDTX1","_pricing":{"usd":39.9,"rate":25000,"discount":0.2,"baseVnd":997500,"finalVnd":798000}},{"originalPriceUSD":39.51,"price":790200,"id":"net_fenvi_fv_8802","name":"fenvi FV-8802","_pricing":{"usd":39.51,"rate":25000,"discount":0.2,"baseVnd":987750,"finalVnd":790200}},{"price":792100,"id":"net_netgear_a6210_100pas","name":"Netgear A6210-100PAS","_estimated":true},{"originalPriceUSD":25.74,"price":514800,"id":"net_tp_link_tl_wn822n","name":"TP-Link TL-WN822N","_pricing":{"usd":25.74,"rate":25000,"discount":0.2,"baseVnd":643500,"finalVnd":514800}},{"price":792100,"id":"net_fenvi_fv_axe3000","name":"fenvi FV-AXE3000","_estimated":true},{"price":792100,"id":"net_nec_np05lm1","name":"NEC NP05LM1","_estimated":true},{"price":792100,"id":"net_wavlink_wl_wn675x2","name":"Wavlink WL-WN675X2","_estimated":true},{"originalPriceUSD":29.99,"price":599800,"id":"net_brostrend_ac3","name":"BrosTrend AC3","_pricing":{"usd":29.99,"rate":25000,"discount":0.2,"baseVnd":749750,"finalVnd":599800}},{"price":792100,"id":"net_asus_pce_n10","name":"Asus PCE-N10","_estimated":true},{"originalPriceUSD":79.98,"price":1599600,"id":"net_tp_link_archer_t8e","name":"TP-Link Archer T8E","_pricing":{"usd":79.98,"rate":25000,"discount":0.2,"baseVnd":1999500,"finalVnd":1599600}},{"originalPriceUSD":109.95,"price":2199000,"id":"net_tp_link_archer_t2uh","name":"TP-Link Archer T2UH","_pricing":{"usd":109.95,"rate":25000,"discount":0.2,"baseVnd":2748750,"finalVnd":2199000}},{"originalPriceUSD":39.99,"price":799800,"id":"net_d_link_dwa_548","name":"D-Link DWA-548","_pricing":{"usd":39.99,"rate":25000,"discount":0.2,"baseVnd":999750,"finalVnd":799800}},{"price":792100,"id":"net_msi_ac905c","name":"MSI AC905C","_estimated":true},{"price":792100,"id":"net_fenvi_fv_axe210ng","name":"fenvi FV-AXE210NG","_estimated":true},{"originalPriceUSD":24.99,"price":499800,"id":"net_startech_pex300wn2x2","name":"StarTech PEX300WN2X2","_pricing":{"usd":24.99,"rate":25000,"discount":0.2,"baseVnd":624750,"finalVnd":499800}},{"price":792100,"id":"net_avm_fritz_wlan_stick_ac_430_mu_mimo","name":"AVM FRITZ! WLAN Stick AC 430 MU-MIMO","_estimated":true},{"price":792100,"id":"net_intel_9560_ngwg_nvr","name":"Intel 9560.NGWG.NVR","_estimated":true},{"originalPriceUSD":17.55,"price":351000,"id":"net_edimax_ew_7612pin_v2","name":"Edimax EW-7612PIN V2","_pricing":{"usd":17.55,"rate":25000,"discount":0.2,"baseVnd":438750,"finalVnd":351000}},{"price":792100,"id":"net_tp_link_tl_wn851nd","name":"TP-Link TL-WN851ND","_estimated":true},{"price":792100,"id":"net_d_link_dwa_131","name":"D-Link DWA-131","_estimated":true},{"originalPriceUSD":63.29,"price":1265800,"id":"net_rosewill_rnx_ac1900pce","name":"Rosewill RNX-AC1900PCE","_pricing":{"usd":63.29,"rate":25000,"discount":0.2,"baseVnd":1582250,"finalVnd":1265800}},{"price":792100,"id":"net_cisco_air_pi21ag_a_k9","name":"Cisco AIR-PI21AG-A-K9","_estimated":true},{"originalPriceUSD":14,"price":280000,"id":"net_intel_6235an_hmwwb","name":"Intel 6235AN.HMWWB","_pricing":{"usd":14,"rate":25000,"discount":0.2,"baseVnd":350000,"finalVnd":280000}},{"originalPriceUSD":46.17,"price":923400,"id":"net_netgear_a6200_100nas","name":"Netgear A6200-100NAS","_pricing":{"usd":46.17,"rate":25000,"discount":0.2,"baseVnd":1154250,"finalVnd":923400}},{"originalPriceUSD":79.98,"price":1599600,"id":"net_tp_link_tl_wn951n","name":"TP-Link TL-WN951N","_pricing":{"usd":79.98,"rate":25000,"discount":0.2,"baseVnd":1999500,"finalVnd":1599600}},{"price":792100,"id":"net_fenvi_fv_axe3000rgb","name":"fenvi FV-AXE3000RGB","_estimated":true},{"price":792100,"id":"net_msi_ac905c_v2","name":"MSI AC905C-V2","_estimated":true},{"originalPriceUSD":20.99,"price":419800,"id":"net_brostrend_ac1","name":"BrosTrend AC1","_pricing":{"usd":20.99,"rate":25000,"discount":0.2,"baseVnd":524750,"finalVnd":419800}},{"price":792100,"id":"net_hp_fh971aa","name":"HP FH971AA","_estimated":true},{"price":792100,"id":"net_trendnet_tew_648ubm","name":"TRENDnet TEW-648UBM","_estimated":true},{"price":792100,"id":"net_asus_usb_ac56","name":"Asus USB-AC56","_estimated":true},{"originalPriceUSD":35,"price":700000,"id":"net_intel_7260","name":"Intel 7260","_pricing":{"usd":35,"rate":25000,"discount":0.2,"baseVnd":875000,"finalVnd":700000}},{"originalPriceUSD":74.11,"price":1482200,"id":"net_tp_link_archer_t4uh","name":"TP-Link Archer T4UH","_pricing":{"usd":74.11,"rate":25000,"discount":0.2,"baseVnd":1852750,"finalVnd":1482200}},{"price":792100,"id":"net_rosewill_n900pce","name":"Rosewill N900PCE","_estimated":true},{"price":792100,"id":"net_tp_link_tl_wdn3800","name":"TP-Link TL-WDN3800","_estimated":true},{"price":792100,"id":"net_feb_smart_fs_n600_basic_edition","name":"Feb Smart FS-N600 Basic Edition","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_ac600pcev3","name":"Rosewill RNX-AC600PCEv3","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_ac1200pcev2","name":"Rosewill RNX-AC1200PCEv2","_estimated":true},{"price":792100,"id":"net_hp_9260","name":"HP 9260","_estimated":true},{"originalPriceUSD":34.99,"price":699800,"id":"net_netgear_a6150_100pas","name":"Netgear A6150-100PAS","_pricing":{"usd":34.99,"rate":25000,"discount":0.2,"baseVnd":874750,"finalVnd":699800}},{"price":792100,"id":"net_ziyituod_zyt_7265","name":"Ziyituod ZYT-7265","_estimated":true},{"price":792100,"id":"net_fenvi_wi_fi_7_fv_be8800pro","name":"fenvi Wi-Fi 7 FV-BE8800Pro","_estimated":true},{"originalPriceUSD":29.98,"price":599600,"id":"net_rosewill_rnx_n300x","name":"Rosewill RNX-N300X","_pricing":{"usd":29.98,"rate":25000,"discount":0.2,"baseVnd":749500,"finalVnd":599600}},{"price":792100,"id":"net_intel_62205an_hmwwb","name":"Intel 62205AN.HMWWB","_estimated":true},{"originalPriceUSD":18.05,"price":361000,"id":"net_edimax_ew_7811utc","name":"Edimax EW-7811UTC","_pricing":{"usd":18.05,"rate":25000,"discount":0.2,"baseVnd":451250,"finalVnd":361000}},{"price":792100,"id":"net_trendnet_tbw_108ub","name":"TRENDnet TBW-108UB","_estimated":true},{"originalPriceUSD":30.66,"price":613200,"id":"net_trendnet_tew_643pi","name":"TRENDnet TEW-643PI","_pricing":{"usd":30.66,"rate":25000,"discount":0.2,"baseVnd":766500,"finalVnd":613200}},{"originalPriceUSD":18.5,"price":370000,"id":"net_startech_usb433wacdb","name":"StarTech USB433WACDB","_pricing":{"usd":18.5,"rate":25000,"discount":0.2,"baseVnd":462500,"finalVnd":370000}},{"price":792100,"id":"net_edimax_ew_7811dac","name":"Edimax EW-7811DAC","_estimated":true},{"price":792100,"id":"net_encore_enuwi_1xn45","name":"Encore ENUWI-1XN45","_estimated":true},{"originalPriceUSD":59.99,"price":1199800,"id":"net_3m_78_6972_0104_0","name":"3M 78-6972-0104-0","_pricing":{"usd":59.99,"rate":25000,"discount":0.2,"baseVnd":1499750,"finalVnd":1199800}},{"price":792100,"id":"net_tp_link_tl_wn8200nd","name":"TP-Link TL-WN8200ND","_estimated":true},{"originalPriceUSD":44.95,"price":899000,"id":"net_edimax_ew_7822pic","name":"Edimax EW-7822PIC","_pricing":{"usd":44.95,"rate":25000,"discount":0.2,"baseVnd":1123750,"finalVnd":899000}},{"price":792100,"id":"net_syba_sy_pex23063","name":"Syba SY-PEX23063","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_ac1900pcev2","name":"Rosewill RNX-AC1900PCEv2","_estimated":true},{"price":792100,"id":"net_fenvi_fv_2030t","name":"fenvi FV-2030T","_estimated":true},{"price":792100,"id":"net_asus_usb_n13_c1","name":"Asus USB-N13 C1","_estimated":true},{"originalPriceUSD":38.99,"price":779800,"id":"net_linksys_wusb6300","name":"Linksys WUSB6300","_pricing":{"usd":38.99,"rate":25000,"discount":0.2,"baseVnd":974750,"finalVnd":779800}},{"originalPriceUSD":16.98,"price":339600,"id":"net_tp_link_archer_t1u","name":"TP-Link Archer T1U","_pricing":{"usd":16.98,"rate":25000,"discount":0.2,"baseVnd":424500,"finalVnd":339600}},{"originalPriceUSD":37.99,"price":759800,"id":"net_brostrend_ac3l_linux_wi_fi_adapter","name":"BrosTrend AC3L Linux Wi-Fi Adapter","_pricing":{"usd":37.99,"rate":25000,"discount":0.2,"baseVnd":949750,"finalVnd":759800}},{"originalPriceUSD":27.94,"price":558800,"id":"net_tp_link_archer_t4u_v2","name":"TP-Link Archer T4U V2","_pricing":{"usd":27.94,"rate":25000,"discount":0.2,"baseVnd":698500,"finalVnd":558800}},{"originalPriceUSD":99.95,"price":1999000,"id":"net_rosewill_rnx_n150pcx","name":"Rosewill RNX-N150PCx","_pricing":{"usd":99.95,"rate":25000,"discount":0.2,"baseVnd":2498750,"finalVnd":1999000}},{"originalPriceUSD":57.99,"price":1159800,"id":"net_tp_link_tl_wn751nd","name":"TP-Link TL-WN751ND","_pricing":{"usd":57.99,"rate":25000,"discount":0.2,"baseVnd":1449750,"finalVnd":1159800}},{"originalPriceUSD":20.99,"price":419800,"id":"net_edimax_ew_7822utc","name":"Edimax EW-7822UTC","_pricing":{"usd":20.99,"rate":25000,"discount":0.2,"baseVnd":524750,"finalVnd":419800}},{"originalPriceUSD":39.97,"price":799400,"id":"net_linksys_wusb6100m","name":"Linksys WUSB6100M","_pricing":{"usd":39.97,"rate":25000,"discount":0.2,"baseVnd":999250,"finalVnd":799400}},{"price":792100,"id":"net_asus_pce_ac66","name":"Asus PCE-AC66","_estimated":true},{"price":792100,"id":"net_asus_usb_n13","name":"Asus USB-N13","_estimated":true},{"price":792100,"id":"net_encore_enuwi_g2","name":"Encore ENUWI-G2","_estimated":true},{"price":792100,"id":"net_linksys_wmp600n","name":"Linksys WMP600N","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_g300lx","name":"Rosewill RNX-G300LX","_estimated":true},{"price":792100,"id":"net_asus_pce_n53","name":"Asus PCE-N53","_estimated":true},{"originalPriceUSD":64.97,"price":1299400,"id":"net_linksys_ae2500","name":"Linksys AE2500","_pricing":{"usd":64.97,"rate":25000,"discount":0.2,"baseVnd":1624250,"finalVnd":1299400}},{"price":792100,"id":"net_intel_2200bnhmwdtx1","name":"Intel 2200BNHMWDTX1","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_n600ube","name":"Rosewill RNX-N600UBE","_estimated":true},{"price":792100,"id":"net_trendnet_tew_424ub","name":"TRENDnet TEW-424UB","_estimated":true},{"price":792100,"id":"net_netgear_wna3100_100ens","name":"Netgear WNA3100-100ENS","_estimated":true},{"price":792100,"id":"net_netgear_wnda3100_100nas","name":"Netgear WNDA3100-100NAS","_estimated":true},{"price":792100,"id":"net_tp_link_tl_wdn3200","name":"TP-Link TL-WDN3200","_estimated":true},{"price":792100,"id":"net_tp_link_tl_wn723n","name":"TP-Link TL-WN723N","_estimated":true},{"price":792100,"id":"net_intel_7260hmw","name":"Intel 7260HMW","_estimated":true},{"price":792100,"id":"net_tp_link_tl_wn7200nd","name":"TP-Link TL-WN7200ND","_estimated":true},{"price":792100,"id":"net_asus_usb_ac53","name":"Asus USB-AC53","_estimated":true},{"originalPriceUSD":44.99,"price":899800,"id":"net_edimax_ew_7822uac","name":"Edimax EW-7822UAC","_pricing":{"usd":44.99,"rate":25000,"discount":0.2,"baseVnd":1124750,"finalVnd":899800}},{"price":792100,"id":"net_tp_link_tl_wn721n","name":"TP-Link TL-WN721N","_estimated":true},{"originalPriceUSD":17.98,"price":359600,"id":"net_belkin_f9l1001","name":"Belkin F9L1001","_pricing":{"usd":17.98,"rate":25000,"discount":0.2,"baseVnd":449500,"finalVnd":359600}},{"price":792100,"id":"net_rosewill_ac1200ube","name":"Rosewill AC1200UBE","_estimated":true},{"price":792100,"id":"net_asus_usb_ac51","name":"Asus USB-AC51","_estimated":true},{"originalPriceUSD":19.99,"price":399800,"id":"net_startech_usb150wn1x1w","name":"StarTech USB150WN1X1W","_pricing":{"usd":19.99,"rate":25000,"discount":0.2,"baseVnd":499750,"finalVnd":399800}},{"price":792100,"id":"net_asus_usb_ac55","name":"Asus USB-AC55","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_ac1200pce","name":"Rosewill RNX-AC1200PCE","_estimated":true},{"originalPriceUSD":42,"price":840000,"id":"net_startech_pex867wac22","name":"StarTech PEX867WAC22","_pricing":{"usd":42,"rate":25000,"discount":0.2,"baseVnd":1050000,"finalVnd":840000}},{"price":792100,"id":"net_rosewill_rnx_n150nub","name":"Rosewill RNX-N150NUB","_estimated":true},{"originalPriceUSD":76.89,"price":1537800,"id":"net_linksys_ae3000_ca","name":"Linksys AE3000-CA","_pricing":{"usd":76.89,"rate":25000,"discount":0.2,"baseVnd":1922250,"finalVnd":1537800}},{"price":792100,"id":"net_inamax_4332804407","name":"Inamax 4332804407","_estimated":true},{"price":792100,"id":"net_brostrend_ac6","name":"BrosTrend AC6","_estimated":true},{"originalPriceUSD":25.99,"price":519800,"id":"net_startech_usb433acd1x1","name":"StarTech USB433ACD1X1","_pricing":{"usd":25.99,"rate":25000,"discount":0.2,"baseVnd":649750,"finalVnd":519800}},{"price":792100,"id":"net_tp_link_archer_t4uhp","name":"TP-Link ARCHER T4UHP","_estimated":true},{"price":792100,"id":"net_infocus_ina_wifiusb_4","name":"InFocus INA-WIFIUSB-4","_estimated":true},{"price":792100,"id":"net_hp_8265","name":"HP 8265","_estimated":true},{"price":792100,"id":"net_fenvi_fv8303","name":"fenvi FV8303","_estimated":true},{"price":792100,"id":"net_intel_8265_ngwmg_dtx1","name":"Intel 8265.NGWMG.DTX1","_estimated":true},{"price":792100,"id":"net_gigabyte_gc_wbax1200","name":"Gigabyte GC-WBAX1200","_estimated":true},{"originalPriceUSD":16.22,"price":324400,"id":"net_siig_ju_wr0112_s2","name":"SIIG JU-WR0112-S2","_pricing":{"usd":16.22,"rate":25000,"discount":0.2,"baseVnd":405500,"finalVnd":324400}},{"price":792100,"id":"net_rosewill_rnx_ac3000","name":"Rosewill RNX-AC3000","_estimated":true},{"originalPriceUSD":61.34,"price":1226800,"id":"net_belkin_b2n002","name":"Belkin B2N002","_pricing":{"usd":61.34,"rate":25000,"discount":0.2,"baseVnd":1533500,"finalVnd":1226800}},{"price":792100,"id":"net_d_link_dwa_121","name":"D-Link DWA-121","_estimated":true},{"originalPriceUSD":13.99,"price":279800,"id":"net_d_link_dwa_162","name":"D-Link DWA-162","_pricing":{"usd":13.99,"rate":25000,"discount":0.2,"baseVnd":349750,"finalVnd":279800}},{"originalPriceUSD":36,"price":720000,"id":"net_d_link_dwa_171","name":"D-Link DWA-171","_pricing":{"usd":36,"rate":25000,"discount":0.2,"baseVnd":900000,"finalVnd":720000}},{"originalPriceUSD":41.23,"price":824600,"id":"net_startech_usb867wac22","name":"StarTech USB867WAC22","_pricing":{"usd":41.23,"rate":25000,"discount":0.2,"baseVnd":1030750,"finalVnd":824600}},{"originalPriceUSD":23.87,"price":477400,"id":"net_trendnet_tew_806ubh","name":"TRENDnet TEW-806UBH","_pricing":{"usd":23.87,"rate":25000,"discount":0.2,"baseVnd":596750,"finalVnd":477400}},{"originalPriceUSD":27.99,"price":559800,"id":"net_brostrend_ac1l","name":"BrosTrend AC1L","_pricing":{"usd":27.99,"rate":25000,"discount":0.2,"baseVnd":699750,"finalVnd":559800}},{"originalPriceUSD":25,"price":500000,"id":"net_netgear_a6100_10000s","name":"Netgear A6100-10000S","_pricing":{"usd":25,"rate":25000,"discount":0.2,"baseVnd":625000,"finalVnd":500000}},{"price":792100,"id":"net_asus_usb_n10","name":"Asus USB-N10","_estimated":true},{"originalPriceUSD":49.99,"price":999800,"id":"net_belkin_f7d2102","name":"Belkin F7D2102","_pricing":{"usd":49.99,"rate":25000,"discount":0.2,"baseVnd":1249750,"finalVnd":999800}},{"price":792100,"id":"net_encore_enewi_1xn42","name":"Encore ENEWI-1XN42","_estimated":true},{"price":792100,"id":"net_iogear_gwu625","name":"IOGEAR GWU625","_estimated":true},{"price":792100,"id":"net_intel_2200bnhmwdtx1g","name":"Intel 2200BNHMWDTX1G","_estimated":true},{"price":792100,"id":"net_intel_633an_hmwwb","name":"Intel 633AN.HMWWB","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_minin2_rwld_11002_","name":"Rosewill RNX-MiniN2(RWLD-11002)","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_n150pce","name":"Rosewill RNX-N150PCe","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_n150ube","name":"Rosewill RNX-N150UBE","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_n180ub","name":"Rosewill RNX-N180UB","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_n180ube","name":"Rosewill RNX-N180UBE","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_n250ube","name":"Rosewill RNX-N250UBE","_estimated":true},{"price":792100,"id":"net_startech_usb300wn2x2d","name":"StarTech USB300WN2X2D","_estimated":true},{"price":792100,"id":"net_syba_cl_ada23032","name":"Syba CL-ADA23032","_estimated":true},{"price":792100,"id":"net_syba_cl_ada24004","name":"Syba CL-ADA24004","_estimated":true},{"price":792100,"id":"net_syba_sy_ada23026","name":"Syba SY-ADA23026","_estimated":true},{"price":792100,"id":"net_trendnet_tew_648ub","name":"TRENDnet TEW-648UB","_estimated":true},{"price":792100,"id":"net_trendnet_tew_646ubh","name":"TRENDnet TEW-646UBH","_estimated":true},{"price":792100,"id":"net_trendnet_tew_703pil","name":"TRENDnet TEW-703PIL","_estimated":true},{"price":792100,"id":"net_trendnet_tew_703pi","name":"TRENDnet TEW-703PI","_estimated":true},{"price":792100,"id":"net_rosewill_n900ube","name":"Rosewill N900UBE","_estimated":true},{"price":792100,"id":"net_asus_usb_n53","name":"Asus USB-N53","_estimated":true},{"price":792100,"id":"net_asus_usb_n66","name":"Asus USB-N66","_estimated":true},{"price":792100,"id":"net_linksys_ae1200_np","name":"Linksys AE1200-NP","_estimated":true},{"originalPriceUSD":19.98,"price":399600,"id":"net_linksys_ae1200","name":"Linksys AE1200","_pricing":{"usd":19.98,"rate":25000,"discount":0.2,"baseVnd":499500,"finalVnd":399600}},{"price":792100,"id":"net_rosewill_rnwd_n1501ub","name":"Rosewill RNWD-N1501UB","_estimated":true},{"price":792100,"id":"net_linksys_ae3000_np","name":"Linksys AE3000-NP","_estimated":true},{"originalPriceUSD":39.95,"price":799000,"id":"net_linksys_ae3000","name":"Linksys AE3000","_pricing":{"usd":39.95,"rate":25000,"discount":0.2,"baseVnd":998750,"finalVnd":799000}},{"price":792100,"id":"net_rosewill_rnx_n250pc2","name":"Rosewill RNX-N250PC2","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_n150hg","name":"Rosewill RNX-N150HG","_estimated":true},{"price":792100,"id":"net_linksys_ae2500_np","name":"Linksys AE2500-NP","_estimated":true},{"price":792100,"id":"net_rosewill_rnwd_n1502ube","name":"Rosewill RNWD-N1502UBE","_estimated":true},{"price":792100,"id":"net_belkin_e9l1500","name":"Belkin E9L1500","_estimated":true},{"price":792100,"id":"net_belkin_e9l3000","name":"Belkin E9L3000","_estimated":true},{"price":792100,"id":"net_belkin_e9l6000","name":"Belkin E9L6000","_estimated":true},{"price":792100,"id":"net_belkin_e9l7500","name":"Belkin E9L7500","_estimated":true},{"price":792100,"id":"net_diamond_wl700nxs","name":"Diamond WL700NXS","_estimated":true},{"price":792100,"id":"net_encore_enuwi_1xn42","name":"Encore ENUWI-1XN42","_estimated":true},{"originalPriceUSD":21,"price":420000,"id":"net_encore_enuwi_1xn4m","name":"Encore ENUWI-1XN4M","_pricing":{"usd":21,"rate":25000,"discount":0.2,"baseVnd":525000,"finalVnd":420000}},{"price":792100,"id":"net_encore_enuwi_2xn42","name":"Encore ENUWI-2XN42","_estimated":true},{"price":792100,"id":"net_encore_enuwi_2xn45","name":"Encore ENUWI-2XN45","_estimated":true},{"price":792100,"id":"net_iogear_gwu627w6","name":"IOGEAR GWU627W6","_estimated":true},{"price":792100,"id":"net_patriot_pcusbw1150","name":"Patriot PCUSBW1150","_estimated":true},{"price":792100,"id":"net_trendnet_tew_684ub","name":"TRENDnet TEW-684UB","_estimated":true},{"price":792100,"id":"net_trendnet_tew_649ub","name":"TRENDnet TEW-649UB","_estimated":true},{"price":792100,"id":"net_encore_enewi_1xn45","name":"Encore ENEWI-1XN45","_estimated":true},{"price":792100,"id":"net_encore_enewi_2xn42","name":"Encore ENEWI-2XN42","_estimated":true},{"price":792100,"id":"net_encore_enewi_2xn45","name":"Encore ENEWI-2XN45","_estimated":true},{"price":792100,"id":"net_rosewill_n600pce","name":"Rosewill N600PCE","_estimated":true},{"price":792100,"id":"net_trendnet_tew_623pi","name":"TRENDnet TEW-623PI","_estimated":true},{"originalPriceUSD":44.98,"price":899600,"id":"net_d_link_dwa_125","name":"D-Link DWA-125","_pricing":{"usd":44.98,"rate":25000,"discount":0.2,"baseVnd":1124500,"finalVnd":899600}},{"price":792100,"id":"net_d_link_dwa_130","name":"D-Link DWA-130","_estimated":true},{"originalPriceUSD":48.99,"price":979800,"id":"net_d_link_dwa_160","name":"D-Link DWA-160","_pricing":{"usd":48.99,"rate":25000,"discount":0.2,"baseVnd":1224750,"finalVnd":979800}},{"originalPriceUSD":48,"price":960000,"id":"net_d_link_dwa_182","name":"D-Link DWA-182","_pricing":{"usd":48,"rate":25000,"discount":0.2,"baseVnd":1200000,"finalVnd":960000}},{"originalPriceUSD":49.99,"price":999800,"id":"net_d_link_dwa_566","name":"D-Link DWA-566","_pricing":{"usd":49.99,"rate":25000,"discount":0.2,"baseVnd":1249750,"finalVnd":999800}},{"price":792100,"id":"net_netgear_wn311b_100nas","name":"Netgear WN311B-100NAS","_estimated":true},{"price":792100,"id":"net_netgear_wna1000m_100ens","name":"Netgear WNA1000M-100ENS","_estimated":true},{"originalPriceUSD":62,"price":1240000,"id":"net_netgear_wna1100_100ens","name":"Netgear WNA1100-100ENS","_pricing":{"usd":62,"rate":25000,"discount":0.2,"baseVnd":1550000,"finalVnd":1240000}},{"price":792100,"id":"net_tp_link_tl_wn350gd","name":"TP-Link TL-WN350GD","_estimated":true},{"price":792100,"id":"net_tp_link_tl_wn727n","name":"TP-Link TL-WN727N","_estimated":true},{"price":792100,"id":"net_intel_6235anhmw","name":"Intel 6235ANHMW","_estimated":true},{"price":792100,"id":"net_intel_105","name":"Intel 105","_estimated":true},{"price":792100,"id":"net_intel_135","name":"Intel 135","_estimated":true},{"price":792100,"id":"net_intel_2200bnhmw","name":"Intel 2200BNHMW","_estimated":true},{"price":792100,"id":"net_intel_7260hmw_bn","name":"Intel 7260HMW BN","_estimated":true},{"price":792100,"id":"net_linksys_ae6000","name":"Linksys AE6000","_estimated":true},{"price":792100,"id":"net_orico_orico_wra150","name":"Orico ORICO WRA150","_estimated":true},{"price":792100,"id":"net_orico_orico_wrb150","name":"Orico ORICO WRB150","_estimated":true},{"price":792100,"id":"net_orico_orico_wrd150","name":"Orico ORICO WRD150","_estimated":true},{"price":792100,"id":"net_orico_wrd150blk","name":"Orico WRD150BLK","_estimated":true},{"price":792100,"id":"net_samsung_wis12abgnx_xaa","name":"Samsung WIS12ABGNX/XAA","_estimated":true},{"price":792100,"id":"net_startech_pci300wn2x2","name":"StarTech PCI300WN2X2","_estimated":true},{"price":792100,"id":"net_trendnet_tew_624ub","name":"TRENDnet TEW-624UB","_estimated":true},{"originalPriceUSD":49.99,"price":999800,"id":"net_trendnet_tew_664ub","name":"TRENDnet TEW-664UB","_pricing":{"usd":49.99,"rate":25000,"discount":0.2,"baseVnd":1249750,"finalVnd":999800}},{"price":792100,"id":"net_trendnet_tew_726ec","name":"TRENDnet TEW-726EC","_estimated":true},{"originalPriceUSD":27.83,"price":556600,"id":"net_trendnet_tew_805ub","name":"TRENDnet TEW-805UB","_pricing":{"usd":27.83,"rate":25000,"discount":0.2,"baseVnd":695750,"finalVnd":556600}},{"price":792100,"id":"net_d_link_dwa_180","name":"D-Link DWA-180","_estimated":true},{"price":792100,"id":"net_d_link_dwa_525","name":"D-Link DWA-525","_estimated":true},{"price":792100,"id":"net_edimax_ew_7811un","name":"Edimax EW-7811Un","_estimated":true},{"price":792100,"id":"net_edimax_ew_7128gn","name":"Edimax EW-7128Gn","_estimated":true},{"originalPriceUSD":42.49,"price":849800,"id":"net_edimax_ew_7612pin","name":"Edimax EW-7612PIn","_pricing":{"usd":42.49,"rate":25000,"discount":0.2,"baseVnd":1062250,"finalVnd":849800}},{"price":792100,"id":"net_edimax_ew_7711usn","name":"Edimax EW-7711USN","_estimated":true},{"price":792100,"id":"net_edimax_ew_7722in","name":"Edimax EW-7722In","_estimated":true},{"originalPriceUSD":23.98,"price":479600,"id":"net_edimax_ew_7722utn","name":"Edimax EW-7722UTn","_pricing":{"usd":23.98,"rate":25000,"discount":0.2,"baseVnd":599500,"finalVnd":479600}},{"price":792100,"id":"net_edimax_ew_7722pnd","name":"Edimax EW-7722PnD","_estimated":true},{"price":792100,"id":"net_edimax_ew_7722und","name":"Edimax EW-7722UnD","_estimated":true},{"price":792100,"id":"net_hawking_technology_hawnu1","name":"Hawking Technology HAWNU1","_estimated":true},{"price":792100,"id":"net_hawking_technology_hawnu2","name":"Hawking Technology HAWNU2","_estimated":true},{"price":792100,"id":"net_hawking_technology_hd45u","name":"Hawking Technology HD45U","_estimated":true},{"price":792100,"id":"net_hawking_technology_hwdn3","name":"Hawking Technology HWDN3","_estimated":true},{"price":792100,"id":"net_hawking_technology_hwug1","name":"Hawking Technology HWUG1","_estimated":true},{"price":792100,"id":"net_hawking_technology_hwun4","name":"Hawking Technology HWUN4","_estimated":true},{"price":792100,"id":"net_iogear_gwu523","name":"IOGEAR GWU523","_estimated":true},{"price":792100,"id":"net_patriot_pcbowau2_n","name":"Patriot PCBOWAU2-N","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_g300ex","name":"Rosewill RNX-G300EX","_estimated":true},{"price":792100,"id":"net_siig_cn_wr0811_s1","name":"SIIG CN-WR0811-S1","_estimated":true},{"price":792100,"id":"net_belkin_f9l1002","name":"Belkin F9L1002","_estimated":true},{"price":792100,"id":"net_belkin_f9l1103","name":"Belkin F9L1103","_estimated":true},{"price":792100,"id":"net_belkin_f9l1109_om","name":"Belkin F9L1109-OM","_estimated":true},{"originalPriceUSD":43.98,"price":879600,"id":"net_buffalo_technology_wi_u2_300d","name":"Buffalo Technology WI-U2-300D","_pricing":{"usd":43.98,"rate":25000,"discount":0.2,"baseVnd":1099500,"finalVnd":879600}},{"price":792100,"id":"net_belkin_f7d1102","name":"Belkin F7D1102","_estimated":true},{"price":792100,"id":"net_buffalo_technology_wi_u2_433dm","name":"Buffalo Technology WI-U2-433DM","_estimated":true},{"price":792100,"id":"net_cisco_am10","name":"Cisco AM10","_estimated":true},{"price":792100,"id":"net_d_link_n69506","name":"D-Link N69506","_estimated":true},{"price":792100,"id":"net_encore_enlwi_n3","name":"Encore ENLWI-N3","_estimated":true},{"originalPriceUSD":52.99,"price":1059800,"id":"net_linksys_wusb600n","name":"Linksys WUSB600N","_pricing":{"usd":52.99,"rate":25000,"discount":0.2,"baseVnd":1324750,"finalVnd":1059800}},{"price":792100,"id":"net_siig_ju_wr0012_s1","name":"SIIG JU-WR0012-S1","_estimated":true},{"price":792100,"id":"net_siig_ju_wr0212_s1","name":"SIIG JU-WR0212-S1","_estimated":true},{"price":792100,"id":"net_trendnet_tew_804ub","name":"TRENDnet TEW-804UB","_estimated":true},{"price":792100,"id":"net_siig_ju_wr0112_s1","name":"SIIG JU-WR0112-S1","_estimated":true},{"price":792100,"id":"net_tp_link_tl_wdn4200","name":"TP-Link TL-WDN4200","_estimated":true},{"price":792100,"id":"net_cisco_ae3000","name":"Cisco AE3000","_estimated":true},{"price":792100,"id":"net_intel_6205","name":"Intel 6205","_estimated":true},{"price":792100,"id":"net_belkin_ae3000","name":"Belkin AE3000","_estimated":true},{"price":792100,"id":"net_belkin_f7d2102tt","name":"Belkin F7D2102TT","_estimated":true},{"price":792100,"id":"net_benq_wdrt8192","name":"BenQ WDRT8192","_estimated":true},{"price":792100,"id":"net_cisco_ae1200","name":"Cisco AE1200","_estimated":true},{"originalPriceUSD":59.99,"price":1199800,"id":"net_cisco_ae2500","name":"Cisco AE2500","_pricing":{"usd":59.99,"rate":25000,"discount":0.2,"baseVnd":1499750,"finalVnd":1199800}},{"price":792100,"id":"net_hawking_technology_hd65u","name":"Hawking Technology HD65U","_estimated":true},{"price":792100,"id":"net_hawking_technology_hw7acu","name":"Hawking Technology HW7ACU","_estimated":true},{"price":792100,"id":"net_iogear_gwu735","name":"IOGEAR GWU735","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_ac1200ube2","name":"Rosewill RNX-AC1200UBE2","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_n600ub","name":"Rosewill RNX-N600UB","_estimated":true},{"originalPriceUSD":18,"price":360000,"id":"net_startech_usb300wn2x2c","name":"StarTech USB300WN2X2C","_pricing":{"usd":18,"rate":25000,"discount":0.2,"baseVnd":450000,"finalVnd":360000}},{"price":792100,"id":"net_edimax_ew_7711mac","name":"Edimax EW-7711MAC","_estimated":true},{"price":792100,"id":"net_intel_3160_ngwg","name":"Intel 3160.NGWG","_estimated":true},{"price":792100,"id":"net_intel_6300","name":"Intel 6300","_estimated":true},{"price":792100,"id":"net_asus_usb_ac68","name":"Asus USB-AC68","_estimated":true},{"price":792100,"id":"net_aukey_wf_r12","name":"AUKEY WF-R12","_estimated":true},{"price":792100,"id":"net_athenatech_ne_wn3201d","name":"Athenatech NE-WN3201D","_estimated":true},{"price":792100,"id":"net_d_link_dwa_192","name":"D-Link DWA-192","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_n600pce_v2_0","name":"Rosewill RNX-N600PCE_v2.0","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_n300ub","name":"Rosewill RNX-N300UB","_estimated":true},{"price":792100,"id":"net_trendnet_tew_807ech","name":"TRENDnet TEW-807ECH","_estimated":true},{"price":792100,"id":"net_linksys_ae2500_ca","name":"Linksys AE2500-CA","_estimated":true},{"price":792100,"id":"net_netgear_wf2190","name":"Netgear WF2190","_estimated":true},{"price":792100,"id":"net_hawking_technology_hw17acu","name":"Hawking Technology HW17ACU","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_ac1200ubv2","name":"Rosewill RNX-AC1200UBv2","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_ac600hgubev2","name":"Rosewill RNX-AC600HGUBEv2","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_ac600nubv2","name":"Rosewill RNX-AC600NUBv2","_estimated":true},{"price":792100,"id":"net_asus_usb_ac55_b1","name":"Asus USB-AC55 B1","_estimated":true},{"price":792100,"id":"net_trendnet_tew_808ubm","name":"TRENDnet TEW-808UBM","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_ac2030pce","name":"Rosewill RNX-AC2030PCE","_estimated":true},{"price":792100,"id":"net_rosewill_rnx_ac1900ub","name":"Rosewill RNX-AC1900UB","_estimated":true},{"price":792100,"id":"net_hawking_technology_hw12acu","name":"Hawking Technology HW12ACU","_estimated":true},{"price":792100,"id":"net_syba_sy_pex23059","name":"Syba SY-PEX23059","_estimated":true},{"price":792100,"id":"net_sabrent_usbg802","name":"Sabrent USBG802","_estimated":true},{"price":792100,"id":"net_sabrent_usb_802n","name":"Sabrent USB-802N","_estimated":true},{"price":792100,"id":"net_belkin_linksys_ae1200_np","name":"Belkin Linksys AE1200-NP","_estimated":true},{"price":792100,"id":"net_hommie_n900","name":"Hommie N900","_estimated":true},{"price":792100,"id":"net_fenvi_fv_ax3000r","name":"fenvi FV-AX3000R","_estimated":true},{"price":792100,"id":"net_fenvi_wi_fi_7_fv_be8800","name":"fenvi Wi-Fi 7 FV-BE8800","_estimated":true},{"originalPriceUSD":19.79,"price":395800,"id":"net_d_link_dwa_181_us","name":"D-Link DWA-181-US","_pricing":{"usd":19.79,"rate":25000,"discount":0.2,"baseVnd":494750,"finalVnd":395800}},{"price":792100,"id":"net_d_link_dwa_x3000","name":"D-Link DWA-X3000","_estimated":true},{"originalPriceUSD":45.99,"price":919800,"id":"net_siig_lb_wr0111_s1","name":"SIIG LB-WR0111-S1","_pricing":{"usd":45.99,"rate":25000,"discount":0.2,"baseVnd":1149750,"finalVnd":919800}},{"originalPriceUSD":39.51,"price":790200,"id":"net_siig_lb_wr0011_s1","name":"SIIG LB-WR0011-S1","_pricing":{"usd":39.51,"rate":25000,"discount":0.2,"baseVnd":987750,"finalVnd":790200}}]
+[
+    {
+        "originalPriceUSD": 14.99,
+        "price": 299800,
+        "id": "net_tp_link_tg_3468",
+        "name": "TP-Link TG-3468",
+        "_pricing": {
+            "usd": 14.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 374750,
+            "finalVnd": 299800
+        }
+    },
+    {
+        "originalPriceUSD": 452.97,
+        "price": 9059400,
+        "id": "net_startech_st10gpexndpi",
+        "name": "StarTech ST10GPEXNDPI",
+        "_pricing": {
+            "usd": 452.97,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 11324250,
+            "finalVnd": 9059400
+        }
+    },
+    {
+        "originalPriceUSD": 99.99,
+        "price": 1999800,
+        "id": "net_asus_xg_c100c",
+        "name": "Asus XG-C100C",
+        "_pricing": {
+            "usd": 99.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2499750,
+            "finalVnd": 1999800
+        }
+    },
+    {
+        "originalPriceUSD": 87,
+        "price": 1740000,
+        "id": "net_intel_x540_t2",
+        "name": "Intel X540-T2",
+        "_pricing": {
+            "usd": 87,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2175000,
+            "finalVnd": 1740000
+        }
+    },
+    {
+        "originalPriceUSD": 24.99,
+        "price": 499800,
+        "id": "net_tp_link_tx201",
+        "name": "TP-Link TX201",
+        "_pricing": {
+            "usd": 24.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 624750,
+            "finalVnd": 499800
+        }
+    },
+    {
+        "originalPriceUSD": 99.99,
+        "price": 1999800,
+        "id": "net_tp_link_tx401",
+        "name": "TP-Link TX401",
+        "_pricing": {
+            "usd": 99.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2499750,
+            "finalVnd": 1999800
+        }
+    },
+    {
+        "originalPriceUSD": 116.72,
+        "price": 2334400,
+        "id": "net_intel_x550_t2",
+        "name": "Intel X550-T2",
+        "_pricing": {
+            "usd": 116.72,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2918000,
+            "finalVnd": 2334400
+        }
+    },
+    {
+        "originalPriceUSD": 420.79,
+        "price": 8415800,
+        "id": "net_startech_st1000spex42",
+        "name": "StarTech ST1000SPEX42",
+        "_pricing": {
+            "usd": 420.79,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 10519750,
+            "finalVnd": 8415800
+        }
+    },
+    {
+        "originalPriceUSD": 256.99,
+        "price": 5139800,
+        "id": "net_intel_x710_t2l",
+        "name": "Intel X710-T2L",
+        "_pricing": {
+            "usd": 256.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 6424750,
+            "finalVnd": 5139800
+        }
+    },
+    {
+        "originalPriceUSD": 129,
+        "price": 2580000,
+        "id": "net_intel_x540t1",
+        "name": "Intel X540T1",
+        "_pricing": {
+            "usd": 129,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3225000,
+            "finalVnd": 2580000
+        }
+    },
+    {
+        "originalPriceUSD": 99,
+        "price": 1980000,
+        "id": "net_intel_x520_da1",
+        "name": "Intel X520-DA1",
+        "_pricing": {
+            "usd": 99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2475000,
+            "finalVnd": 1980000
+        }
+    },
+    {
+        "originalPriceUSD": 54.24,
+        "price": 1084800,
+        "id": "net_intel_expi9301ctblk",
+        "name": "Intel EXPI9301CTBLK",
+        "_pricing": {
+            "usd": 54.24,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1356000,
+            "finalVnd": 1084800
+        }
+    },
+    {
+        "originalPriceUSD": 74.98,
+        "price": 1499600,
+        "id": "net_trendnet_trendnet_teg_10gectx_10_gigabit_pcie_network_adapte",
+        "name": "TRENDnet TRENDnet TEG-10GECTX 10 Gigabit PCIe Network Adapter",
+        "_pricing": {
+            "usd": 74.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1874500,
+            "finalVnd": 1499600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_gigabyte_gc_aqc107",
+        "name": "Gigabyte GC-AQC107",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 30.47,
+        "price": 609400,
+        "id": "net_syba_sd_pex24066",
+        "name": "Syba SD-PEX24066",
+        "_pricing": {
+            "usd": 30.47,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 761750,
+            "finalVnd": 609400
+        }
+    },
+    {
+        "originalPriceUSD": 51,
+        "price": 1020000,
+        "id": "net_intel_e1g42etblk",
+        "name": "Intel E1G42ETBLK",
+        "_pricing": {
+            "usd": 51,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1275000,
+            "finalVnd": 1020000
+        }
+    },
+    {
+        "originalPriceUSD": 287.99,
+        "price": 5759800,
+        "id": "net_startech_st10gspexndp2",
+        "name": "StarTech ST10GSPEXNDP2",
+        "_pricing": {
+            "usd": 287.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 7199750,
+            "finalVnd": 5759800
+        }
+    },
+    {
+        "originalPriceUSD": 11.99,
+        "price": 239800,
+        "id": "net_tp_link_ue306",
+        "name": "TP-Link UE306",
+        "_pricing": {
+            "usd": 11.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 299750,
+            "finalVnd": 239800
+        }
+    },
+    {
+        "originalPriceUSD": 149.94,
+        "price": 2998800,
+        "id": "net_startech_st10gspexnb2",
+        "name": "StarTech ST10GSPEXNB2",
+        "_pricing": {
+            "usd": 149.94,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3748500,
+            "finalVnd": 2998800
+        }
+    },
+    {
+        "originalPriceUSD": 92.04,
+        "price": 1840800,
+        "id": "net_intel_e1g44htblk",
+        "name": "Intel E1G44HTBLK",
+        "_pricing": {
+            "usd": 92.04,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2301000,
+            "finalVnd": 1840800
+        }
+    },
+    {
+        "originalPriceUSD": 9.97,
+        "price": 199400,
+        "id": "net_tp_link_ue300",
+        "name": "TP-Link UE300",
+        "_pricing": {
+            "usd": 9.97,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 249250,
+            "finalVnd": 199400
+        }
+    },
+    {
+        "originalPriceUSD": 74.73,
+        "price": 1494600,
+        "id": "net_intel_i226t1",
+        "name": "Intel I226T1",
+        "_pricing": {
+            "usd": 74.73,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1868250,
+            "finalVnd": 1494600
+        }
+    },
+    {
+        "originalPriceUSD": 29.99,
+        "price": 599800,
+        "id": "net_asus_usb_c2500",
+        "name": "Asus USB-C2500",
+        "_pricing": {
+            "usd": 29.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 749750,
+            "finalVnd": 599800
+        }
+    },
+    {
+        "originalPriceUSD": 99,
+        "price": 1980000,
+        "id": "net_qnap_qxg5g1t111c",
+        "name": "QNAP QXG5G1T111C",
+        "_pricing": {
+            "usd": 99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2475000,
+            "finalVnd": 1980000
+        }
+    },
+    {
+        "originalPriceUSD": 19.98,
+        "price": 399600,
+        "id": "net_trendnet_teg_25gectx",
+        "name": "TRENDnet TEG-25GECTX",
+        "_pricing": {
+            "usd": 19.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 499500,
+            "finalVnd": 399600
+        }
+    },
+    {
+        "originalPriceUSD": 6.99,
+        "price": 139800,
+        "id": "net_belkin_f5d5000",
+        "name": "Belkin F5D5000",
+        "_pricing": {
+            "usd": 6.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 174750,
+            "finalVnd": 139800
+        }
+    },
+    {
+        "originalPriceUSD": 82.31,
+        "price": 1646200,
+        "id": "net_syba_sd_pex24055",
+        "name": "Syba SD-PEX24055",
+        "_pricing": {
+            "usd": 82.31,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2057750,
+            "finalVnd": 1646200
+        }
+    },
+    {
+        "originalPriceUSD": 63.06,
+        "price": 1261200,
+        "id": "net_startech_usb32000spt",
+        "name": "StarTech USB32000SPT",
+        "_pricing": {
+            "usd": 63.06,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1576500,
+            "finalVnd": 1261200
+        }
+    },
+    {
+        "originalPriceUSD": 37.97,
+        "price": 759400,
+        "id": "net_syba_si_pex24042",
+        "name": "Syba SI-PEX24042",
+        "_pricing": {
+            "usd": 37.97,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 949250,
+            "finalVnd": 759400
+        }
+    },
+    {
+        "originalPriceUSD": 57.93,
+        "price": 1158600,
+        "id": "net_intel_expi9301ct",
+        "name": "Intel EXPI9301CT",
+        "_pricing": {
+            "usd": 57.93,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1448250,
+            "finalVnd": 1158600
+        }
+    },
+    {
+        "originalPriceUSD": 79,
+        "price": 1580000,
+        "id": "net_qnap_qxg2g2ti225",
+        "name": "QNAP QXG2G2TI225",
+        "_pricing": {
+            "usd": 79,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1975000,
+            "finalVnd": 1580000
+        }
+    },
+    {
+        "originalPriceUSD": 59.99,
+        "price": 1199800,
+        "id": "net_syba_sy_pex24045",
+        "name": "Syba SY-PEX24045",
+        "_pricing": {
+            "usd": 59.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1499750,
+            "finalVnd": 1199800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_x520_t2",
+        "name": "Intel X520-T2",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 196.95,
+        "price": 3939000,
+        "id": "net_startech_st10gspexnb",
+        "name": "StarTech ST10GSPEXNB",
+        "_pricing": {
+            "usd": 196.95,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 4923750,
+            "finalVnd": 3939000
+        }
+    },
+    {
+        "originalPriceUSD": 355.2,
+        "price": 7104000,
+        "id": "net_intel_e1g44et2blk",
+        "name": "Intel E1G44ET2BLK",
+        "_pricing": {
+            "usd": 355.2,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 8880000,
+            "finalVnd": 7104000
+        }
+    },
+    {
+        "originalPriceUSD": 139,
+        "price": 2780000,
+        "id": "net_qnap_qxg_10g1t",
+        "name": "QNAP QXG-10G1T",
+        "_pricing": {
+            "usd": 139,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3475000,
+            "finalVnd": 2780000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_expi9404ptlblk",
+        "name": "Intel EXPI9404PTLBLK",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 157.99,
+        "price": 3159800,
+        "id": "net_startech_st2000pexpse",
+        "name": "StarTech ST2000PEXPSE",
+        "_pricing": {
+            "usd": 157.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3949750,
+            "finalVnd": 3159800
+        }
+    },
+    {
+        "originalPriceUSD": 24.14,
+        "price": 482800,
+        "id": "net_startech_st1000spex2",
+        "name": "StarTech ST1000SPEX2",
+        "_pricing": {
+            "usd": 24.14,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 603500,
+            "finalVnd": 482800
+        }
+    },
+    {
+        "originalPriceUSD": 9.99,
+        "price": 199800,
+        "id": "net_syba_sy_ada24029",
+        "name": "Syba SY-ADA24029",
+        "_pricing": {
+            "usd": 9.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 249750,
+            "finalVnd": 199800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_monoprice_112909",
+        "name": "Monoprice 112909",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 39.7,
+        "price": 794000,
+        "id": "net_tripp_lite_u436_06n_2p5",
+        "name": "Tripp Lite U436-06N-2P5",
+        "_pricing": {
+            "usd": 39.7,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 992500,
+            "finalVnd": 794000
+        }
+    },
+    {
+        "originalPriceUSD": 218.5,
+        "price": 4370000,
+        "id": "net_siig_lb_ge0311_s1",
+        "name": "SIIG LB-GE0311-S1",
+        "_pricing": {
+            "usd": 218.5,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 5462500,
+            "finalVnd": 4370000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_qlogic_qle3242_cu_ck",
+        "name": "QLogic QLE3242-CU-CK",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 112.5,
+        "price": 2250000,
+        "id": "net_lenovo_7zt7a00482",
+        "name": "Lenovo 7ZT7A00482",
+        "_pricing": {
+            "usd": 112.5,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2812500,
+            "finalVnd": 2250000
+        }
+    },
+    {
+        "originalPriceUSD": 35.51,
+        "price": 710200,
+        "id": "net_startech_st2gpex",
+        "name": "StarTech ST2GPEX",
+        "_pricing": {
+            "usd": 35.51,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 887750,
+            "finalVnd": 710200
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dxe_820t",
+        "name": "D-Link DXE-820T",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 152.88,
+        "price": 3057600,
+        "id": "net_siig_lb_ge0211_s1",
+        "name": "SIIG LB-GE0211-S1",
+        "_pricing": {
+            "usd": 152.88,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3822000,
+            "finalVnd": 3057600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_expi9404ptlblk_1pk",
+        "name": "Intel EXPI9404PTLBLK-1PK",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_e10g42bt",
+        "name": "Intel E10G42BT",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_gigabyte_gc_aqc113c_10g",
+        "name": "Gigabyte GC-AQC113C 10G",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 69.61,
+        "price": 1392200,
+        "id": "net_intel_expi9402ptg2p20",
+        "name": "Intel EXPI9402PTG2P20",
+        "_pricing": {
+            "usd": 69.61,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1740250,
+            "finalVnd": 1392200
+        }
+    },
+    {
+        "originalPriceUSD": 106,
+        "price": 2120000,
+        "id": "net_intel_e1g44ht",
+        "name": "Intel E1G44HT",
+        "_pricing": {
+            "usd": 106,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2650000,
+            "finalVnd": 2120000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_e1g42et",
+        "name": "Intel E1G42ET",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 69,
+        "price": 1380000,
+        "id": "net_qnap_qxg_2g1t_i225",
+        "name": "QNAP QXG-2G1T-I225",
+        "_pricing": {
+            "usd": 69,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1725000,
+            "finalVnd": 1380000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_rog_areion",
+        "name": "Asus ROG AREION",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 12.99,
+        "price": 259800,
+        "id": "net_tp_link_ue300c",
+        "name": "TP-Link UE300C",
+        "_pricing": {
+            "usd": 12.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 324750,
+            "finalVnd": 259800
+        }
+    },
+    {
+        "originalPriceUSD": 21.99,
+        "price": 439800,
+        "id": "net_trendnet_tuc_et2g",
+        "name": "TRENDnet TUC-ET2G",
+        "_pricing": {
+            "usd": 21.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 549750,
+            "finalVnd": 439800
+        }
+    },
+    {
+        "originalPriceUSD": 92.87,
+        "price": 1857400,
+        "id": "net_syba_sy_pex24028",
+        "name": "Syba SY-PEX24028",
+        "_pricing": {
+            "usd": 92.87,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2321750,
+            "finalVnd": 1857400
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_expi9404ptl",
+        "name": "Intel EXPI9404PTL",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 32,
+        "price": 640000,
+        "id": "net_intel_pwla8391gtblk",
+        "name": "Intel PWLA8391GTBLK",
+        "_pricing": {
+            "usd": 32,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 800000,
+            "finalVnd": 640000
+        }
+    },
+    {
+        "originalPriceUSD": 21.82,
+        "price": 436400,
+        "id": "net_startech_st1000spex2l",
+        "name": "StarTech ST1000SPEX2L",
+        "_pricing": {
+            "usd": 21.82,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 545500,
+            "finalVnd": 436400
+        }
+    },
+    {
+        "originalPriceUSD": 18.63,
+        "price": 372600,
+        "id": "net_d_link_dge_560t",
+        "name": "D-Link DGE-560T",
+        "_pricing": {
+            "usd": 18.63,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 465750,
+            "finalVnd": 372600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_e1g44et2",
+        "name": "Intel E1G44ET2",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 42.99,
+        "price": 859800,
+        "id": "net_startech_us2gc30",
+        "name": "StarTech US2GC30",
+        "_pricing": {
+            "usd": 42.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1074750,
+            "finalVnd": 859800
+        }
+    },
+    {
+        "originalPriceUSD": 375.99,
+        "price": 7519800,
+        "id": "net_startech_st1000spex4",
+        "name": "StarTech ST1000SPEX4",
+        "_pricing": {
+            "usd": 375.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 9399750,
+            "finalVnd": 7519800
+        }
+    },
+    {
+        "originalPriceUSD": 20.99,
+        "price": 419800,
+        "id": "net_belkin_f2cu040btblk",
+        "name": "Belkin F2CU040btBLK",
+        "_pricing": {
+            "usd": 20.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 524750,
+            "finalVnd": 419800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_edup_ep_9602gs",
+        "name": "EDUP EP-9602GS",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 23.23,
+        "price": 464600,
+        "id": "net_startech_usb31000s2",
+        "name": "StarTech USB31000S2",
+        "_pricing": {
+            "usd": 23.23,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 580750,
+            "finalVnd": 464600
+        }
+    },
+    {
+        "originalPriceUSD": 19.99,
+        "price": 399800,
+        "id": "net_syba_sd_pex24009",
+        "name": "Syba SD-PEX24009",
+        "_pricing": {
+            "usd": 19.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 499750,
+            "finalVnd": 399800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_visiontek_bigfoot_killer_2100",
+        "name": "VisionTek Bigfoot Killer 2100",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 42.1,
+        "price": 842000,
+        "id": "net_startech_st3300u3s",
+        "name": "StarTech ST3300U3S",
+        "_pricing": {
+            "usd": 42.1,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1052500,
+            "finalVnd": 842000
+        }
+    },
+    {
+        "originalPriceUSD": 18.95,
+        "price": 379000,
+        "id": "net_plugable_usbc_e1000",
+        "name": "Plugable USBC-E1000",
+        "_pricing": {
+            "usd": 18.95,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 473750,
+            "finalVnd": 379000
+        }
+    },
+    {
+        "originalPriceUSD": 56.86,
+        "price": 1137200,
+        "id": "net_syba_sy_hub24047",
+        "name": "Syba SY-HUB24047",
+        "_pricing": {
+            "usd": 56.86,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1421500,
+            "finalVnd": 1137200
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rc_nic416dual",
+        "name": "Rosewill RC-NIC416Dual",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_supermicro_aoc_stg_i2t",
+        "name": "Supermicro AOC-STG-i2T",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 114.99,
+        "price": 2299800,
+        "id": "net_siig_lb_ge0014_s1",
+        "name": "SIIG LB-GE0014-S1",
+        "_pricing": {
+            "usd": 114.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2874750,
+            "finalVnd": 2299800
+        }
+    },
+    {
+        "originalPriceUSD": 30.99,
+        "price": 619800,
+        "id": "net_startech_pex100s",
+        "name": "StarTech PEX100S",
+        "_pricing": {
+            "usd": 30.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 774750,
+            "finalVnd": 619800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_pwla8490mtblk",
+        "name": "Intel PWLA8490MTBLK",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_supermicro_aoc_sg_i2",
+        "name": "Supermicro AOC-SG-i2",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 22.65,
+        "price": 453000,
+        "id": "net_syba_sy_pex24030",
+        "name": "Syba SY-PEX24030",
+        "_pricing": {
+            "usd": 22.65,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 566250,
+            "finalVnd": 453000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_expi9402pt",
+        "name": "Intel EXPI9402PT",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 92,
+        "price": 1840000,
+        "id": "net_intel_pwla8492mt",
+        "name": "Intel PWLA8492MT",
+        "_pricing": {
+            "usd": 92,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2300000,
+            "finalVnd": 1840000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_acer_np_oth11_005",
+        "name": "Acer NP.OTH11.005",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tg_3269",
+        "name": "TP-Link TG-3269",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tf_3239dl",
+        "name": "TP-Link TF-3239DL",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_en_9130txl",
+        "name": "Edimax EN-9130TXL",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 15.26,
+        "price": 305200,
+        "id": "net_plugable_usb3_e1000",
+        "name": "Plugable USB3-E1000",
+        "_pricing": {
+            "usd": 15.26,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 381500,
+            "finalVnd": 305200
+        }
+    },
+    {
+        "originalPriceUSD": 44.17,
+        "price": 883400,
+        "id": "net_d_link_dub_1312",
+        "name": "D-Link DUB-1312",
+        "_pricing": {
+            "usd": 44.17,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1104250,
+            "finalVnd": 883400
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_supermicro_sgp_i4",
+        "name": "Supermicro SGP-i4",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_en_9320tx_e",
+        "name": "Edimax EN-9320TX-E",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_pce_c2500",
+        "name": "Asus PCE-C2500",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_ue305",
+        "name": "TP-Link UE305",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_startech_st10gspexndp",
+        "name": "StarTech ST10GSPEXNDP",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 14.66,
+        "price": 293200,
+        "id": "net_trendnet_teg_pcitxr",
+        "name": "TRENDnet TEG-PCITXR",
+        "_pricing": {
+            "usd": 14.66,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 366500,
+            "finalVnd": 293200
+        }
+    },
+    {
+        "originalPriceUSD": 50,
+        "price": 1000000,
+        "id": "net_intel_pwla8391gtlblk",
+        "name": "Intel PWLA8391GTLBLK",
+        "_pricing": {
+            "usd": 50,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1250000,
+            "finalVnd": 1000000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rc_400_lx",
+        "name": "Rosewill RC-400-LX",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 19.95,
+        "price": 399000,
+        "id": "net_syba_sy_ada24027",
+        "name": "Syba SY-ADA24027",
+        "_pricing": {
+            "usd": 19.95,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 498750,
+            "finalVnd": 399000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_nx1101",
+        "name": "Asus NX1101",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 34.9,
+        "price": 698000,
+        "id": "net_netgear_ga311",
+        "name": "Netgear GA311",
+        "_pricing": {
+            "usd": 34.9,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 872500,
+            "finalVnd": 698000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_startech_st10000spex",
+        "name": "StarTech ST10000SPEX",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 24.74,
+        "price": 494800,
+        "id": "net_belkin_b2b145_blk",
+        "name": "Belkin B2B145-BLK",
+        "_pricing": {
+            "usd": 24.74,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 618500,
+            "finalVnd": 494800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_v7_v7ucrj45_blk_1n",
+        "name": "V7 V7UCRJ45-BLK-1N",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hp_e0x95aa",
+        "name": "HP E0X95AA",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_sd_pex24065",
+        "name": "Syba SD-PEX24065",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rc_20001",
+        "name": "Rosewill RC-20001",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 25.79,
+        "price": 515800,
+        "id": "net_startech_usb31000s",
+        "name": "StarTech USB31000S",
+        "_pricing": {
+            "usd": 25.79,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 644750,
+            "finalVnd": 515800
+        }
+    },
+    {
+        "originalPriceUSD": 43.9,
+        "price": 878000,
+        "id": "net_intel_pwla8391gt",
+        "name": "Intel PWLA8391GT",
+        "_pricing": {
+            "usd": 43.9,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1097500,
+            "finalVnd": 878000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rc_400",
+        "name": "Rosewill RC-400",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rc_404",
+        "name": "Rosewill RC-404",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnf_405u",
+        "name": "Rosewill RNF-405U",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rng_406u",
+        "name": "Rosewill RNG-406U",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 27.98,
+        "price": 559600,
+        "id": "net_startech_st1000bt32",
+        "name": "StarTech ST1000BT32",
+        "_pricing": {
+            "usd": 27.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 699500,
+            "finalVnd": 559600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_startech_st100s",
+        "name": "StarTech ST100S",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_startech_usb21000s2",
+        "name": "StarTech USB21000S2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_sy_ada24024",
+        "name": "Syba SY-ADA24024",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_te100_pciwn",
+        "name": "TRENDnet TE100-PCIWN",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_expi9402ptblk_1pk",
+        "name": "Intel EXPI9402PTBLK-1PK",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_pwla8391gtblk_1pk",
+        "name": "Intel PWLA8391GTBLK-1PK",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_pwla8492mtblk5",
+        "name": "Intel PWLA8492MTBLK5",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_cn_gp1011_s3",
+        "name": "SIIG CN-GP1011-S3",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_startech_st1000spexd2",
+        "name": "StarTech ST1000SPEXD2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_sy_ada24005",
+        "name": "Syba SY-ADA24005",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_startech_st1000spex",
+        "name": "StarTech ST1000SPEX",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_cn_gp2011_s1",
+        "name": "SIIG CN-GP2011-S1",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 32.99,
+        "price": 659800,
+        "id": "net_siig_cn_gp1021_s3",
+        "name": "SIIG CN-GP1021-S3",
+        "_pricing": {
+            "usd": 32.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 824750,
+            "finalVnd": 659800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_f4u047_rs",
+        "name": "Belkin F4U047-RS",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rc_401_ex",
+        "name": "Rosewill RC-401-EX",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rc_402",
+        "name": "Rosewill RC-402",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 11,
+        "price": 220000,
+        "id": "net_d_link_dfe530tx_",
+        "name": "D-Link DFE530TX+",
+        "_pricing": {
+            "usd": 11,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 275000,
+            "finalVnd": 220000
+        }
+    },
+    {
+        "originalPriceUSD": 22.99,
+        "price": 459800,
+        "id": "net_d_link_dge_530t",
+        "name": "D-Link DGE-530T",
+        "_pricing": {
+            "usd": 22.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 574750,
+            "finalVnd": 459800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dub_e100",
+        "name": "D-Link DUB-E100",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 11.99,
+        "price": 239800,
+        "id": "net_edimax_eu_4208",
+        "name": "Edimax EU-4208",
+        "_pricing": {
+            "usd": 11.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 299750,
+            "finalVnd": 239800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_eu_4306",
+        "name": "Edimax EU-4306",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rc_411",
+        "name": "Rosewill RC-411",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rng_407_dual",
+        "name": "Rosewill RNG-407-Dual",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_cn_gp4011_s1",
+        "name": "SIIG CN-GP4011-S1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_startech_st1000spexd3",
+        "name": "StarTech ST1000SPEXD3",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 32.99,
+        "price": 659800,
+        "id": "net_startech_usb31000nds",
+        "name": "StarTech USB31000NDS",
+        "_pricing": {
+            "usd": 32.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 824750,
+            "finalVnd": 659800
+        }
+    },
+    {
+        "originalPriceUSD": 21.99,
+        "price": 439800,
+        "id": "net_startech_usb31000sw",
+        "name": "StarTech USB31000SW",
+        "_pricing": {
+            "usd": 21.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 549750,
+            "finalVnd": 439800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_sd_ada24032",
+        "name": "Syba SD-ADA24032",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_cisco_n2xx_abpci03_m3_",
+        "name": "Cisco N2XX-ABPCI03-M3=",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_ju_ne0511_s1",
+        "name": "SIIG JU-NE0511-S1",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 33.99,
+        "price": 679800,
+        "id": "net_startech_usb31000sptb",
+        "name": "StarTech USB31000SPTB",
+        "_pricing": {
+            "usd": 33.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 849750,
+            "finalVnd": 679800
+        }
+    },
+    {
+        "originalPriceUSD": 35.99,
+        "price": 719800,
+        "id": "net_startech_usb31000sptw",
+        "name": "StarTech USB31000SPTW",
+        "_pricing": {
+            "usd": 35.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 899750,
+            "finalVnd": 719800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_si_ada24037",
+        "name": "Syba SI-ADA24037",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_cn_gp1111_s1",
+        "name": "SIIG CN-GP1111-S1",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 31.54,
+        "price": 630800,
+        "id": "net_lenovo_4x90e51405",
+        "name": "Lenovo 4X90E51405",
+        "_pricing": {
+            "usd": 31.54,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 788500,
+            "finalVnd": 630800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_cn_gp4111_s1",
+        "name": "SIIG CN-GP4111-S1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_sy_ada24040",
+        "name": "Syba SY-ADA24040",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_ju_ne0711_s1",
+        "name": "SIIG JU-NE0711-S1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_linksys_usb3gig",
+        "name": "Linksys USB3GIG",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_sy_pex24056",
+        "name": "Syba SY-PEX24056",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rng_408u",
+        "name": "Rosewill RNG-408U",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 25.8,
+        "price": 516000,
+        "id": "net_tripp_lite_u436_000_gb",
+        "name": "Tripp Lite U436-000-GB",
+        "_pricing": {
+            "usd": 25.8,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 645000,
+            "finalVnd": 516000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_ju_ne0621_s2",
+        "name": "SIIG JU-NE0621-S2",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 49.99,
+        "price": 999800,
+        "id": "net_siig_lb_ge0611_s1",
+        "name": "SIIG LB-GE0611-S1",
+        "_pricing": {
+            "usd": 49.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1249750,
+            "finalVnd": 999800
+        }
+    },
+    {
+        "originalPriceUSD": 36.99,
+        "price": 739800,
+        "id": "net_gigabyte_gc_wbax210",
+        "name": "Gigabyte GC-WBAX210",
+        "_pricing": {
+            "usd": 36.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 924750,
+            "finalVnd": 739800
+        }
+    },
+    {
+        "originalPriceUSD": 79.98,
+        "price": 1599600,
+        "id": "net_tp_link_archer_tbe550e",
+        "name": "TP-Link Archer TBE550E",
+        "_pricing": {
+            "usd": 79.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1999500,
+            "finalVnd": 1599600
+        }
+    },
+    {
+        "originalPriceUSD": 31.99,
+        "price": 639800,
+        "id": "net_tp_link_archer_tx3000e",
+        "name": "TP-Link Archer TX3000E",
+        "_pricing": {
+            "usd": 31.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 799750,
+            "finalVnd": 639800
+        }
+    },
+    {
+        "originalPriceUSD": 14.85,
+        "price": 297000,
+        "id": "net_tp_link_archer_t2u_plus",
+        "name": "TP-Link ARCHER T2U PLUS",
+        "_pricing": {
+            "usd": 14.85,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 371250,
+            "finalVnd": 297000
+        }
+    },
+    {
+        "originalPriceUSD": 26.99,
+        "price": 539800,
+        "id": "net_tp_link_archertx20e",
+        "name": "TP-Link ArcherTX20E",
+        "_pricing": {
+            "usd": 26.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 674750,
+            "finalVnd": 539800
+        }
+    },
+    {
+        "originalPriceUSD": 49.99,
+        "price": 999800,
+        "id": "net_asus_pce_ax3000",
+        "name": "Asus PCE-AX3000",
+        "_pricing": {
+            "usd": 49.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1249750,
+            "finalVnd": 999800
+        }
+    },
+    {
+        "originalPriceUSD": 14.99,
+        "price": 299800,
+        "id": "net_tp_link_tl_wn881nd",
+        "name": "TP-Link TL-WN881ND",
+        "_pricing": {
+            "usd": 14.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 374750,
+            "finalVnd": 299800
+        }
+    },
+    {
+        "originalPriceUSD": 16.48,
+        "price": 329600,
+        "id": "net_intel_ax210",
+        "name": "Intel AX210",
+        "_pricing": {
+            "usd": 16.48,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 412000,
+            "finalVnd": 329600
+        }
+    },
+    {
+        "originalPriceUSD": 170.67,
+        "price": 3413400,
+        "id": "net_belkin_ae6000",
+        "name": "Belkin AE6000",
+        "_pricing": {
+            "usd": 170.67,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 4266750,
+            "finalVnd": 3413400
+        }
+    },
+    {
+        "originalPriceUSD": 29,
+        "price": 580000,
+        "id": "net_tp_link_archer_tx55e",
+        "name": "TP-Link Archer TX55E",
+        "_pricing": {
+            "usd": 29,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 725000,
+            "finalVnd": 580000
+        }
+    },
+    {
+        "originalPriceUSD": 49.99,
+        "price": 999800,
+        "id": "net_msi_herald_be_wifi_7_max",
+        "name": "MSI HERALD-BE WIFI 7 MAX",
+        "_pricing": {
+            "usd": 49.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1249750,
+            "finalVnd": 999800
+        }
+    },
+    {
+        "originalPriceUSD": 19.98,
+        "price": 399600,
+        "id": "net_tp_link_archer_t3u_plus",
+        "name": "TP-Link Archer T3U Plus",
+        "_pricing": {
+            "usd": 19.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 499500,
+            "finalVnd": 399600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_archer_tx50e",
+        "name": "TP-Link Archer TX50E",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 29.99,
+        "price": 599800,
+        "id": "net_asus_pce_ax1800",
+        "name": "Asus PCE-AX1800",
+        "_pricing": {
+            "usd": 29.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 749750,
+            "finalVnd": 599800
+        }
+    },
+    {
+        "originalPriceUSD": 64.98,
+        "price": 1299600,
+        "id": "net_asus_pce_be92bt",
+        "name": "Asus PCE-BE92BT",
+        "_pricing": {
+            "usd": 64.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1624500,
+            "finalVnd": 1299600
+        }
+    },
+    {
+        "originalPriceUSD": 25.5,
+        "price": 510000,
+        "id": "net_ziyituod_zyt_ax210s",
+        "name": "Ziyituod ZYT-AX210S",
+        "_pricing": {
+            "usd": 25.5,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 637500,
+            "finalVnd": 510000
+        }
+    },
+    {
+        "originalPriceUSD": 9.99,
+        "price": 199800,
+        "id": "net_tp_link_tl_wn725n",
+        "name": "TP-Link TL-WN725N",
+        "_pricing": {
+            "usd": 9.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 249750,
+            "finalVnd": 199800
+        }
+    },
+    {
+        "originalPriceUSD": 19.98,
+        "price": 399600,
+        "id": "net_tp_link_archer_t4e",
+        "name": "TP-Link Archer T4E",
+        "_pricing": {
+            "usd": 19.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 499500,
+            "finalVnd": 399600
+        }
+    },
+    {
+        "originalPriceUSD": 50.48,
+        "price": 1009600,
+        "id": "net_asus_pce_axe5400",
+        "name": "Asus PCE-AXE5400",
+        "_pricing": {
+            "usd": 50.48,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1262000,
+            "finalVnd": 1009600
+        }
+    },
+    {
+        "originalPriceUSD": 26.95,
+        "price": 539000,
+        "id": "net_edup_ep_9651",
+        "name": "EDUP EP-9651",
+        "_pricing": {
+            "usd": 26.95,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 673750,
+            "finalVnd": 539000
+        }
+    },
+    {
+        "originalPriceUSD": 29.99,
+        "price": 599800,
+        "id": "net_tp_link_archer_tx20u_plus",
+        "name": "TP-Link Archer TX20U plus",
+        "_pricing": {
+            "usd": 29.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 749750,
+            "finalVnd": 599800
+        }
+    },
+    {
+        "originalPriceUSD": 39.99,
+        "price": 799800,
+        "id": "net_tp_link_archer_txe72e",
+        "name": "TP-Link Archer TXE72E",
+        "_pricing": {
+            "usd": 39.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 999750,
+            "finalVnd": 799800
+        }
+    },
+    {
+        "originalPriceUSD": 14.99,
+        "price": 299800,
+        "id": "net_tp_link_archer_t2e",
+        "name": "TP-Link ARCHER T2E",
+        "_pricing": {
+            "usd": 14.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 374750,
+            "finalVnd": 299800
+        }
+    },
+    {
+        "originalPriceUSD": 49.95,
+        "price": 999000,
+        "id": "net_intel_ax200",
+        "name": "Intel AX200",
+        "_pricing": {
+            "usd": 49.95,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1248750,
+            "finalVnd": 999000
+        }
+    },
+    {
+        "originalPriceUSD": 129.99,
+        "price": 2599800,
+        "id": "net_netgear_wna3100m_100ens",
+        "name": "Netgear WNA3100M-100ENS",
+        "_pricing": {
+            "usd": 129.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3249750,
+            "finalVnd": 2599800
+        }
+    },
+    {
+        "originalPriceUSD": 44.99,
+        "price": 899800,
+        "id": "net_tp_link_archer_txe75e",
+        "name": "TP-Link Archer TXE75E",
+        "_pricing": {
+            "usd": 44.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1124750,
+            "finalVnd": 899800
+        }
+    },
+    {
+        "originalPriceUSD": 99.79,
+        "price": 1995800,
+        "id": "net_tp_link_tl_wdn4800",
+        "name": "TP-Link TL-WDN4800",
+        "_pricing": {
+            "usd": 99.79,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2494750,
+            "finalVnd": 1995800
+        }
+    },
+    {
+        "originalPriceUSD": 44.75,
+        "price": 895000,
+        "id": "net_intel_killer_ax1675",
+        "name": "Intel Killer AX1675",
+        "_pricing": {
+            "usd": 44.75,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1118750,
+            "finalVnd": 895000
+        }
+    },
+    {
+        "originalPriceUSD": 55.99,
+        "price": 1119800,
+        "id": "net_asus_pce_ax58bt",
+        "name": "Asus PCE-AX58BT",
+        "_pricing": {
+            "usd": 55.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1399750,
+            "finalVnd": 1119800
+        }
+    },
+    {
+        "originalPriceUSD": 69,
+        "price": 1380000,
+        "id": "net_netgear_nighthawk_axe3000",
+        "name": "Netgear Nighthawk AXE3000",
+        "_pricing": {
+            "usd": 69,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1725000,
+            "finalVnd": 1380000
+        }
+    },
+    {
+        "originalPriceUSD": 23.77,
+        "price": 475400,
+        "id": "net_intel_ax210_w_vpro",
+        "name": "Intel AX210 w/vPro",
+        "_pricing": {
+            "usd": 23.77,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 594250,
+            "finalVnd": 475400
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_ziyituod_zyt_ax200",
+        "name": "Ziyituod ZYT-AX200",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 9.27,
+        "price": 185400,
+        "id": "net_startech_usb150wn1x1",
+        "name": "StarTech USB150WN1X1",
+        "_pricing": {
+            "usd": 9.27,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 231750,
+            "finalVnd": 185400
+        }
+    },
+    {
+        "originalPriceUSD": 49.99,
+        "price": 999800,
+        "id": "net_msi_herald_be_ncm865_wi_fi_7",
+        "name": "MSI HERALD-BE NCM865 WI-FI 7",
+        "_pricing": {
+            "usd": 49.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1249750,
+            "finalVnd": 999800
+        }
+    },
+    {
+        "originalPriceUSD": 27.98,
+        "price": 559600,
+        "id": "net_asus_pce_ac56",
+        "name": "Asus PCE-AC56",
+        "_pricing": {
+            "usd": 27.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 699500,
+            "finalVnd": 559600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_gigabyte_gc_wbax200",
+        "name": "Gigabyte GC-WBAX200",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 23.99,
+        "price": 479800,
+        "id": "net_tp_link_archer_t5e",
+        "name": "TP-Link Archer T5E",
+        "_pricing": {
+            "usd": 23.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 599750,
+            "finalVnd": 479800
+        }
+    },
+    {
+        "originalPriceUSD": 28.99,
+        "price": 579800,
+        "id": "net_edup_ep_9636gs_bl",
+        "name": "EDUP EP-9636GS-BL",
+        "_pricing": {
+            "usd": 28.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 724750,
+            "finalVnd": 579800
+        }
+    },
+    {
+        "originalPriceUSD": 59.99,
+        "price": 1199800,
+        "id": "net_asus_pce_axe58bt",
+        "name": "Asus PCE-AXE58BT",
+        "_pricing": {
+            "usd": 59.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1499750,
+            "finalVnd": 1199800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_pce_ac68",
+        "name": "Asus PCE-AC68",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 129.79,
+        "price": 2595800,
+        "id": "net_tp_link_archer_t9uh",
+        "name": "TP-Link Archer T9UH",
+        "_pricing": {
+            "usd": 129.79,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 3244750,
+            "finalVnd": 2595800
+        }
+    },
+    {
+        "originalPriceUSD": 19.98,
+        "price": 399600,
+        "id": "net_tp_link_archer_t2ub_nano",
+        "name": "TP-Link Archer T2UB Nano",
+        "_pricing": {
+            "usd": 19.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 499500,
+            "finalVnd": 399600
+        }
+    },
+    {
+        "originalPriceUSD": 34.99,
+        "price": 699800,
+        "id": "net_msi_ax905c",
+        "name": "MSI AX905C",
+        "_pricing": {
+            "usd": 34.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 874750,
+            "finalVnd": 699800
+        }
+    },
+    {
+        "originalPriceUSD": 34.99,
+        "price": 699800,
+        "id": "net_asus_usb_ax55_nano",
+        "name": "Asus USB-AX55 Nano",
+        "_pricing": {
+            "usd": 34.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 874750,
+            "finalVnd": 699800
+        }
+    },
+    {
+        "originalPriceUSD": 31.99,
+        "price": 639800,
+        "id": "net_cudy_we3000",
+        "name": "Cudy WE3000",
+        "_pricing": {
+            "usd": 31.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 799750,
+            "finalVnd": 639800
+        }
+    },
+    {
+        "originalPriceUSD": 70.98,
+        "price": 1419600,
+        "id": "net_gigabyte_gc_wb867d_i",
+        "name": "Gigabyte GC-WB867D-I",
+        "_pricing": {
+            "usd": 70.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1774500,
+            "finalVnd": 1419600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_pce_ac88",
+        "name": "Asus PCE-AC88",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wn781nd",
+        "name": "TP-Link TL-WN781ND",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 86.8,
+        "price": 1736000,
+        "id": "net_tp_link_archer_t6e_ac1300",
+        "name": "TP-Link Archer T6E AC1300",
+        "_pricing": {
+            "usd": 86.8,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2170000,
+            "finalVnd": 1736000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_gigabyte_gc_wb1733d_i",
+        "name": "Gigabyte GC-WB1733D-I",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 54.43,
+        "price": 1088600,
+        "id": "net_intel_ax200_ngwg_nv",
+        "name": "Intel AX200.NGWG.NV",
+        "_pricing": {
+            "usd": 54.43,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1360750,
+            "finalVnd": 1088600
+        }
+    },
+    {
+        "originalPriceUSD": 19.98,
+        "price": 399600,
+        "id": "net_tp_link_archer_t3u",
+        "name": "TP-Link Archer T3U",
+        "_pricing": {
+            "usd": 19.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 499500,
+            "finalVnd": 399600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_ubit_ax210",
+        "name": "Ubit AX210",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wn821n",
+        "name": "TP-Link TL-WN821N",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 39.99,
+        "price": 799800,
+        "id": "net_msi_ax1800",
+        "name": "MSI AX1800",
+        "_pricing": {
+            "usd": 39.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 999750,
+            "finalVnd": 799800
+        }
+    },
+    {
+        "originalPriceUSD": 14.99,
+        "price": 299800,
+        "id": "net_tp_link_archer_t2u_nano",
+        "name": "TP-Link Archer T2U Nano",
+        "_pricing": {
+            "usd": 14.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 374750,
+            "finalVnd": 299800
+        }
+    },
+    {
+        "originalPriceUSD": 23.99,
+        "price": 479800,
+        "id": "net_tp_link_archer_t4u_plus",
+        "name": "TP-Link Archer T4U Plus",
+        "_pricing": {
+            "usd": 23.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 599750,
+            "finalVnd": 479800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_edup_ep_9651gs",
+        "name": "EDUP EP-9651GS",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 110,
+        "price": 2200000,
+        "id": "net_intel_7260hmwdtx1",
+        "name": "Intel 7260HMWDTX1",
+        "_pricing": {
+            "usd": 110,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2750000,
+            "finalVnd": 2200000
+        }
+    },
+    {
+        "originalPriceUSD": 29,
+        "price": 580000,
+        "id": "net_asus_usb_ac53_nano",
+        "name": "Asus USB-AC53 NANO",
+        "_pricing": {
+            "usd": 29,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 725000,
+            "finalVnd": 580000
+        }
+    },
+    {
+        "originalPriceUSD": 69.99,
+        "price": 1399800,
+        "id": "net_asus_pce_axe59bt",
+        "name": "Asus PCE-AXE59BT",
+        "_pricing": {
+            "usd": 69.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1749750,
+            "finalVnd": 1399800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_brostrend_ac5",
+        "name": "BrosTrend AC5",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dwa_582",
+        "name": "D-Link DWA-582",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 18.98,
+        "price": 379600,
+        "id": "net_tp_link_tl_wn823n",
+        "name": "TP-Link TL-WN823N",
+        "_pricing": {
+            "usd": 18.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 474500,
+            "finalVnd": 379600
+        }
+    },
+    {
+        "originalPriceUSD": 83.94,
+        "price": 1678800,
+        "id": "net_belkin_f9l1101",
+        "name": "Belkin F9L1101",
+        "_pricing": {
+            "usd": 83.94,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2098500,
+            "finalVnd": 1678800
+        }
+    },
+    {
+        "originalPriceUSD": 50.04,
+        "price": 1000800,
+        "id": "net_asus_pce_ac51",
+        "name": "Asus PCE-AC51",
+        "_pricing": {
+            "usd": 50.04,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1251000,
+            "finalVnd": 1000800
+        }
+    },
+    {
+        "originalPriceUSD": 16.21,
+        "price": 324200,
+        "id": "net_rosewill_rnx_n250pce",
+        "name": "Rosewill RNX-N250PCe",
+        "_pricing": {
+            "usd": 16.21,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 405250,
+            "finalVnd": 324200
+        }
+    },
+    {
+        "originalPriceUSD": 89.99,
+        "price": 1799800,
+        "id": "net_tp_link_archer_t9e",
+        "name": "TP-Link Archer T9E",
+        "_pricing": {
+            "usd": 89.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2249750,
+            "finalVnd": 1799800
+        }
+    },
+    {
+        "originalPriceUSD": 59.09,
+        "price": 1181800,
+        "id": "net_netgear_nighthawk_ac1900_a7000_10000s",
+        "name": "Netgear Nighthawk AC1900 A7000-10000S",
+        "_pricing": {
+            "usd": 59.09,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1477250,
+            "finalVnd": 1181800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_ubit_g10h_ax210s",
+        "name": "Ubit G10H-AX210S",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 45.59,
+        "price": 911800,
+        "id": "net_fenvi_fv_t919",
+        "name": "fenvi FV-T919",
+        "_pricing": {
+            "usd": 45.59,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1139750,
+            "finalVnd": 911800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_fenvi_fv_ax3000",
+        "name": "fenvi FV-AX3000",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 61.72,
+        "price": 1234400,
+        "id": "net_netgear_a6100_100pas",
+        "name": "Netgear A6100-100PAS",
+        "_pricing": {
+            "usd": 61.72,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1543000,
+            "finalVnd": 1234400
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_pce_ac55bt_b1",
+        "name": "Asus PCE-AC55BT B1",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 66.03,
+        "price": 1320600,
+        "id": "net_asus_usb_ax56",
+        "name": "Asus USB-AX56",
+        "_pricing": {
+            "usd": 66.03,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1650750,
+            "finalVnd": 1320600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wn722n",
+        "name": "TP-Link TL-WN722N",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 34.95,
+        "price": 699000,
+        "id": "net_fenvi_fv_hb1200",
+        "name": "fenvi FV-HB1200",
+        "_pricing": {
+            "usd": 34.95,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 873750,
+            "finalVnd": 699000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_pce_n15",
+        "name": "Asus PCE-N15",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 39.99,
+        "price": 799800,
+        "id": "net_d_link_dwa_140",
+        "name": "D-Link DWA-140",
+        "_pricing": {
+            "usd": 39.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 999750,
+            "finalVnd": 799800
+        }
+    },
+    {
+        "originalPriceUSD": 23,
+        "price": 460000,
+        "id": "net_rosewill_rnx_ac1300pcev2",
+        "name": "Rosewill RNX-AC1300PCEv2",
+        "_pricing": {
+            "usd": 23,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 575000,
+            "finalVnd": 460000
+        }
+    },
+    {
+        "originalPriceUSD": 44.09,
+        "price": 881800,
+        "id": "net_netgear_wnda4100_100nas",
+        "name": "Netgear WNDA4100-100NAS",
+        "_pricing": {
+            "usd": 44.09,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1102250,
+            "finalVnd": 881800
+        }
+    },
+    {
+        "originalPriceUSD": 17.98,
+        "price": 359600,
+        "id": "net_tp_link_archer_t3u_nano",
+        "name": "TP-Link Archer T3U Nano",
+        "_pricing": {
+            "usd": 17.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 449500,
+            "finalVnd": 359600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_pce_ac58bt",
+        "name": "Asus PCE-AC58BT",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 48.87,
+        "price": 977400,
+        "id": "net_d_link_dwa_552",
+        "name": "D-Link DWA-552",
+        "_pricing": {
+            "usd": 48.87,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1221750,
+            "finalVnd": 977400
+        }
+    },
+    {
+        "originalPriceUSD": 19.98,
+        "price": 399600,
+        "id": "net_edimax_ew_7811uac",
+        "name": "Edimax EW-7811UAC",
+        "_pricing": {
+            "usd": 19.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 499500,
+            "finalVnd": 399600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_gigabyte_gc_wb867d_i_rev_4_2",
+        "name": "Gigabyte GC-WB867D-I REV 4.2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_8265_ngwmg_s",
+        "name": "Intel 8265.NGWMG.S",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 39.99,
+        "price": 799800,
+        "id": "net_tp_link_archer_tx21uh",
+        "name": "TP-Link Archer TX21UH",
+        "_pricing": {
+            "usd": 39.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 999750,
+            "finalVnd": 799800
+        }
+    },
+    {
+        "originalPriceUSD": 34.99,
+        "price": 699800,
+        "id": "net_tp_link_archer_t4u",
+        "name": "TP-Link Archer T4U",
+        "_pricing": {
+            "usd": 34.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 874750,
+            "finalVnd": 699800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_pce_ac55bt",
+        "name": "Asus PCE-AC55BT",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dwa_x1850",
+        "name": "D-Link DWA-X1850",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 29.29,
+        "price": 585800,
+        "id": "net_tp_link_archer_t2u",
+        "name": "TP-Link Archer T2U",
+        "_pricing": {
+            "usd": 29.29,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 732250,
+            "finalVnd": 585800
+        }
+    },
+    {
+        "originalPriceUSD": 39.9,
+        "price": 798000,
+        "id": "net_intel_62205anhmwdtx1",
+        "name": "Intel 62205ANHMWDTX1",
+        "_pricing": {
+            "usd": 39.9,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 997500,
+            "finalVnd": 798000
+        }
+    },
+    {
+        "originalPriceUSD": 39.51,
+        "price": 790200,
+        "id": "net_fenvi_fv_8802",
+        "name": "fenvi FV-8802",
+        "_pricing": {
+            "usd": 39.51,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 987750,
+            "finalVnd": 790200
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_netgear_a6210_100pas",
+        "name": "Netgear A6210-100PAS",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 25.74,
+        "price": 514800,
+        "id": "net_tp_link_tl_wn822n",
+        "name": "TP-Link TL-WN822N",
+        "_pricing": {
+            "usd": 25.74,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 643500,
+            "finalVnd": 514800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_fenvi_fv_axe3000",
+        "name": "fenvi FV-AXE3000",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_nec_np05lm1",
+        "name": "NEC NP05LM1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_wavlink_wl_wn675x2",
+        "name": "Wavlink WL-WN675X2",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 29.99,
+        "price": 599800,
+        "id": "net_brostrend_ac3",
+        "name": "BrosTrend AC3",
+        "_pricing": {
+            "usd": 29.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 749750,
+            "finalVnd": 599800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_pce_n10",
+        "name": "Asus PCE-N10",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 79.98,
+        "price": 1599600,
+        "id": "net_tp_link_archer_t8e",
+        "name": "TP-Link Archer T8E",
+        "_pricing": {
+            "usd": 79.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1999500,
+            "finalVnd": 1599600
+        }
+    },
+    {
+        "originalPriceUSD": 109.95,
+        "price": 2199000,
+        "id": "net_tp_link_archer_t2uh",
+        "name": "TP-Link Archer T2UH",
+        "_pricing": {
+            "usd": 109.95,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2748750,
+            "finalVnd": 2199000
+        }
+    },
+    {
+        "originalPriceUSD": 39.99,
+        "price": 799800,
+        "id": "net_d_link_dwa_548",
+        "name": "D-Link DWA-548",
+        "_pricing": {
+            "usd": 39.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 999750,
+            "finalVnd": 799800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_msi_ac905c",
+        "name": "MSI AC905C",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_fenvi_fv_axe210ng",
+        "name": "fenvi FV-AXE210NG",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 24.99,
+        "price": 499800,
+        "id": "net_startech_pex300wn2x2",
+        "name": "StarTech PEX300WN2X2",
+        "_pricing": {
+            "usd": 24.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 624750,
+            "finalVnd": 499800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_avm_fritz_wlan_stick_ac_430_mu_mimo",
+        "name": "AVM FRITZ! WLAN Stick AC 430 MU-MIMO",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_9560_ngwg_nvr",
+        "name": "Intel 9560.NGWG.NVR",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 17.55,
+        "price": 351000,
+        "id": "net_edimax_ew_7612pin_v2",
+        "name": "Edimax EW-7612PIN V2",
+        "_pricing": {
+            "usd": 17.55,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 438750,
+            "finalVnd": 351000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wn851nd",
+        "name": "TP-Link TL-WN851ND",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dwa_131",
+        "name": "D-Link DWA-131",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 63.29,
+        "price": 1265800,
+        "id": "net_rosewill_rnx_ac1900pce",
+        "name": "Rosewill RNX-AC1900PCE",
+        "_pricing": {
+            "usd": 63.29,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1582250,
+            "finalVnd": 1265800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_cisco_air_pi21ag_a_k9",
+        "name": "Cisco AIR-PI21AG-A-K9",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 14,
+        "price": 280000,
+        "id": "net_intel_6235an_hmwwb",
+        "name": "Intel 6235AN.HMWWB",
+        "_pricing": {
+            "usd": 14,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 350000,
+            "finalVnd": 280000
+        }
+    },
+    {
+        "originalPriceUSD": 46.17,
+        "price": 923400,
+        "id": "net_netgear_a6200_100nas",
+        "name": "Netgear A6200-100NAS",
+        "_pricing": {
+            "usd": 46.17,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1154250,
+            "finalVnd": 923400
+        }
+    },
+    {
+        "originalPriceUSD": 79.98,
+        "price": 1599600,
+        "id": "net_tp_link_tl_wn951n",
+        "name": "TP-Link TL-WN951N",
+        "_pricing": {
+            "usd": 79.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1999500,
+            "finalVnd": 1599600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_fenvi_fv_axe3000rgb",
+        "name": "fenvi FV-AXE3000RGB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_msi_ac905c_v2",
+        "name": "MSI AC905C-V2",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 20.99,
+        "price": 419800,
+        "id": "net_brostrend_ac1",
+        "name": "BrosTrend AC1",
+        "_pricing": {
+            "usd": 20.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 524750,
+            "finalVnd": 419800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_hp_fh971aa",
+        "name": "HP FH971AA",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_648ubm",
+        "name": "TRENDnet TEW-648UBM",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_ac56",
+        "name": "Asus USB-AC56",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 35,
+        "price": 700000,
+        "id": "net_intel_7260",
+        "name": "Intel 7260",
+        "_pricing": {
+            "usd": 35,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 875000,
+            "finalVnd": 700000
+        }
+    },
+    {
+        "originalPriceUSD": 74.11,
+        "price": 1482200,
+        "id": "net_tp_link_archer_t4uh",
+        "name": "TP-Link Archer T4UH",
+        "_pricing": {
+            "usd": 74.11,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1852750,
+            "finalVnd": 1482200
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_n900pce",
+        "name": "Rosewill N900PCE",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wdn3800",
+        "name": "TP-Link TL-WDN3800",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_feb_smart_fs_n600_basic_edition",
+        "name": "Feb Smart FS-N600 Basic Edition",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac600pcev3",
+        "name": "Rosewill RNX-AC600PCEv3",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac1200pcev2",
+        "name": "Rosewill RNX-AC1200PCEv2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hp_9260",
+        "name": "HP 9260",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 34.99,
+        "price": 699800,
+        "id": "net_netgear_a6150_100pas",
+        "name": "Netgear A6150-100PAS",
+        "_pricing": {
+            "usd": 34.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 874750,
+            "finalVnd": 699800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_ziyituod_zyt_7265",
+        "name": "Ziyituod ZYT-7265",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_fenvi_wi_fi_7_fv_be8800pro",
+        "name": "fenvi Wi-Fi 7 FV-BE8800Pro",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 29.98,
+        "price": 599600,
+        "id": "net_rosewill_rnx_n300x",
+        "name": "Rosewill RNX-N300X",
+        "_pricing": {
+            "usd": 29.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 749500,
+            "finalVnd": 599600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_62205an_hmwwb",
+        "name": "Intel 62205AN.HMWWB",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 18.05,
+        "price": 361000,
+        "id": "net_edimax_ew_7811utc",
+        "name": "Edimax EW-7811UTC",
+        "_pricing": {
+            "usd": 18.05,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 451250,
+            "finalVnd": 361000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tbw_108ub",
+        "name": "TRENDnet TBW-108UB",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 30.66,
+        "price": 613200,
+        "id": "net_trendnet_tew_643pi",
+        "name": "TRENDnet TEW-643PI",
+        "_pricing": {
+            "usd": 30.66,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 766500,
+            "finalVnd": 613200
+        }
+    },
+    {
+        "originalPriceUSD": 18.5,
+        "price": 370000,
+        "id": "net_startech_usb433wacdb",
+        "name": "StarTech USB433WACDB",
+        "_pricing": {
+            "usd": 18.5,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 462500,
+            "finalVnd": 370000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_ew_7811dac",
+        "name": "Edimax EW-7811DAC",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_encore_enuwi_1xn45",
+        "name": "Encore ENUWI-1XN45",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 59.99,
+        "price": 1199800,
+        "id": "net_3m_78_6972_0104_0",
+        "name": "3M 78-6972-0104-0",
+        "_pricing": {
+            "usd": 59.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1499750,
+            "finalVnd": 1199800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wn8200nd",
+        "name": "TP-Link TL-WN8200ND",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 44.95,
+        "price": 899000,
+        "id": "net_edimax_ew_7822pic",
+        "name": "Edimax EW-7822PIC",
+        "_pricing": {
+            "usd": 44.95,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1123750,
+            "finalVnd": 899000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_sy_pex23063",
+        "name": "Syba SY-PEX23063",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac1900pcev2",
+        "name": "Rosewill RNX-AC1900PCEv2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_fenvi_fv_2030t",
+        "name": "fenvi FV-2030T",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_n13_c1",
+        "name": "Asus USB-N13 C1",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 38.99,
+        "price": 779800,
+        "id": "net_linksys_wusb6300",
+        "name": "Linksys WUSB6300",
+        "_pricing": {
+            "usd": 38.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 974750,
+            "finalVnd": 779800
+        }
+    },
+    {
+        "originalPriceUSD": 16.98,
+        "price": 339600,
+        "id": "net_tp_link_archer_t1u",
+        "name": "TP-Link Archer T1U",
+        "_pricing": {
+            "usd": 16.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 424500,
+            "finalVnd": 339600
+        }
+    },
+    {
+        "originalPriceUSD": 37.99,
+        "price": 759800,
+        "id": "net_brostrend_ac3l_linux_wi_fi_adapter",
+        "name": "BrosTrend AC3L Linux Wi-Fi Adapter",
+        "_pricing": {
+            "usd": 37.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 949750,
+            "finalVnd": 759800
+        }
+    },
+    {
+        "originalPriceUSD": 27.94,
+        "price": 558800,
+        "id": "net_tp_link_archer_t4u_v2",
+        "name": "TP-Link Archer T4U V2",
+        "_pricing": {
+            "usd": 27.94,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 698500,
+            "finalVnd": 558800
+        }
+    },
+    {
+        "originalPriceUSD": 99.95,
+        "price": 1999000,
+        "id": "net_rosewill_rnx_n150pcx",
+        "name": "Rosewill RNX-N150PCx",
+        "_pricing": {
+            "usd": 99.95,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 2498750,
+            "finalVnd": 1999000
+        }
+    },
+    {
+        "originalPriceUSD": 57.99,
+        "price": 1159800,
+        "id": "net_tp_link_tl_wn751nd",
+        "name": "TP-Link TL-WN751ND",
+        "_pricing": {
+            "usd": 57.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1449750,
+            "finalVnd": 1159800
+        }
+    },
+    {
+        "originalPriceUSD": 20.99,
+        "price": 419800,
+        "id": "net_edimax_ew_7822utc",
+        "name": "Edimax EW-7822UTC",
+        "_pricing": {
+            "usd": 20.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 524750,
+            "finalVnd": 419800
+        }
+    },
+    {
+        "originalPriceUSD": 39.97,
+        "price": 799400,
+        "id": "net_linksys_wusb6100m",
+        "name": "Linksys WUSB6100M",
+        "_pricing": {
+            "usd": 39.97,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 999250,
+            "finalVnd": 799400
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_pce_ac66",
+        "name": "Asus PCE-AC66",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_n13",
+        "name": "Asus USB-N13",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_encore_enuwi_g2",
+        "name": "Encore ENUWI-G2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_linksys_wmp600n",
+        "name": "Linksys WMP600N",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_g300lx",
+        "name": "Rosewill RNX-G300LX",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_pce_n53",
+        "name": "Asus PCE-N53",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 64.97,
+        "price": 1299400,
+        "id": "net_linksys_ae2500",
+        "name": "Linksys AE2500",
+        "_pricing": {
+            "usd": 64.97,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1624250,
+            "finalVnd": 1299400
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_2200bnhmwdtx1",
+        "name": "Intel 2200BNHMWDTX1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n600ube",
+        "name": "Rosewill RNX-N600UBE",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_424ub",
+        "name": "TRENDnet TEW-424UB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_netgear_wna3100_100ens",
+        "name": "Netgear WNA3100-100ENS",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_netgear_wnda3100_100nas",
+        "name": "Netgear WNDA3100-100NAS",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wdn3200",
+        "name": "TP-Link TL-WDN3200",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wn723n",
+        "name": "TP-Link TL-WN723N",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_7260hmw",
+        "name": "Intel 7260HMW",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wn7200nd",
+        "name": "TP-Link TL-WN7200ND",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_ac53",
+        "name": "Asus USB-AC53",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 44.99,
+        "price": 899800,
+        "id": "net_edimax_ew_7822uac",
+        "name": "Edimax EW-7822UAC",
+        "_pricing": {
+            "usd": 44.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1124750,
+            "finalVnd": 899800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wn721n",
+        "name": "TP-Link TL-WN721N",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 17.98,
+        "price": 359600,
+        "id": "net_belkin_f9l1001",
+        "name": "Belkin F9L1001",
+        "_pricing": {
+            "usd": 17.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 449500,
+            "finalVnd": 359600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_ac1200ube",
+        "name": "Rosewill AC1200UBE",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_ac51",
+        "name": "Asus USB-AC51",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 19.99,
+        "price": 399800,
+        "id": "net_startech_usb150wn1x1w",
+        "name": "StarTech USB150WN1X1W",
+        "_pricing": {
+            "usd": 19.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 499750,
+            "finalVnd": 399800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_ac55",
+        "name": "Asus USB-AC55",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac1200pce",
+        "name": "Rosewill RNX-AC1200PCE",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 42,
+        "price": 840000,
+        "id": "net_startech_pex867wac22",
+        "name": "StarTech PEX867WAC22",
+        "_pricing": {
+            "usd": 42,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1050000,
+            "finalVnd": 840000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n150nub",
+        "name": "Rosewill RNX-N150NUB",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 76.89,
+        "price": 1537800,
+        "id": "net_linksys_ae3000_ca",
+        "name": "Linksys AE3000-CA",
+        "_pricing": {
+            "usd": 76.89,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1922250,
+            "finalVnd": 1537800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_inamax_4332804407",
+        "name": "Inamax 4332804407",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_brostrend_ac6",
+        "name": "BrosTrend AC6",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 25.99,
+        "price": 519800,
+        "id": "net_startech_usb433acd1x1",
+        "name": "StarTech USB433ACD1X1",
+        "_pricing": {
+            "usd": 25.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 649750,
+            "finalVnd": 519800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_archer_t4uhp",
+        "name": "TP-Link ARCHER T4UHP",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_infocus_ina_wifiusb_4",
+        "name": "InFocus INA-WIFIUSB-4",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hp_8265",
+        "name": "HP 8265",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_fenvi_fv8303",
+        "name": "fenvi FV8303",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_8265_ngwmg_dtx1",
+        "name": "Intel 8265.NGWMG.DTX1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_gigabyte_gc_wbax1200",
+        "name": "Gigabyte GC-WBAX1200",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 16.22,
+        "price": 324400,
+        "id": "net_siig_ju_wr0112_s2",
+        "name": "SIIG JU-WR0112-S2",
+        "_pricing": {
+            "usd": 16.22,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 405500,
+            "finalVnd": 324400
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac3000",
+        "name": "Rosewill RNX-AC3000",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 61.34,
+        "price": 1226800,
+        "id": "net_belkin_b2n002",
+        "name": "Belkin B2N002",
+        "_pricing": {
+            "usd": 61.34,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1533500,
+            "finalVnd": 1226800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dwa_121",
+        "name": "D-Link DWA-121",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 13.99,
+        "price": 279800,
+        "id": "net_d_link_dwa_162",
+        "name": "D-Link DWA-162",
+        "_pricing": {
+            "usd": 13.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 349750,
+            "finalVnd": 279800
+        }
+    },
+    {
+        "originalPriceUSD": 36,
+        "price": 720000,
+        "id": "net_d_link_dwa_171",
+        "name": "D-Link DWA-171",
+        "_pricing": {
+            "usd": 36,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 900000,
+            "finalVnd": 720000
+        }
+    },
+    {
+        "originalPriceUSD": 41.23,
+        "price": 824600,
+        "id": "net_startech_usb867wac22",
+        "name": "StarTech USB867WAC22",
+        "_pricing": {
+            "usd": 41.23,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1030750,
+            "finalVnd": 824600
+        }
+    },
+    {
+        "originalPriceUSD": 23.87,
+        "price": 477400,
+        "id": "net_trendnet_tew_806ubh",
+        "name": "TRENDnet TEW-806UBH",
+        "_pricing": {
+            "usd": 23.87,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 596750,
+            "finalVnd": 477400
+        }
+    },
+    {
+        "originalPriceUSD": 27.99,
+        "price": 559800,
+        "id": "net_brostrend_ac1l",
+        "name": "BrosTrend AC1L",
+        "_pricing": {
+            "usd": 27.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 699750,
+            "finalVnd": 559800
+        }
+    },
+    {
+        "originalPriceUSD": 25,
+        "price": 500000,
+        "id": "net_netgear_a6100_10000s",
+        "name": "Netgear A6100-10000S",
+        "_pricing": {
+            "usd": 25,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 625000,
+            "finalVnd": 500000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_n10",
+        "name": "Asus USB-N10",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 49.99,
+        "price": 999800,
+        "id": "net_belkin_f7d2102",
+        "name": "Belkin F7D2102",
+        "_pricing": {
+            "usd": 49.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1249750,
+            "finalVnd": 999800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_encore_enewi_1xn42",
+        "name": "Encore ENEWI-1XN42",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_iogear_gwu625",
+        "name": "IOGEAR GWU625",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_2200bnhmwdtx1g",
+        "name": "Intel 2200BNHMWDTX1G",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_633an_hmwwb",
+        "name": "Intel 633AN.HMWWB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_minin2_rwld_11002_",
+        "name": "Rosewill RNX-MiniN2(RWLD-11002)",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n150pce",
+        "name": "Rosewill RNX-N150PCe",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n150ube",
+        "name": "Rosewill RNX-N150UBE",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n180ub",
+        "name": "Rosewill RNX-N180UB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n180ube",
+        "name": "Rosewill RNX-N180UBE",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n250ube",
+        "name": "Rosewill RNX-N250UBE",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_startech_usb300wn2x2d",
+        "name": "StarTech USB300WN2X2D",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_cl_ada23032",
+        "name": "Syba CL-ADA23032",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_cl_ada24004",
+        "name": "Syba CL-ADA24004",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_sy_ada23026",
+        "name": "Syba SY-ADA23026",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_648ub",
+        "name": "TRENDnet TEW-648UB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_646ubh",
+        "name": "TRENDnet TEW-646UBH",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_703pil",
+        "name": "TRENDnet TEW-703PIL",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_703pi",
+        "name": "TRENDnet TEW-703PI",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_n900ube",
+        "name": "Rosewill N900UBE",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_n53",
+        "name": "Asus USB-N53",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_n66",
+        "name": "Asus USB-N66",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_linksys_ae1200_np",
+        "name": "Linksys AE1200-NP",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 19.98,
+        "price": 399600,
+        "id": "net_linksys_ae1200",
+        "name": "Linksys AE1200",
+        "_pricing": {
+            "usd": 19.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 499500,
+            "finalVnd": 399600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnwd_n1501ub",
+        "name": "Rosewill RNWD-N1501UB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_linksys_ae3000_np",
+        "name": "Linksys AE3000-NP",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 39.95,
+        "price": 799000,
+        "id": "net_linksys_ae3000",
+        "name": "Linksys AE3000",
+        "_pricing": {
+            "usd": 39.95,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 998750,
+            "finalVnd": 799000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n250pc2",
+        "name": "Rosewill RNX-N250PC2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n150hg",
+        "name": "Rosewill RNX-N150HG",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_linksys_ae2500_np",
+        "name": "Linksys AE2500-NP",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnwd_n1502ube",
+        "name": "Rosewill RNWD-N1502UBE",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_e9l1500",
+        "name": "Belkin E9L1500",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_e9l3000",
+        "name": "Belkin E9L3000",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_e9l6000",
+        "name": "Belkin E9L6000",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_e9l7500",
+        "name": "Belkin E9L7500",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_diamond_wl700nxs",
+        "name": "Diamond WL700NXS",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_encore_enuwi_1xn42",
+        "name": "Encore ENUWI-1XN42",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 21,
+        "price": 420000,
+        "id": "net_encore_enuwi_1xn4m",
+        "name": "Encore ENUWI-1XN4M",
+        "_pricing": {
+            "usd": 21,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 525000,
+            "finalVnd": 420000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_encore_enuwi_2xn42",
+        "name": "Encore ENUWI-2XN42",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_encore_enuwi_2xn45",
+        "name": "Encore ENUWI-2XN45",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_iogear_gwu627w6",
+        "name": "IOGEAR GWU627W6",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_patriot_pcusbw1150",
+        "name": "Patriot PCUSBW1150",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_684ub",
+        "name": "TRENDnet TEW-684UB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_649ub",
+        "name": "TRENDnet TEW-649UB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_encore_enewi_1xn45",
+        "name": "Encore ENEWI-1XN45",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_encore_enewi_2xn42",
+        "name": "Encore ENEWI-2XN42",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_encore_enewi_2xn45",
+        "name": "Encore ENEWI-2XN45",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_n600pce",
+        "name": "Rosewill N600PCE",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_623pi",
+        "name": "TRENDnet TEW-623PI",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 44.98,
+        "price": 899600,
+        "id": "net_d_link_dwa_125",
+        "name": "D-Link DWA-125",
+        "_pricing": {
+            "usd": 44.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1124500,
+            "finalVnd": 899600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dwa_130",
+        "name": "D-Link DWA-130",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 48.99,
+        "price": 979800,
+        "id": "net_d_link_dwa_160",
+        "name": "D-Link DWA-160",
+        "_pricing": {
+            "usd": 48.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1224750,
+            "finalVnd": 979800
+        }
+    },
+    {
+        "originalPriceUSD": 48,
+        "price": 960000,
+        "id": "net_d_link_dwa_182",
+        "name": "D-Link DWA-182",
+        "_pricing": {
+            "usd": 48,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1200000,
+            "finalVnd": 960000
+        }
+    },
+    {
+        "originalPriceUSD": 49.99,
+        "price": 999800,
+        "id": "net_d_link_dwa_566",
+        "name": "D-Link DWA-566",
+        "_pricing": {
+            "usd": 49.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1249750,
+            "finalVnd": 999800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_netgear_wn311b_100nas",
+        "name": "Netgear WN311B-100NAS",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_netgear_wna1000m_100ens",
+        "name": "Netgear WNA1000M-100ENS",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 62,
+        "price": 1240000,
+        "id": "net_netgear_wna1100_100ens",
+        "name": "Netgear WNA1100-100ENS",
+        "_pricing": {
+            "usd": 62,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1550000,
+            "finalVnd": 1240000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wn350gd",
+        "name": "TP-Link TL-WN350GD",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wn727n",
+        "name": "TP-Link TL-WN727N",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_6235anhmw",
+        "name": "Intel 6235ANHMW",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_105",
+        "name": "Intel 105",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_135",
+        "name": "Intel 135",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_2200bnhmw",
+        "name": "Intel 2200BNHMW",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_7260hmw_bn",
+        "name": "Intel 7260HMW BN",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_linksys_ae6000",
+        "name": "Linksys AE6000",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_orico_orico_wra150",
+        "name": "Orico ORICO WRA150",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_orico_orico_wrb150",
+        "name": "Orico ORICO WRB150",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_orico_orico_wrd150",
+        "name": "Orico ORICO WRD150",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_orico_wrd150blk",
+        "name": "Orico WRD150BLK",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_samsung_wis12abgnx_xaa",
+        "name": "Samsung WIS12ABGNX/XAA",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_startech_pci300wn2x2",
+        "name": "StarTech PCI300WN2X2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_624ub",
+        "name": "TRENDnet TEW-624UB",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 49.99,
+        "price": 999800,
+        "id": "net_trendnet_tew_664ub",
+        "name": "TRENDnet TEW-664UB",
+        "_pricing": {
+            "usd": 49.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1249750,
+            "finalVnd": 999800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_726ec",
+        "name": "TRENDnet TEW-726EC",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 27.83,
+        "price": 556600,
+        "id": "net_trendnet_tew_805ub",
+        "name": "TRENDnet TEW-805UB",
+        "_pricing": {
+            "usd": 27.83,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 695750,
+            "finalVnd": 556600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dwa_180",
+        "name": "D-Link DWA-180",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dwa_525",
+        "name": "D-Link DWA-525",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_ew_7811un",
+        "name": "Edimax EW-7811Un",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_ew_7128gn",
+        "name": "Edimax EW-7128Gn",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 42.49,
+        "price": 849800,
+        "id": "net_edimax_ew_7612pin",
+        "name": "Edimax EW-7612PIn",
+        "_pricing": {
+            "usd": 42.49,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1062250,
+            "finalVnd": 849800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_ew_7711usn",
+        "name": "Edimax EW-7711USN",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_ew_7722in",
+        "name": "Edimax EW-7722In",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 23.98,
+        "price": 479600,
+        "id": "net_edimax_ew_7722utn",
+        "name": "Edimax EW-7722UTn",
+        "_pricing": {
+            "usd": 23.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 599500,
+            "finalVnd": 479600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_ew_7722pnd",
+        "name": "Edimax EW-7722PnD",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_ew_7722und",
+        "name": "Edimax EW-7722UnD",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hawking_technology_hawnu1",
+        "name": "Hawking Technology HAWNU1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hawking_technology_hawnu2",
+        "name": "Hawking Technology HAWNU2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hawking_technology_hd45u",
+        "name": "Hawking Technology HD45U",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hawking_technology_hwdn3",
+        "name": "Hawking Technology HWDN3",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hawking_technology_hwug1",
+        "name": "Hawking Technology HWUG1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hawking_technology_hwun4",
+        "name": "Hawking Technology HWUN4",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_iogear_gwu523",
+        "name": "IOGEAR GWU523",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_patriot_pcbowau2_n",
+        "name": "Patriot PCBOWAU2-N",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_g300ex",
+        "name": "Rosewill RNX-G300EX",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_cn_wr0811_s1",
+        "name": "SIIG CN-WR0811-S1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_f9l1002",
+        "name": "Belkin F9L1002",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_f9l1103",
+        "name": "Belkin F9L1103",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_f9l1109_om",
+        "name": "Belkin F9L1109-OM",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 43.98,
+        "price": 879600,
+        "id": "net_buffalo_technology_wi_u2_300d",
+        "name": "Buffalo Technology WI-U2-300D",
+        "_pricing": {
+            "usd": 43.98,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1099500,
+            "finalVnd": 879600
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_f7d1102",
+        "name": "Belkin F7D1102",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_buffalo_technology_wi_u2_433dm",
+        "name": "Buffalo Technology WI-U2-433DM",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_cisco_am10",
+        "name": "Cisco AM10",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_n69506",
+        "name": "D-Link N69506",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_encore_enlwi_n3",
+        "name": "Encore ENLWI-N3",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 52.99,
+        "price": 1059800,
+        "id": "net_linksys_wusb600n",
+        "name": "Linksys WUSB600N",
+        "_pricing": {
+            "usd": 52.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1324750,
+            "finalVnd": 1059800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_ju_wr0012_s1",
+        "name": "SIIG JU-WR0012-S1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_ju_wr0212_s1",
+        "name": "SIIG JU-WR0212-S1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_804ub",
+        "name": "TRENDnet TEW-804UB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_siig_ju_wr0112_s1",
+        "name": "SIIG JU-WR0112-S1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_tp_link_tl_wdn4200",
+        "name": "TP-Link TL-WDN4200",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_cisco_ae3000",
+        "name": "Cisco AE3000",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_6205",
+        "name": "Intel 6205",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_ae3000",
+        "name": "Belkin AE3000",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_f7d2102tt",
+        "name": "Belkin F7D2102TT",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_benq_wdrt8192",
+        "name": "BenQ WDRT8192",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_cisco_ae1200",
+        "name": "Cisco AE1200",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 59.99,
+        "price": 1199800,
+        "id": "net_cisco_ae2500",
+        "name": "Cisco AE2500",
+        "_pricing": {
+            "usd": 59.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1499750,
+            "finalVnd": 1199800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_hawking_technology_hd65u",
+        "name": "Hawking Technology HD65U",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hawking_technology_hw7acu",
+        "name": "Hawking Technology HW7ACU",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_iogear_gwu735",
+        "name": "IOGEAR GWU735",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac1200ube2",
+        "name": "Rosewill RNX-AC1200UBE2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n600ub",
+        "name": "Rosewill RNX-N600UB",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 18,
+        "price": 360000,
+        "id": "net_startech_usb300wn2x2c",
+        "name": "StarTech USB300WN2X2C",
+        "_pricing": {
+            "usd": 18,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 450000,
+            "finalVnd": 360000
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_edimax_ew_7711mac",
+        "name": "Edimax EW-7711MAC",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_3160_ngwg",
+        "name": "Intel 3160.NGWG",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_intel_6300",
+        "name": "Intel 6300",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_ac68",
+        "name": "Asus USB-AC68",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_aukey_wf_r12",
+        "name": "AUKEY WF-R12",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_athenatech_ne_wn3201d",
+        "name": "Athenatech NE-WN3201D",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dwa_192",
+        "name": "D-Link DWA-192",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n600pce_v2_0",
+        "name": "Rosewill RNX-N600PCE_v2.0",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_n300ub",
+        "name": "Rosewill RNX-N300UB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_807ech",
+        "name": "TRENDnet TEW-807ECH",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_linksys_ae2500_ca",
+        "name": "Linksys AE2500-CA",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_netgear_wf2190",
+        "name": "Netgear WF2190",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hawking_technology_hw17acu",
+        "name": "Hawking Technology HW17ACU",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac1200ubv2",
+        "name": "Rosewill RNX-AC1200UBv2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac600hgubev2",
+        "name": "Rosewill RNX-AC600HGUBEv2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac600nubv2",
+        "name": "Rosewill RNX-AC600NUBv2",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_asus_usb_ac55_b1",
+        "name": "Asus USB-AC55 B1",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_trendnet_tew_808ubm",
+        "name": "TRENDnet TEW-808UBM",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac2030pce",
+        "name": "Rosewill RNX-AC2030PCE",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_rosewill_rnx_ac1900ub",
+        "name": "Rosewill RNX-AC1900UB",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hawking_technology_hw12acu",
+        "name": "Hawking Technology HW12ACU",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_syba_sy_pex23059",
+        "name": "Syba SY-PEX23059",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_sabrent_usbg802",
+        "name": "Sabrent USBG802",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_sabrent_usb_802n",
+        "name": "Sabrent USB-802N",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_belkin_linksys_ae1200_np",
+        "name": "Belkin Linksys AE1200-NP",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_hommie_n900",
+        "name": "Hommie N900",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_fenvi_fv_ax3000r",
+        "name": "fenvi FV-AX3000R",
+        "_estimated": true
+    },
+    {
+        "price": 792100,
+        "id": "net_fenvi_wi_fi_7_fv_be8800",
+        "name": "fenvi Wi-Fi 7 FV-BE8800",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 19.79,
+        "price": 395800,
+        "id": "net_d_link_dwa_181_us",
+        "name": "D-Link DWA-181-US",
+        "_pricing": {
+            "usd": 19.79,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 494750,
+            "finalVnd": 395800
+        }
+    },
+    {
+        "price": 792100,
+        "id": "net_d_link_dwa_x3000",
+        "name": "D-Link DWA-X3000",
+        "_estimated": true
+    },
+    {
+        "originalPriceUSD": 45.99,
+        "price": 919800,
+        "id": "net_siig_lb_wr0111_s1",
+        "name": "SIIG LB-WR0111-S1",
+        "_pricing": {
+            "usd": 45.99,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 1149750,
+            "finalVnd": 919800
+        }
+    },
+    {
+        "originalPriceUSD": 39.51,
+        "price": 790200,
+        "id": "net_siig_lb_wr0011_s1",
+        "name": "SIIG LB-WR0011-S1",
+        "_pricing": {
+            "usd": 39.51,
+            "rate": 25000,
+            "discount": 0.2,
+            "baseVnd": 987750,
+            "finalVnd": 790200
+        }
+    }
+]

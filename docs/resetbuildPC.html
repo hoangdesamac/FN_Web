@@ -22,6 +22,47 @@
     <script src="Script/js_header.js"></script>
     <!-- Thêm hệ thống giỏ hàng để có thể thêm linh kiện đã build -->
     <script src="Script/js_CartHandler.js" defer></script>
+    <!-- xuất file pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script>
+// Đảm bảo cả hai nút Thêm vào giỏ hàng (tổng và minibar) đều gọi chung một hàm xử lý
+function handleAddToCartClick() {
+  var snackbar = document.getElementById('snackbar-buildpc');
+  var snackBundle = document.getElementById('snack-bundle');
+  var snackParts = document.getElementById('snack-parts');
+  // Lấy danh sách required từ PART_CATEGORIES (chỉ lấy 8 mục đầu tiên)
+  var required = (window.PART_CATEGORIES||[]).slice(0,8).map(c=>c.key.toLowerCase());
+  var labels = (window.PART_CATEGORIES||[]).reduce((obj,c)=>{ obj[c.key.toLowerCase()]=c.label; return obj; }, {});
+  var missing = required.filter(function(key){
+    return !(window.state && state.selected && state.selected[key]);
+  });
+  if(missing.length) {
+    if(window.showNotification) window.showNotification('Vui lòng chọn đủ các bộ phận: '+missing.map(function(k){return labels[k]||k;}).join(', '),'error');
+    return;
+  }
+  if(snackbar && snackBundle && snackParts) {
+    snackbar.style.display = 'flex';
+    setTimeout(()=>{snackbar.classList.add('show')},10);
+  } else {
+    // Fallback: hỏi confirm nếu không có snackbar
+    if (!window.confirm('Bạn có muốn chúng tôi tiến hành lắp ráp sẵn cho bạn không?\n\nChọn OK để lắp ráp sẵn (thêm 1 sản phẩm tổng),\nChọn Cancel để thêm từng linh kiện riêng lẻ.')) {
+      if(typeof addCurrentSelectionToCart==='function') addCurrentSelectionToCart({bundle:false});
+      return;
+    }
+    if(typeof addCurrentSelectionToCart==='function') addCurrentSelectionToCart({bundle:true});
+  }
+}
+function bindAddToCartButtons() {
+  var btn = document.getElementById('export-json');
+  var floatBtn = document.getElementById('floatbar-addcart');
+  if(btn) btn.onclick = handleAddToCartClick;
+  if(floatBtn) floatBtn.onclick = handleAddToCartClick;
+}
+document.addEventListener('DOMContentLoaded', bindAddToCartButtons);
+</script>
     <script src="Script/js_resetbuildPC.js" defer></script>
 
 </head>
@@ -37,8 +78,8 @@
             <h2 class="builder-title">Danh mục</h2>
             <ul id="category-list"></ul>
             <div class="persist-actions">
-                <button class="btn neon-btn" id="save-config"><i class="fa fa-save"></i> Lưu cấu hình</button>
-                <button class="btn neon-btn" id="load-config"><i class="fa fa-cloud-download"></i> Tải cấu hình</button>
+                <button class="btn neon-btn" id="save-config"><i class="fa fa-save"></i> Xuất PDF</button>
+                <button class="btn neon-btn" id="load-config"><i class="fa fa-cloud-download"></i> Tải PDF</button>
             </div>
         </aside>
 
@@ -64,15 +105,11 @@
                         <td id="total-price">0₫</td>
                         <td></td>
                     </tr>
-                    <tr class="power-row">
-                        <td colspan="2">Công suất ước tính</td>
-                        <td id="total-power">0W</td>
-                        <td></td>
-                    </tr>
+                    
                 </tfoot>
             </table>
             <div class="export-actions">
-                <button class="btn neon-btn" id="export-json"><i class="fa fa-code"></i> Xuất JSON</button>
+                <button class="btn neon-btn" id="export-json"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng</button>
                 <button class="btn neon-btn alt" id="clear-config"><i class="fa fa-trash"></i> Xóa hết</button>
             </div>
            
@@ -132,17 +169,22 @@
 
 <!-- Floating mini summary bar -->
 <div class="builder-float-bar" id="builder-float-bar">
-    <div class="bf-left">
-        <span id="float-total">Tổng: 0₫</span>
-        <span id="float-power">• Công suất: 0W</span>
-    </div>
-    <div class="bf-actions">
-        <button id="toggle-compact" type="button" class="bf-btn" aria-label="Chuyển chế độ compact">Compact</button>
-        <button id="scroll-top" type="button" class="bf-btn" aria-label="Lên đầu trang">Lên đầu</button>
-    </div>
+  <div class="bf-left">
+    <span id="floatbar-total-price">Tổng: 0₫</span>
+  </div>
+  <div class="bf-actions">
+    <button id="floatbar-addcart" type="button" class="bf-btn" aria-label="Thêm vào giỏ hàng"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+  </div>
 </div>
 
-<!-- Minimal Chatbox -->
+<!-- Snackbar xác nhận lắp ráp sẵn -->
+<div id="snackbar-buildpc" style="display:none;position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:9999;min-width:320px;max-width:90vw;padding:18px 24px;border-radius:14px;box-shadow:0 4px 32px #00e6ff55,0 2px 12px #0008;display:flex;align-items:center;gap:16px;font-size:1.1rem;backdrop-filter:blur(2px);">
+  <span style="flex:1">Bạn có muốn chúng tôi lắp ráp sẵn cho bạn không?</span>
+  <button id="snack-bundle" class="btn neon-btn" style="margin-right:4px;">Lắp ráp sẵn</button>
+  <button id="snack-parts" class="btn neon-btn alt">Từng linh kiện</button>
+</div>
+
+<!-- 
 <button id="openChatbox" class="chat-launch-bar sunken" aria-label="Mở chat tư vấn" title="Chat tư vấn">
     <span class="clb-icon"><i class="fa fa-comments"></i></span>
     <span class="clb-label">Chat tư vấn - Giải đáp mọi thắc mắc</span>
@@ -215,5 +257,236 @@ document.addEventListener('DOMContentLoaded', positionChatLaunch);
     }
   </style>
 </div>
+-->
+
+<script>
+// Gán sự kiện cho nút Thêm vào giỏ hàng tổng bằng snackbar đẹp (và minibar cũng dùng chung logic này)
+document.addEventListener('DOMContentLoaded', function() {
+  var snackbar = document.getElementById('snackbar-buildpc');
+  var snackBundle = document.getElementById('snack-bundle');
+  var snackParts = document.getElementById('snack-parts');
+  function closeSnack() {
+    snackbar.classList.remove('show');
+    setTimeout(()=>{snackbar.style.display='none';},300);
+  }
+  if(snackBundle && snackParts) {
+    snackBundle.onclick = function() {
+      if(typeof addCurrentSelectionToCart==='function') addCurrentSelectionToCart({bundle:true});
+      closeSnack();
+    };
+    snackParts.onclick = function() {
+      if(typeof addCurrentSelectionToCart==='function') addCurrentSelectionToCart({bundle:false});
+      closeSnack();
+    };
+  }
+});
+</script>
+<script>
+// Gán sự kiện cho nút Thêm vào giỏ hàng trên thanh builder-float-bar (minibar) dùng chung logic với nút tổng
+document.addEventListener('DOMContentLoaded', function() {
+  var floatBtn = document.getElementById('floatbar-addcart');
+  if(floatBtn) floatBtn.onclick = handleAddToCartClick;
+});
+</script>
+<script>
+// Cập nhật động tổng giá cho thanh builder-float-bar (bỏ công suất)
+function updateFloatBar() {
+  var totalText = '';
+  var mainTotal = document.getElementById('total-price');
+  if(mainTotal) {
+    totalText = mainTotal.textContent || mainTotal.innerText || '';
+    // Nếu là 'Liên hệ' hoặc rỗng thì hiển thị 0₫
+    if(!totalText.trim() || /liên hệ/i.test(totalText)) totalText = '0₫';
+  } else {
+    // Fallback: tự tính lại nếu không tìm thấy
+    var total = 0;
+    if(window.state && state.selected) {
+      Object.values(state.selected).forEach(function(p){
+        total += p.price||0;
+      });
+    }
+    totalText = (typeof formatPrice === 'function') ? formatPrice(total) : (total? total.toLocaleString('vi-VN')+'₫' : '0₫');
+  }
+  var el = document.getElementById('floatbar-total-price');
+  if(el) el.textContent = 'Tổng: ' + totalText.replace(/^Tổng: /,'').replace(/^\s+|\s+$/g,'');
+  // Đảm bảo nút thanh toán luôn enable/disable đúng trạng thái
+  var btn = document.getElementById('floatbar-addcart');
+  // Lấy số tiền số để disable đúng
+  var totalNum = 0;
+  if(mainTotal) {
+    var num = (mainTotal.textContent||'').replace(/[^\d]/g,'');
+    totalNum = parseInt(num,10)||0;
+  }
+  if(btn) btn.disabled = totalNum <= 0;
+  // Luôn gán lại sự kiện cho cả hai nút mỗi lần cập nhật minibar
+  bindAddToCartButtons();
+}
+document.addEventListener('DOMContentLoaded', function() {
+  updateFloatBar();
+});
+window.updateFloatBar = updateFloatBar;
+// Gọi updateFloatBar trong các hàm chọn/xóa linh kiện (js_resetbuildPC.js) để luôn đồng bộ
+</script>
+<script>
+// ====== Xuất PDF cấu hình PC ======
+document.addEventListener('DOMContentLoaded', function() {
+  var exportBtn = document.getElementById('export-pdf');
+  if(exportBtn) exportBtn.onclick = exportPCBuildPDF;
+});
+document.addEventListener('DOMContentLoaded', function() {
+  var exportBtn = document.getElementById('save-config');
+  if(exportBtn) exportBtn.onclick = exportPCBuildPDF;
+});
+
+function exportPCBuildPDF() {
+  if(!window.state || !state.selected || Object.keys(state.selected).length === 0) {
+    if(window.showNotification) window.showNotification('Bạn chưa chọn linh kiện nào để xuất PDF!','error');
+    return;
+  }
+  var parts = Object.values(state.selected);
+  var now = new Date();
+  var formattedDate = now.toLocaleString('vi-VN');
+  var total = parts.reduce((sum,p)=>sum+(p.price||0),0);
+  var logoUrl = 'Image_Showroom/Slogan_w_logo.png';
+
+  // Tạo bảng sản phẩm (bỏ cột Loại)
+  var tableBody = [
+    [
+      {text:'Tên linh kiện', bold:true, alignment:'left'},
+      {text:'Giá', bold:true, alignment:'right'}
+    ],
+    ...parts.map(p=>[
+      {text:p.name, alignment:'left'},
+      {text: (typeof formatPrice==='function'? formatPrice(p.price) : (p.price||0).toLocaleString('vi-VN')+'₫'), alignment:'right'}
+    ])
+  ];
+
+  // Tải logo base64 nếu có pdfmake
+  function toBase64Image(url, cb) {
+    var img = new window.Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      canvas.width = img.width; canvas.height = img.height;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img,0,0);
+      cb(canvas.toDataURL('image/png'));
+    };
+    img.onerror = function(){ cb(null); };
+    img.src = url;
+  }
+
+  toBase64Image(logoUrl, function(logoBase64) {
+    var docDefinition = {
+      background: logoBase64 ? function(currentPage, pageSize) {
+        return {
+          image: logoBase64,
+          width: pageSize.width * 0.7,
+          opacity: 0.08,
+          absolutePosition: { x: (pageSize.width - pageSize.width * 0.7) / 2, y: (pageSize.height - pageSize.width * 1) / 2 }
+        };
+      } : undefined,
+      content: [
+        {
+          columns: [
+            logoBase64 ? { image: logoBase64, width: 80 } : { text: '', width: 80 },
+            { text: 'CẤU HÌNH PC', style: 'header', alignment: 'center', width: '*' },
+            { text: '', width: 80 }
+          ]
+        },
+        { text: '\n' },
+        { text: 'Ngày xuất: ' + formattedDate },
+        { text: '\nDanh sách linh kiện:', style: 'subheader' },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*','auto'],
+            body: tableBody
+          }
+        },
+        { text: '\nTổng cộng: ' + (typeof formatPrice==='function'? formatPrice(total) : total.toLocaleString('vi-VN')+'₫'), alignment: 'right', bold: true },
+        { text: '\nCảm ơn bạn đã sử dụng 3TD Shop!', italics: true, alignment: 'center', color: 'black' }
+      ],
+      styles: {
+        header: { fontSize: 18, bold: true, color: '#1e88e5' },
+        subheader: { fontSize: 15, bold: true, margin: [0, 10, 0, 5] }
+      },
+      defaultStyle: {
+        font: 'Roboto', fontSize: 11
+      },
+      pageSize: 'A4',
+      pageMargins: [40, 60, 40, 60]
+    };
+    if(window.pdfMake) pdfMake.createPdf(docDefinition).download('CauHinhPC_3TDShop.pdf');
+    else alert('Không tìm thấy thư viện pdfMake!');
+  });
+}
+</script>
+<style>
+#snackbar-buildpc {
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s, bottom .3s, box-shadow .3s;
+  background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+  border: 2px solid #00e6ff;
+  box-shadow: 0 4px 32px #00e6ff55, 0 2px 12px #0008;
+  color: #fff;
+}
+#snackbar-buildpc.show {
+  opacity:1;
+  pointer-events:auto;
+  bottom:48px;
+  box-shadow: 0 0 16px 4px #00e6ffcc, 0 4px 32px #00e6ff55, 0 2px 12px #0008;
+}
+#snackbar-buildpc .btn {
+  font-size:1rem;
+  padding:6px 16px;
+  background: linear-gradient(90deg, #00e6ff 0%, #0072ff 100%);
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #00e6ff33;
+  transition: background .2s, color .2s;
+}
+#snackbar-buildpc .btn.alt {
+  background: #222;
+  color: #00e6ff;
+  border: 1px solid #00e6ff;
+}
+#snackbar-buildpc .btn:hover {
+  filter: brightness(1.1);
+  color: #0072ff;
+}
+#notification.notification-popup {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  min-width: 180px;
+  max-width: 320px;
+  background: #222;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px #0006;
+  z-index: 99999;
+  font-size: 0.98rem;
+  display: block;
+  opacity: 1;
+  transition: opacity .3s, bottom .3s;
+}
+#notification.notification-popup.error { background: #b71c1c; color: #fff; }
+#notification.notification-popup.success { background: #222; color: #fff; }
+#notification .notification-content { display: flex; align-items: center; gap: 8px; }
+#notification .notification-message { flex: 1; }
+#notification .notification-close { background: none; border: none; color: #fff; font-size: 1.1em; cursor: pointer; }
+#notification .notification-actions { margin-top: 6px; display: flex; gap: 6px; }
+#notification .view-cart-btn { background: #00e676; color: #222; border: none; border-radius: 5px; padding: 4px 10px; text-decoration: none; font-weight: 600; font-size:0.95em; }
+#notification .continue-btn { background: #444; color: #fff; border: none; border-radius: 5px; padding: 4px 10px; font-size:0.95em; }
+@keyframes popupNotification {
+  from { opacity: 0; bottom: 0; }
+  to { opacity: 1; bottom: 16px; }
+}
+</style>
 </body>
 </html>
