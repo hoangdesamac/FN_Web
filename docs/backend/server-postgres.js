@@ -7,6 +7,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sgMail = require('@sendgrid/mail');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
+// Nếu Node <18, bật dòng dưới và cài node-fetch@2
+// const fetch = require('node-fetch');
 
 const app = express();
 
@@ -64,6 +67,24 @@ async function sendMail(to, subject, htmlContent) {
         console.error("❌ Lỗi gửi email:", err.response?.body || err.message);
         throw err;
     }
+}
+
+// ===== Google OAuth =====
+const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'https://fn-web.onrender.com';
+
+const googleClient = new OAuth2Client({
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    redirectUri: `${BACKEND_BASE_URL}/api/auth/google/callback`,
+});
+
+function setAuthCookie(res, userRow) {
+    const token = jwt.sign(
+        { id: userRow.id, email: userRow.email, lastName: userRow.last_name },
+        JWT_SECRET,
+        { expiresIn: '7d' }
+    );
+    res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
 }
 
 // ===== Debug / Health =====
@@ -178,6 +199,97 @@ app.post('/api/logout', (_req, res) => {
     res.json({ success: true });
 });
 
+// ===== Google OAuth routes =====
+app.get('/api/auth/google', async (req, res) => {
+    try {
+        const url = googleClient.generateAuthUrl({
+            access_type: 'offline',
+            prompt: 'consent',
+            scope: ['openid', 'email', 'profile'],
+        });
+        return res.redirect(url);
+    } catch (err) {
+        console.error('Google auth start error:', err);
+        return res.status(500).send('Google auth init error');
+    }
+});
+
+app.get('/api/auth/google/callback', async (req, res) => {
+    try {
+        const code = req.query.code;
+        if (!code) return res.status(400).send('Missing code');
+
+        const { tokens } = await googleClient.getToken(code);
+
+        let payload;
+        if (tokens.id_token) {
+            const ticket = await googleClient.verifyIdToken({
+                idToken: tokens.id_token,
+                audience: process.env.GOOGLE_CLIENT_ID,
+            });
+            payload = ticket.getPayload();
+        } else if (tokens.access_token) {
+            const userinfoRes = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+                headers: { Authorization: `Bearer ${tokens.access_token}` }
+            });
+            payload = await userinfoRes.json();
+        } else {
+            throw new Error('No id_token or access_token received from Google');
+        }
+
+        const profile = {
+            id: payload.sub || payload.id,
+            email: payload.email,
+            verified_email: payload.email_verified,
+            name: payload.name,
+            given_name: payload.given_name,
+            family_name: payload.family_name,
+            picture: payload.picture
+        };
+
+        if (!profile || !profile.email) {
+            return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+        }
+
+        let userRow;
+        const byGoogle = await pool.query('SELECT * FROM users WHERE google_id = $1', [profile.id]);
+        if (byGoogle.rows.length) {
+            userRow = byGoogle.rows[0];
+        } else {
+            const byEmail = await pool.query('SELECT * FROM users WHERE email = $1', [profile.email]);
+            if (byEmail.rows.length) {
+                userRow = byEmail.rows[0];
+                await pool.query(
+                    'UPDATE users SET google_id = $1, avatar_url = $2 WHERE id = $3',
+                    [profile.id, profile.picture || null, userRow.id]
+                );
+            } else {
+                const insert = await pool.query(
+                    `INSERT INTO users (email, first_name, last_name, password_hash, google_id, avatar_url)
+                     VALUES ($1, $2, $3, $4, $5, $6)
+                     RETURNING *`,
+                    [
+                        profile.email,
+                        profile.given_name || '',
+                        profile.family_name || '',
+                        null,
+                        profile.id,
+                        profile.picture || null
+                    ]
+                );
+                userRow = insert.rows[0];
+            }
+        }
+
+        setAuthCookie(res, userRow);
+
+        return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=google`);
+    } catch (err) {
+        console.error('Google callback error:', err);
+        return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+    }
+});
+
 // ===== Quên mật khẩu =====
 app.post('/api/forgot-password', async (req, res) => {
     try {
@@ -191,7 +303,7 @@ app.post('/api/forgot-password', async (req, res) => {
 
         const user = rows[0];
         const token = crypto.randomBytes(32).toString("hex");
-        const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 phút
+        const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
 
         await pool.query(
             `INSERT INTO reset_tokens (user_id, token, expires_at) VALUES ($1,$2,$3)`,

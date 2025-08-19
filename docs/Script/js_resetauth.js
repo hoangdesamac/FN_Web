@@ -1,3 +1,4 @@
+// ==================== CẤU HÌNH API ====================
 window.API_BASE = "https://fn-web.onrender.com"; // Backend
 
 // ==================== HÀM HỖ TRỢ ====================
@@ -102,6 +103,20 @@ if (loginForm) {
     });
 }
 
+// ==================== ĐĂNG XUẤT ====================
+async function logout() {
+    try {
+        await fetch(`${API_BASE}/api/logout`, {
+            method: "POST",
+            credentials: "include"
+        });
+        localStorage.removeItem("userName");
+        window.location.reload();
+    } catch (err) {
+        console.error("Lỗi đăng xuất:", err);
+    }
+}
+
 // ==================== QUÊN MẬT KHẨU ====================
 const forgotForm = document.getElementById("forgotForm");
 if (forgotForm) {
@@ -131,6 +146,36 @@ if (forgotForm) {
     });
 }
 
+// ==================== GOOGLE LOGIN ====================
+document.addEventListener("DOMContentLoaded", () => {
+    // Gắn event cho cả 3 nút Google
+    const googleButtons = [
+        document.getElementById("googleLoginBtn-login"),
+        document.getElementById("googleLoginBtn-register"),
+        document.getElementById("googleLoginBtn-forgot")
+    ];
+    googleButtons.forEach(btn => {
+        if (btn) {
+            btn.addEventListener("click", () => {
+                window.location.href = `${API_BASE}/api/auth/google`;
+            });
+        }
+    });
+
+    // ✅ Kiểm tra redirect kết quả từ Google callback
+    const urlParams = new URLSearchParams(window.location.search);
+    const loginStatus = urlParams.get("login");
+    if (loginStatus === "google") {
+        // Google login thành công
+        checkLoginStatus();
+        if (typeof CyberModal !== "undefined") CyberModal.close();
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (loginStatus === "failed") {
+        showMessage("login-error", "❌ Google login thất bại, vui lòng thử lại!");
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
+
 // ==================== AUTO CHECK LOGIN + TỰ MỞ MODAL SAU RESET ====================
 document.addEventListener("DOMContentLoaded", () => {
     checkLoginStatus();
@@ -149,4 +194,3 @@ document.addEventListener("DOMContentLoaded", () => {
         openLoginModal();
     }
 });
-
