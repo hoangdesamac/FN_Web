@@ -20,7 +20,7 @@ async function checkLoginStatus() {
         });
         const data = await res.json();
         if (data.loggedIn) {
-            localStorage.setItem("userName", data.user.lastName.trim());
+            localStorage.setItem("userName", (data.user.lastName || "").trim());
         } else {
             localStorage.removeItem("userName");
         }
@@ -55,7 +55,7 @@ if (registerForm) {
             if (data.success) {
                 showMessage("register-error", "✅ Đăng ký thành công! Vui lòng đăng nhập.", "success");
                 setTimeout(() => {
-                    if (typeof CyberModal !== "undefined") CyberModal.showLogin();
+                    if (typeof CyberModal !== "undefined" && CyberModal.showLogin) CyberModal.showLogin();
                     showMessage("register-error", "");
                 }, 1500);
             } else {
@@ -91,7 +91,7 @@ if (loginForm) {
                 if (data.user && data.user.lastName) {
                     localStorage.setItem("userName", data.user.lastName.trim());
                 }
-                if (typeof CyberModal !== "undefined") CyberModal.close();
+                if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
                 window.location.reload(); // reload lại để cập nhật UI
             } else {
                 showMessage("login-error", data.error || "❌ Sai email hoặc mật khẩu!");
@@ -146,51 +146,64 @@ if (forgotForm) {
     });
 }
 
-// ==================== GOOGLE LOGIN ====================
-document.addEventListener("DOMContentLoaded", () => {
-    // Gắn event cho cả 3 nút Google
-    const googleButtons = [
-        document.getElementById("googleLoginBtn-login"),
-        document.getElementById("googleLoginBtn-register"),
-        document.getElementById("googleLoginBtn-forgot")
-    ];
-    googleButtons.forEach(btn => {
-        if (btn) {
-            btn.addEventListener("click", () => {
-                window.location.href = `${API_BASE}/api/auth/google`;
-            });
+/* =======================================================================
+   GOOGLE LOGIN — BỀN VỮNG VỚI DOM TẢI ĐỘNG
+   - Dùng event delegation: không phụ thuộc DOMContentLoaded
+   - Hoạt động cho cả nút trong Login / Register / Forgot
+   - Tránh bind trùng, không cần interval/polling
+   ======================================================================= */
+
+// 1) Lắng nghe click trên document cho mọi nút Google
+document.addEventListener("click", (e) => {
+    const btn = e.target.closest("#googleLoginBtn-login, #googleLoginBtn-register, #googleLoginBtn-forgot, .google-btn");
+    if (!btn) return;
+
+    // Tránh bị disabled (nếu có nút Facebook đang disabled)
+    if (btn.disabled) return;
+
+    try {
+        // Chuyển sang backend OAuth start
+        window.location.href = `${API_BASE}/api/auth/google`;
+    } catch (err) {
+        console.error("Không thể chuyển sang Google OAuth:", err);
+        showMessage("login-error", "❌ Không thể mở Google Login, vui lòng thử lại!");
+    }
+});
+
+// 2) Xử lý kết quả redirect từ Google callback (?login=google|failed)
+(function handleGoogleCallbackAndAutoOpen() {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const loginStatus = urlParams.get("login");
+
+        if (loginStatus === "google") {
+            // Google login thành công → cập nhật UI + đóng modal (nếu đang mở)
+            checkLoginStatus();
+            if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
+            // Xóa query param để không lặp lại
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else if (loginStatus === "failed") {
+            // Google login thất bại
+            showMessage("login-error", "❌ Google login thất bại, vui lòng thử lại!");
+            window.history.replaceState({}, document.title, window.location.pathname);
         }
-    });
 
-    // ✅ Kiểm tra redirect kết quả từ Google callback
-    const urlParams = new URLSearchParams(window.location.search);
-    const loginStatus = urlParams.get("login");
-    if (loginStatus === "google") {
-        // Google login thành công
+        // 3) AUTO CHECK LOGIN + TỰ MỞ MODAL SAU RESET
         checkLoginStatus();
-        if (typeof CyberModal !== "undefined") CyberModal.close();
-        window.history.replaceState({}, document.title, window.location.pathname);
-    } else if (loginStatus === "failed") {
-        showMessage("login-error", "❌ Google login thất bại, vui lòng thử lại!");
-        window.history.replaceState({}, document.title, window.location.pathname);
+
+        if (localStorage.getItem("showLoginAfterReset") === "true") {
+            localStorage.removeItem("showLoginAfterReset");
+
+            const openLoginModal = () => {
+                if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+                    CyberModal.open(); // mở modal + show login
+                } else {
+                    setTimeout(openLoginModal, 200);
+                }
+            };
+            openLoginModal();
+        }
+    } catch (err) {
+        console.error("Lỗi xử lý callback Google/auto open:", err);
     }
-});
-
-// ==================== AUTO CHECK LOGIN + TỰ MỞ MODAL SAU RESET ====================
-document.addEventListener("DOMContentLoaded", () => {
-    checkLoginStatus();
-
-    // ✅ Nếu vừa reset mật khẩu xong → tự mở modal đăng nhập
-    if (localStorage.getItem("showLoginAfterReset") === "true") {
-        localStorage.removeItem("showLoginAfterReset");
-
-        const openLoginModal = () => {
-            if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                CyberModal.open(); // ✅ mở modal + show login luôn
-            } else {
-                setTimeout(openLoginModal, 200);
-            }
-        };
-        openLoginModal();
-    }
-});
+})();
