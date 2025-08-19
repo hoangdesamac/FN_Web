@@ -317,7 +317,7 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
             return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
         }
 
-        // Lấy thông tin user
+        // Lấy thông tin user từ Facebook
         const userRes = await fetch(`https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${tokenData.access_token}`);
         const fbUser = await userRes.json();
 
@@ -327,35 +327,40 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
         }
 
         let userRow;
+        // Tìm theo facebook_id
         const byFb = await pool.query('SELECT * FROM users WHERE facebook_id = $1', [fbUser.id]);
         if (byFb.rows.length) {
             userRow = byFb.rows[0];
         } else {
+            // Nếu chưa có thì tìm theo email
             const byEmail = await pool.query('SELECT * FROM users WHERE email = $1', [fbUser.email]);
             if (byEmail.rows.length) {
                 userRow = byEmail.rows[0];
+                // Chỉ update facebook_id thôi, chưa update avatar
                 await pool.query(
-                    'UPDATE users SET facebook_id = $1, avatar_url = $2 WHERE id = $3',
-                    [fbUser.id, fbUser.picture?.data?.url || null, userRow.id]
+                    'UPDATE users SET facebook_id = $1 WHERE id = $2',
+                    [fbUser.id, userRow.id]
                 );
             } else {
+                // Tạo user mới và lưu luôn avatar
                 const insert = await pool.query(
-                    `INSERT INTO users (email, first_name, last_name, password_hash, facebook_id, avatar_url)
+                    `INSERT INTO users (email, first_name, last_name, password_hash, facebook_id, facebook_avatar)
                      VALUES ($1, $2, $3, $4, $5, $6)
-                     RETURNING *`,
+                         RETURNING *`,
                     [
                         fbUser.email,
                         fbUser.name.split(' ')[0] || '',
                         fbUser.name.split(' ').slice(1).join(' ') || '',
                         null,
                         fbUser.id,
-                        fbUser.picture?.data?.url || null
+                        fbUser.picture?.data?.url || null  // ✅ chỉ lưu lúc tạo mới
                     ]
                 );
                 userRow = insert.rows[0];
             }
         }
 
+        // Set cookie và redirect
         setAuthCookie(res, userRow);
         return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=facebook`);
     } catch (err) {
@@ -363,6 +368,7 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
         return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
     }
 });
+
 
 // ===== Quên mật khẩu =====
 app.post('/api/forgot-password', async (req, res) => {
