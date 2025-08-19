@@ -669,50 +669,88 @@ async function exportToPDF(orderId) {
         return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
     }
 
-    // === Convert product images to base64 ===
-    const productImages = await Promise.all(
-        order.items.map(async item => {
-            const proxiedURL = proxifyImageURL(item.image);
-            try {
-                const response = await fetch(proxiedURL, { mode: 'cors' });
-                const blob = await response.blob();
-                return await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(blob);
+        // === Convert product images to base64 (hỗ trợ cả bundle và lẻ) ===
+        const flatItems = [];
+        order.items.forEach(item => {
+            if(item.isBundle && Array.isArray(item.parts)) {
+                flatItems.push({
+                    ...item,
+                    _isBundleHeader: true
                 });
-            } catch (err) {
-                console.warn('Không thể lấy ảnh qua proxy:', item.image, err);
-                return null;
+                item.parts.forEach(part => {
+                    flatItems.push({
+                        ...part,
+                        _isBundlePart: true,
+                        bundleName: item.name
+                    });
+                });
+            } else {
+                flatItems.push(item);
             }
-        })
-    );
+        });
 
-    // === Table rows ===
-    const productTable = [
-        [
-            { text: 'Ảnh', bold: true, alignment: 'center' },
-            { text: 'Tên sản phẩm', bold: true, alignment: 'left' },
-            { text: 'SL', bold: true, alignment: 'center' },
-            { text: 'Giá gốc', bold: true, alignment: 'center' },
-            { text: 'Giảm giá', bold: true, alignment: 'center' },
-            { text: 'Giá ưu đãi', bold: true, alignment: 'center' },
-            { text: 'Thành tiền', bold: true, alignment: 'center' }
-        ],
-        ...order.items.map((item, i) => [
-            item.image ? { image: productImages[i], width: 40, height: 40, alignment: 'center' } : 'Không ảnh',
-            { text: item.name, alignment: 'left' }, // Cột này bạn có thể alignment: 'left'
-            { text: item.quantity.toString(), alignment: 'center' },
-            { text: formatCurrency(item.originalPrice), alignment: 'center' },
-            { text: `${item.discountPercent !== undefined
-                    ? item.discountPercent
-                    : Math.round(100 - (item.salePrice / item.originalPrice * 100))
-                }%`, alignment: 'center' },
-            { text: formatCurrency(item.salePrice), alignment: 'center' },
-            { text: formatCurrency(item.quantity * item.salePrice), alignment: 'center' }
-        ])
-    ];
+        const productImages = await Promise.all(
+                flatItems.map(async item => {
+                        if(item._isBundleHeader) return null;
+                        const proxiedURL = item.image ? proxifyImageURL(item.image) : null;
+                        if(!proxiedURL) return null;
+                        try {
+                                const response = await fetch(proxiedURL, { mode: 'cors' });
+                                const blob = await response.blob();
+                                return await new Promise((resolve, reject) => {
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => resolve(reader.result);
+                                        reader.onerror = reject;
+                                        reader.readAsDataURL(blob);
+                                });
+                        } catch (err) {
+                                console.warn('Không thể lấy ảnh qua proxy:', item.image, err);
+                                return null;
+                        }
+                })
+        );
+
+        // === Table rows (hỗ trợ bundle) ===
+        const productTable = [
+                [
+                        { text: 'Ảnh', bold: true, alignment: 'center' },
+                        { text: 'Tên sản phẩm', bold: true, alignment: 'left' },
+                        { text: 'SL', bold: true, alignment: 'center' },
+                        { text: 'Giá gốc', bold: true, alignment: 'center' },
+                        { text: 'Giảm giá', bold: true, alignment: 'center' },
+                        { text: 'Giá ưu đãi', bold: true, alignment: 'center' },
+                        { text: 'Thành tiền', bold: true, alignment: 'center' }
+                ],
+                ...flatItems.map((item, i) => {
+                    if(item._isBundleHeader) {
+                        return [
+                            { text: '', colSpan: 1, border: [false,false,false,false] },
+                            { text: `🖥️ ${item.name} (PC tự build)`, colSpan: 6, bold: true, fillColor: '#e3f2fd', color: '#1976d2', alignment: 'left', margin: [0,4,0,4] },
+                            {},{},{},{},{}
+                        ];
+                    } else if(item._isBundlePart) {
+                        return [
+                            item.image ? { image: productImages[i], width: 32, height: 32, alignment: 'center' } : '',
+                            { text: '↳ ' + item.name, alignment: 'left', italics: true },
+                            { text: item.quantity ? item.quantity.toString() : '1', alignment: 'center' },
+                            { text: formatCurrency(item.originalPrice), alignment: 'center' },
+                            { text: item.discountPercent !== undefined ? `${item.discountPercent}%` : '', alignment: 'center' },
+                            { text: formatCurrency(item.salePrice||item.price), alignment: 'center' },
+                            { text: formatCurrency((item.salePrice||item.price) * (item.quantity||1)), alignment: 'center' }
+                        ];
+                    } else {
+                        return [
+                            item.image ? { image: productImages[i], width: 40, height: 40, alignment: 'center' } : 'Không ảnh',
+                            { text: item.name, alignment: 'left' },
+                            { text: item.quantity ? item.quantity.toString() : '1', alignment: 'center' },
+                            { text: formatCurrency(item.originalPrice), alignment: 'center' },
+                            { text: item.discountPercent !== undefined ? `${item.discountPercent}%` : '', alignment: 'center' },
+                            { text: formatCurrency(item.salePrice||item.price), alignment: 'center' },
+                            { text: formatCurrency((item.salePrice||item.price) * (item.quantity||1)), alignment: 'center' }
+                        ];
+                    }
+                })
+        ];
 
     // === Logo Base64 ===
     const logoBase64 = await toBase64Image("Image_Showroom/Slogan_w.jpg");
