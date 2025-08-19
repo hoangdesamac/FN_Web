@@ -121,7 +121,7 @@ app.post('/api/register', async (req, res) => {
         const hash = await bcrypt.hash(password, 10);
         const q = `INSERT INTO users (email, first_name, last_name, password_hash)
                    VALUES ($1,$2,$3,$4)
-                   RETURNING id, email, first_name, last_name, created_at`;
+                       RETURNING id, email, first_name, last_name, created_at`;
         const { rows } = await pool.query(q, [email, firstName, lastName, hash]);
 
         res.json({
@@ -267,7 +267,7 @@ app.get('/api/auth/google/callback', async (req, res) => {
                 const insert = await pool.query(
                     `INSERT INTO users (email, first_name, last_name, password_hash, google_id, avatar_url)
                      VALUES ($1, $2, $3, $4, $5, $6)
-                     RETURNING *`,
+                         RETURNING *`,
                     [
                         profile.email,
                         profile.given_name || '',
@@ -286,6 +286,80 @@ app.get('/api/auth/google/callback', async (req, res) => {
         return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=google`);
     } catch (err) {
         console.error('Google callback error:', err);
+        return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+    }
+});
+
+// ===== Facebook OAuth routes =====
+app.get('/api/auth/facebook', (req, res) => {
+    const redirectUri = process.env.FACEBOOK_CALLBACK_URL;
+    const clientId = process.env.FACEBOOK_CLIENT_ID;
+
+    const fbAuthUrl = `https://www.facebook.com/v12.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=email,public_profile`;
+    res.redirect(fbAuthUrl);
+});
+
+app.get('/api/auth/facebook/callback', async (req, res) => {
+    try {
+        const code = req.query.code;
+        if (!code) {
+            return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+        }
+
+        // Đổi code -> access_token
+        const tokenRes = await fetch(
+            `https://graph.facebook.com/v12.0/oauth/access_token?client_id=${process.env.FACEBOOK_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.FACEBOOK_CALLBACK_URL)}&client_secret=${process.env.FACEBOOK_CLIENT_SECRET}&code=${code}`
+        );
+        const tokenData = await tokenRes.json();
+
+        if (!tokenData.access_token) {
+            console.error("FB token error:", tokenData);
+            return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+        }
+
+        // Lấy thông tin user
+        const userRes = await fetch(`https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${tokenData.access_token}`);
+        const fbUser = await userRes.json();
+
+        if (!fbUser || !fbUser.email) {
+            console.error("FB user fetch error:", fbUser);
+            return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+        }
+
+        let userRow;
+        const byFb = await pool.query('SELECT * FROM users WHERE facebook_id = $1', [fbUser.id]);
+        if (byFb.rows.length) {
+            userRow = byFb.rows[0];
+        } else {
+            const byEmail = await pool.query('SELECT * FROM users WHERE email = $1', [fbUser.email]);
+            if (byEmail.rows.length) {
+                userRow = byEmail.rows[0];
+                await pool.query(
+                    'UPDATE users SET facebook_id = $1, avatar_url = $2 WHERE id = $3',
+                    [fbUser.id, fbUser.picture?.data?.url || null, userRow.id]
+                );
+            } else {
+                const insert = await pool.query(
+                    `INSERT INTO users (email, first_name, last_name, password_hash, facebook_id, avatar_url)
+                     VALUES ($1, $2, $3, $4, $5, $6)
+                     RETURNING *`,
+                    [
+                        fbUser.email,
+                        fbUser.name.split(' ')[0] || '',
+                        fbUser.name.split(' ').slice(1).join(' ') || '',
+                        null,
+                        fbUser.id,
+                        fbUser.picture?.data?.url || null
+                    ]
+                );
+                userRow = insert.rows[0];
+            }
+        }
+
+        setAuthCookie(res, userRow);
+        return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=facebook`);
+    } catch (err) {
+        console.error("Facebook callback error:", err);
         return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
     }
 });

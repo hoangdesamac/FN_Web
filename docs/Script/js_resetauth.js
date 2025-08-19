@@ -148,21 +148,13 @@ if (forgotForm) {
 
 /* =======================================================================
    GOOGLE LOGIN — BỀN VỮNG VỚI DOM TẢI ĐỘNG
-   - Dùng event delegation: không phụ thuộc DOMContentLoaded
-   - Hoạt động cho cả nút trong Login / Register / Forgot
-   - Tránh bind trùng, không cần interval/polling
    ======================================================================= */
-
-// 1) Lắng nghe click trên document cho mọi nút Google
 document.addEventListener("click", (e) => {
     const btn = e.target.closest("#googleLoginBtn-login, #googleLoginBtn-register, #googleLoginBtn-forgot, .google-btn");
     if (!btn) return;
-
-    // Tránh bị disabled (nếu có nút Facebook đang disabled)
     if (btn.disabled) return;
 
     try {
-        // Chuyển sang backend OAuth start
         window.location.href = `${API_BASE}/api/auth/google`;
     } catch (err) {
         console.error("Không thể chuyển sang Google OAuth:", err);
@@ -170,33 +162,27 @@ document.addEventListener("click", (e) => {
     }
 });
 
-// 2) Xử lý kết quả redirect từ Google callback (?login=google|failed)
 (function handleGoogleCallbackAndAutoOpen() {
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const loginStatus = urlParams.get("login");
 
         if (loginStatus === "google") {
-            // Google login thành công → cập nhật UI + đóng modal (nếu đang mở)
             checkLoginStatus();
             if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-            // Xóa query param để không lặp lại
             window.history.replaceState({}, document.title, window.location.pathname);
         } else if (loginStatus === "failed") {
-            // Google login thất bại
             showMessage("login-error", "❌ Google login thất bại, vui lòng thử lại!");
             window.history.replaceState({}, document.title, window.location.pathname);
         }
 
-        // 3) AUTO CHECK LOGIN + TỰ MỞ MODAL SAU RESET
         checkLoginStatus();
 
         if (localStorage.getItem("showLoginAfterReset") === "true") {
             localStorage.removeItem("showLoginAfterReset");
-
             const openLoginModal = () => {
                 if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                    CyberModal.open(); // mở modal + show login
+                    CyberModal.open();
                 } else {
                     setTimeout(openLoginModal, 200);
                 }
@@ -205,5 +191,39 @@ document.addEventListener("click", (e) => {
         }
     } catch (err) {
         console.error("Lỗi xử lý callback Google/auto open:", err);
+    }
+})();
+
+/* =======================================================================
+   FACEBOOK LOGIN — THÊM MỚI
+   ======================================================================= */
+document.addEventListener("click", (e) => {
+    const btn = e.target.closest("#facebookLoginBtn-login, #facebookLoginBtn-register, #facebookLoginBtn-forgot, .facebook-btn");
+    if (!btn) return;
+    if (btn.disabled) return;
+
+    try {
+        window.location.href = `${API_BASE}/api/auth/facebook`;
+    } catch (err) {
+        console.error("Không thể chuyển sang Facebook OAuth:", err);
+        showMessage("login-error", "❌ Không thể mở Facebook Login, vui lòng thử lại!");
+    }
+});
+
+(function handleFacebookCallback() {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const loginStatus = urlParams.get("login");
+
+        if (loginStatus === "facebook") {
+            checkLoginStatus();
+            if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else if (loginStatus === "failed_fb") {
+            showMessage("login-error", "❌ Facebook login thất bại, vui lòng thử lại!");
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    } catch (err) {
+        console.error("Lỗi xử lý callback Facebook:", err);
     }
 })();
