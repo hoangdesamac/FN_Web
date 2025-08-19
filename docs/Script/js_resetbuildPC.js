@@ -869,40 +869,9 @@ function renderSelected(category){
         priceCell.textContent=formatPrice(part.price);
     actCell.innerHTML=`<div class="row-actions"><button class="add-part-cart" title="Thêm vào giỏ" onclick="handleAddToCart('${category}')"><i class="fa fa-cart-plus"></i></button><button class="remove-part-btn" title="Xóa linh kiện" onclick="removePart('${category}')">×</button></div>`;
 // Hàm xử lý thêm vào giỏ hàng với popup xác nhận lắp ráp sẵn
-function handleAddToCart(category) {
-    if (!window.confirm('Bạn có muốn chúng tôi tiến hành lắp ráp sẵn cho bạn không?\n\nChọn OK để lắp ráp sẵn (thêm 1 sản phẩm tổng),\nChọn Cancel để thêm từng linh kiện riêng lẻ.')) {
-        // Thêm từng linh kiện riêng lẻ
-        addSinglePart(category);
-        return;
-    }
-    // Thêm 1 sản phẩm "Build PC trọn bộ" vào giỏ hàng
-    const parts = Object.values(state.selected||{});
-    if (!parts.length) {
-        showNotification?.('Chưa chọn linh kiện nào','error');
-        return;
-    }
-    let cart = JSON.parse(localStorage.getItem('cart')||'[]');
-    const bundleId = 'build_' + Date.now();
-    const totalPrice = parts.reduce((sum,p)=>sum+(p.price||0),0);
-    const name = 'Build PC trọn bộ ('+parts.map(p=>p.name).join(', ')+')';
-    cart.push({
-        id: bundleId,
-        name: name,
-        originalPrice: totalPrice,
-        salePrice: totalPrice,
-        discountPercent: 0,
-        price: totalPrice,
-        image: 'Images/Logo.jpg',
-        quantity: 1,
-        addedAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        isBundle: true,
-        parts: parts.map(p=>({id:p.id,name:p.name,price:p.price}))
-    });
-    localStorage.setItem('cart', JSON.stringify(cart));
-    if(typeof refreshCartCache==='function') refreshCartCache();
-    if(typeof updateCartCount==='function') updateCartCount(); else scheduleCartCountRefresh();
-    showNotification?.('Đã thêm Build PC trọn bộ vào giỏ hàng!','success');
+window.handleAddToCart = function handleAddToCart(category) {
+    // Thêm thẳng linh kiện lẻ vào giỏ hàng, không hỏi confirm
+    addSinglePart(category);
 }
     }
     // Update category list item visual state (without altering the count which reflects dataset size)
@@ -1049,7 +1018,7 @@ async function initProcessed(){
     document.getElementById('close-modal')?.addEventListener('click', closeModal);
     document.getElementById('part-modal')?.addEventListener('click', e=>{ if(e.target.id==='part-modal') closeModal(); });
     document.getElementById('clear-config')?.addEventListener('click', clearConfig);
-    document.getElementById('save-config')?.addEventListener('click', saveToLocal);
+    // Đã xoá nút lưu cấu hình, không cần gán sự kiện
     document.getElementById('load-config')?.addEventListener('click', ()=>{ loadFromLocal(); Object.keys(state.selected).forEach(k=> renderSelected(k)); recalcTotals(); updateSummary(); });
 }
 
