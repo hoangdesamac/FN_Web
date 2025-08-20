@@ -21,9 +21,16 @@ async function checkLoginStatus() {
         const data = await res.json();
         if (data.loggedIn) {
             localStorage.setItem("userName", (data.user.lastName || "").trim());
+            if (data.user.avatar_url) {
+                localStorage.setItem("avatarUrl", data.user.avatar_url);
+            } else {
+                localStorage.removeItem("avatarUrl"); // để UI tự tạo avatar ngẫu nhiên
+            }
         } else {
             localStorage.removeItem("userName");
+            localStorage.removeItem("avatarUrl");
         }
+
         if (typeof updateUserDisplay === "function") {
             updateUserDisplay();
         }
@@ -88,12 +95,20 @@ if (loginForm) {
             const data = await res.json();
 
             if (data.success) {
-                if (data.user && data.user.lastName) {
-                    localStorage.setItem("userName", data.user.lastName.trim());
+                if (data.user) {
+                    if (data.user.lastName) {
+                        localStorage.setItem("userName", data.user.lastName.trim());
+                    }
+                    if (data.user.avatar_url) {
+                        localStorage.setItem("avatarUrl", data.user.avatar_url);
+                    } else {
+                        localStorage.removeItem("avatarUrl"); // cho login thường thì sẽ random avatar
+                    }
                 }
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-                window.location.reload(); // reload lại để cập nhật UI
-            } else {
+                window.location.reload();
+            }
+            else {
                 showMessage("login-error", data.error || "❌ Sai email hoặc mật khẩu!");
             }
         } catch (err) {
@@ -111,6 +126,7 @@ async function logout() {
             credentials: "include"
         });
         localStorage.removeItem("userName");
+        localStorage.removeItem("avatarUrl");
         window.location.reload();
     } catch (err) {
         console.error("Lỗi đăng xuất:", err);
