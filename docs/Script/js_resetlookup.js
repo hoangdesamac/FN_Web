@@ -667,8 +667,15 @@ async function exportToPDF(orderId) {
     const formattedDate = new Date(order.createdAt).toLocaleString('vi-VN');
     const { points } = calculatePointsAndTier(order);
 
+
     function proxifyImageURL(url) {
-        return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
+        // Nếu là link http/https thì proxy, còn nếu là local (Images/Logo.jpg) thì trả về nguyên bản
+        if (!url) return null;
+        if (/^https?:\/\//i.test(url)) {
+            return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
+        }
+        // Local path, trả về nguyên bản để xử lý base64 sau
+        return url;
     }
 
     // === Convert product images to base64 (hỗ trợ cả bundle và lẻ) ===
@@ -708,24 +715,45 @@ async function exportToPDF(orderId) {
     });
 
         const productImages = await Promise.all(
-                flatItems.map(async item => {
-                        if(item._isBundleHeader) return null;
-                        const proxiedURL = item.image ? proxifyImageURL(item.image) : null;
-                        if(!proxiedURL) return null;
-                        try {
-                                const response = await fetch(proxiedURL, { mode: 'cors' });
-                                const blob = await response.blob();
-                                return await new Promise((resolve, reject) => {
-                                        const reader = new FileReader();
-                                        reader.onloadend = () => resolve(reader.result);
-                                        reader.onerror = reject;
-                                        reader.readAsDataURL(blob);
-                                });
-                        } catch (err) {
-                                console.warn('Không thể lấy ảnh qua proxy:', item.image, err);
-                                return null;
-                        }
-                })
+            flatItems.map(async item => {
+                if(item._isBundleHeader) return null;
+                const imgUrl = item.image ? proxifyImageURL(item.image) : null;
+                if(!imgUrl) return null;
+                // Nếu là local path (không phải http/https), convert sang base64 bằng html2canvas
+                if(!/^https?:\/\//i.test(imgUrl)) {
+                    // Tạo 1 img element ẩn để convert
+                    return await new Promise(resolve => {
+                        const img = new window.Image();
+                        img.crossOrigin = 'anonymous';
+                        img.src = imgUrl;
+                        img.onload = function() {
+                            try {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0);
+                                resolve(canvas.toDataURL('image/png'));
+                            } catch(e) { resolve(null); }
+                        };
+                        img.onerror = function() { resolve(null); };
+                    });
+                }
+                // Nếu là link http/https thì fetch qua proxy như cũ
+                try {
+                    const response = await fetch(imgUrl, { mode: 'cors' });
+                    const blob = await response.blob();
+                    return await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+                } catch (err) {
+                    console.warn('Không thể lấy ảnh qua proxy:', item.image, err);
+                    return null;
+                }
+            })
         );
 
         // === Table rows (hỗ trợ bundle) ===
