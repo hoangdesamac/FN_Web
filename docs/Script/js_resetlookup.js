@@ -669,13 +669,13 @@ async function exportToPDF(orderId) {
 
 
     function proxifyImageURL(url) {
-        // Nếu là link http/https thì proxy, còn nếu là local (Images/Logo.jpg) thì trả về nguyên bản
+        // Nếu là link http/https thì proxy, còn nếu là local (Images/Logo.jpg) thì trả về null để không fetch proxy
         if (!url) return null;
         if (/^https?:\/\//i.test(url)) {
             return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
         }
-        // Local path, trả về nguyên bản để xử lý base64 sau
-        return url;
+        // Local path, trả về null để không fetch proxy
+        return null;
     }
 
     // === Convert product images to base64 (hỗ trợ cả bundle và lẻ) ===
@@ -717,15 +717,13 @@ async function exportToPDF(orderId) {
         const productImages = await Promise.all(
             flatItems.map(async item => {
                 if(item._isBundleHeader) return null;
-                const imgUrl = item.image ? proxifyImageURL(item.image) : null;
-                if(!imgUrl) return null;
-                // Nếu là local path (không phải http/https), convert sang base64 bằng html2canvas
-                if(!/^https?:\/\//i.test(imgUrl)) {
+                // Nếu là local path (không phải http/https), bỏ qua proxy và cố gắng lấy base64 nếu có trên server
+                if(item.image && !/^https?:\/\//i.test(item.image)) {
                     // Tạo 1 img element ẩn để convert
                     return await new Promise(resolve => {
                         const img = new window.Image();
                         img.crossOrigin = 'anonymous';
-                        img.src = imgUrl;
+                        img.src = item.image;
                         img.onload = function() {
                             try {
                                 const canvas = document.createElement('canvas');
@@ -734,12 +732,14 @@ async function exportToPDF(orderId) {
                                 const ctx = canvas.getContext('2d');
                                 ctx.drawImage(img, 0, 0);
                                 resolve(canvas.toDataURL('image/png'));
-                            } catch(e) { resolve(null); }
+                            } catch(e) { resolve(undefined); }
                         };
-                        img.onerror = function() { resolve(null); };
+                        img.onerror = function() { resolve(undefined); };
                     });
                 }
                 // Nếu là link http/https thì fetch qua proxy như cũ
+                const imgUrl = item.image ? proxifyImageURL(item.image) : null;
+                if(!imgUrl) return undefined;
                 try {
                     const response = await fetch(imgUrl, { mode: 'cors' });
                     const blob = await response.blob();
@@ -751,7 +751,7 @@ async function exportToPDF(orderId) {
                     });
                 } catch (err) {
                     console.warn('Không thể lấy ảnh qua proxy:', item.image, err);
-                    return null;
+                    return undefined;
                 }
             })
         );
