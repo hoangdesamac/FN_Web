@@ -139,6 +139,7 @@ function calculateDeliveryScore(order) {
 
 // Format currency
 function formatCurrency(amount) {
+    if (typeof amount !== 'number' || isNaN(amount)) return '0₫';
     return amount.toLocaleString('vi-VN') + '₫';
 }
 
@@ -654,6 +655,7 @@ function createApprovalSealBase64() {
 
 // ✅ Hàm chính: Xuất PDF với watermark trung tâm + watermark con
 async function exportToPDF(orderId) {
+
     const orders = JSON.parse(localStorage.getItem('orders')) || [];
     const order = orders.find(o => o.id === orderId);
     if (!order) {
@@ -665,54 +667,136 @@ async function exportToPDF(orderId) {
     const formattedDate = new Date(order.createdAt).toLocaleString('vi-VN');
     const { points } = calculatePointsAndTier(order);
 
+
     function proxifyImageURL(url) {
-        return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
+        // Nếu là link http/https thì proxy, còn nếu là local (Images/Logo.jpg) thì trả về null để không fetch proxy
+        if (!url) return null;
+        if (/^https?:\/\//i.test(url)) {
+            return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
+        }
+        // Local path, trả về null để không fetch proxy
+        return null;
     }
 
-    // === Convert product images to base64 ===
-    const productImages = await Promise.all(
-        order.items.map(async item => {
-            const proxiedURL = proxifyImageURL(item.image);
-            try {
-                const response = await fetch(proxiedURL, { mode: 'cors' });
-                const blob = await response.blob();
-                return await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(blob);
+    // === Convert product images to base64 (hỗ trợ cả bundle và lẻ) ===
+    const flatItems = [];
+    order.items.forEach(item => {
+        if(item.isBundle && Array.isArray(item.parts)) {
+            flatItems.push({
+                ...item,
+                _isBundleHeader: true
+            });
+            item.parts.forEach(part => {
+                // Đảm bảo part có đủ trường quantity, originalPrice, salePrice, price, image, discountPercent
+                flatItems.push({
+                    ...part,
+                    _isBundlePart: true,
+                    bundleName: item.name,
+                    quantity: part.quantity !== undefined ? part.quantity : 1,
+                    originalPrice: typeof part.originalPrice === 'number' ? part.originalPrice : (typeof part.price === 'number' ? part.price : 0),
+                    salePrice: typeof part.salePrice === 'number' ? part.salePrice : (typeof part.price === 'number' ? part.price : 0),
+                    price: typeof part.price === 'number' ? part.price : 0,
+                    image: part.image || item.image || 'Images/Logo.jpg',
+                    discountPercent: typeof part.discountPercent === 'number' ? part.discountPercent : 0
                 });
-            } catch (err) {
-                console.warn('Không thể lấy ảnh qua proxy:', item.image, err);
-                return null;
-            }
-        })
-    );
+            });
+        } else {
+            // Đảm bảo item lẻ cũng có đủ trường quantity, originalPrice, salePrice, price, image, discountPercent
+            flatItems.push({
+                ...item,
+                quantity: item.quantity !== undefined ? item.quantity : 1,
+                originalPrice: typeof item.originalPrice === 'number' ? item.originalPrice : (typeof item.price === 'number' ? item.price : 0),
+                salePrice: typeof item.salePrice === 'number' ? item.salePrice : (typeof item.price === 'number' ? item.price : 0),
+                price: typeof item.price === 'number' ? item.price : 0,
+                image: item.image || 'Images/Logo.jpg',
+                discountPercent: typeof item.discountPercent === 'number' ? item.discountPercent : 0
+            });
+        }
+    });
 
-    // === Table rows ===
-    const productTable = [
-        [
-            { text: 'Ảnh', bold: true, alignment: 'center' },
-            { text: 'Tên sản phẩm', bold: true, alignment: 'left' },
-            { text: 'SL', bold: true, alignment: 'center' },
-            { text: 'Giá gốc', bold: true, alignment: 'center' },
-            { text: 'Giảm giá', bold: true, alignment: 'center' },
-            { text: 'Giá ưu đãi', bold: true, alignment: 'center' },
-            { text: 'Thành tiền', bold: true, alignment: 'center' }
-        ],
-        ...order.items.map((item, i) => [
-            item.image ? { image: productImages[i], width: 40, height: 40, alignment: 'center' } : 'Không ảnh',
-            { text: item.name, alignment: 'left' }, // Cột này bạn có thể alignment: 'left'
-            { text: item.quantity.toString(), alignment: 'center' },
-            { text: formatCurrency(item.originalPrice), alignment: 'center' },
-            { text: `${item.discountPercent !== undefined
-                    ? item.discountPercent
-                    : Math.round(100 - (item.salePrice / item.originalPrice * 100))
-                }%`, alignment: 'center' },
-            { text: formatCurrency(item.salePrice), alignment: 'center' },
-            { text: formatCurrency(item.quantity * item.salePrice), alignment: 'center' }
-        ])
-    ];
+        const productImages = await Promise.all(
+            flatItems.map(async item => {
+                if(item._isBundleHeader) return null;
+                // Nếu là local path (không phải http/https), bỏ qua proxy và cố gắng lấy base64 nếu có trên server
+                if(item.image && !/^https?:\/\//i.test(item.image)) {
+                    // Tạo 1 img element ẩn để convert
+                    return await new Promise(resolve => {
+                        const img = new window.Image();
+                        img.crossOrigin = 'anonymous';
+                        img.src = item.image;
+                        img.onload = function() {
+                            try {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0);
+                                resolve(canvas.toDataURL('image/png'));
+                            } catch(e) { resolve(undefined); }
+                        };
+                        img.onerror = function() { resolve(undefined); };
+                    });
+                }
+                // Nếu là link http/https thì fetch qua proxy như cũ
+                const imgUrl = item.image ? proxifyImageURL(item.image) : null;
+                if(!imgUrl) return undefined;
+                try {
+                    const response = await fetch(imgUrl, { mode: 'cors' });
+                    const blob = await response.blob();
+                    return await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+                } catch (err) {
+                    console.warn('Không thể lấy ảnh qua proxy:', item.image, err);
+                    return undefined;
+                }
+            })
+        );
+
+        // === Table rows (hỗ trợ bundle) ===
+        const productTable = [
+                [
+                        { text: 'Ảnh', bold: true, alignment: 'center' },
+                        { text: 'Tên sản phẩm', bold: true, alignment: 'left' },
+                        { text: 'SL', bold: true, alignment: 'center' },
+                        { text: 'Giá gốc', bold: true, alignment: 'center' },
+                        { text: 'Giảm giá', bold: true, alignment: 'center' },
+                        { text: 'Giá ưu đãi', bold: true, alignment: 'center' },
+                        { text: 'Thành tiền', bold: true, alignment: 'center' }
+                ],
+                ...flatItems.map((item, i) => {
+                    if(item._isBundleHeader) {
+                        return [
+                            { text: '', colSpan: 1, border: [false,false,false,false] },
+                            { text: `🖥️ ${item.name} (PC tự build)`, colSpan: 6, bold: true, fillColor: '#e3f2fd', color: '#1976d2', alignment: 'left', margin: [0,4,0,4] },
+                            {},{},{},{},{}
+                        ];
+                    } else if(item._isBundlePart) {
+                        return [
+                            item.image ? { image: productImages[i], width: 32, height: 32, alignment: 'center' } : '',
+                            { text: '↳ ' + item.name, alignment: 'left', italics: true },
+                            { text: item.quantity ? item.quantity.toString() : '1', alignment: 'center' },
+                            { text: formatCurrency(item.originalPrice), alignment: 'center' },
+                            { text: item.discountPercent !== undefined ? `${item.discountPercent}%` : '', alignment: 'center' },
+                            { text: formatCurrency(item.salePrice||item.price), alignment: 'center' },
+                            { text: formatCurrency((item.salePrice||item.price) * (item.quantity||1)), alignment: 'center' }
+                        ];
+                    } else {
+                        return [
+                            item.image ? { image: productImages[i], width: 40, height: 40, alignment: 'center' } : 'Không ảnh',
+                            { text: item.name, alignment: 'left' },
+                            { text: item.quantity ? item.quantity.toString() : '1', alignment: 'center' },
+                            { text: formatCurrency(item.originalPrice), alignment: 'center' },
+                            { text: item.discountPercent !== undefined ? `${item.discountPercent}%` : '', alignment: 'center' },
+                            { text: formatCurrency(item.salePrice||item.price), alignment: 'center' },
+                            { text: formatCurrency((item.salePrice||item.price) * (item.quantity||1)), alignment: 'center' }
+                        ];
+                    }
+                })
+        ];
 
     // === Logo Base64 ===
     const logoBase64 = await toBase64Image("Image_Showroom/Slogan_w.jpg");
