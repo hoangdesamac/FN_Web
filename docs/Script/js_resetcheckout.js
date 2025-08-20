@@ -945,6 +945,10 @@ function processPayment() {
 }
 
 function formatCurrency(amount) {
+    if (typeof amount === 'string') {
+        amount = parseFloat(amount.replace(/[^\d.-]/g, ''));
+    }
+    if (typeof amount !== 'number' || isNaN(amount) || amount === undefined || amount === null) return '0₫';
     return amount.toLocaleString('vi-VN') + '₫';
 }
 

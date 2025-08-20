@@ -139,6 +139,7 @@ function calculateDeliveryScore(order) {
 
 // Format currency
 function formatCurrency(amount) {
+    if (typeof amount !== 'number' || isNaN(amount)) return '0₫';
     return amount.toLocaleString('vi-VN') + '₫';
 }
 
@@ -654,6 +655,7 @@ function createApprovalSealBase64() {
 
 // ✅ Hàm chính: Xuất PDF với watermark trung tâm + watermark con
 async function exportToPDF(orderId) {
+
     const orders = JSON.parse(localStorage.getItem('orders')) || [];
     const order = orders.find(o => o.id === orderId);
     if (!order) {
@@ -669,25 +671,41 @@ async function exportToPDF(orderId) {
         return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
     }
 
-        // === Convert product images to base64 (hỗ trợ cả bundle và lẻ) ===
-        const flatItems = [];
-        order.items.forEach(item => {
-            if(item.isBundle && Array.isArray(item.parts)) {
+    // === Convert product images to base64 (hỗ trợ cả bundle và lẻ) ===
+    const flatItems = [];
+    order.items.forEach(item => {
+        if(item.isBundle && Array.isArray(item.parts)) {
+            flatItems.push({
+                ...item,
+                _isBundleHeader: true
+            });
+            item.parts.forEach(part => {
+                // Đảm bảo part có đủ trường quantity, originalPrice, salePrice, price, image, discountPercent
                 flatItems.push({
-                    ...item,
-                    _isBundleHeader: true
+                    ...part,
+                    _isBundlePart: true,
+                    bundleName: item.name,
+                    quantity: part.quantity !== undefined ? part.quantity : 1,
+                    originalPrice: typeof part.originalPrice === 'number' ? part.originalPrice : (typeof part.price === 'number' ? part.price : 0),
+                    salePrice: typeof part.salePrice === 'number' ? part.salePrice : (typeof part.price === 'number' ? part.price : 0),
+                    price: typeof part.price === 'number' ? part.price : 0,
+                    image: part.image || item.image || 'Images/Logo.jpg',
+                    discountPercent: typeof part.discountPercent === 'number' ? part.discountPercent : 0
                 });
-                item.parts.forEach(part => {
-                    flatItems.push({
-                        ...part,
-                        _isBundlePart: true,
-                        bundleName: item.name
-                    });
-                });
-            } else {
-                flatItems.push(item);
-            }
-        });
+            });
+        } else {
+            // Đảm bảo item lẻ cũng có đủ trường quantity, originalPrice, salePrice, price, image, discountPercent
+            flatItems.push({
+                ...item,
+                quantity: item.quantity !== undefined ? item.quantity : 1,
+                originalPrice: typeof item.originalPrice === 'number' ? item.originalPrice : (typeof item.price === 'number' ? item.price : 0),
+                salePrice: typeof item.salePrice === 'number' ? item.salePrice : (typeof item.price === 'number' ? item.price : 0),
+                price: typeof item.price === 'number' ? item.price : 0,
+                image: item.image || 'Images/Logo.jpg',
+                discountPercent: typeof item.discountPercent === 'number' ? item.discountPercent : 0
+            });
+        }
+    });
 
         const productImages = await Promise.all(
                 flatItems.map(async item => {
