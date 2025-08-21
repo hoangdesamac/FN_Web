@@ -19,11 +19,29 @@ async function checkLoginStatus() {
             credentials: "include"
         });
         const data = await res.json();
-        if (data.loggedIn) {
-            localStorage.setItem("userName", (data.user.lastName || "").trim());
+
+        if (data.loggedIn && data.user) {
+            // Lưu thông tin cần thiết vào localStorage
+            localStorage.setItem("userId", data.user.id || "");
+            localStorage.setItem("firstName", (data.user.firstName || "").trim());
+            localStorage.setItem("lastName", (data.user.lastName || "").trim());
+            localStorage.setItem("email", data.user.email || "");
+            localStorage.setItem("userName", (data.user.lastName || "").trim()); // giữ cho header cũ
+            if (data.user.avatar_url) {
+                localStorage.setItem("avatarUrl", data.user.avatar_url);
+            } else {
+                localStorage.removeItem("avatarUrl"); // để UI tự tạo avatar ngẫu nhiên
+            }
         } else {
+            // Xóa hết nếu chưa đăng nhập
+            localStorage.removeItem("userId");
+            localStorage.removeItem("firstName");
+            localStorage.removeItem("lastName");
+            localStorage.removeItem("email");
             localStorage.removeItem("userName");
+            localStorage.removeItem("avatarUrl");
         }
+
         if (typeof updateUserDisplay === "function") {
             updateUserDisplay();
         }
@@ -87,13 +105,23 @@ if (loginForm) {
             });
             const data = await res.json();
 
-            if (data.success) {
-                if (data.user && data.user.lastName) {
-                    localStorage.setItem("userName", data.user.lastName.trim());
+            if (data.success && data.user) {
+                // Lưu vào localStorage ngay khi login
+                localStorage.setItem("userId", data.user.id || "");
+                localStorage.setItem("firstName", (data.user.firstName || "").trim());
+                localStorage.setItem("lastName", (data.user.lastName || "").trim());
+                localStorage.setItem("email", data.user.email || "");
+                localStorage.setItem("userName", (data.user.lastName || "").trim());
+                if (data.user.avatar_url) {
+                    localStorage.setItem("avatarUrl", data.user.avatar_url);
+                } else {
+                    localStorage.removeItem("avatarUrl");
                 }
+
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-                window.location.reload(); // reload lại để cập nhật UI
-            } else {
+                window.location.reload();
+            }
+            else {
                 showMessage("login-error", data.error || "❌ Sai email hoặc mật khẩu!");
             }
         } catch (err) {
@@ -110,7 +138,8 @@ async function logout() {
             method: "POST",
             credentials: "include"
         });
-        localStorage.removeItem("userName");
+        // Xóa hết localStorage
+        localStorage.clear();
         window.location.reload();
     } catch (err) {
         console.error("Lỗi đăng xuất:", err);
@@ -147,7 +176,7 @@ if (forgotForm) {
 }
 
 /* =======================================================================
-   GOOGLE LOGIN — BỀN VỮNG VỚI DOM TẢI ĐỘNG
+   GOOGLE LOGIN
    ======================================================================= */
 document.addEventListener("click", (e) => {
     const btn = e.target.closest("#googleLoginBtn-login, #googleLoginBtn-register, #googleLoginBtn-forgot, .google-btn");
@@ -195,7 +224,7 @@ document.addEventListener("click", (e) => {
 })();
 
 /* =======================================================================
-   FACEBOOK LOGIN — THÊM MỚI
+   FACEBOOK LOGIN
    ======================================================================= */
 document.addEventListener("click", (e) => {
     const btn = e.target.closest("#facebookLoginBtn-login, #facebookLoginBtn-register, #facebookLoginBtn-forgot, .facebook-btn");
@@ -219,7 +248,7 @@ document.addEventListener("click", (e) => {
             checkLoginStatus();
             if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
             window.history.replaceState({}, document.title, window.location.pathname);
-        } else if (loginStatus === "failed_fb") {
+        } else if (loginStatus === "failed") {
             showMessage("login-error", "❌ Facebook login thất bại, vui lòng thử lại!");
             window.history.replaceState({}, document.title, window.location.pathname);
         }

@@ -23,12 +23,13 @@ app.use(cookieParser());
 const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'https://3tdshop.id.vn';
 const corsOptions = {
     origin: FRONTEND_ORIGIN,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // 👈 thêm PATCH
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
+
 
 // ===== PostgreSQL (Render) =====
 const pool = new Pool({
@@ -80,7 +81,12 @@ const googleClient = new OAuth2Client({
 
 function setAuthCookie(res, userRow) {
     const token = jwt.sign(
-        { id: userRow.id, email: userRow.email, lastName: userRow.last_name },
+        {
+            id: userRow.id,
+            email: userRow.email,
+            firstName: userRow.first_name || userRow.firstName || null,
+            lastName: userRow.last_name || userRow.lastName || null
+        },
         JWT_SECRET,
         { expiresIn: '7d' }
     );
@@ -168,7 +174,7 @@ app.post('/api/login', async (req, res) => {
         res.json({
             success: true,
             message: 'Đăng nhập thành công',
-            user: { id: user.id, email: user.email, lastName: user.last_name }
+            user: { id: user.id, email: user.email, lastName: user.last_name, avatar_url: user.avatar_url || null }
         });
     } catch (err) {
         console.error('Lỗi đăng nhập:', err);
@@ -177,19 +183,107 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Lấy thông tin user theo cookie
-app.get('/api/me', (req, res) => {
+app.get('/api/me', async (req, res) => {
     const token = req.cookies?.[COOKIE_NAME];
     if (!token) return res.json({ loggedIn: false });
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
+
+        // Lấy profile đầy đủ từ DB để đảm bảo dữ liệu mới nhất
+        const { rows } = await pool.query(
+            `SELECT id, email, first_name, last_name, avatar_url, phone, gender, birthday
+             FROM users WHERE id = $1`,
+            [decoded.id]
+        );
+        const row = rows[0] || {};
+
+        // birthday có thể là Date hoặc string (PG tùy cấu hình)
+        const birthday = row.birthday
+            ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday)
+            : null;
+
         res.json({
             loggedIn: true,
-            user: { id: decoded.id, email: decoded.email, lastName: decoded.lastName }
+            user: {
+                id: row.id || decoded.id,
+                email: row.email || decoded.email || null,
+                firstName: row.first_name || null,
+                lastName: row.last_name || decoded.lastName || null,
+                avatar_url: row.avatar_url || null,
+                phone: row.phone || null,
+                gender: row.gender || null,
+                birthday: birthday
+            }
         });
-    } catch (_e) {
-        res.clearCookie(COOKIE_NAME, COOKIE_OPTS);
-        res.json({ loggedIn: false });
+    } catch (err) {
+        console.error('GET /api/me error:', err);
+        // token invalid → clear cookie
+        try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
+        return res.json({ loggedIn: false });
+    }
+});
+
+// ---- ADD this PATCH /api/me endpoint ----
+app.patch('/api/me', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: 'Chưa xác thực' });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        const { firstName, lastName, phone, gender, birthday } = req.body;
+
+        // Optional: bạn có thể validate phone / gender / birthday ở đây
+        const q = `
+            UPDATE users
+            SET first_name = $1,
+                last_name  = $2,
+                phone      = $3,
+                gender     = $4,
+                birthday   = $5
+            WHERE id = $6
+            RETURNING id, email, first_name, last_name, avatar_url, phone, gender, birthday
+        `;
+
+        const values = [
+            firstName || null,
+            lastName || null,
+            phone || null,
+            gender || null,
+            birthday || null, // expected format 'YYYY-MM-DD' or null
+            decoded.id
+        ];
+
+        const { rows } = await pool.query(q, values);
+        if (!rows.length) return res.status(404).json({ success: false, error: 'User không tồn tại' });
+
+        const row = rows[0];
+        const b = row.birthday ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday) : null;
+
+        // Trả profile cập nhật
+        res.json({
+            success: true,
+            user: {
+                id: row.id,
+                email: row.email,
+                firstName: row.first_name,
+                lastName: row.last_name,
+                avatar_url: row.avatar_url,
+                phone: row.phone,
+                gender: row.gender,
+                birthday: b
+            }
+        });
+
+    } catch (err) {
+        console.error('PATCH /api/me error:', err);
+        // Nếu token invalid: clear cookie + 401
+        if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+            try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
+            return res.status(401).json({ success: false, error: 'Chưa xác thực' });
+        }
+        res.status(500).json({ success: false, error: 'Lỗi server' });
     }
 });
 
@@ -317,8 +411,8 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
             return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
         }
 
-        // Lấy thông tin user từ Facebook
-        const userRes = await fetch(`https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${tokenData.access_token}`);
+        // Lấy thông tin user từ Facebook (yêu cầu first_name, last_name, picture)
+        const userRes = await fetch(`https://graph.facebook.com/me?fields=id,first_name,last_name,name,email,picture.width(300).height(300)&access_token=${tokenData.access_token}`);
         const fbUser = await userRes.json();
 
         if (!fbUser || !fbUser.email) {
@@ -327,33 +421,30 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
         }
 
         let userRow;
-        // Tìm theo facebook_id
+        // 1) Nếu có facebook_id thì dùng user đó
         const byFb = await pool.query('SELECT * FROM users WHERE facebook_id = $1', [fbUser.id]);
         if (byFb.rows.length) {
             userRow = byFb.rows[0];
         } else {
-            // Nếu chưa có thì tìm theo email
+            // 2) Nếu không có facebook_id, thử tìm theo email
             const byEmail = await pool.query('SELECT * FROM users WHERE email = $1', [fbUser.email]);
             if (byEmail.rows.length) {
                 userRow = byEmail.rows[0];
-                // Chỉ update facebook_id thôi, chưa update avatar
-                await pool.query(
-                    'UPDATE users SET facebook_id = $1 WHERE id = $2',
-                    [fbUser.id, userRow.id]
-                );
+                // chỉ cập nhật facebook_id (không cập nhật avatar để giữ nguyên theo ý bạn)
+                await pool.query('UPDATE users SET facebook_id = $1 WHERE id = $2', [fbUser.id, userRow.id]);
             } else {
-                // Tạo user mới và lưu luôn avatar
+                // 3) Nếu chưa có user → tạo mới, lưu avatar vào avatar_url
                 const insert = await pool.query(
-                    `INSERT INTO users (email, first_name, last_name, password_hash, facebook_id, facebook_avatar)
+                    `INSERT INTO users (email, first_name, last_name, password_hash, facebook_id, avatar_url)
                      VALUES ($1, $2, $3, $4, $5, $6)
                          RETURNING *`,
                     [
                         fbUser.email,
-                        fbUser.name.split(' ')[0] || '',
-                        fbUser.name.split(' ').slice(1).join(' ') || '',
+                        fbUser.first_name || fbUser.name.split(' ')[0] || '',
+                        fbUser.last_name || fbUser.name.split(' ').slice(1).join(' ') || '',
                         null,
                         fbUser.id,
-                        fbUser.picture?.data?.url || null  // ✅ chỉ lưu lúc tạo mới
+                        fbUser.picture?.data?.url || null   // <-- lưu avatar vào avatar_url
                     ]
                 );
                 userRow = insert.rows[0];
@@ -368,6 +459,7 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
         return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
     }
 });
+
 
 
 // ===== Quên mật khẩu =====

@@ -127,17 +127,48 @@ async function fetchUserInfo() {
         const data = await res.json();
         if (data.loggedIn) {
             localStorage.setItem('userName', data.user.lastName.trim());
+            if (data.user.avatar_url) {
+                localStorage.setItem('avatarUrl', data.user.avatar_url);
+            } else {
+                localStorage.removeItem('avatarUrl');
+            }
         } else {
             localStorage.removeItem('userName');
+            localStorage.removeItem('avatarUrl');
         }
     } catch (err) {
         console.error("Lỗi lấy thông tin user:", err);
     }
 }
 
+// ================= Hàm tạo avatar ngẫu nhiên =================
+function generateRandomAvatar(name) {
+    const colors = ["#ff4757", "#1e90ff", "#2ed573", "#ffa502", "#eccc68", "#3742fa", "#ff6b81"];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const initial = name ? name.charAt(0).toUpperCase() : "?";
+
+    return `
+        <div class="avatar-generated" style="
+            background:${color};
+            color:#fff;
+            font-weight:600;
+            width:32px;height:32px;
+            display:flex;align-items:center;justify-content:center;
+            border-radius:50%;font-size:14px;
+        ">
+            ${initial}
+        </div>
+    `;
+}
+
 // ================= Update hiển thị user =================
 function updateUserDisplay() {
-    const userName = localStorage.getItem('userName');
+    const firstName = localStorage.getItem('firstName') || "";
+    const lastName = localStorage.getItem('lastName') || "";
+    const email = localStorage.getItem('email') || "";
+    const avatarUrl = localStorage.getItem('avatarUrl');
+    const fullName = `${firstName} ${lastName}`.trim() || lastName || firstName || "Người dùng";
+
     let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
 
@@ -147,18 +178,25 @@ function updateUserDisplay() {
     userAction.parentNode.replaceChild(newUserAction, userAction);
     userAction = newUserAction;
 
-    if (userName) {
+    if (fullName !== "Người dùng") {
         // ✅ Đã login
-        const shortName = userName.length > 12 ? userName.slice(0, 12) + "..." : userName;
+        const shortName = fullName.length > 14 ? fullName.slice(0, 14) + "..." : fullName;
+
+        // Avatar (server → random fallback)
+        const avatarHTML = avatarUrl
+            ? `<img src="${avatarUrl}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
+            : generateRandomAvatar(firstName || lastName);
+
         userAction.innerHTML = `
             <div class="user-menu">
-                <i class="bx bx-user-circle action-icon"></i>
+                ${avatarHTML}
                 <div class="user-info">
                     <div style="font-size: 10px; opacity: 0.8;">Xin chào</div>
-                    <div style="font-size: 12px; font-weight: 600;" title="${userName}">${shortName}</div>
+                    <div style="font-size: 12px; font-weight: 600;" title="${fullName}">${shortName}</div>
                 </div>
                 <div class="user-dropdown">
-                    <button id="logoutBtn" class="logout-btn">Đăng xuất</button>
+                    <div class="dropdown-item" id="profileLink">👤 Thông tin cá nhân</div>
+                    <div class="dropdown-item" id="logoutBtn">🚪 Đăng xuất</div>
                 </div>
             </div>
         `;
@@ -168,13 +206,18 @@ function updateUserDisplay() {
         userMenu.addEventListener('mouseenter', () => userMenu.classList.add('show'));
         userMenu.addEventListener('mouseleave', () => userMenu.classList.remove('show'));
 
-        // ✅ Logout
+        // Link đến trang profile
+        document.getElementById("profileLink").addEventListener("click", () => {
+            window.location.href = "profile.html";
+        });
+
+        // Logout
         document.getElementById("logoutBtn").addEventListener("click", async () => {
             await fetch(`${API_BASE}/api/logout`, {
                 method: "POST",
                 credentials: "include"
             });
-            localStorage.removeItem("userName");
+            localStorage.clear();
             window.location.reload();
         });
 
@@ -190,6 +233,7 @@ function updateUserDisplay() {
         userAction.addEventListener("click", () => CyberModal.open());
     }
 }
+
 
 // ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {
