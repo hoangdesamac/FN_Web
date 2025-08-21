@@ -1,5 +1,4 @@
-// JS RESET SHOWROOM - TÁCH RIÊNG CÁC HÀM & GỌI LOAD
-
+// ======================= JS RESET SHOWROOM =======================
 // 👉 Nội dung cho các modal
 const benefitModalContent = {
     'Giữ xe miễn phí': {
@@ -41,7 +40,6 @@ function showBenefitModal(benefitText) {
     const content = benefitModalContent[benefitText];
     if (!content) return;
 
-    // Tạo modal
     const modal = $(`
         <div class="modal fade" id="benefitModal" tabindex="-1" aria-labelledby="benefitModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -58,13 +56,8 @@ function showBenefitModal(benefitText) {
         </div>
     `);
 
-    // Thêm modal vào body
     $('body').append(modal);
-
-    // Hiển thị modal
     modal.modal('show');
-
-    // Xóa modal sau khi đóng để tránh tích lũy
     modal.on('hidden.bs.modal', function () {
         modal.remove();
     });
@@ -72,8 +65,7 @@ function showBenefitModal(benefitText) {
 
 // 👉 Hiệu ứng particles nổi
 function createParticle() {
-    const particle = $('<div class="particle"></div>');
-    particle.css({
+    const particle = $('<div class="particle"></div>').css({
         position: 'fixed',
         width: '2px',
         height: '2px',
@@ -84,94 +76,60 @@ function createParticle() {
         'z-index': '1',
         'box-shadow': '0 0 10px #00f2ff'
     });
-
     $('body').append(particle);
-
     particle.animate({
         top: '-10px',
         left: '+=' + (Math.random() * 200 - 100) + 'px'
     }, {
         duration: 8000,
         easing: 'linear',
-        complete: function() {
-            particle.remove();
-        }
+        complete: function () { particle.remove(); }
     });
 }
-
-function initParticles() {
-    setInterval(createParticle, 3000);
-}
+function initParticles() { setInterval(createParticle, 3000); }
 
 // 👉 Hiệu ứng hover/click trên benefit items
 function initBenefitItemEffects() {
     $('.benefit-item').hover(
-        function() {
-            $(this).addClass('benefit-hover');
-        },
-        function() {
-            $(this).removeClass('benefit-hover');
-        }
+        function () { $(this).addClass('benefit-hover'); },
+        function () { $(this).removeClass('benefit-hover'); }
     );
-
-    $('.benefit-item').click(function() {
+    $('.benefit-item').click(function () {
         $(this).addClass('benefit-clicked');
-        setTimeout(() => {
-            $(this).removeClass('benefit-clicked');
-        }, 200);
-
-        // Lấy nội dung của benefit-item để hiển thị modal
+        setTimeout(() => $(this).removeClass('benefit-clicked'), 200);
         const benefitText = $(this).find('div').text().trim();
         showBenefitModal(benefitText);
     });
 }
 
-// 👉 Hiệu ứng animation khi cuộn tới tiện ích showroom
+// 👉 Animation khi cuộn tới benefit
 function initIntersectionObserver() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.animationPlayState = 'running';
-            }
-        });
-    }, observerOptions);
-
-    $('.benefit-item').each(function() {
-        observer.observe(this);
-    });
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.style.animationPlayState = 'running'; });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    $('.benefit-item').each(function () { observer.observe(this); });
 }
 
-// 👉 Gọi khi bấm nút "Chỉ đường" để hiện iframe bản đồ
+// 👉 Toggle map
 function initMapToggleLogic() {
     $('.navigation-toggle-btn').click(function () {
-        const $storeCard = $(this).closest('.store-card');
-        const $map = $storeCard.find('.map-frame');
-
-        $map.slideToggle(300);
+        $(this).closest('.store-card').find('.map-frame').slideToggle(300);
     });
 }
 
-// 👉 Nút "Xem bản đồ" - chỉ để click feedback, không mở iframe
+// 👉 Navigation button feedback
 function initNavigationButtonLogic() {
-    $('.navigation-btn').click(function() {
+    $('.navigation-btn').click(function () {
         const storeName = $(this).closest('.store-card').find('.store-name').text().trim();
         console.log('Navigate to:', storeName);
-
         $(this).addClass('clicked');
-        setTimeout(() => {
-            $(this).removeClass('clicked');
-        }, 300);
+        setTimeout(() => $(this).removeClass('clicked'), 300);
     });
 }
 
-// 👉 Hotline gọi nhanh
+// 👉 Hotline
 function initHotlineLogic() {
-    $('.hotline-btn').click(function(e) {
+    $('.hotline-btn').click(function (e) {
         e.preventDefault();
         $(this).addClass('animate__pulse');
         setTimeout(() => {
@@ -181,86 +139,82 @@ function initHotlineLogic() {
     });
 }
 
-// 👉 Hiệu ứng delay animation từng store-card
+// 👉 Delay animation từng store-card
 function initStoreCardAnimations() {
-    $('.store-card').each(function(index) {
+    $('.store-card').each(function (index) {
         $(this).css('animation-delay', (index * 0.2) + 's');
     });
 }
 
+// 👉 Intro video
 function initIntroVideoLogic() {
     const video = document.getElementById("introVideo");
     const introContainer = document.querySelector(".video-banner-container");
     const showroomIntro = document.getElementById("showroomIntro");
-
     if (!video || !introContainer || !showroomIntro) return;
 
-    // Reset trạng thái ban đầu
     introContainer.classList.remove("fade-out", "d-none");
     showroomIntro.classList.add("d-none");
     showroomIntro.classList.remove("show");
-
-    // Đặt lại video từ đầu
     video.currentTime = 0;
 
-    // Thử autoplay video
     setTimeout(() => {
-        video.play().catch((error) => {
-            console.warn("Autoplay bị chặn, chờ tương tác người dùng.", error);
-
+        video.play().catch(() => {
             const resumePlayback = () => {
                 video.play();
                 document.removeEventListener("click", resumePlayback);
                 document.removeEventListener("keydown", resumePlayback);
             };
-
             document.addEventListener("click", resumePlayback);
             document.addEventListener("keydown", resumePlayback);
         });
-    }, 300); // đảm bảo video đã ready
+    }, 300);
 
     video.addEventListener("ended", function () {
-        // Fade out video
         introContainer.classList.add("fade-out");
-
-        // Sau 1 giây, ẩn video và hiện showroom intro
         setTimeout(() => {
             introContainer.classList.add("d-none");
-
             showroomIntro.classList.remove("d-none");
-            requestAnimationFrame(() => {
-                showroomIntro.classList.add("show");
-            });
+            requestAnimationFrame(() => showroomIntro.classList.add("show"));
         }, 1000);
     });
 }
 
-document.addEventListener("DOMContentLoaded", initIntroVideoLogic);
-
-
-
-
-async function loadPagePart(url, containerId, callback = null) {
-    try {
-        const response = await fetch(url);
-        const html = await response.text();
-        $(`#${containerId}`).html(html);
-
-        const $tempDiv = $('<div>').html(html);
-        $tempDiv.find('script').each(function () {
-            const src = $(this).attr('src');
-            if (src && $(`script[src="${src}"]`).length) return;
-            const $newScript = $('<script>');
-            if (src) $newScript.attr('src', src);
-            else $newScript.text($(this).text());
-            $('body').append($newScript);
-        });
-
-        if (typeof callback === 'function') callback();
-    } catch (error) {
-        console.error(`Lỗi khi tải ${url}:`, error);
-    }
+// ======================= Loader đồng bộ với checkout.js =======================
+function loadPagePart(url, selector, callback = null, executeScripts = true) {
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+            return response.text();
+        })
+        .then(data => {
+            const container = document.querySelector(selector);
+            if (container) {
+                container.innerHTML = data;
+                if (executeScripts) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = data;
+                    const scripts = tempDiv.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        if (oldScript.src) {
+                            if (!document.querySelector(`script[src="${oldScript.src}"]`)) {
+                                newScript.src = oldScript.src;
+                                newScript.defer = true;
+                                document.body.appendChild(newScript);
+                            }
+                        } else {
+                            newScript.textContent = oldScript.textContent;
+                            document.body.appendChild(newScript);
+                        }
+                    });
+                }
+                if (typeof callback === 'function') callback();
+            }
+        })
+        .catch(error => console.error(`Lỗi khi tải ${url}:`, error));
 }
+
 // 📌 MAIN LOADER
 function initShowroomPage() {
     initParticles();
@@ -273,14 +227,18 @@ function initShowroomPage() {
     initIntroVideoLogic();
 }
 
-// Gọi khi DOM sẵn sàng
-$(function() {
-    // Load header và footer
-    loadPagePart("HTML/Layout/resetheader.html", "header-container", () => {
+document.addEventListener("DOMContentLoaded", function () {
+    // Header
+    loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {
         if (typeof initHeader === 'function') initHeader();
+        if (typeof initializeUser === 'function') initializeUser();
     });
-    loadPagePart("HTML/Layout/resetfooter.html", "footer-container");
 
-    // Gọi các hàm showroom
+    // Footer
+    loadPagePart("HTML/Layout/resetfooter.html", "#footer-container", () => {
+        if (typeof initFooter === 'function') initFooter();
+    });
+
+    // Gọi showroom logic
     initShowroomPage();
 });
