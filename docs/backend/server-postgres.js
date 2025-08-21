@@ -23,12 +23,13 @@ app.use(cookieParser());
 const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'https://3tdshop.id.vn';
 const corsOptions = {
     origin: FRONTEND_ORIGIN,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // 👈 thêm PATCH
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
+
 
 // ===== PostgreSQL (Render) =====
 const pool = new Pool({
