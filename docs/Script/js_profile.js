@@ -1,39 +1,5 @@
 const API_BASE = window.API_BASE || "https://fn-web.onrender.com";
 
-/* ================== LOAD HEADER + FOOTER ================== */
-document.addEventListener("DOMContentLoaded", function () {
-    loadSection("HTML/Layout/resetheader.html", "#header-container", function () {
-        if (typeof initHeader === "function") initHeader();
-
-        // ✅ Load auth.js sau khi header đã vào DOM
-        const script = document.createElement("script");
-        script.src = "Script/js_resetauth.js";
-        script.defer = true;
-        document.body.appendChild(script);
-    });
-
-    loadSection("HTML/Layout/resetfooter.html", "#footer-container", function () {
-        if (typeof initFooter === "function") initFooter();
-    });
-
-    // ✅ Sau khi DOM ready thì load profile
-    loadProfile();
-});
-
-function loadSection(url, selector, callback) {
-    fetch(url)
-        .then((res) => {
-            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-            return res.text();
-        })
-        .then((html) => {
-            document.querySelector(selector).innerHTML = html;
-            if (callback && typeof callback === "function") callback();
-        })
-        .catch((err) => console.error("Error loading section:", err));
-}
-
-/* ================== PROFILE LOGIC ================== */
 async function loadProfile() {
     try {
         const res = await fetch(`${API_BASE}/api/me`, { credentials: "include" });
@@ -55,10 +21,8 @@ async function loadProfile() {
         document.getElementById("birthday").value = user.birthday || "";
 
         // Sidebar avatar + name
-        document.getElementById("sidebarAvatar").src =
-            user.avatar_url || "https://via.placeholder.com/80?text=U";
-        document.getElementById("sidebarName").textContent =
-            `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Người dùng";
+        document.getElementById("sidebarAvatar").src = user.avatar_url || "https://via.placeholder.com/80?text=U";
+        document.getElementById("sidebarName").textContent = `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Người dùng";
     } catch (err) {
         console.error("Lỗi load profile:", err);
     }
@@ -72,7 +36,7 @@ document.getElementById("profileForm").addEventListener("submit", async (e) => {
         lastName: document.getElementById("lastName").value.trim(),
         phone: document.getElementById("phone").value.trim(),
         gender: document.getElementById("gender").value,
-        birthday: document.getElementById("birthday").value,
+        birthday: document.getElementById("birthday").value
     };
 
     try {
@@ -80,7 +44,7 @@ document.getElementById("profileForm").addEventListener("submit", async (e) => {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify(body),
+            body: JSON.stringify(body)
         });
         const data = await res.json();
 
@@ -98,10 +62,8 @@ document.getElementById("profileForm").addEventListener("submit", async (e) => {
             }
 
             // Đồng bộ sidebar
-            document.getElementById("sidebarAvatar").src =
-                data.user.avatar_url || "https://via.placeholder.com/80?text=U";
-            document.getElementById("sidebarName").textContent =
-                `${data.user.firstName || ""} ${data.user.lastName || ""}`.trim() || "Người dùng";
+            document.getElementById("sidebarAvatar").src = data.user.avatar_url || "https://via.placeholder.com/80?text=U";
+            document.getElementById("sidebarName").textContent = `${data.user.firstName || ""} ${data.user.lastName || ""}`.trim() || "Người dùng";
         } else {
             msgBox.textContent = data.error || "❌ Lỗi cập nhật!";
             msgBox.className = "form-message text-danger fw-bold";
@@ -110,3 +72,5 @@ document.getElementById("profileForm").addEventListener("submit", async (e) => {
         console.error("Lỗi update profile:", err);
     }
 });
+
+document.addEventListener("DOMContentLoaded", loadProfile);
