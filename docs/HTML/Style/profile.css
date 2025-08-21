@@ -1,12 +1,4 @@
 :root {
-    --primary: #00f2ff;
-    --secondary: #ff00e6;
-    --accent: #ffcc00;
-    --dark: #080818;
-    --darker: #050510;
-    --bg-gradient: linear-gradient(135deg, #080818 0%, #101040 100%);
-    --neon-box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
-    --header-bg: rgba(8, 8, 24, 0.95);
     --font-main: 'Rajdhani', sans-serif;
 }
 
