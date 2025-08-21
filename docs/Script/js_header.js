@@ -163,8 +163,12 @@ function generateRandomAvatar(name) {
 
 // ================= Update hiển thị user =================
 function updateUserDisplay() {
-    const userName = localStorage.getItem('userName');
+    const firstName = localStorage.getItem('firstName') || "";
+    const lastName = localStorage.getItem('lastName') || "";
+    const email = localStorage.getItem('email') || "";
     const avatarUrl = localStorage.getItem('avatarUrl');
+    const fullName = `${firstName} ${lastName}`.trim() || lastName || firstName || "Người dùng";
+
     let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
 
@@ -174,24 +178,25 @@ function updateUserDisplay() {
     userAction.parentNode.replaceChild(newUserAction, userAction);
     userAction = newUserAction;
 
-    if (userName) {
+    if (fullName !== "Người dùng") {
         // ✅ Đã login
-        const shortName = userName.length > 12 ? userName.slice(0, 12) + "..." : userName;
+        const shortName = fullName.length > 14 ? fullName.slice(0, 14) + "..." : fullName;
 
-        // Nếu có avatar từ server thì dùng, nếu không thì random
+        // Avatar (server → random fallback)
         const avatarHTML = avatarUrl
             ? `<img src="${avatarUrl}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
-            : generateRandomAvatar(userName);
+            : generateRandomAvatar(firstName || lastName);
 
         userAction.innerHTML = `
             <div class="user-menu">
                 ${avatarHTML}
                 <div class="user-info">
                     <div style="font-size: 10px; opacity: 0.8;">Xin chào</div>
-                    <div style="font-size: 12px; font-weight: 600;" title="${userName}">${shortName}</div>
+                    <div style="font-size: 12px; font-weight: 600;" title="${fullName}">${shortName}</div>
                 </div>
                 <div class="user-dropdown">
-                    <button id="logoutBtn" class="logout-btn">Đăng xuất</button>
+                    <div class="dropdown-item" id="profileLink">👤 Thông tin cá nhân</div>
+                    <div class="dropdown-item" id="logoutBtn">🚪 Đăng xuất</div>
                 </div>
             </div>
         `;
@@ -201,14 +206,18 @@ function updateUserDisplay() {
         userMenu.addEventListener('mouseenter', () => userMenu.classList.add('show'));
         userMenu.addEventListener('mouseleave', () => userMenu.classList.remove('show'));
 
-        // ✅ Logout
+        // Link đến trang profile
+        document.getElementById("profileLink").addEventListener("click", () => {
+            window.location.href = "profile.html";
+        });
+
+        // Logout
         document.getElementById("logoutBtn").addEventListener("click", async () => {
             await fetch(`${API_BASE}/api/logout`, {
                 method: "POST",
                 credentials: "include"
             });
-            localStorage.removeItem("userName");
-            localStorage.removeItem("avatarUrl");
+            localStorage.clear();
             window.location.reload();
         });
 
@@ -224,6 +233,7 @@ function updateUserDisplay() {
         userAction.addEventListener("click", () => CyberModal.open());
     }
 }
+
 
 // ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {

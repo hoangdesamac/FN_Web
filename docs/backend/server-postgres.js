@@ -80,7 +80,12 @@ const googleClient = new OAuth2Client({
 
 function setAuthCookie(res, userRow) {
     const token = jwt.sign(
-        { id: userRow.id, email: userRow.email, lastName: userRow.last_name },
+        {
+            id: userRow.id,
+            email: userRow.email,
+            firstName: userRow.first_name || userRow.firstName || null,
+            lastName: userRow.last_name || userRow.lastName || null
+        },
         JWT_SECRET,
         { expiresIn: '7d' }
     );
@@ -184,29 +189,102 @@ app.get('/api/me', async (req, res) => {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
 
-        // Lấy avatar_url + last_name + email trực tiếp từ DB để đảm bảo là bản mới nhất
+        // Lấy profile đầy đủ từ DB để đảm bảo dữ liệu mới nhất
         const { rows } = await pool.query(
-            'SELECT avatar_url, last_name, email FROM users WHERE id = $1',
+            `SELECT id, email, first_name, last_name, avatar_url, phone, gender, birthday
+             FROM users WHERE id = $1`,
             [decoded.id]
         );
         const row = rows[0] || {};
 
+        // birthday có thể là Date hoặc string (PG tùy cấu hình)
+        const birthday = row.birthday
+            ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday)
+            : null;
+
         res.json({
             loggedIn: true,
             user: {
-                id: decoded.id,
+                id: row.id || decoded.id,
                 email: row.email || decoded.email || null,
+                firstName: row.first_name || null,
                 lastName: row.last_name || decoded.lastName || null,
-                avatar_url: row.avatar_url || null
+                avatar_url: row.avatar_url || null,
+                phone: row.phone || null,
+                gender: row.gender || null,
+                birthday: birthday
             }
         });
     } catch (err) {
+        console.error('GET /api/me error:', err);
         // token invalid → clear cookie
-        res.clearCookie(COOKIE_NAME, COOKIE_OPTS);
+        try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
         return res.json({ loggedIn: false });
     }
 });
 
+// ---- ADD this PATCH /api/me endpoint ----
+app.patch('/api/me', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: 'Chưa xác thực' });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        const { firstName, lastName, phone, gender, birthday } = req.body;
+
+        // Optional: bạn có thể validate phone / gender / birthday ở đây
+        const q = `
+            UPDATE users
+            SET first_name = $1,
+                last_name  = $2,
+                phone      = $3,
+                gender     = $4,
+                birthday   = $5
+            WHERE id = $6
+            RETURNING id, email, first_name, last_name, avatar_url, phone, gender, birthday
+        `;
+
+        const values = [
+            firstName || null,
+            lastName || null,
+            phone || null,
+            gender || null,
+            birthday || null, // expected format 'YYYY-MM-DD' or null
+            decoded.id
+        ];
+
+        const { rows } = await pool.query(q, values);
+        if (!rows.length) return res.status(404).json({ success: false, error: 'User không tồn tại' });
+
+        const row = rows[0];
+        const b = row.birthday ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday) : null;
+
+        // Trả profile cập nhật
+        res.json({
+            success: true,
+            user: {
+                id: row.id,
+                email: row.email,
+                firstName: row.first_name,
+                lastName: row.last_name,
+                avatar_url: row.avatar_url,
+                phone: row.phone,
+                gender: row.gender,
+                birthday: b
+            }
+        });
+
+    } catch (err) {
+        console.error('PATCH /api/me error:', err);
+        // Nếu token invalid: clear cookie + 401
+        if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+            try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
+            return res.status(401).json({ success: false, error: 'Chưa xác thực' });
+        }
+        res.status(500).json({ success: false, error: 'Lỗi server' });
+    }
+});
 
 // Đăng xuất
 app.post('/api/logout', (_req, res) => {

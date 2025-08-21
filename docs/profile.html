@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin cá nhân - 3TD SHOP</title>
+    <link rel="stylesheet" href="HTML/Style/profile.css">
+</head>
+<body>
+<div class="profile-container">
+    <h2>👤 Thông tin cá nhân</h2>
+
+    <!-- Avatar -->
+    <div class="profile-avatar">
+        <img id="profileAvatar" src="" alt="Avatar">
+    </div>
+
+    <!-- Form -->
+    <form id="profileForm">
+        <div class="form-group">
+            <label for="firstName">Họ</label>
+            <input type="text" id="firstName" name="firstName">
+        </div>
+        <div class="form-group">
+            <label for="lastName">Tên</label>
+            <input type="text" id="lastName" name="lastName">
+        </div>
+        <div class="form-group">
+            <label for="email">Email (không sửa)</label>
+            <input type="email" id="email" name="email" disabled>
+        </div>
+        <div class="form-group">
+            <label for="phone">Số điện thoại</label>
+            <input type="text" id="phone" name="phone">
+        </div>
+        <div class="form-group">
+            <label for="gender">Giới tính</label>
+            <select id="gender" name="gender">
+                <option value="">-- Chọn --</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+                <option value="other">Khác</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="birthday">Ngày sinh</label>
+            <input type="date" id="birthday" name="birthday">
+        </div>
+
+        <button type="submit" class="btn-save">💾 Lưu thay đổi</button>
+    </form>
+
+    <div id="profileMessage" class="form-message"></div>
+</div>
+
+<script src="Script/js_profile.js"></script>
+</body>
+</html>
