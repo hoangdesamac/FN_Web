@@ -1,3 +1,10 @@
+.mega-menu {
+    z-index: 10 !important; /* Đảm bảo mega menu luôn chìm dưới header khi cuộn */
+}
+/* Đảm bảo mega menu luôn ngang với sidebar bằng cách dịch xuống đúng top sidebar */
+.mega-menu {
+    margin-top: 110px !important; /* Đảm bảo mega menu luôn ngang bằng top với sidebar */
+}
 :root {
     --primary: #00f2ff;
     --secondary: #ff00e6;

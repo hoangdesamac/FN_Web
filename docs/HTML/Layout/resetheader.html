@@ -311,4 +311,42 @@
 </div>
 
 </body>
+<script>
+// Hiệu ứng hover mega menu cho danh mục trên header (giống sidebar)
+document.addEventListener('DOMContentLoaded', function() {
+    const headerCategoryItems = document.querySelectorAll('.cyber-categories-dropdown .category-item.has-mega-menu');
+    const megaMenus = document.querySelectorAll('.mega-menu');
+    function hideAllMegaMenus() {
+        megaMenus.forEach(menu => menu.style.display = 'none');
+    }
+    headerCategoryItems.forEach(item => {
+        const megaId = item.id.replace('menu-', 'mega-');
+        const megaMenu = document.getElementById(megaId);
+        if (!megaMenu) return;
+        item.addEventListener('mouseenter', () => {
+            hideAllMegaMenus();
+            // Hiện mega menu ngay cạnh dropdown header, nhỏ gọn
+            const rect = item.getBoundingClientRect();
+            megaMenu.style.display = 'block';
+            megaMenu.style.position = 'fixed';
+            megaMenu.style.top = (rect.top) + 'px';
+            megaMenu.style.left = (rect.right + 8) + 'px';
+            megaMenu.style.width = '420px';
+            megaMenu.style.height = 'auto';
+            megaMenu.style.zIndex = 2000;
+        });
+        item.addEventListener('mouseleave', () => {
+            setTimeout(() => {
+                megaMenu.style.display = 'none';
+            }, 200);
+        });
+        megaMenu.addEventListener('mouseenter', () => {
+            megaMenu.style.display = 'block';
+        });
+        megaMenu.addEventListener('mouseleave', () => {
+            megaMenu.style.display = 'none';
+        });
+    });
+});
+</script>
 </html>
