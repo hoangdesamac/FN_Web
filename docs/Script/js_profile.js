@@ -1,4 +1,3 @@
-const API_BASE = window.API_BASE || "https://fn-web.onrender.com";
 
 // ===== Helper load header/footer =====
 function loadPagePart(url, selector, callback = null) {
@@ -35,7 +34,7 @@ function loadPagePart(url, selector, callback = null) {
 // ===== Load profile data =====
 async function loadProfile() {
     try {
-        const res = await fetch(`${API_BASE}/api/me`, { credentials: "include" });
+        const res = await fetch(`${window.API_BASE}/api/me`, { credentials: "include" });
         const data = await res.json();
 
         if (!data.loggedIn) {
@@ -84,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         try {
-            const res = await fetch(`${API_BASE}/api/me`, {
+            const res = await fetch(`${window.API_BASE}/api/me`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",

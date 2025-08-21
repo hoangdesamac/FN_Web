@@ -1,6 +1,3 @@
-// ==================== CẤU HÌNH API ====================
-window.API_BASE = "https://fn-web.onrender.com"; // Backend
-
 // ==================== HÀM HỖ TRỢ ====================
 // Hiển thị lỗi hoặc thông báo
 function showMessage(elementId, message, type = "error") {
@@ -14,7 +11,7 @@ function showMessage(elementId, message, type = "error") {
 // ==================== KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP ====================
 async function checkLoginStatus() {
     try {
-        const res = await fetch(`${API_BASE}/api/me`, {
+        const res = await fetch(`${window.API_BASE}/api/me`, {
             method: "GET",
             credentials: "include"
         });
@@ -63,7 +60,7 @@ if (registerForm) {
         showMessage("register-error", "");
 
         try {
-            const res = await fetch(`${API_BASE}/api/register`, {
+            const res = await fetch(`${window.API_BASE}/api/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -97,7 +94,7 @@ if (loginForm) {
         showMessage("login-error", "");
 
         try {
-            const res = await fetch(`${API_BASE}/api/login`, {
+            const res = await fetch(`${window.API_BASE}/api/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -134,7 +131,7 @@ if (loginForm) {
 // ==================== ĐĂNG XUẤT ====================
 async function logout() {
     try {
-        await fetch(`${API_BASE}/api/logout`, {
+        await fetch(`${window.API_BASE}/api/logout`, {
             method: "POST",
             credentials: "include"
         });
@@ -156,7 +153,7 @@ if (forgotForm) {
         showMessage("forgot-error", "");
 
         try {
-            const res = await fetch(`${API_BASE}/api/forgot-password`, {
+            const res = await fetch(`${window.API_BASE}/api/forgot-password`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email })
@@ -184,7 +181,7 @@ document.addEventListener("click", (e) => {
     if (btn.disabled) return;
 
     try {
-        window.location.href = `${API_BASE}/api/auth/google`;
+        window.location.href = `${window.API_BASE}/api/auth/google`;
     } catch (err) {
         console.error("Không thể chuyển sang Google OAuth:", err);
         showMessage("login-error", "❌ Không thể mở Google Login, vui lòng thử lại!");
@@ -232,7 +229,7 @@ document.addEventListener("click", (e) => {
     if (btn.disabled) return;
 
     try {
-        window.location.href = `${API_BASE}/api/auth/facebook`;
+        window.location.href = `${window.API_BASE}/api/auth/facebook`;
     } catch (err) {
         console.error("Không thể chuyển sang Facebook OAuth:", err);
         showMessage("login-error", "❌ Không thể mở Facebook Login, vui lòng thử lại!");

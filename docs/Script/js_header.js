@@ -116,11 +116,10 @@ function switchToForgot() { CyberModal.showForgot(); }
 function closeCyberModal() { CyberModal.close(); }
 
 // ================= User login state =================
-const API_BASE = window.API_BASE || "https://fn-web.onrender.com";
 
 async function fetchUserInfo() {
     try {
-        const res = await fetch(`${API_BASE}/api/me`, {
+        const res = await fetch(`${window.API_BASE}/api/me`, {
             method: "GET",
             credentials: "include"
         });
@@ -195,8 +194,8 @@ function updateUserDisplay() {
                     <div style="font-size: 12px; font-weight: 600;" title="${fullName}">${shortName}</div>
                 </div>
                 <div class="user-dropdown">
-                    <div class="dropdown-item" id="profileLink">👤 Thông tin cá nhân</div>
-                    <div class="dropdown-item" id="logoutBtn">🚪 Đăng xuất</div>
+                    <div class="dropdown-item" id="profileLink"> Thông tin cá nhân</div>
+                    <div class="dropdown-item" id="logoutBtn"> Đăng xuất</div>
                 </div>
             </div>
         `;
@@ -213,7 +212,7 @@ function updateUserDisplay() {
 
         // Logout
         document.getElementById("logoutBtn").addEventListener("click", async () => {
-            await fetch(`${API_BASE}/api/logout`, {
+            await fetch(`${window.API_BASE}/api/logout`, {
                 method: "POST",
                 credentials: "include"
             });
