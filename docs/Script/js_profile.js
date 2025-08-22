@@ -1,4 +1,3 @@
-
 // ===== Helper load header/footer =====
 function loadPagePart(url, selector, callback = null) {
     fetch(url)
@@ -59,8 +58,9 @@ async function loadProfile() {
     }
 }
 
-// ===== Update profile =====
+// ===== Main =====
 document.addEventListener("DOMContentLoaded", () => {
+    // Load header + footer
     loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {
         if (typeof initHeader === "function") initHeader();
         if (typeof initializeUser === "function") initializeUser();
@@ -72,6 +72,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadProfile();
 
+    const editBtn = document.getElementById("editBtn");
+    const saveBtn = document.getElementById("saveBtn");
+
+    // ===== Toggle edit mode =====
+    editBtn.addEventListener("click", () => {
+        const inputs = document.querySelectorAll("#profileForm input, #profileForm select");
+        inputs.forEach(input => {
+            if (input.id !== "email") {
+                input.removeAttribute("readonly");
+                input.removeAttribute("disabled");
+            }
+        });
+        saveBtn.classList.remove("d-none"); // hiện nút lưu
+        editBtn.style.display = "none"; // ẩn bút chì
+    });
+
+    // ===== Update profile =====
     document.getElementById("profileForm").addEventListener("submit", async e => {
         e.preventDefault();
         const body = {
@@ -95,6 +112,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (data.success) {
                 msgBox.textContent = "✅ Cập nhật thành công!";
                 msgBox.className = "form-message text-success fw-bold";
+
+                // cập nhật sidebar
                 localStorage.setItem("firstName", data.user.firstName || "");
                 localStorage.setItem("lastName", data.user.lastName || "");
                 localStorage.setItem("email", data.user.email || "");
@@ -106,6 +125,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("sidebarName").textContent =
                     `${data.user.firstName || ""} ${data.user.lastName || ""}`.trim() ||
                     "Người dùng";
+
+                // Sau khi lưu thành công → khóa lại input
+                const inputs = document.querySelectorAll("#profileForm input, #profileForm select");
+                inputs.forEach(input => {
+                    input.setAttribute("readonly", true);
+                    input.setAttribute("disabled", true);
+                });
+                document.getElementById("email").setAttribute("readonly", true); // email luôn readonly
+                saveBtn.classList.add("d-none");
+                editBtn.style.display = "block";
             } else {
                 msgBox.textContent = data.error || "❌ Lỗi cập nhật!";
                 msgBox.className = "form-message text-danger fw-bold";
