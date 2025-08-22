@@ -69,11 +69,10 @@ body {
     color: #fff;
     cursor: default;
 }
-select:disabled {
-    background: var(--dark);
+.readonly-select {
+    pointer-events: none;
+    background: var(--dark); /* giữ màu theo theme */
     color: #fff;
-    opacity: 1; /* tránh bị mờ đi */
-    pointer-events: none; /* để không bấm được */
 }
 
 .neon-input:focus {

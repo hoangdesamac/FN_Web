@@ -77,13 +77,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ===== Toggle edit mode =====
     editBtn.addEventListener("click", () => {
-        const inputs = document.querySelectorAll("#profileForm input, #profileForm select");
+        const inputs = document.querySelectorAll("#profileForm input");
         inputs.forEach(input => {
             if (input.id !== "email") {
                 input.removeAttribute("readonly");
-                input.removeAttribute("disabled");
             }
         });
+
+        // riêng select gender thì bỏ class readonly-select
+        const genderSelect = document.getElementById("gender");
+        genderSelect.classList.remove("readonly-select");
+
         saveBtn.classList.remove("d-none"); // hiện nút lưu
         editBtn.style.display = "none"; // ẩn bút chì
     });
@@ -127,12 +131,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Người dùng";
 
                 // Sau khi lưu thành công → khóa lại input
-                const inputs = document.querySelectorAll("#profileForm input, #profileForm select");
+                const inputs = document.querySelectorAll("#profileForm input");
                 inputs.forEach(input => {
                     input.setAttribute("readonly", true);
-                    input.setAttribute("disabled", true);
                 });
                 document.getElementById("email").setAttribute("readonly", true); // email luôn readonly
+
+                // Khóa lại select bằng cách add class readonly-select
+                const genderSelect = document.getElementById("gender");
+                genderSelect.classList.add("readonly-select");
+
                 saveBtn.classList.add("d-none");
                 editBtn.style.display = "block";
             } else {
