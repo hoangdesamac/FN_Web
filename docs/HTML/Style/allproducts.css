@@ -1,0 +1,119 @@
+
+/* Sidebar */
+.product-sidebar {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+
+.sidebar-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 20px 0 10px;
+}
+
+.category-list {
+    margin-bottom: 20px;
+}
+
+.category-option {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+.category-option:hover {
+    background: #f0f0f0;
+}
+.category-option i {
+    margin-right: 8px;
+    font-size: 1.2rem;
+}
+
+/* Product Cards */
+.product-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.flash-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: red;
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff9900;
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+
+.product-image img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.product-name {
+    font-size: 1rem;
+    margin: 10px 0;
+    font-weight: 500;
+}
+
+.price-section {
+    font-size: 0.9rem;
+}
+.original-price {
+    text-decoration: line-through;
+    color: gray;
+}
+.sale-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: red;
+}
+
+.buy-button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #00aaff;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.buy-button:hover {
+    background: #0088cc;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-sidebar {
+        margin-bottom: 20px;
+    }
+}
