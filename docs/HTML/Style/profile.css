@@ -77,7 +77,6 @@ select.readonly-select {
 }
 
 .neon-input:focus {
-    border-color: var(--primary);
     box-shadow: 0 0 8px rgba(0,242,255,0.5);
 }
 
