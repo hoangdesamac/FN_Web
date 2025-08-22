@@ -61,7 +61,6 @@ body {
 .neon-input {
     background: var(--dark);
     border: 1px solid var(--primary); /* luôn cyan */
-    box-shadow: 0 0 8px rgba(0,242,255,0.5); /* luôn có glow */
     color: #fff;
     transition: 0.2s;
 }
