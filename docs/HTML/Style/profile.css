@@ -65,10 +65,10 @@ body {
     transition: 0.2s;
 }
 
-.neon-input:focus {
+input.neon-input:focus {
     border-color: var(--primary);
-    outline: none;
-    box-shadow: none!important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .neon-input[readonly] {
