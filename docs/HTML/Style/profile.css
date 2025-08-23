@@ -194,6 +194,7 @@ select.readonly-select {
 #profileMessage.error { color: #ff4757; font-weight: 600; }
 
 /* Màu chữ của thông báo OTP */
+.otp-section .form-label,
 .otp-section small.text-muted {
     display: block;
     margin-top: 6px;
