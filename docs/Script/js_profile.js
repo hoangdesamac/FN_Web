@@ -7,7 +7,6 @@ function loadPagePart(url, selector, callback = null) {
             if (container) {
                 container.innerHTML = data;
 
-                // chạy lại script trong fragment
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = data;
                 const scripts = tempDiv.querySelectorAll("script");
@@ -30,11 +29,13 @@ function loadPagePart(url, selector, callback = null) {
         .catch(err => console.error(`Lỗi khi load ${url}:`, err));
 }
 
-// ===== Load profile data =====
-let currentPhone = null;
-let pendingPhone = null;
-let phoneVerified = true; // flag xác minh số mới
+// ===== Globals =====
+let currentPhone = null;   // số gốc từ DB
+let pendingPhone = null;   // số đang chờ xác minh OTP
+let phoneVerified = true;  // flag trạng thái xác minh
+let countdownInterval = null;
 
+// ===== Load profile data =====
 async function loadProfile() {
     try {
         const res = await fetch(`${window.API_BASE}/api/me`, { credentials: "include" });
@@ -59,7 +60,7 @@ async function loadProfile() {
             `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Người dùng";
 
         currentPhone = user.phone || null;
-        phoneVerified = true; // mặc định đã xác minh
+        phoneVerified = true; // mặc định đã xác minh nếu số từ DB
     } catch (err) {
         console.error("Lỗi load profile:", err);
     }
@@ -67,7 +68,6 @@ async function loadProfile() {
 
 // ===== Main =====
 document.addEventListener("DOMContentLoaded", () => {
-    // Load header + footer
     loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {
         if (typeof initHeader === "function") initHeader();
         if (typeof initializeUser === "function") initializeUser();
@@ -84,10 +84,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const phoneInput = document.getElementById("phone");
     const msgBox = document.getElementById("profileMessage");
 
-    // OTP section & Send OTP button (đã có sẵn trong HTML)
     const otpSection = document.querySelector(".otp-section");
     const sendOtpBtn = document.getElementById("sendOtpBtn");
     const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+    const otpCode = document.getElementById("otpCode");
+
+    const resendBox = document.createElement("small");
 
     // Ban đầu ẩn
     otpSection.classList.add("d-none");
@@ -101,26 +103,38 @@ document.addEventListener("DOMContentLoaded", () => {
                 input.removeAttribute("readonly");
             }
         });
-
         const genderSelect = document.getElementById("gender");
         genderSelect.classList.remove("readonly-select");
 
         saveBtn.classList.remove("d-none");
         editBtn.style.display = "none";
 
-        // Cho phép gửi OTP khi edit
-        sendOtpBtn.classList.remove("d-none");
+        // Cho phép hiện nút OTP nếu có thay đổi
+        if (currentPhone) {
+            sendOtpBtn.classList.remove("d-none");
+        }
     });
 
-    // ===== Sự kiện thay đổi số điện thoại =====
+    // ===== Kiểm tra thay đổi số điện thoại =====
     phoneInput.addEventListener("input", () => {
         const newPhone = phoneInput.value.trim();
-        if (newPhone && newPhone !== currentPhone) {
-            phoneVerified = false; // cần xác minh
-            saveBtn.disabled = true; // disable nút lưu
-        } else {
+
+        if (newPhone === currentPhone) {
             phoneVerified = true;
             saveBtn.disabled = false;
+            sendOtpBtn.classList.add("d-none");
+            otpSection.classList.add("d-none");
+        } else if (newPhone === "") {
+            // Xóa số → cho lưu luôn
+            phoneVerified = true;
+            saveBtn.disabled = false;
+            sendOtpBtn.classList.add("d-none");
+            otpSection.classList.add("d-none");
+        } else {
+            // Số mới → cần OTP
+            phoneVerified = false;
+            saveBtn.disabled = true;
+            sendOtpBtn.classList.remove("d-none");
         }
     });
 
@@ -145,11 +159,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({ phone: newPhone })
             });
             const data = await res.json();
+
             if (data.success) {
                 pendingPhone = newPhone;
                 otpSection.classList.remove("d-none");
-                msgBox.textContent = data.message;
+                msgBox.textContent = data.message || "✅ OTP đã gửi!";
                 msgBox.className = "form-message text-success fw-bold";
+
+                startCountdown(sendOtpBtn);
             } else {
                 msgBox.textContent = data.error || "❌ Lỗi gửi OTP!";
                 msgBox.className = "form-message text-danger fw-bold";
@@ -161,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ===== Xác minh OTP =====
     verifyOtpBtn.addEventListener("click", async () => {
-        const otp = document.getElementById("otpCode").value.trim();
+        const otp = otpCode.value.trim();
         if (!pendingPhone || !otp) {
             msgBox.textContent = "❌ Vui lòng nhập OTP.";
             msgBox.className = "form-message text-danger fw-bold";
@@ -175,15 +192,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({ phone: pendingPhone, otp })
             });
             const data = await res.json();
+
             if (data.success) {
                 currentPhone = pendingPhone;
                 pendingPhone = null;
                 phoneVerified = true;
-                saveBtn.disabled = false; // cho phép lưu
+                saveBtn.disabled = false;
                 otpSection.classList.add("d-none");
                 msgBox.textContent = "✅ Số điện thoại đã xác minh!";
                 msgBox.className = "form-message text-success fw-bold";
             } else {
+                phoneVerified = false;
+                saveBtn.disabled = true;
                 msgBox.textContent = data.error || "❌ Mã OTP không hợp lệ!";
                 msgBox.className = "form-message text-danger fw-bold";
             }
@@ -196,7 +216,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("profileForm").addEventListener("submit", async e => {
         e.preventDefault();
 
-        // Kiểm tra số điện thoại đã xác minh chưa
         if (!phoneVerified) {
             msgBox.textContent = "❌ Bạn cần xác minh số điện thoại mới trước khi lưu!";
             msgBox.className = "form-message text-danger fw-bold";
@@ -224,7 +243,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 msgBox.textContent = "✅ Cập nhật thành công!";
                 msgBox.className = "form-message text-success fw-bold";
 
-                // cập nhật sidebar
                 localStorage.setItem("firstName", data.user.firstName || "");
                 localStorage.setItem("lastName", data.user.lastName || "");
                 localStorage.setItem("email", data.user.email || "");
@@ -237,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     `${data.user.firstName || ""} ${data.user.lastName || ""}`.trim() ||
                     "Người dùng";
 
-                // Sau khi lưu thành công → khóa lại input
+                // Reset lại trạng thái form
                 const inputs = document.querySelectorAll("#profileForm input");
                 inputs.forEach(input => input.setAttribute("readonly", true));
                 document.getElementById("email").setAttribute("readonly", true);
@@ -248,6 +266,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 editBtn.style.display = "block";
                 sendOtpBtn.classList.add("d-none");
                 otpSection.classList.add("d-none");
+
+                currentPhone = body.phone || null; // cập nhật số mới làm gốc
             } else {
                 msgBox.textContent = data.error || "❌ Lỗi cập nhật!";
                 msgBox.className = "form-message text-danger fw-bold";
@@ -256,4 +276,32 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Lỗi update profile:", err);
         }
     });
+
+    // ===== Countdown resend OTP =====
+    function startCountdown(btn) {
+        let timeLeft = 30;
+        btn.disabled = true;
+
+        if (countdownInterval) clearInterval(countdownInterval);
+
+        resendBox.textContent = `Bạn chưa nhận được mã? Gửi lại sau ${timeLeft}s`;
+        resendBox.className = "text-muted d-block mt-2";
+        otpSection.appendChild(resendBox);
+
+        countdownInterval = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0) {
+                resendBox.textContent = `Bạn chưa nhận được mã? Gửi lại sau ${timeLeft}s`;
+            } else {
+                clearInterval(countdownInterval);
+                resendBox.innerHTML = `<a href="#" id="resendOtpLink">Gửi lại mã</a>`;
+                btn.disabled = false;
+
+                document.getElementById("resendOtpLink").addEventListener("click", (e) => {
+                    e.preventDefault();
+                    btn.click();
+                });
+            }
+        }, 1000);
+    }
 });
