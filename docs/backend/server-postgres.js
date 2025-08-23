@@ -182,7 +182,7 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// ===== Lấy thông tin user theo cookie =====
+// Lấy thông tin user theo cookie
 app.get('/api/me', async (req, res) => {
     const token = req.cookies?.[COOKIE_NAME];
     if (!token) return res.json({ loggedIn: false });
@@ -190,6 +190,7 @@ app.get('/api/me', async (req, res) => {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
 
+        // Lấy profile đầy đủ từ DB để đảm bảo dữ liệu mới nhất
         const { rows } = await pool.query(
             `SELECT id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified
              FROM users WHERE id = $1`,
@@ -197,6 +198,7 @@ app.get('/api/me', async (req, res) => {
         );
         const row = rows[0] || {};
 
+        // birthday có thể là Date hoặc string (PG tùy cấu hình)
         const birthday = row.birthday
             ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday)
             : null;
@@ -211,30 +213,26 @@ app.get('/api/me', async (req, res) => {
                 avatar_url: row.avatar_url || null,
                 phone: row.phone || null,
                 gender: row.gender || null,
-                birthday,
-                phone_verified: !!row.phone_verified
+                birthday: birthday,
+                phone_verified: row.phone_verified || false
             }
         });
     } catch (err) {
         console.error('GET /api/me error:', err);
+        // token invalid → clear cookie
         try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
         return res.json({ loggedIn: false });
     }
 });
 
-
-// ---- PATCH /api/me (đã chỉnh) ----
+// ---- ADD this PATCH /api/me endpoint ----
 app.patch('/api/me', async (req, res) => {
     const token = req.cookies?.[COOKIE_NAME];
     if (!token) return res.status(401).json({ success: false, error: 'Chưa xác thực' });
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        let { firstName, lastName, phone, gender, birthday } = req.body;
-
-        // Chuẩn hoá phone để so sánh
-        const normalize = v => (v || '').trim();
-        phone = normalize(phone);
+        const { firstName, lastName, phone, gender, birthday } = req.body;
 
         // Lấy thông tin hiện tại
         const checkRes = await pool.query(
@@ -244,17 +242,16 @@ app.patch('/api/me', async (req, res) => {
         if (!checkRes.rows.length) {
             return res.status(404).json({ success: false, error: "User không tồn tại" });
         }
-        const { phone: oldPhone, phone_verified } = checkRes.rows[0];
-        const oldNorm = normalize(oldPhone);
 
-        // CASE 1: XÓA SỐ → cho phép và set phone_verified=false
-        if (!phone) {
+        const { phone: oldPhone, phone_verified } = checkRes.rows[0];
+
+        // ✅ CASE 1: Nếu xoá số (phone null/empty) → update ngay
+        if (!phone || phone.trim() === "") {
             const q = `
                 UPDATE users
                 SET first_name = $1,
                     last_name  = $2,
                     phone      = NULL,
-                    phone_verified = false,
                     gender     = $3,
                     birthday   = $4
                 WHERE id = $5
@@ -281,25 +278,23 @@ app.patch('/api/me', async (req, res) => {
             });
         }
 
-        // CASE 2: ĐỔI SANG SỐ MỚI (khác DB hoặc trước đây chưa có số) → CHẶN, yêu cầu OTP
-        // - Nếu oldNorm rỗng (chưa từng có số) mà client nhập số mới → vẫn phải verify
-        // - Nếu oldNorm khác phone → cũng phải verify
-        if (!oldNorm || oldNorm !== phone) {
+        // 🚫 CASE 2: Nếu nhập số mới khác số cũ → yêu cầu xác minh OTP
+        if (oldPhone && oldPhone !== phone) {
             return res.status(403).json({
                 success: false,
                 error: "Vui lòng xác minh số điện thoại mới trước khi cập nhật thông tin."
             });
         }
 
-        // CASE 3: Số hiện tại chưa verify → CHẶN
-        if (oldNorm && phone_verified === false) {
+        // 🚫 CASE 3: Nếu có số nhưng chưa verify → chặn update
+        if (oldPhone && phone_verified === false) {
             return res.status(403).json({
                 success: false,
                 error: "Vui lòng xác minh số điện thoại trước khi cập nhật thông tin."
             });
         }
 
-        // CASE 4: KHÔNG ĐỔI SỐ & ĐÃ VERIFY → Update các field khác
+        // ✅ CASE 4: Update bình thường (không đổi số hoặc đã verify)
         const q = `
             UPDATE users
             SET first_name = $1,
@@ -341,117 +336,6 @@ app.patch('/api/me', async (req, res) => {
         res.status(500).json({ success: false, error: 'Lỗi server' });
     }
 });
-
-
-// ===== Xác minh OTP (số đã ở trong DB) =====
-app.post('/api/verify-otp', async (req, res) => {
-    try {
-        const { phone, otp } = req.body;
-        if (!phone || !otp) {
-            return res.status(400).json({ success: false, error: "Thiếu phone hoặc otp" });
-        }
-
-        const { rows } = await pool.query(
-            `SELECT 1 FROM otp_codes WHERE phone=$1 AND otp=$2 AND expires_at > NOW()`,
-            [phone.trim(), otp.trim()]
-        );
-        if (!rows.length) {
-            return res.json({ success: false, error: "OTP không hợp lệ hoặc hết hạn" });
-        }
-
-        // Đánh dấu verified cho user đang dùng số này
-        const upd = await pool.query(
-            `UPDATE users SET phone_verified = true WHERE phone = $1 RETURNING id`,
-            [phone.trim()]
-        );
-
-        // Dọn OTP
-        await pool.query(`DELETE FROM otp_codes WHERE phone=$1`, [phone.trim()]);
-
-        // Nếu không có user nào có phone này (VD: chưa cập nhật số vào DB) → báo cho FE dùng /api/verify-otp-phone-change
-        if (!upd.rowCount) {
-            return res.json({
-                success: false,
-                error: "Số này chưa được lưu vào tài khoản. Vui lòng dùng luồng xác minh khi đổi số."
-            });
-        }
-
-        res.json({ success: true, verified: true });
-    } catch (err) {
-        console.error("❌ Lỗi verify OTP:", err);
-        res.status(500).json({ success: false, error: "Lỗi server khi xác minh OTP" });
-    }
-});
-
-
-// ===== Xác minh OTP cho số MỚI & cập nhật user =====
-app.post('/api/verify-otp-phone-change', async (req, res) => {
-    const token = req.cookies?.[COOKIE_NAME];
-    if (!token) return res.status(401).json({ success: false, error: "Chưa xác thực" });
-
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const { phone, otp } = req.body;
-        if (!phone || !otp) {
-            return res.status(400).json({ success: false, error: "Thiếu phone hoặc otp" });
-        }
-
-        // Kiểm tra OTP
-        const { rows } = await pool.query(
-            `SELECT 1 FROM otp_codes WHERE phone=$1 AND otp=$2 AND expires_at > NOW()`,
-            [phone.trim(), otp.trim()]
-        );
-        if (!rows.length) {
-            return res.json({ success: false, error: "OTP không hợp lệ hoặc hết hạn" });
-        }
-
-        // Cập nhật số mới & verified
-        const updateRes = await pool.query(
-            `UPDATE users
-             SET phone = $1,
-                 phone_verified = true
-             WHERE id = $2
-             RETURNING id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified`,
-            [phone.trim(), decoded.id]
-        );
-
-        // Dọn OTP
-        await pool.query(`DELETE FROM otp_codes WHERE phone=$1`, [phone.trim()]);
-
-        if (!updateRes.rows.length) {
-            return res.status(404).json({ success: false, error: "User không tồn tại" });
-        }
-
-        const row = updateRes.rows[0];
-        const b = row.birthday
-            ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday)
-            : null;
-
-        res.json({
-            success: true,
-            message: "Số điện thoại mới đã được xác minh và cập nhật.",
-            user: {
-                id: row.id,
-                email: row.email,
-                firstName: row.first_name,
-                lastName: row.last_name,
-                avatar_url: row.avatar_url,
-                phone: row.phone,
-                gender: row.gender,
-                birthday: b,
-                phone_verified: row.phone_verified
-            }
-        });
-    } catch (err) {
-        console.error("❌ Lỗi verify-otp-phone-change:", err);
-        if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
-            try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
-            return res.status(401).json({ success: false, error: 'Chưa xác thực' });
-        }
-        res.status(500).json({ success: false, error: "Lỗi server khi xác minh OTP số mới" });
-    }
-});
-
 
 // Đăng xuất
 app.post('/api/logout', (_req, res) => {
