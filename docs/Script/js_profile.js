@@ -7,6 +7,7 @@ function loadPagePart(url, selector, callback = null) {
             if (container) {
                 container.innerHTML = data;
 
+                // chạy lại script trong fragment
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = data;
                 const scripts = tempDiv.querySelectorAll("script");
@@ -109,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveBtn.classList.remove("d-none");
         editBtn.style.display = "none";
 
-        // Cho phép hiện nút OTP nếu có thay đổi
+        // Cho phép hiện nút OTP nếu có thay đổi số
         if (currentPhone) {
             sendOtpBtn.classList.remove("d-none");
         }
@@ -120,19 +121,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const newPhone = phoneInput.value.trim();
 
         if (newPhone === currentPhone) {
+            // không thay đổi
             phoneVerified = true;
+            pendingPhone = null;
             saveBtn.disabled = false;
             sendOtpBtn.classList.add("d-none");
             otpSection.classList.add("d-none");
         } else if (newPhone === "") {
             // Xóa số → cho lưu luôn
             phoneVerified = true;
+            pendingPhone = null;   // ✅ fix: reset pendingPhone
             saveBtn.disabled = false;
             sendOtpBtn.classList.add("d-none");
             otpSection.classList.add("d-none");
         } else {
-            // Số mới → cần OTP
+            // Nhập số mới → cần OTP
             phoneVerified = false;
+            pendingPhone = newPhone;
             saveBtn.disabled = true;
             sendOtpBtn.classList.remove("d-none");
         }
@@ -243,6 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 msgBox.textContent = "✅ Cập nhật thành công!";
                 msgBox.className = "form-message text-success fw-bold";
 
+                // update sidebar
                 localStorage.setItem("firstName", data.user.firstName || "");
                 localStorage.setItem("lastName", data.user.lastName || "");
                 localStorage.setItem("email", data.user.email || "");
@@ -255,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     `${data.user.firstName || ""} ${data.user.lastName || ""}`.trim() ||
                     "Người dùng";
 
-                // Reset lại trạng thái form
+                // reset trạng thái form
                 const inputs = document.querySelectorAll("#profileForm input");
                 inputs.forEach(input => input.setAttribute("readonly", true));
                 document.getElementById("email").setAttribute("readonly", true);
