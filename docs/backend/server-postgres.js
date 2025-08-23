@@ -234,7 +234,7 @@ app.patch('/api/me', async (req, res) => {
         const decoded = jwt.verify(token, JWT_SECRET);
         const { firstName, lastName, phone, gender, birthday } = req.body;
 
-        // Lấy thông tin cũ
+        // Lấy thông tin hiện tại
         const checkRes = await pool.query(
             `SELECT phone, phone_verified FROM users WHERE id=$1`,
             [decoded.id]
@@ -245,23 +245,56 @@ app.patch('/api/me', async (req, res) => {
 
         const { phone: oldPhone, phone_verified } = checkRes.rows[0];
 
-        // 🚫 Nếu user nhập số mới khác số cũ → CHẶN update cho đến khi xác minh OTP
-        if (phone && phone.trim() !== "" && oldPhone && oldPhone !== phone) {
+        // ✅ CASE 1: Nếu xoá số (phone null/empty) → update ngay
+        if (!phone || phone.trim() === "") {
+            const q = `
+                UPDATE users
+                SET first_name = $1,
+                    last_name  = $2,
+                    phone      = NULL,
+                    gender     = $3,
+                    birthday   = $4
+                WHERE id = $5
+                RETURNING id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified
+            `;
+            const values = [firstName || null, lastName || null, gender || null, birthday || null, decoded.id];
+            const { rows } = await pool.query(q, values);
+            const row = rows[0];
+            const b = row.birthday ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday) : null;
+
+            return res.json({
+                success: true,
+                user: {
+                    id: row.id,
+                    email: row.email,
+                    firstName: row.first_name,
+                    lastName: row.last_name,
+                    avatar_url: row.avatar_url,
+                    phone: row.phone,
+                    gender: row.gender,
+                    birthday: b,
+                    phone_verified: row.phone_verified
+                }
+            });
+        }
+
+        // 🚫 CASE 2: Nếu nhập số mới khác số cũ → yêu cầu xác minh OTP
+        if (oldPhone && oldPhone !== phone) {
             return res.status(403).json({
                 success: false,
                 error: "Vui lòng xác minh số điện thoại mới trước khi cập nhật thông tin."
             });
         }
 
-        // 🚫 Nếu số hiện tại chưa verify mà vẫn có → chặn update
-        if (oldPhone && oldPhone.trim() !== "" && phone_verified === false) {
+        // 🚫 CASE 3: Nếu có số nhưng chưa verify → chặn update
+        if (oldPhone && phone_verified === false) {
             return res.status(403).json({
                 success: false,
                 error: "Vui lòng xác minh số điện thoại trước khi cập nhật thông tin."
             });
         }
 
-        // ✅ Nếu xoá số điện thoại (phone = null/empty) → cho phép update
+        // ✅ CASE 4: Update bình thường (không đổi số hoặc đã verify)
         const q = `
             UPDATE users
             SET first_name = $1,
@@ -270,18 +303,9 @@ app.patch('/api/me', async (req, res) => {
                 gender     = $4,
                 birthday   = $5
             WHERE id = $6
-            RETURNING id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified
+                RETURNING id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified
         `;
-
-        const values = [
-            firstName || null,
-            lastName || null,
-            (phone && phone.trim() !== "") ? phone : null,
-            gender || null,
-            birthday || null,
-            decoded.id
-        ];
-
+        const values = [firstName || null, lastName || null, phone, gender || null, birthday || null, decoded.id];
         const { rows } = await pool.query(q, values);
         if (!rows.length) return res.status(404).json({ success: false, error: 'User không tồn tại' });
 
@@ -312,7 +336,6 @@ app.patch('/api/me', async (req, res) => {
         res.status(500).json({ success: false, error: 'Lỗi server' });
     }
 });
-
 
 // Đăng xuất
 app.post('/api/logout', (_req, res) => {
