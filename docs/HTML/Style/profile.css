@@ -39,12 +39,10 @@ body {
     font-weight: 600;
     transition: 0.3s;
 }
-
 .sidebar-menu li i {
     margin-right: 8px;
     color: var(--secondary);
 }
-
 .sidebar-menu li.active,
 .sidebar-menu li:hover {
     background: var(--dark);
@@ -58,7 +56,6 @@ body {
     box-shadow: var(--neon-box-shadow);
     border-radius: 12px;
 }
-
 .profile-content h4 {
     color: var(--primary);
     font-weight: 700;
@@ -71,19 +68,16 @@ body {
     color: #fff;
     transition: 0.2s;
 }
-
 .neon-input:focus {
     border-color: var(--primary);
     outline: none !important;
     box-shadow: 0 0 10px var(--primary);
 }
-
 .neon-input[readonly] {
     background: var(--dark);
     color: #fff;
     cursor: default;
 }
-
 select.readonly-select {
     pointer-events: none !important;
     background: var(--dark) !important;
@@ -105,7 +99,6 @@ select.readonly-select {
     background: var(--primary);
     box-shadow: 0 0 20px rgba(0,242,255,0.7);
 }
-
 .cyber-edit-btn {
     background: var(--dark);
     color: var(--secondary);
@@ -135,14 +128,19 @@ select.readonly-select {
     box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
     animation: otpSlideDown 0.5s ease forwards;
 }
-
 @keyframes otpSlideDown {
     0% { opacity: 0; transform: translateY(-10px); }
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Input OTP neon */
+/* OTP input + nút xác minh nằm cạnh nhau */
+.otp-section .input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 .otp-section input#otpCode {
+    flex: 1;
     background: rgba(0, 0, 0, 0.7);
     color: #fff;
     border: 1px solid var(--secondary);
@@ -155,8 +153,10 @@ select.readonly-select {
     outline: none;
 }
 
-/* Button "Xác minh" */
+/* Nút "Xác minh" */
 #verifyOtpBtn {
+    font-size: 0.9rem;
+    padding: 6px 12px;
     background: linear-gradient(90deg, #00f2ff, #ff00e6);
     color: #fff;
     font-weight: bold;
@@ -170,13 +170,16 @@ select.readonly-select {
     box-shadow: 0 0 20px rgba(255, 0, 230, 0.9), 0 0 30px rgba(0, 242, 255, 0.8);
 }
 
-/* Button "Gửi OTP" */
+/* Nút "Gửi OTP" */
 #sendOtpBtn {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    margin-left: 6px;
     background: rgba(0, 242, 255, 0.1);
     border: 1px solid var(--primary);
     color: var(--primary);
     font-weight: 600;
-    border-radius: 8px;
+    border-radius: 6px;
     transition: all 0.3s ease;
     white-space: nowrap;
 }
@@ -189,3 +192,11 @@ select.readonly-select {
 /* ===== MESSAGE ===== */
 #profileMessage.success { color: #2ed573; font-weight: 600; }
 #profileMessage.error { color: #ff4757; font-weight: 600; }
+
+/* Màu chữ của thông báo OTP */
+.otp-section small.text-muted {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: #ccc !important;
+}
