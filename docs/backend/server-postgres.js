@@ -488,8 +488,6 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
 });
 
 // ===== OTP Xác minh số điện thoại =====
-const fetch = require("node-fetch"); // nếu Node <18 thì cài node-fetch@2
-
 // Hàm gửi SMS qua Infobip
 async function sendSMS(phone, text) {
     try {
