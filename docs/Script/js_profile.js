@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const msgBox = document.getElementById("profileMessage");
 
     // OTP section & Send OTP button (đã có sẵn trong HTML)
-    const otpSection = document.getElementById("otpSection");
+    const otpSection = document.querySelector(".otp-section");
     const sendOtpBtn = document.getElementById("sendOtpBtn");
     const verifyOtpBtn = document.getElementById("verifyOtpBtn");
 
