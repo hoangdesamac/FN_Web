@@ -192,7 +192,7 @@ app.get('/api/me', async (req, res) => {
 
         // Lấy profile đầy đủ từ DB để đảm bảo dữ liệu mới nhất
         const { rows } = await pool.query(
-            `SELECT id, email, first_name, last_name, avatar_url, phone, gender, birthday
+            `SELECT id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified
              FROM users WHERE id = $1`,
             [decoded.id]
         );
@@ -213,7 +213,8 @@ app.get('/api/me', async (req, res) => {
                 avatar_url: row.avatar_url || null,
                 phone: row.phone || null,
                 gender: row.gender || null,
-                birthday: birthday
+                birthday: birthday,
+                phone_verified: row.phone_verified || false
             }
         });
     } catch (err) {
@@ -231,10 +232,36 @@ app.patch('/api/me', async (req, res) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-
         const { firstName, lastName, phone, gender, birthday } = req.body;
 
-        // Optional: bạn có thể validate phone / gender / birthday ở đây
+        // Lấy thông tin cũ
+        const checkRes = await pool.query(
+            `SELECT phone, phone_verified FROM users WHERE id=$1`,
+            [decoded.id]
+        );
+        if (!checkRes.rows.length) {
+            return res.status(404).json({ success: false, error: "User không tồn tại" });
+        }
+
+        const { phone: oldPhone, phone_verified } = checkRes.rows[0];
+
+        // 🚫 Nếu user nhập số mới khác số cũ → CHẶN update cho đến khi xác minh OTP
+        if (phone && phone.trim() !== "" && oldPhone && oldPhone !== phone) {
+            return res.status(403).json({
+                success: false,
+                error: "Vui lòng xác minh số điện thoại mới trước khi cập nhật thông tin."
+            });
+        }
+
+        // 🚫 Nếu số hiện tại chưa verify mà vẫn có → chặn update
+        if (oldPhone && oldPhone.trim() !== "" && phone_verified === false) {
+            return res.status(403).json({
+                success: false,
+                error: "Vui lòng xác minh số điện thoại trước khi cập nhật thông tin."
+            });
+        }
+
+        // ✅ Nếu xoá số điện thoại (phone = null/empty) → cho phép update
         const q = `
             UPDATE users
             SET first_name = $1,
@@ -243,15 +270,15 @@ app.patch('/api/me', async (req, res) => {
                 gender     = $4,
                 birthday   = $5
             WHERE id = $6
-            RETURNING id, email, first_name, last_name, avatar_url, phone, gender, birthday
+            RETURNING id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified
         `;
 
         const values = [
             firstName || null,
             lastName || null,
-            phone || null,
+            (phone && phone.trim() !== "") ? phone : null,
             gender || null,
-            birthday || null, // expected format 'YYYY-MM-DD' or null
+            birthday || null,
             decoded.id
         ];
 
@@ -261,7 +288,6 @@ app.patch('/api/me', async (req, res) => {
         const row = rows[0];
         const b = row.birthday ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday) : null;
 
-        // Trả profile cập nhật
         res.json({
             success: true,
             user: {
@@ -272,13 +298,13 @@ app.patch('/api/me', async (req, res) => {
                 avatar_url: row.avatar_url,
                 phone: row.phone,
                 gender: row.gender,
-                birthday: b
+                birthday: b,
+                phone_verified: row.phone_verified
             }
         });
 
     } catch (err) {
         console.error('PATCH /api/me error:', err);
-        // Nếu token invalid: clear cookie + 401
         if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
             try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
             return res.status(401).json({ success: false, error: 'Chưa xác thực' });
@@ -286,6 +312,7 @@ app.patch('/api/me', async (req, res) => {
         res.status(500).json({ success: false, error: 'Lỗi server' });
     }
 });
+
 
 // Đăng xuất
 app.post('/api/logout', (_req, res) => {
@@ -460,7 +487,170 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
     }
 });
 
+// ===== OTP Xác minh số điện thoại =====
+const fetch = require("node-fetch"); // nếu Node <18 thì cài node-fetch@2
 
+// Hàm gửi SMS qua Infobip
+async function sendSMS(phone, text) {
+    try {
+        const response = await fetch(`${process.env.INFOBIP_BASE_URL}/sms/2/text/advanced`, {
+            method: "POST",
+            headers: {
+                "Authorization": `App ${process.env.INFOBIP_API_KEY}`,
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                messages: [
+                    {
+                        destinations: [{ to: phone }],
+                        from: "3TDShop",
+                        text
+                    }
+                ]
+            })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            console.error("❌ Infobip error:", data);
+            throw new Error("Gửi SMS thất bại");
+        }
+        console.log("✅ Đã gửi SMS:", data);
+        return true;
+    } catch (err) {
+        console.error("❌ Lỗi gửi SMS:", err.message);
+        return false;
+    }
+}
+
+// Gửi OTP
+app.post('/api/send-otp', async (req, res) => {
+    try {
+        const { phone } = req.body;
+        if (!phone) return res.status(400).json({ success: false, error: "Thiếu số điện thoại" });
+
+        // Sinh OTP 6 số
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // Lưu OTP vào DB (upsert)
+        await pool.query(
+            `INSERT INTO otp_codes (phone, otp, expires_at)
+             VALUES ($1, $2, NOW() + interval '5 minutes')
+             ON CONFLICT (phone) DO UPDATE SET otp = $2, expires_at = NOW() + interval '5 minutes'`,
+            [phone, otp]
+        );
+
+        // Gửi SMS
+        const ok = await sendSMS(phone, `Mã xác minh 3TDShop của bạn là: ${otp}. Có hiệu lực 5 phút.`);
+        if (!ok) return res.status(500).json({ success: false, error: "Không gửi được SMS" });
+
+        res.json({ success: true, message: "OTP đã gửi qua SMS" });
+    } catch (err) {
+        console.error("❌ Lỗi gửi OTP:", err);
+        res.status(500).json({ success: false, error: "Lỗi server khi gửi OTP" });
+    }
+});
+
+// Xác minh OTP
+app.post('/api/verify-otp', async (req, res) => {
+    try {
+        const { phone, otp } = req.body;
+        if (!phone || !otp) {
+            return res.status(400).json({ success: false, error: "Thiếu phone hoặc otp" });
+        }
+
+        const { rows } = await pool.query(
+            `SELECT * FROM otp_codes WHERE phone=$1 AND otp=$2 AND expires_at > NOW()`,
+            [phone, otp]
+        );
+
+        if (!rows.length) {
+            return res.json({ success: false, error: "OTP không hợp lệ hoặc hết hạn" });
+        }
+
+        // ✅ Cập nhật trạng thái user → phone_verified = true
+        await pool.query(`UPDATE users SET phone_verified = true WHERE phone=$1`, [phone]);
+
+        // ❌ Xoá OTP đã dùng
+        await pool.query(`DELETE FROM otp_codes WHERE phone=$1`, [phone]);
+
+        res.json({ success: true, verified: true });
+    } catch (err) {
+        console.error("❌ Lỗi verify OTP:", err);
+        res.status(500).json({ success: false, error: "Lỗi server khi xác minh OTP" });
+    }
+});
+
+// Xác minh OTP cho số mới và cập nhật user
+app.post('/api/verify-otp-phone-change', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa xác thực" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { phone, otp } = req.body;
+
+        if (!phone || !otp) {
+            return res.status(400).json({ success: false, error: "Thiếu phone hoặc otp" });
+        }
+
+        // Kiểm tra OTP hợp lệ
+        const { rows } = await pool.query(
+            `SELECT * FROM otp_codes WHERE phone=$1 AND otp=$2 AND expires_at > NOW()`,
+            [phone, otp]
+        );
+
+        if (!rows.length) {
+            return res.json({ success: false, error: "OTP không hợp lệ hoặc hết hạn" });
+        }
+
+        // ✅ Nếu OTP đúng → update số mới cho user
+        const updateRes = await pool.query(
+            `UPDATE users
+             SET phone = $1,
+                 phone_verified = true
+             WHERE id = $2
+             RETURNING id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified`,
+            [phone, decoded.id]
+        );
+
+        // Xoá OTP đã dùng
+        await pool.query(`DELETE FROM otp_codes WHERE phone=$1`, [phone]);
+
+        if (!updateRes.rows.length) {
+            return res.status(404).json({ success: false, error: "User không tồn tại" });
+        }
+
+        const row = updateRes.rows[0];
+        const b = row.birthday
+            ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday)
+            : null;
+
+        res.json({
+            success: true,
+            message: "Số điện thoại mới đã được xác minh và cập nhật.",
+            user: {
+                id: row.id,
+                email: row.email,
+                firstName: row.first_name,
+                lastName: row.last_name,
+                avatar_url: row.avatar_url,
+                phone: row.phone,
+                gender: row.gender,
+                birthday: b,
+                phone_verified: row.phone_verified
+            }
+        });
+    } catch (err) {
+        console.error("❌ Lỗi verify-otp-phone-change:", err);
+        if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+            try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
+            return res.status(401).json({ success: false, error: 'Chưa xác thực' });
+        }
+        res.status(500).json({ success: false, error: "Lỗi server khi xác minh OTP số mới" });
+    }
+});
 
 // ===== Quên mật khẩu =====
 app.post('/api/forgot-password', async (req, res) => {
