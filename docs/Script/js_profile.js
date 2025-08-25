@@ -104,38 +104,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 input.removeAttribute("readonly");
             }
         });
-        const genderSelect = document.getElementById("gender");
-        genderSelect.classList.remove("readonly-select");
+        document.getElementById("gender").classList.remove("readonly-select");
 
         saveBtn.classList.remove("d-none");
         editBtn.style.display = "none";
-
-        // Cho phép hiện nút OTP nếu có thay đổi số
-        if (currentPhone) {
-            sendOtpBtn.classList.remove("d-none");
-        }
     });
 
     // ===== Kiểm tra thay đổi số điện thoại =====
     phoneInput.addEventListener("input", () => {
         const newPhone = phoneInput.value.trim();
 
-        if (newPhone === currentPhone) {
-            // không thay đổi
+        if (newPhone === currentPhone || newPhone === "") {
+            // không thay đổi hoặc xoá số
             phoneVerified = true;
             pendingPhone = null;
             saveBtn.disabled = false;
             sendOtpBtn.classList.add("d-none");
             otpSection.classList.add("d-none");
-        } else if (newPhone === "") {
-            // Xóa số → cho lưu luôn
-            phoneVerified = true;
-            pendingPhone = null;   // ✅ fix: reset pendingPhone
-            saveBtn.disabled = false;
-            sendOtpBtn.classList.add("d-none");
-            otpSection.classList.add("d-none");
         } else {
-            // Nhập số mới → cần OTP
+            // nhập số mới → cần OTP
             phoneVerified = false;
             pendingPhone = newPhone;
             saveBtn.disabled = true;
@@ -149,11 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!newPhone) {
             msgBox.textContent = "❌ Vui lòng nhập số điện thoại.";
             msgBox.className = "form-message text-danger fw-bold";
-            return;
-        }
-        if (newPhone === currentPhone) {
-            msgBox.textContent = "ℹ️ Số điện thoại chưa thay đổi.";
-            msgBox.className = "form-message text-info fw-bold";
             return;
         }
 
@@ -170,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 otpSection.classList.remove("d-none");
                 msgBox.textContent = data.message || "✅ OTP đã gửi!";
                 msgBox.className = "form-message text-success fw-bold";
-
                 startCountdown(sendOtpBtn);
             } else {
                 msgBox.textContent = data.error || "❌ Lỗi gửi OTP!";
@@ -191,10 +172,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const res = await fetch(`${window.API_BASE}/api/verify-otp`, {
+            let endpoint;
+            let body = { phone: pendingPhone, otp };
+
+            // Nếu nhập số mới → verify + update DB
+            if (pendingPhone !== currentPhone) {
+                endpoint = `${window.API_BASE}/api/verify-otp-phone-change`;
+            } else {
+                endpoint = `${window.API_BASE}/api/verify-otp`;
+            }
+
+            const res = await fetch(endpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ phone: pendingPhone, otp })
+                credentials: "include",
+                body: JSON.stringify(body)
             });
             const data = await res.json();
 
@@ -204,6 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 phoneVerified = true;
                 saveBtn.disabled = false;
                 otpSection.classList.add("d-none");
+                sendOtpBtn.classList.add("d-none");
                 msgBox.textContent = "✅ Số điện thoại đã xác minh!";
                 msgBox.className = "form-message text-success fw-bold";
             } else {
@@ -214,6 +207,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (err) {
             console.error("Lỗi verify OTP:", err);
+            msgBox.textContent = "❌ Lỗi hệ thống khi xác minh OTP!";
+            msgBox.className = "form-message text-danger fw-bold";
         }
     });
 
@@ -262,11 +257,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Người dùng";
 
                 // reset trạng thái form
-                const inputs = document.querySelectorAll("#profileForm input");
-                inputs.forEach(input => input.setAttribute("readonly", true));
+                document.querySelectorAll("#profileForm input")
+                    .forEach(input => input.setAttribute("readonly", true));
                 document.getElementById("email").setAttribute("readonly", true);
-                const genderSelect = document.getElementById("gender");
-                genderSelect.classList.add("readonly-select");
+                document.getElementById("gender").classList.add("readonly-select");
 
                 saveBtn.classList.add("d-none");
                 editBtn.style.display = "block";
