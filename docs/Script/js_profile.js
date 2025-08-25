@@ -191,40 +191,33 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const res = await fetch(`${window.API_BASE}/api/verify-otp`, {
+            let endpoint;
+            let body = { phone: pendingPhone, otp };
+
+            // 🚀 Nếu số mới khác currentPhone thì dùng API verify-otp-phone-change
+            if (pendingPhone !== currentPhone) {
+                endpoint = `${window.API_BASE}/api/verify-otp-phone-change`;
+            } else {
+                endpoint = `${window.API_BASE}/api/verify-otp`;
+            }
+
+            const res = await fetch(endpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ phone: pendingPhone, otp })
+                credentials: "include",
+                body: JSON.stringify(body)
             });
             const data = await res.json();
 
             if (data.success) {
-                try {
-                    // Gửi yêu cầu cập nhật trạng thái đã xác minh vào DB
-                    const updateRes = await fetch(`${window.API_BASE}/api/me/verify-phone`, {
-                        method: "PATCH",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include",
-                        body: JSON.stringify({ phone: pendingPhone })
-                    });
-                    const updateData = await updateRes.json();
-
-                    if (updateData.success) {
-                        currentPhone = pendingPhone;
-                        pendingPhone = null;
-                        phoneVerified = true;
-                        saveBtn.disabled = false;
-                        otpSection.classList.add("d-none");
-                        sendOtpBtn.classList.add("d-none"); // ẩn nút OTP khi đã xác minh
-                        msgBox.textContent = "✅ Số điện thoại đã xác minh và cập nhật!";
-                        msgBox.className = "form-message text-success fw-bold";
-                    } else {
-                        msgBox.textContent = updateData.error || "❌ Không thể cập nhật trạng thái xác minh!";
-                        msgBox.className = "form-message text-danger fw-bold";
-                    }
-                } catch (err) {
-                    console.error("Lỗi cập nhật trạng thái xác minh:", err);
-                }
+                currentPhone = pendingPhone;
+                pendingPhone = null;
+                phoneVerified = true;
+                saveBtn.disabled = false;
+                otpSection.classList.add("d-none");
+                sendOtpBtn.classList.add("d-none");
+                msgBox.textContent = "✅ Số điện thoại đã xác minh và cập nhật!";
+                msgBox.className = "form-message text-success fw-bold";
             } else {
                 phoneVerified = false;
                 saveBtn.disabled = true;
@@ -233,8 +226,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (err) {
             console.error("Lỗi verify OTP:", err);
+            msgBox.textContent = "❌ Lỗi hệ thống khi xác minh OTP!";
+            msgBox.className = "form-message text-danger fw-bold";
         }
     });
+
 
     // ===== Update profile =====
     document.getElementById("profileForm").addEventListener("submit", async e => {
