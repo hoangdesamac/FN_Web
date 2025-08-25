@@ -191,21 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            let endpoint;
-            let body = { phone: pendingPhone, otp };
-
-            // 🚀 Nếu số mới khác currentPhone thì dùng API verify-otp-phone-change
-            if (pendingPhone !== currentPhone) {
-                endpoint = `${window.API_BASE}/api/verify-otp-phone-change`;
-            } else {
-                endpoint = `${window.API_BASE}/api/verify-otp`;
-            }
-
-            const res = await fetch(endpoint, {
+            const res = await fetch(`${window.API_BASE}/api/verify-otp`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(body)
+                body: JSON.stringify({ phone: pendingPhone, otp })
             });
             const data = await res.json();
 
@@ -215,8 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 phoneVerified = true;
                 saveBtn.disabled = false;
                 otpSection.classList.add("d-none");
-                sendOtpBtn.classList.add("d-none");
-                msgBox.textContent = "✅ Số điện thoại đã xác minh và cập nhật!";
+                msgBox.textContent = "✅ Số điện thoại đã xác minh!";
                 msgBox.className = "form-message text-success fw-bold";
             } else {
                 phoneVerified = false;
@@ -226,11 +214,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } catch (err) {
             console.error("Lỗi verify OTP:", err);
-            msgBox.textContent = "❌ Lỗi hệ thống khi xác minh OTP!";
-            msgBox.className = "form-message text-danger fw-bold";
         }
     });
-
 
     // ===== Update profile =====
     document.getElementById("profileForm").addEventListener("submit", async e => {
