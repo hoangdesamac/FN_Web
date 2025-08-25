@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken');
 const sgMail = require('@sendgrid/mail');
 const crypto = require('crypto');
 const { OAuth2Client } = require('google-auth-library');
-// Nếu Node <18, bật dòng dưới và cài node-fetch@2
-// const fetch = require('node-fetch');
+
 
 const app = express();
 
