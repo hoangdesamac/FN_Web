@@ -34,10 +34,10 @@
                     <h5 id="sidebarName" class="mt-2">User Name</h5>
                 </div>
                 <ul class="list-unstyled sidebar-menu">
-                    <li class="active"><i class="fa-solid fa-user"></i> Thông tin tài khoản</li>
-                    <li><i class="fa-solid fa-location-dot"></i> Sổ địa chỉ</li>
-                    <li><i class="fa-solid fa-box"></i> Quản lý đơn hàng</li>
-                    <li><i class="fa-solid fa-eye"></i> Sản phẩm đã xem</li>
+                    <li class="active" data-target="tab-profile"><i class="fa-solid fa-user"></i> Thông tin tài khoản</li>
+                    <li data-target="tab-address"><i class="fa-solid fa-location-dot"></i> Sổ địa chỉ</li>
+                    <li data-target="tab-orders"><i class="fa-solid fa-box"></i> Quản lý đơn hàng</li>
+                    <li data-target="tab-viewed"><i class="fa-solid fa-eye"></i> Sản phẩm đã xem</li>
                     <li id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</li>
                 </ul>
             </div>
@@ -46,75 +46,98 @@
         <!-- Content -->
         <div class="col-lg-9 col-md-8">
             <div class="profile-content p-4 rounded-3 shadow">
-                <!-- Header + Nút edit -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="mb-0">
-                        <i class="fa-solid fa-user-gear me-2"></i>Thông tin tài khoản
-                    </h4>
-                    <button id="editBtn" class="cyber-edit-btn" type="button" title="Chỉnh sửa">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
-                </div>
 
-                <!-- Form -->
-                <form id="profileForm" class="row g-3">
-                    <div class="col-md-6">
-                        <label for="firstName" class="form-label">Họ</label>
-                        <input type="text" id="firstName" class="form-control neon-input" readonly>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="lastName" class="form-label">Tên</label>
-                        <input type="text" id="lastName" class="form-control neon-input" readonly>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="gender" class="form-label">Giới tính</label>
-                        <select id="gender" class="form-select neon-input readonly-select">
-                            <option value="male">Nam</option>
-                            <option value="female">Nữ</option>
-                            <option value="other">Khác</option>
-                        </select>
-                    </div>
-
-                    <!-- Phone + Gửi OTP nằm trong cùng 1 input-group -->
-                    <div class="col-md-6">
-                        <label for="phone" class="form-label">Số điện thoại</label>
-                        <div class="input-group">
-                            <input type="text" id="phone" class="form-control neon-input" readonly>
-                            <button type="button" class="btn d-none" id="sendOtpBtn">
-                                <i class="fa-solid fa-paper-plane"></i> OTP
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- OTP Section -->
-                    <div class="col-12 otp-section d-none">
-                        <label for="otpCode" class="form-label">Nhập mã OTP</label>
-                        <div class="input-group">
-                            <input type="text" id="otpCode" class="form-control neon-input" placeholder="Nhập OTP">
-                            <button class="btn" type="button" id="verifyOtpBtn">
-                                <i class="fa-solid fa-check"></i> Xác minh
-                            </button>
-                        </div>
-                        <small class="text-muted">Mã OTP sẽ gửi qua SMS và có hiệu lực trong 5 phút.</small>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" class="form-control neon-input" readonly>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="birthday" class="form-label">Ngày sinh</label>
-                        <input type="date" id="birthday" class="form-control neon-input" readonly>
-                    </div>
-
-                    <div class="col-12">
-                        <button type="submit" class="btn neon-btn w-100 d-none" id="saveBtn">
-                            <i class="fa-solid fa-floppy-disk me-2"></i>Lưu thay đổi
+                <!-- Tab: Thông tin tài khoản -->
+                <div class="tab-pane" id="tab-profile">
+                    <!-- Header + Nút edit -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">
+                            <i class="fa-solid fa-user-gear me-2"></i>Thông tin tài khoản
+                        </h4>
+                        <button id="editBtn" class="cyber-edit-btn" type="button" title="Chỉnh sửa">
+                            <i class="fa-solid fa-pen-to-square"></i>
                         </button>
                     </div>
-                </form>
-                <div id="profileMessage" class="mt-3 text-center"></div>
+
+                    <!-- Form -->
+                    <form id="profileForm" class="row g-3">
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label">Họ</label>
+                            <input type="text" id="firstName" class="form-control neon-input" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lastName" class="form-label">Tên</label>
+                            <input type="text" id="lastName" class="form-control neon-input" readonly>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="gender" class="form-label">Giới tính</label>
+                            <select id="gender" class="form-select neon-input readonly-select">
+                                <option value="male">Nam</option>
+                                <option value="female">Nữ</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </div>
+
+                        <!-- Phone + Gửi OTP -->
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Số điện thoại</label>
+                            <div class="input-group">
+                                <input type="text" id="phone" class="form-control neon-input" readonly>
+                                <button type="button" class="btn d-none" id="sendOtpBtn">
+                                    <i class="fa-solid fa-paper-plane"></i> OTP
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- OTP Section -->
+                        <div class="col-12 otp-section d-none">
+                            <label for="otpCode" class="form-label">Nhập mã OTP</label>
+                            <div class="input-group">
+                                <input type="text" id="otpCode" class="form-control neon-input" placeholder="Nhập OTP">
+                                <button class="btn" type="button" id="verifyOtpBtn">
+                                    <i class="fa-solid fa-check"></i> Xác minh
+                                </button>
+                            </div>
+                            <small class="text-muted">Mã OTP sẽ gửi qua SMS và có hiệu lực trong 5 phút.</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" class="form-control neon-input" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="birthday" class="form-label">Ngày sinh</label>
+                            <input type="date" id="birthday" class="form-control neon-input" readonly>
+                        </div>
+
+                        <div class="col-12">
+                            <button type="submit" class="btn neon-btn w-100 d-none" id="saveBtn">
+                                <i class="fa-solid fa-floppy-disk me-2"></i>Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                    <div id="profileMessage" class="mt-3 text-center"></div>
+                </div>
+
+                <!-- Tab: Sổ địa chỉ -->
+                <div class="tab-pane d-none" id="tab-address">
+                    <h4><i class="fa-solid fa-location-dot me-2"></i>Sổ địa chỉ</h4>
+                    <p>👉 Nội dung Sổ địa chỉ sẽ hiển thị ở đây.</p>
+                </div>
+
+                <!-- Tab: Quản lý đơn hàng -->
+                <div class="tab-pane d-none" id="tab-orders">
+                    <h4><i class="fa-solid fa-box me-2"></i>Quản lý đơn hàng</h4>
+                    <p>👉 Nội dung đơn hàng sẽ hiển thị ở đây.</p>
+                </div>
+
+                <!-- Tab: Sản phẩm đã xem -->
+                <div class="tab-pane d-none" id="tab-viewed">
+                    <h4><i class="fa-solid fa-eye me-2"></i>Sản phẩm đã xem</h4>
+                    <p>👉 Nội dung sản phẩm đã xem sẽ hiển thị ở đây.</p>
+                </div>
+
             </div>
         </div>
     </div>

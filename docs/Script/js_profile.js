@@ -304,4 +304,26 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }, 1000);
     }
+
+    // ===== Sidebar Tabs =====
+    const sidebarItems = document.querySelectorAll(".sidebar-menu li[data-target]");
+    const tabPanes = document.querySelectorAll(".tab-pane");
+
+    sidebarItems.forEach(item => {
+        item.addEventListener("click", () => {
+            // active menu
+            sidebarItems.forEach(el => el.classList.remove("active"));
+            item.classList.add("active");
+
+            // show đúng tab
+            const target = item.getAttribute("data-target");
+            tabPanes.forEach(pane => {
+                if (pane.id === target) {
+                    pane.classList.remove("d-none");
+                } else {
+                    pane.classList.add("d-none");
+                }
+            });
+        });
+    });
 });
