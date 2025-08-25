@@ -149,6 +149,7 @@ select.readonly-select {
     border-color: var(--primary);
     box-shadow: 0 0 12px var(--primary), inset 0 0 10px rgba(0, 242, 255, 0.6);
     outline: none;
+    color: #000 !important;        /* chữ đen */
 }
 
 /* Nút "Xác minh" */
