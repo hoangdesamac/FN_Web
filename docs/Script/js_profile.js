@@ -199,13 +199,32 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
 
             if (data.success) {
-                currentPhone = pendingPhone;
-                pendingPhone = null;
-                phoneVerified = true;
-                saveBtn.disabled = false;
-                otpSection.classList.add("d-none");
-                msgBox.textContent = "✅ Số điện thoại đã xác minh!";
-                msgBox.className = "form-message text-success fw-bold";
+                try {
+                    // Gửi yêu cầu cập nhật trạng thái đã xác minh vào DB
+                    const updateRes = await fetch(`${window.API_BASE}/api/me/verify-phone`, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify({ phone: pendingPhone })
+                    });
+                    const updateData = await updateRes.json();
+
+                    if (updateData.success) {
+                        currentPhone = pendingPhone;
+                        pendingPhone = null;
+                        phoneVerified = true;
+                        saveBtn.disabled = false;
+                        otpSection.classList.add("d-none");
+                        sendOtpBtn.classList.add("d-none"); // ẩn nút OTP khi đã xác minh
+                        msgBox.textContent = "✅ Số điện thoại đã xác minh và cập nhật!";
+                        msgBox.className = "form-message text-success fw-bold";
+                    } else {
+                        msgBox.textContent = updateData.error || "❌ Không thể cập nhật trạng thái xác minh!";
+                        msgBox.className = "form-message text-danger fw-bold";
+                    }
+                } catch (err) {
+                    console.error("Lỗi cập nhật trạng thái xác minh:", err);
+                }
             } else {
                 phoneVerified = false;
                 saveBtn.disabled = true;

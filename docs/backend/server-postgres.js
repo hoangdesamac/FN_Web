@@ -672,6 +672,62 @@ app.post('/api/verify-otp-phone-change', async (req, res) => {
     }
 });
 
+// ===== Xác nhận số điện thoại đã được verify sau khi OTP thành công =====
+app.patch('/api/me/verify-phone', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa xác thực" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { phone } = req.body;
+
+        if (!phone) {
+            return res.status(400).json({ success: false, error: "Thiếu số điện thoại" });
+        }
+
+        // Cập nhật trạng thái phone_verified cho user
+        const updateRes = await pool.query(
+            `UPDATE users
+             SET phone_verified = true
+             WHERE id = $1 AND phone = $2
+             RETURNING id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified`,
+            [decoded.id, phone]
+        );
+
+        if (!updateRes.rows.length) {
+            return res.status(404).json({ success: false, error: "Không tìm thấy user hoặc số điện thoại không khớp" });
+        }
+
+        const row = updateRes.rows[0];
+        const b = row.birthday
+            ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday)
+            : null;
+
+        res.json({
+            success: true,
+            message: "Số điện thoại đã được xác minh!",
+            user: {
+                id: row.id,
+                email: row.email,
+                firstName: row.first_name,
+                lastName: row.last_name,
+                avatar_url: row.avatar_url,
+                phone: row.phone,
+                gender: row.gender,
+                birthday: b,
+                phone_verified: row.phone_verified
+            }
+        });
+    } catch (err) {
+        console.error("❌ Lỗi /api/me/verify-phone:", err);
+        if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+            try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
+            return res.status(401).json({ success: false, error: 'Chưa xác thực' });
+        }
+        res.status(500).json({ success: false, error: "Lỗi server khi cập nhật trạng thái xác minh" });
+    }
+});
+
 // ===== Quên mật khẩu =====
 app.post('/api/forgot-password', async (req, res) => {
     try {
