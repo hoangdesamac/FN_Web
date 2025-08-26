@@ -358,17 +358,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                     <p><i class="fa-solid fa-phone me-2"></i>${addr.recipient_phone}</p>
                     <p><i class="fa-solid fa-location-dot me-2"></i>${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</p>
+                    
                     <div class="cyber-actions">
+                        <!-- Nút sửa luôn có -->
                         <button class="cyber-btn cyber-btn-edit" onclick="editAddress(${addr.id})">
                             <i class="fa-solid fa-pen"></i> Sửa
                         </button>
+
+                        <!-- Nếu không phải địa chỉ mặc định thì mới hiện nút Xóa -->
+                        ${!addr.is_default ? `
                         <button class="cyber-btn cyber-btn-delete" onclick="deleteAddress(${addr.id})">
                             <i class="fa-solid fa-trash"></i> Xóa
                         </button>
-                        ${!addr.is_default ? `
-                        <button class="cyber-btn cyber-btn-default" onclick="setDefaultAddress(${addr.id})">
-                            <i class="fa-solid fa-check"></i> Đặt mặc định
-                        </button>` : ""}
+                        ` : ""}
                     </div>
                 </div>
             </div>
@@ -378,6 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
             container.innerHTML = `<p class="text-danger">❌ Lỗi server khi tải địa chỉ!</p>`;
         }
     }
+
 
 // Sửa địa chỉ
     async function editAddress(id) {
