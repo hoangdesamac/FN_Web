@@ -199,3 +199,14 @@ select.readonly-select {
     font-size: 0.85rem;
     color: #ccc !important;
 }
+
+.modal {
+    position: fixed;        /* cố định theo màn hình */
+    top: 50%;               /* đẩy xuống 50% chiều cao */
+    left: 50%;              /* đẩy sang phải 50% chiều rộng */
+    transform: translate(-50%, -50%); /* kéo ngược lại để căn giữa */
+    z-index: 9999;          /* nổi lên trên cùng */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
