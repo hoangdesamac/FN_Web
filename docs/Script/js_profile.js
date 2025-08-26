@@ -487,13 +487,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-// Khi chuyển sang tab "addressTab" thì load
-    const addressTab = document.querySelector('.sidebar-menu li[data-target="addressTab"]');
+// Khi chuyển sang tab "tab-address" thì load
+    const addressTab = document.querySelector('.sidebar-menu li[data-target="tab-address"]');
     if (addressTab) {
         addressTab.addEventListener("click", () => {
             loadAddresses();
         });
     }
+
 
 
 });
