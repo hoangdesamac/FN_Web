@@ -67,6 +67,49 @@ async function loadProfile() {
     }
 }
 
+// Sửa địa chỉ
+async function editAddress(id) {
+    try {
+        const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
+        const data = await res.json();
+        const addr = data.addresses.find(a => a.id === id);
+        if (!addr) return alert("❌ Không tìm thấy địa chỉ!");
+
+        const form = document.getElementById("addressForm");
+        form.recipient_name.value = addr.recipient_name;
+        form.recipient_phone.value = addr.recipient_phone;
+        form.street_address.value = addr.street_address;
+        form.ward.value = addr.ward || "";
+        form.city.value = addr.city || "";
+        form.is_default.checked = addr.is_default;
+        form.dataset.editingId = id;
+
+        document.getElementById("addressFormTitle").textContent = "Chỉnh sửa địa chỉ";
+        new bootstrap.Modal(document.getElementById("addressModal")).show();
+    } catch (err) {
+        console.error("Lỗi editAddress:", err);
+    }
+}
+
+// Xóa địa chỉ
+async function deleteAddress(id) {
+    if (!confirm("Bạn có chắc muốn xóa địa chỉ này?")) return;
+    try {
+        const res = await fetch(`${window.API_BASE}/api/addresses/${id}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
+        const data = await res.json();
+        if (data.success) {
+            await loadAddresses();
+        } else {
+            alert(data.error || "❌ Lỗi xóa địa chỉ!");
+        }
+    } catch (err) {
+        console.error("Lỗi deleteAddress:", err);
+    }
+}
+
 // ===== Main =====
 document.addEventListener("DOMContentLoaded", () => {
     loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {
@@ -359,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p><i class="fa-solid fa-phone me-2"></i>${addr.recipient_phone}</p>
                     <p><i class="fa-solid fa-location-dot me-2"></i>${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</p>
                     
-                    <div class=".cyber-actions-address">
+                    <div class="cyber-actions-address">
                         <!-- Nút sửa luôn có -->
                         <button class="cyber-btn cyber-btn-edit" onclick="editAddress(${addr.id})">
                             <i class="fa-solid fa-pen"></i> Sửa
@@ -382,29 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-// Sửa địa chỉ
-    async function editAddress(id) {
-        try {
-            const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
-            const data = await res.json();
-            const addr = data.addresses.find(a => a.id === id);
-            if (!addr) return alert("❌ Không tìm thấy địa chỉ!");
 
-            const form = document.getElementById("addressForm");
-            form.recipient_name.value = addr.recipient_name;
-            form.recipient_phone.value = addr.recipient_phone;
-            form.street_address.value = addr.street_address;
-            form.ward.value = addr.ward || "";
-            form.city.value = addr.city || "";
-            form.is_default.checked = addr.is_default;
-            form.dataset.editingId = id;
-
-            document.getElementById("addressFormTitle").textContent = "Chỉnh sửa địa chỉ";
-            new bootstrap.Modal(document.getElementById("addressModal")).show();
-        } catch (err) {
-            console.error("Lỗi editAddress:", err);
-        }
-    }
 
 // Submit form thêm/sửa
     document.getElementById("addressForm").addEventListener("submit", async (e) => {
@@ -449,25 +470,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Lỗi submit address form:", err);
         }
     });
-
-// Xóa địa chỉ
-    async function deleteAddress(id) {
-        if (!confirm("Bạn có chắc muốn xóa địa chỉ này?")) return;
-        try {
-            const res = await fetch(`${window.API_BASE}/api/addresses/${id}`, {
-                method: "DELETE",
-                credentials: "include"
-            });
-            const data = await res.json();
-            if (data.success) {
-                await loadAddresses();
-            } else {
-                alert(data.error || "❌ Lỗi xóa địa chỉ!");
-            }
-        } catch (err) {
-            console.error("Lỗi deleteAddress:", err);
-        }
-    }
 
 // Đặt mặc định
     async function setDefaultAddress(id) {
