@@ -12,10 +12,11 @@ async function loadProvinceData() {
         return provinceData;
     } catch (err) {
         console.error("Lỗi load danh mục tỉnh/xã:", err);
-        provinceData = {};
+        provinceData = [];   // ❌ trước đây là {}, giờ sửa thành []
         return provinceData;
     }
 }
+
 
 // Điền options cho #city và #ward; preProvince/preWard nếu preset khi edit
 async function populateProvinceWard(preProvince = "", preWard = "") {
@@ -29,29 +30,25 @@ async function populateProvinceWard(preProvince = "", preWard = "") {
     wardEl.innerHTML = `<option value="">-- Chọn Xã/Phường --</option>`;
 
     // thêm tỉnh
-    const provinces = Object.keys(provinceData || {}).sort((a,b) => a.localeCompare(b, 'vi'));
-    provinces.forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p;
-        opt.textContent = p;
-        provinceEl.appendChild(opt);
-    });
+    provinceData
+        .slice()
+        .sort((a,b) => a.tentinhmoi.localeCompare(b.tentinhmoi, 'vi'))
+        .forEach(p => {
+            const opt = document.createElement("option");
+            opt.value = p.tentinhmoi;        // lưu tên tỉnh
+            opt.textContent = p.tentinhmoi;  // hiển thị tên tỉnh
+            provinceEl.appendChild(opt);
+        });
 
     // helper lấy wards (flatten nếu cần)
-    const getWards = (province) => {
-        const v = provinceData[province];
-        if (!v) return [];
-        if (Array.isArray(v)) return v.slice().sort((a,b)=>a.localeCompare(b,'vi'));
-        if (typeof v === "object") {
-            // gộp tất cả xã/phường từ các key (nếu JSON có cấp huyện)
-            const merged = [];
-            for (const k in v) {
-                if (Array.isArray(v[k])) merged.push(...v[k]);
-            }
-            return [...new Set(merged)].sort((a,b)=>a.localeCompare(b,'vi'));
-        }
-        return [];
+    const getWards = (provinceName) => {
+        const province = provinceData.find(p => p.tentinhmoi === provinceName);
+        if (!province || !province.phuongxa) return [];
+        return province.phuongxa
+            .map(x => x.tenphuongxa)   // lấy tên xã/phường
+            .sort((a, b) => a.localeCompare(b, 'vi'));
     };
+
 
     // attach change listener chỉ 1 lần (global)
     if (!provinceListenerAttached) {
@@ -65,6 +62,7 @@ async function populateProvinceWard(preProvince = "", preWard = "") {
                 wardEl.appendChild(opt);
             });
         });
+
         provinceListenerAttached = true;
     }
 
