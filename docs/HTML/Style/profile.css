@@ -208,3 +208,68 @@ select.readonly-select {
     margin: 0 !important;
 }
 
+.cyber-card {
+    background: #111827;
+    border: 2px solid #0ff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+.cyber-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+}
+.cyber-card-default {
+    border-color: #ff0099;
+    box-shadow: 0 0 20px rgba(255, 0, 153, 0.6);
+}
+.cyber-recipient {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0ff;
+    font-family: 'Orbitron', sans-serif;
+}
+.cyber-badge {
+    background: linear-gradient(90deg, #ff0099, #ff6600);
+    color: white;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+}
+.cyber-actions {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.cyber-btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    font-family: 'Rajdhani', sans-serif;
+    transition: 0.3s;
+}
+.cyber-btn-edit {
+    background: #00c3ff;
+    color: #000;
+}
+.cyber-btn-edit:hover { background: #0ff; }
+.cyber-btn-delete {
+    background: #ff003c;
+    color: #fff;
+}
+.cyber-btn-delete:hover { background: #ff3366; }
+.cyber-btn-default {
+    background: transparent;
+    border: 1px solid #0ff;
+    color: #0ff;
+}
+.cyber-btn-default:hover {
+    background: #0ff;
+    color: #000;
+}
+
