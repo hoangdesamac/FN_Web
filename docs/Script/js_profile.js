@@ -326,4 +326,187 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     });
+
+    // ===== Address Book =====
+    async function loadAddresses() {
+        const container = document.getElementById("addressList");
+        if (!container) return;
+
+        try {
+            const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
+            const data = await res.json();
+
+            if (!data.success) {
+                container.innerHTML = `<p class="text-danger">❌ Không tải được danh sách địa chỉ!</p>`;
+                return;
+            }
+
+            if (!data.addresses.length) {
+                container.innerHTML = `<p class="text-muted">Chưa có địa chỉ nào. Hãy thêm mới!</p>`;
+                return;
+            }
+
+            container.innerHTML = data.addresses.map(addr => `
+            <div class="card mb-2 p-3 ${addr.is_default ? "border-success" : ""}">
+                <p><b>${addr.recipient_name}</b> - ${addr.recipient_phone}</p>
+                <p>${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</p>
+                ${addr.is_default ? `<span class="badge bg-success">Mặc định</span>` : ""}
+                <div class="mt-2">
+                    <button class="btn btn-sm btn-primary me-2" onclick="editAddress(${addr.id})">Sửa</button>
+                    <button class="btn btn-sm btn-danger me-2" onclick="deleteAddress(${addr.id})">Xóa</button>
+                    ${!addr.is_default ? `<button class="btn btn-sm btn-outline-success" onclick="setDefaultAddress(${addr.id})">Đặt mặc định</button>` : ""}
+                </div>
+            </div>
+        `).join("");
+        } catch (err) {
+            console.error("Lỗi load addresses:", err);
+            container.innerHTML = `<p class="text-danger">❌ Lỗi server khi tải địa chỉ!</p>`;
+        }
+    }
+
+// Thêm địa chỉ
+    async function addAddress(e) {
+        e.preventDefault();
+        const form = document.getElementById("addressForm");
+        const body = {
+            recipient_name: form.recipient_name.value.trim(),
+            recipient_phone: form.recipient_phone.value.trim(),
+            street_address: form.street_address.value.trim(),
+            ward: form.ward.value.trim(),
+            city: form.city.value.trim(),
+            is_default: form.is_default.checked
+        };
+
+        try {
+            const res = await fetch(`${window.API_BASE}/api/addresses`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                form.reset();
+                await loadAddresses();
+            } else {
+                alert(data.error || "❌ Lỗi thêm địa chỉ!");
+            }
+        } catch (err) {
+            console.error("Lỗi thêm địa chỉ:", err);
+        }
+    }
+
+// Sửa địa chỉ (fill form)
+    async function editAddress(id) {
+        try {
+            const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
+            const data = await res.json();
+            const addr = data.addresses.find(a => a.id === id);
+            if (!addr) return alert("❌ Không tìm thấy địa chỉ!");
+
+            const form = document.getElementById("addressForm");
+            form.recipient_name.value = addr.recipient_name;
+            form.recipient_phone.value = addr.recipient_phone;
+            form.street_address.value = addr.street_address;
+            form.ward.value = addr.ward || "";
+            form.city.value = addr.city || "";
+            form.is_default.checked = addr.is_default;
+
+            form.dataset.editingId = id; // flag
+        } catch (err) {
+            console.error("Lỗi editAddress:", err);
+        }
+    }
+
+// Submit form (thêm/sửa)
+    document.getElementById("addressForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const id = form.dataset.editingId;
+
+        const body = {
+            recipient_name: form.recipient_name.value.trim(),
+            recipient_phone: form.recipient_phone.value.trim(),
+            street_address: form.street_address.value.trim(),
+            ward: form.ward.value.trim(),
+            city: form.city.value.trim(),
+            is_default: form.is_default.checked
+        };
+
+        try {
+            let url = `${window.API_BASE}/api/addresses`;
+            let method = "POST";
+            if (id) {
+                url = `${window.API_BASE}/api/addresses/${id}`;
+                method = "PUT";
+            }
+
+            const res = await fetch(url, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                form.reset();
+                delete form.dataset.editingId;
+                await loadAddresses();
+            } else {
+                alert(data.error || "❌ Lỗi lưu địa chỉ!");
+            }
+        } catch (err) {
+            console.error("Lỗi submit address form:", err);
+        }
+    });
+
+// Xóa địa chỉ
+    async function deleteAddress(id) {
+        if (!confirm("Bạn có chắc muốn xóa địa chỉ này?")) return;
+        try {
+            const res = await fetch(`${window.API_BASE}/api/addresses/${id}`, {
+                method: "DELETE",
+                credentials: "include"
+            });
+            const data = await res.json();
+            if (data.success) {
+                await loadAddresses();
+            } else {
+                alert(data.error || "❌ Lỗi xóa địa chỉ!");
+            }
+        } catch (err) {
+            console.error("Lỗi deleteAddress:", err);
+        }
+    }
+
+// Đặt mặc định
+    async function setDefaultAddress(id) {
+        try {
+            const res = await fetch(`${window.API_BASE}/api/addresses/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ is_default: true })
+            });
+            const data = await res.json();
+            if (data.success) {
+                await loadAddresses();
+            } else {
+                alert(data.error || "❌ Lỗi đặt mặc định!");
+            }
+        } catch (err) {
+            console.error("Lỗi setDefaultAddress:", err);
+        }
+    }
+
+// Khi chuyển sang tab "addressTab" thì load
+    const addressTab = document.querySelector('.sidebar-menu li[data-target="addressTab"]');
+    if (addressTab) {
+        addressTab.addEventListener("click", () => {
+            loadAddresses();
+        });
+    }
+
 });

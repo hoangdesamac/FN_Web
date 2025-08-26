@@ -758,6 +758,117 @@ app.get('/api/test-email', async (req, res) => {
     }
 });
 
+// ====== Address APIs ======
+
+// Lấy danh sách địa chỉ của user
+app.get('/api/addresses', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { rows } = await pool.query(
+            `SELECT * FROM addresses WHERE user_id = $1 ORDER BY is_default DESC, id DESC`,
+            [decoded.id]
+        );
+        res.json({ success: true, addresses: rows });
+    } catch (err) {
+        console.error("GET /api/addresses error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
+// Thêm địa chỉ mới
+app.post('/api/addresses', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { recipient_name, recipient_phone, street_address, ward, city, is_default } = req.body;
+
+        if (!recipient_name || !recipient_phone || !street_address) {
+            return res.status(400).json({ success: false, error: "Thiếu dữ liệu bắt buộc" });
+        }
+
+        // Nếu is_default = true → reset các địa chỉ khác về false
+        if (is_default) {
+            await pool.query(`UPDATE addresses SET is_default = false WHERE user_id = $1`, [decoded.id]);
+        }
+
+        const insert = await pool.query(
+            `INSERT INTO addresses (user_id, recipient_name, recipient_phone, street_address, ward, city, is_default)
+             VALUES ($1,$2,$3,$4,$5,$6,$7)
+             RETURNING *`,
+            [decoded.id, recipient_name, recipient_phone, street_address, ward || null, city || null, is_default || false]
+        );
+
+        res.json({ success: true, address: insert.rows[0] });
+    } catch (err) {
+        console.error("POST /api/addresses error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
+// Cập nhật địa chỉ
+app.put('/api/addresses/:id', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { id } = req.params;
+        const { recipient_name, recipient_phone, street_address, ward, city, is_default } = req.body;
+
+        // Nếu set mặc định thì reset các địa chỉ khác
+        if (is_default) {
+            await pool.query(`UPDATE addresses SET is_default = false WHERE user_id = $1`, [decoded.id]);
+        }
+
+        const update = await pool.query(
+            `UPDATE addresses
+             SET recipient_name=$1, recipient_phone=$2, street_address=$3, ward=$4, city=$5, is_default=$6
+             WHERE id=$7 AND user_id=$8
+             RETURNING *`,
+            [recipient_name, recipient_phone, street_address, ward || null, city || null, is_default || false, id, decoded.id]
+        );
+
+        if (!update.rows.length) {
+            return res.status(404).json({ success: false, error: "Không tìm thấy địa chỉ" });
+        }
+
+        res.json({ success: true, address: update.rows[0] });
+    } catch (err) {
+        console.error("PUT /api/addresses error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
+// Xóa địa chỉ
+app.delete('/api/addresses/:id', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { id } = req.params;
+
+        const del = await pool.query(
+            `DELETE FROM addresses WHERE id=$1 AND user_id=$2 RETURNING *`,
+            [id, decoded.id]
+        );
+
+        if (!del.rows.length) {
+            return res.status(404).json({ success: false, error: "Không tìm thấy địa chỉ" });
+        }
+
+        res.json({ success: true, message: "Đã xóa địa chỉ" });
+    } catch (err) {
+        console.error("DELETE /api/addresses error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
 // ===== Start =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

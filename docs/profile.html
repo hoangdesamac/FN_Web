@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thông tin cá nhân - 3TD SHOP</title>
     <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
+
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome -->
@@ -13,9 +14,11 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Audiowide&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
-    <!-- CSS chung + riêng -->
+
+    <!-- CSS -->
     <link rel="stylesheet" href="HTML/Style/common.css">
     <link rel="stylesheet" href="HTML/Style/profile.css">
+
     <script>
         window.API_BASE = "https://fn-web.onrender.com";
     </script>
@@ -29,8 +32,7 @@
         <div class="col-lg-3 col-md-4">
             <div class="profile-sidebar p-3 rounded-3 shadow">
                 <div class="text-center mb-3">
-                    <img id="sidebarAvatar" alt="avatar"
-                         class="rounded-circle border border-primary" width="80" height="80">
+                    <img id="sidebarAvatar" alt="avatar" class="rounded-circle border border-primary" width="80" height="80">
                     <h5 id="sidebarName" class="mt-2">User Name</h5>
                 </div>
                 <ul class="list-unstyled sidebar-menu">
@@ -49,7 +51,6 @@
 
                 <!-- Tab: Thông tin tài khoản -->
                 <div class="tab-pane" id="tab-profile">
-                    <!-- Header + Nút edit -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="mb-0">
                             <i class="fa-solid fa-user-gear me-2"></i>Thông tin tài khoản
@@ -59,7 +60,6 @@
                         </button>
                     </div>
 
-                    <!-- Form -->
                     <form id="profileForm" class="row g-3">
                         <div class="col-md-6">
                             <label for="firstName" class="form-label">Họ</label>
@@ -79,7 +79,7 @@
                             </select>
                         </div>
 
-                        <!-- Phone + Gửi OTP -->
+                        <!-- Phone + OTP -->
                         <div class="col-md-6">
                             <label for="phone" class="form-label">Số điện thoại</label>
                             <div class="input-group">
@@ -90,7 +90,6 @@
                             </div>
                         </div>
 
-                        <!-- OTP Section -->
                         <div class="col-12 otp-section d-none">
                             <label for="otpCode" class="form-label">Nhập mã OTP</label>
                             <div class="input-group">
@@ -122,8 +121,58 @@
 
                 <!-- Tab: Sổ địa chỉ -->
                 <div class="tab-pane d-none" id="tab-address">
-                    <h4><i class="fa-solid fa-location-dot me-2"></i>Sổ địa chỉ</h4>
-                    <p>👉 Nội dung Sổ địa chỉ sẽ hiển thị ở đây.</p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4><i class="fa-solid fa-location-dot me-2"></i>Sổ địa chỉ</h4>
+                        <button class="btn neon-btn" id="addAddressBtn">
+                            <i class="fa-solid fa-plus"></i> Thêm địa chỉ
+                        </button>
+                    </div>
+
+                    <!-- Danh sách địa chỉ -->
+                    <div id="addressList" class="list-group">
+                        <!-- JS sẽ đổ dữ liệu từ API /api/addresses vào đây -->
+                    </div>
+
+                    <!-- Form thêm / sửa địa chỉ -->
+                    <div id="addressFormContainer" class="d-none mt-4">
+                        <h5 id="addressFormTitle">Thêm địa chỉ mới</h5>
+                        <form id="addressForm" class="row g-3">
+                            <input type="hidden" id="addressId">
+
+                            <div class="col-md-6">
+                                <label for="recipient_name" class="form-label">Người nhận</label>
+                                <input type="text" id="recipient_name" class="form-control neon-input" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="recipient_phone" class="form-label">SĐT người nhận</label>
+                                <input type="text" id="recipient_phone" class="form-control neon-input" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="street_address" class="form-label">Địa chỉ</label>
+                                <input type="text" id="street_address" class="form-control neon-input" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ward" class="form-label">Phường/Xã</label>
+                                <input type="text" id="ward" class="form-control neon-input">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="city" class="form-label">Thành phố/Tỉnh</label>
+                                <input type="text" id="city" class="form-control neon-input">
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input type="checkbox" id="is_default" class="form-check-input">
+                                    <label for="is_default" class="form-check-label">Đặt làm địa chỉ mặc định</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn neon-btn w-100">
+                                    <i class="fa-solid fa-floppy-disk me-2"></i>Lưu địa chỉ
+                                </button>
+                            </div>
+                        </form>
+                        <div id="addressMessage" class="mt-2 text-center"></div>
+                    </div>
                 </div>
 
                 <!-- Tab: Quản lý đơn hàng -->
