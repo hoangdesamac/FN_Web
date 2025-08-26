@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // ===== Address Book =====
+    // ===== Address Book (dùng Modal) =====
     async function loadAddresses() {
         const container = document.getElementById("addressList");
         if (!container) return;
@@ -352,9 +352,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p>${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</p>
                 ${addr.is_default ? `<span class="badge bg-success">Mặc định</span>` : ""}
                 <div class="mt-2">
-                    <button class="btn btn-sm btn-primary me-2" onclick="editAddress(${addr.id})">Sửa</button>
-                    <button class="btn btn-sm btn-danger me-2" onclick="deleteAddress(${addr.id})">Xóa</button>
-                    ${!addr.is_default ? `<button class="btn btn-sm btn-outline-success" onclick="setDefaultAddress(${addr.id})">Đặt mặc định</button>` : ""}
+                    <button class="btn btn-sm btn-primary me-2" onclick="editAddress(${addr.id})">
+                        <i class="fa-solid fa-pen"></i> Sửa
+                    </button>
+                    <button class="btn btn-sm btn-danger me-2" onclick="deleteAddress(${addr.id})">
+                        <i class="fa-solid fa-trash"></i> Xóa
+                    </button>
+                    ${!addr.is_default ? `
+                        <button class="btn btn-sm btn-outline-success" onclick="setDefaultAddress(${addr.id})">
+                            <i class="fa-solid fa-check"></i> Đặt mặc định
+                        </button>` : ""}
                 </div>
             </div>
         `).join("");
@@ -364,40 +371,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-// Thêm địa chỉ
-    async function addAddress(e) {
-        e.preventDefault();
+// Mở modal thêm địa chỉ
+    document.getElementById("addAddressBtn").addEventListener("click", () => {
         const form = document.getElementById("addressForm");
-        const body = {
-            recipient_name: form.recipient_name.value.trim(),
-            recipient_phone: form.recipient_phone.value.trim(),
-            street_address: form.street_address.value.trim(),
-            ward: form.ward.value.trim(),
-            city: form.city.value.trim(),
-            is_default: form.is_default.checked
-        };
+        form.reset();
+        delete form.dataset.editingId;
+        document.getElementById("addressFormTitle").textContent = "Thêm địa chỉ mới";
+        new bootstrap.Modal(document.getElementById("addressModal")).show();
+    });
 
-        try {
-            const res = await fetch(`${window.API_BASE}/api/addresses`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify(body)
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                form.reset();
-                await loadAddresses();
-            } else {
-                alert(data.error || "❌ Lỗi thêm địa chỉ!");
-            }
-        } catch (err) {
-            console.error("Lỗi thêm địa chỉ:", err);
-        }
-    }
-
-// Sửa địa chỉ (fill form)
+// Sửa địa chỉ (mở modal với dữ liệu)
     async function editAddress(id) {
         try {
             const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
@@ -412,8 +395,10 @@ document.addEventListener("DOMContentLoaded", () => {
             form.ward.value = addr.ward || "";
             form.city.value = addr.city || "";
             form.is_default.checked = addr.is_default;
+            form.dataset.editingId = id;
 
-            form.dataset.editingId = id; // flag
+            document.getElementById("addressFormTitle").textContent = "Chỉnh sửa địa chỉ";
+            new bootstrap.Modal(document.getElementById("addressModal")).show();
         } catch (err) {
             console.error("Lỗi editAddress:", err);
         }
@@ -453,6 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (data.success) {
                 form.reset();
                 delete form.dataset.editingId;
+                bootstrap.Modal.getInstance(document.getElementById("addressModal")).hide();
                 await loadAddresses();
             } else {
                 alert(data.error || "❌ Lỗi lưu địa chỉ!");
@@ -508,5 +494,6 @@ document.addEventListener("DOMContentLoaded", () => {
             loadAddresses();
         });
     }
+
 
 });

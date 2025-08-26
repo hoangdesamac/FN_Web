@@ -134,44 +134,60 @@
                     </div>
 
                     <!-- Form thêm / sửa địa chỉ -->
-                    <div id="addressFormContainer" class="d-none mt-4">
-                        <h5 id="addressFormTitle">Thêm địa chỉ mới</h5>
-                        <form id="addressForm" class="row g-3">
-                            <input type="hidden" id="addressId">
+                    <!-- Modal Thêm / Sửa địa chỉ -->
+                    <div class="modal fade" id="addressModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content cyber-modal">
+                                <div class="modal-header border-0">
+                                    <h5 class="modal-title" id="addressFormTitle">
+                                        <i class="fa-solid fa-location-dot me-2"></i> Thêm địa chỉ mới
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="addressForm" class="row g-3">
+                                        <input type="hidden" id="addressId">
 
-                            <div class="col-md-6">
-                                <label for="recipient_name" class="form-label">Người nhận</label>
-                                <input type="text" id="recipient_name" class="form-control neon-input" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="recipient_phone" class="form-label">SĐT người nhận</label>
-                                <input type="text" id="recipient_phone" class="form-control neon-input" required>
-                            </div>
-                            <div class="col-12">
-                                <label for="street_address" class="form-label">Địa chỉ</label>
-                                <input type="text" id="street_address" class="form-control neon-input" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="ward" class="form-label">Phường/Xã</label>
-                                <input type="text" id="ward" class="form-control neon-input">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="city" class="form-label">Thành phố/Tỉnh</label>
-                                <input type="text" id="city" class="form-control neon-input">
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input type="checkbox" id="is_default" class="form-check-input">
-                                    <label for="is_default" class="form-check-label">Đặt làm địa chỉ mặc định</label>
+                                        <div class="col-md-6">
+                                            <label for="recipient_name" class="form-label">Người nhận</label>
+                                            <input type="text" id="recipient_name" class="form-control neon-input" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="recipient_phone" class="form-label">SĐT người nhận</label>
+                                            <input type="text" id="recipient_phone" class="form-control neon-input" required>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="city" class="form-label">Tỉnh/Thành phố</label>
+                                            <input type="text" id="city" class="form-control neon-input" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="ward" class="form-label">Phường/Xã</label>
+                                            <input type="text" id="ward" class="form-control neon-input">
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="street_address" class="form-label">Địa chỉ chi tiết</label>
+                                            <input type="text" id="street_address" class="form-control neon-input" required>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-check">
+                                                <input type="checkbox" id="is_default" class="form-check-input">
+                                                <label for="is_default" class="form-check-label">Đặt làm địa chỉ mặc định</label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div id="addressMessage" class="mt-2 text-center"></div>
+                                </div>
+                                <div class="modal-footer border-0">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                    <button type="submit" form="addressForm" class="btn neon-btn">
+                                        <i class="fa-solid fa-floppy-disk me-2"></i>Lưu địa chỉ
+                                    </button>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <button type="submit" class="btn neon-btn w-100">
-                                    <i class="fa-solid fa-floppy-disk me-2"></i>Lưu địa chỉ
-                                </button>
-                            </div>
-                        </form>
-                        <div id="addressMessage" class="mt-2 text-center"></div>
+                        </div>
                     </div>
                 </div>
 
