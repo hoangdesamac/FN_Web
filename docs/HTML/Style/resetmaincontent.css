@@ -562,6 +562,7 @@
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.3s ease;
+    
 }
 
 .view-more-btn:hover {

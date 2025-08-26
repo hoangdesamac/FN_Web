@@ -128,6 +128,11 @@ function initProductCardClickHandler() {
     });
 }
 
+document.addEventListener('click', function(e) {
+  if (e.target.matches('.btn-view-all-pc')) {
+    window.location.href = 'allproducts.html?type=pc';
+  }
+});
 
 // ✅ Hàm tổng để gọi lại sau khi load xong main content
 function initMainContent() {

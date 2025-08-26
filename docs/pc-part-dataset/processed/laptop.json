@@ -1,0 +1,2224 @@
+[
+  {
+    "name": "Laptop ASUS Expertbook P1403CVA-i716-50W",
+    "image": "https://cdn.hstatic.net/products/200000722513/expertbook-p1-p1403cva-i5se16-50_75afdd8506f04d11b13f57a022b6c108_master.png",
+    "cpu": "Intel Core i7-13620H",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch FHD",
+    "price": 17990000,
+    "category": [
+      "asus",
+      "gamming",
+      "TUF"
+    ]
+  },
+  {
+    "name": "Laptop ASUS Zenbook 14 OLED UX3405MA PP152W",
+    "image": "https://product.hstatic.net/200000722513/product/zenbook_14_ux3405ca_product_photo_3b_ponder_blue_06_33dcc15424d8426faf48ac8ecba9db28_master.png",
+    "cpu": "Intel Core Ultra 7 155H",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14 inch OLED",
+    "price": 31990000,
+    "category": [
+      "gamming",
+      "asus",
+      "ROG"
+    ]
+  },
+  {
+    "name": "Laptop ASUS Zenbook S 14 OLED UX5406SA PV140WS",
+    "image": "https://product.hstatic.net/200000722513/product/ux5406sa-pv140ws_a84418fed2414842af64bef3e826846a_master.png",
+    "cpu": "Intel Core Ultra 7 258V",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14 inch 3K OLED 120Hz",
+    "price": 39990000,
+    "category": [
+      "văn phòng",
+      "asus"
+    ]
+  },
+  {
+    "name": "Laptop ASUS Vivobook 15 OLED A1505VA MA468W",
+    "image": "https://product.hstatic.net/200000722513/product/khung-laptop-23_b898f38424a44201bf2df947e637c74e_master.png",
+    "cpu": "Intel Core i5-13500H",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch 2.8K OLED 120Hz",
+    "price": 16490000,
+    "category": [
+      "dell",
+      "văn phòng"
+    ]
+  },
+  {
+    "name": "Laptop ASUS Vivobook 14 OLED A1405VA KM257W",
+    "image": "https://product.hstatic.net/200000722513/product/khung-laptop-23_b898f38424a44201bf2df947e637c74e_master.png",
+    "cpu": "Intel Core i5-13500H",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch 2.8K OLED",
+    "price": 16990000,
+    "category": [
+      "msi",
+      "gamming"
+    ]
+  },
+  {
+    "name": "Laptop ASUS Zenbook 14 UX3407QA QD299WS",
+    "image": "https://product.hstatic.net/200000722513/product/ux3407qa-qd299ws_1_e0a9f6e222304bf7923b5ee2b33b6ac8_master.jpg",
+    "cpu": "X1 26 100",
+    "gpu": "QA GPU",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch WUXGA OLED 60Hz",
+    "price": 26890000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "laptop asus"
+    ]
+  },
+  {
+    "name": "Laptop ASUS Zenbook 14 UM3406KA PP555WS",
+    "image": "https://product.hstatic.net/200000722513/product/zenbook_14_um3406ka_product_photo_jade_black_2k_product_photo_09_463f064208124f039d058c8c0c1e7ed3_master.png",
+    "cpu": "AMD Ryzen 7 AI 350",
+    "gpu": "AMD Radeon Graphics",
+    "ram": "32GB",
+    "storage": "512GB SSD",
+    "display": "14 inch 3K OLED 120Hz",
+    "price": 31990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "laptop asus"
+    ]
+  },
+  {
+    "name": "Laptop ASUS Zenbook 14 OLED UX3402VA KM203W",
+    "image": "https://product.hstatic.net/200000722513/product/km203w_344a750d654a45099b3da33db79ac173_master.png",
+    "cpu": "Intel Core i5-1340P",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch 2K8 OLED",
+    "price": 23990000,
+    "category": [
+      "văn phòng",
+      "laptop asus"
+    ]
+  },
+  {
+    "name": "Laptop ASUS Vivobook 16 M1607KA MB091WS",
+    "image": "https://product.hstatic.net/200000722513/product/asus_vivobook_16_m1607ka_product_photo_1s_cool_silver_11_non-backlit_577b618398864901a94de114b080cf8c_master.jpg",
+    "cpu": "AMD Ryzen 7 AI 350",
+    "gpu": "AMD Radeon",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "16 inch WUXGA 60Hz",
+    "price": 21490000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "laptop asus"
+    ]
+  },
+  {
+    "name": "Laptop ASUS Expertbook P1403CVA-i516-50W",
+    "image": "https://product.hstatic.net/200000722513/product/expertbook-p1-p1403cva-i5se16-50w__8__f9120f92bbcf40409391d8b907b7c630_0b12de755584415689fecd42c6a95e6a_master.png",
+    "cpu": "Intel Core i5-13420H",
+    "gpu": "UHD",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch FHD IPS",
+    "price": 14290000,
+    "category": [
+      "văn phòng",
+      "laptop asus"
+    ]
+  },
+  {
+    "name": "Laptop ASUS ExpertBook P1 P1503CVA i5SE16 50W",
+    "image": "https://product.hstatic.net/200000722513/product/sus-expertbook-p1-p1503cva-i5se16-50w_62838fda17674f44b67a2991a04c9f48_2c41a977c071467d9f4e705ec46511ac_master.png",
+    "cpu": "Intel Core i5-13500H",
+    "gpu": "UHD",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD LED",
+    "price": 15790000,
+    "category": [
+      "văn phòng",
+      "laptop asus"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS ROG Strix G18 G815LW S9164W",
+    "image": "https://cdn.hstatic.net/products/200000722513/02_gr_new_18_l_1_1_65208b7d16fe4d85b9d386fbd590559c_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5080",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "18 inch 240Hz",
+    "price": 74990000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "ROG",
+      "asus"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS ROG Zephyrus G16 GU605CX QR147W",
+    "image": "https://cdn.hstatic.net/products/200000722513/zephyrus_g16_gu605_grey_02_rgb_1_b1c35d45c00748f08884631e2dcfce42_grande.png",
+    "cpu": "Ultra 9 285H",
+    "gpu": "RTX 5090",
+    "ram": "64GB",
+    "storage": "2TB SSD",
+    "display": "16 inch 240Hz",
+    "price": 119990000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "ROG",
+      "asus"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS ROG Strix G16 G615LW S5219W",
+    "image": "https://cdn.hstatic.net/products/200000722513/02_g_new_16_1_1_1_27a22871a9df43db9376052f52f53971_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5080",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "16 inch WQXGA 240Hz",
+    "price": 68990000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "ROG",
+      "asus"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS ROG Strix G16 G615LR S5289W",
+    "image": "https://cdn.hstatic.net/products/200000722513/02_g_new_16_1_1_1_0de2254fd7c24f0f99846a65f32e1ea0_grande.png",
+    "cpu": "Ultra 7 255HX",
+    "gpu": "RTX 5070Ti",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "16 inch WQXGA 240Hz",
+    "price": 54490000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "ROG",
+      "asus"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS V16 V3607VH RP024W",
+    "image": "https://cdn.hstatic.net/products/200000722513/image_7741ad2158d04fb9a7ba550ac603fdde_grande.png",
+    "cpu": "Core 5 210H",
+    "gpu": "RTX 5050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "16 inch WUXGA 144Hz",
+    "price": 26490000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "TUF",
+      "asus"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS V16 V3607VH RP025W",
+    "image": "https://cdn.hstatic.net/products/200000722513/image_62e95eb5532a42d09f9c15a936c18163_grande.png",
+    "cpu": "Core 7 240H",
+    "gpu": "RTX 5050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "16 inch WUXGA 144Hz",
+    "price": 27990000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "TUF",
+      "asus"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS ROG Strix G16 G615LW S5135W",
+    "image": "https://cdn.hstatic.net/products/200000722513/rog_strix_g16_2025_g615_1_b1f1f2_f3bcea8a1f734cbb80ac9481a2dfa9fa_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5080",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch WQXGA 240Hz",
+    "price": 67990000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "ROG",
+      "asus"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS ROG Flow Z13 GZ302EA RU145WS",
+    "image": "https://product.hstatic.net/200000722513/product/rog_flow_z13_black_04_kb_46f516564c024a50863fab8cc3b9567f_grande.png",
+    "cpu": "Ryzen AI MAX+ 395",
+    "gpu": "AMD XDNA",
+    "ram": "128GB",
+    "storage": "1TB SSD",
+    "display": "13.4 inch WQXGA 180Hz",
+    "price": 79990000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "ROG",
+      "asus"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS ROG Strix SCAR 18 G835LX SA208W",
+    "image": "https://product.hstatic.net/200000722513/product/02_scar_new_18_l_2_4b2203ec8bce461c8d558f9497fecb38_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5090",
+    "ram": "64GB",
+    "storage": "2TB SSD",
+    "display": "18 inch QHD+ 240Hz",
+    "price": 124990000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "TUF",
+      "ROG",
+      "asus",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS ROG Zephyrus G16 GU605CR QR107W",
+    "image": "https://product.hstatic.net/200000722513/product/zephyrus_g16_gu605_grey_05_rgb_1_93776e766ce14539ac479b4faea2684e_grande.png",
+    "cpu": "Ultra 9 285H",
+    "gpu": "RTX 5070Ti",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch WQXGA OLED 240Hz",
+    "price": 74990000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "TUF",
+      "ROG",
+      "asus",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS TUF Gaming F16 FX607VJ RL034W",
+    "image": "https://product.hstatic.net/200000722513/product/02_fx607vu_l_737a9d77cd804a41944ff59e6a349d24_grande.png",
+    "cpu": "Core 5 210H",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "16 inch WUXGA 144Hz",
+    "price": 23490000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "TUF",
+      "ROG",
+      "asus",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS TUF F16 FX608JMR RV048W",
+    "image": "https://product.hstatic.net/200000722513/product/fx608jmr-rv048w_2ada6168d72d4b3b8f5a1e6464c0e4ab_grande.png",
+    "cpu": "i7-14650HX",
+    "gpu": "RTX 5060",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "16 inch WUXGA 165Hz",
+    "price": 37490000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "TUF",
+      "ROG",
+      "asus",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop gaming ASUS TUF Gaming F16 FX608JH RV039W",
+    "image": "https://cdn.hstatic.net/products/200000722513/asus_tuf_gaming_f16_04_l_1_7e796bbd4cad429a873f4d6545b64039_grande.png",
+    "cpu": "i5-13450HX",
+    "gpu": "RTX 5050",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "16 inch FHD+ 165Hz",
+    "price": 30990000,
+    "category": [
+      "laptop gamming",
+      "đồ hoạ",
+      "TUF",
+      "ROG",
+      "asus",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo Yoga Slim 7 14IMH9 83CV00AJVN",
+    "image": "https://cdn.hstatic.net/products/200000722513/ava_c37a4bc7f32b43faafbb6b8cb3019682_grande.png",
+    "cpu": "Intel Core Ultra 7 155H",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14 inch WUXGA OLED 60Hz",
+    "price": 26990000,
+    "category": [
+      "lenovo",
+      "văn phòng",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo Yoga Slim 7 14IMH9 83CV00AHVN",
+    "image": "https://product.hstatic.net/200000722513/product/yoga_slim_7_14imh9_ct1_17_c1c4889d6a584805be859b0952891c1e_grande.png",
+    "cpu": "Intel Core Ultra 5 125H",
+    "gpu": "Intel Arc",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "14 inch WUXGA OLED 60Hz",
+    "price": 23490000,
+    "category": [
+      "lenovo",
+      "văn phòng",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo ThinkPad X9-14 Gen 1 21QA006GVN",
+    "image": "https://product.hstatic.net/200000722513/product/thinkpad_x9_14_gen_1_ct1_06_555f339751314b21836221e78f062056_grande.png",
+    "cpu": "Intel Core Ultra 5 228V",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14 inch WUXGA OLED 60Hz",
+    "price": 44990000,
+    "category": [
+      "lenovo",
+      "văn phòng",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo ThinkPad X9-15 Gen 1 21Q60055VN",
+    "image": "https://product.hstatic.net/200000722513/product/thinkpad_x9_15_gen_1_ct1_03_666a31f4136549008e9eb50fc9164ff9_grande.png",
+    "cpu": "Intel Core Ultra 7 258V",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "15.3 inch 2.8K OLED Touch 120Hz",
+    "price": 52990000,
+    "category": [
+      "lenovo",
+      "văn phòng",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo ThinkPad X1 Carbon Gen 13 21NX003DVN",
+    "image": "https://product.hstatic.net/200000722513/product/thinkpad_x1_carbon_gen_13_ct1_05_ab94e2633b074a7da3a7cc16eb3c4879_grande.png",
+    "cpu": "Intel Core Ultra 5 225H",
+    "gpu": "Intel Arc",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "14 inch WUXGA IPS",
+    "price": 45790000,
+    "category": [
+      "lenovo",
+      "văn phòng",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo V14 G4 IRU 83A000BEVN",
+    "image": "https://product.hstatic.net/200000722513/product/lenovo_v14_g4_iru_ct1_09_cec3749729ee42f3ab1b318c2348639e_grande.png",
+    "cpu": "Intel Core i5-13420H",
+    "gpu": "Onboard",
+    "ram": "8GB",
+    "storage": "512GB SSD",
+    "display": "14 inch FHD IPS",
+    "price": 12290000,
+    "category": [
+      "lenovo",
+      "văn phòng"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo Yoga Slim 9 14ILL10 83CX001AVN",
+    "image": "https://product.hstatic.net/200000722513/product/yoga_slim_9_14ill10_ct2_04_fda1b9eac41e44bf8a382851f3382e6e_grande.png",
+    "cpu": "Intel Core Ultra 7 258V",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14 inch 4K WQUXGA OLED 120Hz",
+    "price": 55990000,
+    "category": [
+      "lenovo",
+      "văn phòng",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo IdeaPad Slim 5 14AKP10 83HX001JVN",
+    "image": "https://product.hstatic.net/200000722513/product/ideapad_slim_5_14akp10_ct2_07_fd9bd66673264ee687a8b4de2263c938_grande.png",
+    "cpu": "AMD Ryzen 7 AI 350",
+    "gpu": "AMD Radeon",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14 inch WUXGA OLED",
+    "price": 24490000,
+    "category": [
+      "lenovo",
+      "văn phòng",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo IdeaPad Slim 3 14IRH10 83K0000BVN",
+    "image": "https://product.hstatic.net/200000722513/product/ideapad_slim_3_14irh10_ct2_08_7408b9ead5d149d0a406c036154727d4_grande.png",
+    "cpu": "Intel Core i5-13420H",
+    "gpu": "UHD",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch WUXGA OLED",
+    "price": 16790000,
+    "category": [
+      "lenovo",
+      "văn phòng"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo IdeaPad Slim 3 15IRH10 83K1000JVN",
+    "image": "https://product.hstatic.net/200000722513/product/ideapad_slim_3_15irh10_ct2_06_bc46c944e3794b06a219ea625da4e568_grande.png",
+    "cpu": "Intel Core i7-13620H",
+    "gpu": "UHD",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.3 inch WUXGA IPS 60Hz",
+    "price": 17890000,
+    "category": [
+      "lenovo",
+      "văn phòng"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo Yoga Pro 7 14IMH9 83E2005DVN",
+    "image": "https://product.hstatic.net/200000722513/product/ava_ceab7a7e77bd4023af63ff5cd7f82173_grande.png",
+    "cpu": "Intel Core Ultra 7 155H",
+    "gpu": "NVIDIA GeForce RTX 4050",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14.5 inch 2.8K OLED 120Hz",
+    "price": 43490000,
+    "category": [
+      "lenovo",
+      "văn phòng",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo Yoga Slim 7 14IMH9 83CV008EVN",
+    "image": "https://product.hstatic.net/200000722513/product/yoga_slim_7_14imh9_ct1_10_57009c24b7d34ea487facd550026cc99_grande.png",
+    "cpu": "Intel Core Ultra 5 125H",
+    "gpu": "Intel Arc",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "14 inch WUXGA OLED 60Hz",
+    "price": 24990000,
+    "category": [
+      "lenovo",
+      "văn phòng",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop Lenovo Yoga Pro 7 14IMH9 83E2006MVN",
+    "image": "https://product.hstatic.net/200000722513/product/ava_8236b3b0602640c48f4a922e1a7dd7f1_grande.png",
+    "cpu": "Intel Core Ultra 7 155H",
+    "gpu": "NVIDIA GeForce RTX 4050",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14.5 inch 2.8K OLED 120Hz",
+    "price": 41990000,
+    "category": [
+      "lenovo",
+      "văn phòng",
+      "AI"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo LOQ 15IRX9 83DV013PVN",
+    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-laptop-gaming-lenovo-loq-15irx9-83dv013pvn-3yrs-warranty_73fe0dd7f71641288a115e5cb97371ae_grande.jpg",
+    "cpu": "i5-13450HX",
+    "gpu": "RTX 3050",
+    "ram": "12GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch 144Hz",
+    "price": 22990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo LOQ 15IRX9 83DV01ALVN",
+    "image": "https://cdn.hstatic.net/products/200000722513/khung-laptop-23_4ae3328e72614810b692664076ddfcba_grande.png",
+    "cpu": "i7-13650HX",
+    "gpu": "RTX 4050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 27990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo LOQ 15AHP10 83JG0047VN",
+    "image": "https://cdn.hstatic.net/products/200000722513/loq_15ahp10_ct1_02_91a5c0fa9a5743f79b650eda0c3dbea7_grande.png",
+    "cpu": "R7 250",
+    "gpu": "RTX 5050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 29990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo Legion Pro 7 16IAX10H 83F5008WVN",
+    "image": "https://product.hstatic.net/200000722513/product/legion_pro_7_16iax10h_ct1_03_e2354f4cad1e49f9b7283ed087360f4b_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5080",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch WQXGA OLED 240Hz",
+    "price": 90990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN",
+    "image": "https://cdn.hstatic.net/products/200000722513/legion_5_15ahp10_ct1_03_9e6c952205974034885dcd7b7d46fd36_grande.png",
+    "cpu": "R7 260",
+    "gpu": "RTX 5050",
+    "ram": "24GB",
+    "storage": "512GB SSD",
+    "display": "15.1 inch WQXGA OLED 165Hz",
+    "price": 36990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo LOQ 15IAX9E 83LK0079VN",
+    "image": "https://product.hstatic.net/200000722513/product/ava_d4425b2bbd314fb09c178ed716c36c37_grande.png",
+    "cpu": "i5-12450HX",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 18590000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo Legion 7 16IAX10 83KY001VVN",
+    "image": "https://cdn.hstatic.net/products/200000722513/legion_7_16iax10_ct1_02_6dc0c2715d814c1cb7865010303c42cd_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5070",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch 240Hz",
+    "price": 63990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo LOQ 15IRX10 83JE006PVN",
+    "image": "https://product.hstatic.net/200000722513/product/loq_15irx10_ct1_03_b9382530088245e3a807427720548db7_grande.png",
+    "cpu": "i7-13650HX",
+    "gpu": "RTX 5050",
+    "ram": "24GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 31290000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo Legion 7 16IAX10 83KY001UVN",
+    "image": "https://cdn.hstatic.net/products/200000722513/legion_7_16iax10_ct1_02_0ebb608b3d014d6883830ec112c6070c_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5060",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch 240Hz",
+    "price": 57990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo Legion 5 15IRX10 83LY00A7VN",
+    "image": "https://product.hstatic.net/200000722513/product/legion_5_15irx10_ct1_02_3956e3fe2fd640f29a51788d335c186d_grande.png",
+    "cpu": "i7-14700HX",
+    "gpu": "RTX 5050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.1 inch WQXGA OLED 165Hz",
+    "price": 37490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo Legion 5 15IRX10 83LY004GVN",
+    "image": "https://product.hstatic.net/200000722513/product/legion_5_15irx10_ct1_02_507b3089904440e581c50702cf3b31c8_grande.png",
+    "cpu": "i7-14700HX",
+    "gpu": "RTX 5070",
+    "ram": "24GB",
+    "storage": "1TB SSD",
+    "display": "15.1 inch WQXGA OLED 165Hz",
+    "price": 46990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo Legion Pro 5 16IAX10 83F3002GVN",
+    "image": "https://product.hstatic.net/200000722513/product/legion_pro_5_16iax10_ct1_03_4afc5e6da4154d6aab7cde5284959933_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5070",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch WQXGA OLED 165Hz",
+    "price": 54990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo Legion 5 15IAX10 83F0003BVN",
+    "image": "https://product.hstatic.net/200000722513/product/legion_5_15iax10_ct1_03_d556db83a08d4d63be8f990c53004df2_grande.png",
+    "cpu": "Ultra 7 255HX",
+    "gpu": "RTX 5070",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "15.1 inch WQXGA OLED 165Hz",
+    "price": 50490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo Legion Pro 5 16IAX10 83F3003VVN",
+    "image": "https://product.hstatic.net/200000722513/product/legion_pro_5_16iax10_ct1_03_0138290e75dd4d2ab715636153d5fb27_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5060",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch WQXGA OLED 165Hz",
+    "price": 49990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop gaming Lenovo Legion 5 15IAX10 83F0003CVN",
+    "image": "https://product.hstatic.net/200000722513/product/legion_5_15iax10_ct1_03_8cf60edb0f6d424a87e95fcdb3049f92_grande.png",
+    "cpu": "Ultra 7 255HX",
+    "gpu": "RTX 5060",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "15.1 inch WQXGA OLED 165Hz",
+    "price": 45790000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "lenovo"
+    ]
+  },
+  {
+    "name": "Laptop Acer Aspire Lite 14 AL14 71P 55P9",
+    "image": "https://cdn.hstatic.net/products/200000722513/acer_aspire_lite_14_ai_al14_71p_1aa3706aef4a42d7ba7ed60c70371dce_grande.png",
+    "cpu": "i5-13500H",
+    "gpu": "UHD",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch FHD+",
+    "price": 14990000,
+    "category": [
+      "văn phòng",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Aspire Lite AL15 72P 581V",
+    "image": "https://cdn.hstatic.net/products/200000722513/52713_laptop_acer_aspire_lite_15_3116c6046d6f4052bbd807081860982c_grande.png",
+    "cpu": "i5-13500H",
+    "gpu": "UHD",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 60Hz",
+    "price": 14290000,
+    "category": [
+      "văn phòng",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Aspire Lite AL15 72P 7232",
+    "image": "https://cdn.hstatic.net/products/200000722513/52713_laptop_acer_aspire_lite_15__1__91a3eab70cd1440bbed70f090d059c26_grande.png",
+    "cpu": "i7-13620H",
+    "gpu": "UHD",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 60Hz",
+    "price": 15990000,
+    "category": [
+      "văn phòng",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Aspire Go AG14 71M 7681",
+    "image": "https://cdn.hstatic.net/products/200000722513/acer-aspire-go-14-ai-ag14-71m-ac__1__2fa03008322e444c8f077929a1bf7ce7_grande.png",
+    "cpu": "Ultra 7 155H",
+    "gpu": "Intel Arc",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch FHD+ 60Hz",
+    "price": 18990000,
+    "category": [
+      "văn phòng",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Aspire Go AG14 71M 57WR",
+    "image": "https://cdn.hstatic.net/products/200000722513/acer-aspire-go-14-ai-ag14-71m-ac__1__77c264ee04c247458da229845f3401ce_grande.png",
+    "cpu": "Ultra 5 125H",
+    "gpu": "Intel Arc",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch FHD+ 60Hz",
+    "price": 15990000,
+    "category": [
+      "văn phòng",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Swift Go SFG14 74 58FJ",
+    "image": "https://product.hstatic.net/200000722513/product/laptop-acer-swift-go-sfg14-74-58__1__e2149a1e030b4ee09351afbe91357a99_grande.png",
+    "cpu": "Ultra 5 255H",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "14 inch OLED 60Hz",
+    "price": 28990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Swift X14 SFX14 72G 79UW",
+    "image": "https://product.hstatic.net/200000722513/product/ava_8884341ac5f14efb8e3a4710682698a2_grande.png",
+    "cpu": "Ultra 7 155H",
+    "gpu": "RTX 4070",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14.5 inch WQXGA+ OLED 120Hz",
+    "price": 52990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Swift X14 SFX14 72G 77F9",
+    "image": "https://product.hstatic.net/200000722513/product/ava_77563131fc2b48acb9a41ec545d9ed7d_grande.png",
+    "cpu": "Ultra 7 155H",
+    "gpu": "RTX 4050",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14.5 inch OLED 120Hz",
+    "price": 43990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Swift 14 AI SF14 51 53P9",
+    "image": "https://product.hstatic.net/200000722513/product/khung-laptop-23_cd9037919f96427a9c25e318a8a00134_grande.png",
+    "cpu": "U5-226V",
+    "gpu": "Intel Arc",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "14 inch 3K OLED",
+    "price": 32490000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Swift X14 SFX14 71G 78SY",
+    "image": "https://product.hstatic.net/200000722513/product/ava_426f720508c745cbb130c469ae257efc_grande.png",
+    "cpu": "i7-13700H",
+    "gpu": "RTX 4050",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14 inch 2.8K OLED 120Hz",
+    "price": 37990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Swift Go 14 SFG14 73 57FZ",
+    "image": "https://product.hstatic.net/200000722513/product/wift-go-ai-2024-gen-2-sfg14-73-71zx_1_ccc2cc55cf11451086e09eac92cae064_ed8a6356d9374b53a4c13abaea1658a8_grande.png",
+    "cpu": "Ultra 5 125H",
+    "gpu": "Intel Arc",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch 2.8K OLED",
+    "price": 23490000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Acer Swift Go 14 SFG14 73 75YM",
+    "image": "https://product.hstatic.net/200000722513/product/wift-go-ai-2024-gen-2-sfg14-73-71zx_1_ccc2cc55cf11451086e09eac92cae064_cebd993058e6471d8b7b7d2dccb51ca3_grande.png",
+    "cpu": "Ultra 7 155H",
+    "gpu": "Intel Arc",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch 2.8K OLED",
+    "price": 26490000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspirion N3530 i5U165W11SLU (1334U)",
+    "image": "https://cdn.hstatic.net/products/200000722513/ava_0a30ce7dc91d4bf9bc058f46086f636d_grande.png",
+    "cpu": "i5-1344U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 120Hz",
+    "price": 15990000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ANV16 41 R4KD",
+    "image": "https://product.hstatic.net/200000722513/product/ava_109bd05918694e2b861b59a5b0b088f4_grande.png",
+    "cpu": "R7-8845HS",
+    "gpu": "RTX 4060",
+    "ram": "32GB",
+    "storage": "512GB SSD",
+    "display": "16 inch 2K 165Hz",
+    "price": 31490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ANV16 41 R7EN",
+    "image": "https://product.hstatic.net/200000722513/product/ava_ded8eaa81f5f4850a4f6fea27adc83b2_grande.png",
+    "cpu": "R7-8845HS",
+    "gpu": "RTX 3050",
+    "ram": "32GB",
+    "storage": "512GB SSD",
+    "display": "16 inch WUXGA 165Hz",
+    "price": 24990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ANV16 41 R36Y",
+    "image": "https://product.hstatic.net/200000722513/product/ava_5cf8182eaaa84d0bb59110b4bd55f03a_grande.png",
+    "cpu": "R7-8845HS",
+    "gpu": "RTX 4050",
+    "ram": "32GB",
+    "storage": "512GB SSD",
+    "display": "16 inch WUXGA 165Hz",
+    "price": 27990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ANV15 51 91T5",
+    "image": "https://product.hstatic.net/200000722513/product/nitro-v_755588bd95514b6386940d73d3951e2d_1024x1024_95ef516ce29440e4ad51dedbab0e352c_grande.png",
+    "cpu": "i9-13900H",
+    "gpu": "RTX 4060",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 32990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ANV15 51 53DM",
+    "image": "https://product.hstatic.net/200000722513/product/nitro-v_755588bd95514b6386940d73d3951e2d_1024x1024_eb2e1844722a4c75a43a97b6ae10ac66_grande.png",
+    "cpu": "i5-13420H",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 19490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Aspire 7 A715 59G 57TU",
+    "image": "https://product.hstatic.net/200000722513/product/gaming-aspire-7-2025-a715-59g-bi__1__4344e21f6fc44b5cab9235c09173d843_grande.png",
+    "cpu": "i5-12450H",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 18990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Aspire 7 A715 59G 73LB",
+    "image": "https://product.hstatic.net/200000722513/product/gaming-aspire-7-2025-a715-59g-bi__1__e47b793ac28543efbd433c1f47b71b9a_grande.png",
+    "cpu": "i7-12650H",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 21490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro Lite 16 NL16 71G 56WQ",
+    "image": "https://product.hstatic.net/200000722513/product/acer-gaming-nitro-lite-16-nl16-7_b824eccac58d4107b63cd0dc765f6bfd_grande.png",
+    "cpu": "i5-13420H",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "16 inch FHD+ 165Hz",
+    "price": 20490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro Lite 16 NL16 71G 71UJ",
+    "image": "https://product.hstatic.net/200000722513/product/acer-gaming-nitro-lite-16-nl16-7_b9c923301cac40ec96fdf625748b97ff_grande.png",
+    "cpu": "i7-13620H",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "16 inch FHD+ 165Hz",
+    "price": 22490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ProPanel ANV15 52 72BM",
+    "image": "https://cdn.hstatic.net/products/200000722513/r-nitro-v-15-anv15-52-non-fingerprint-with-backlit-on-wp-logo-black-01_27ffafaa54d04e0e8c404120f3cc808d_grande.png",
+    "cpu": "i7-13620H",
+    "gpu": "RTX 5050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 180Hz",
+    "price": 30790000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Predator Helios 16 AI PH16 73 93HD",
+    "image": "https://cdn.hstatic.net/products/200000722513/predator-helios-16-ai-2025-ph16_f04c773f6bd247dc9598ca228e756559_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5070Ti",
+    "ram": "32GB",
+    "storage": "2TB SSD",
+    "display": "16 inch QHD+ OLED 240Hz",
+    "price": 84990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V 16S Propanel ANV16S 61 R9ZV",
+    "image": "https://cdn.hstatic.net/products/200000722513/acer-nitro-v-16s-ai-anv16s-61-non-fingerprint-with-backlit-black-08_02f2d286842245769593283832275851_grande.png",
+    "cpu": "R7 AI 350",
+    "gpu": "RTX 5060",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch FHD+ 180Hz",
+    "price": 42990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Predator Helios 16 AI PH16 73 950C",
+    "image": "https://cdn.hstatic.net/products/200000722513/predator-helios-16-ai-2025-ph16_512004ff3260416f97495ebca49681fa_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5090",
+    "ram": "32GB",
+    "storage": "2TB SSD",
+    "display": "16 inch QHD+ OLED 240Hz",
+    "price": 108990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Predator Helios PHN16 73 757W",
+    "image": "https://cdn.hstatic.net/products/200000722513/text_ng_n_2__9_291_97fad265edef4660ac864c3c2cee648b_grande.png",
+    "cpu": "Ultra 7 255HX",
+    "gpu": "RTX 5060",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch 2K+ 240Hz",
+    "price": 52990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Predator Helios Neo 16S PHN16S 71 94T0",
+    "image": "https://product.hstatic.net/200000722513/product/-ai-phn16s-71-non-fingerprint-with-backlit-on-wp-oled-abyssal-black-01_5230115344b4414ebd8d31cab4b3ffeb_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5070Ti",
+    "ram": "32GB",
+    "storage": "2TB SSD",
+    "display": "16 inch WQXGA OLED 240Hz",
+    "price": 64490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Predator Helios Neo 16S PHN16S 71 95MS",
+    "image": "https://product.hstatic.net/200000722513/product/-ai-phn16s-71-non-fingerprint-with-backlit-on-wp-oled-abyssal-black-01_5f32a1e84b6e40bdaf70f2878d7cc639_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5070Ti",
+    "ram": "64GB",
+    "storage": "2TB SSD",
+    "display": "16 inch WQXGA OLED 240Hz",
+    "price": 65990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Predator Helios 18 PH18 73 98AQ",
+    "image": "https://product.hstatic.net/200000722513/product/predator-helios-18-ai-ph18-73-eshell-abyssal-black-01_a48ee61e18a44c5987fc1a486beb2220_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5090",
+    "ram": "192GB",
+    "storage": "6TB SSD",
+    "display": "18 inch WQUXGA 4K Mini Led 120Hz",
+    "price": 139990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Predator Helios 18 PH18 73 93P0",
+    "image": "https://product.hstatic.net/200000722513/product/predator-helios-18-ai-ph18-73-eshell-abyssal-black-01_f94a7b2ded8a4e8ab0db6ff0e8863a13_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5080",
+    "ram": "64GB",
+    "storage": "3TB SSD",
+    "display": "18 inch WQXGA Mini Led 250Hz",
+    "price": 93990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ANV15 51 73BT",
+    "image": "https://product.hstatic.net/200000722513/product/nitro-v_755588bd95514b6386940d73d3951e2d_1024x1024_cef21678bbe24ab8967e926a32dd88bc_grande.png",
+    "cpu": "i7-13620H",
+    "gpu": "RTX 2050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 180Hz",
+    "price": 24990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ANV15 51 500A",
+    "image": "https://product.hstatic.net/200000722513/product/nitro-v_755588bd95514b6386940d73d3951e2d_1024x1024_eaa7dc8d4f4b4e1a86a0891f3497c156_grande.png",
+    "cpu": "i5-13420H",
+    "gpu": "RTX 2050",
+    "ram": "32GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 180Hz",
+    "price": 18390000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ANV15 51 76B9",
+    "image": "https://product.hstatic.net/200000722513/product/nitro-v_755588bd95514b6386940d73d3951e2d_1024x1024_e1587d0e15b642a2a568f52a8a2829c2_grande.png",
+    "cpu": "i7-13620H",
+    "gpu": "RTX 4050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "16 inch FHD 180Hz",
+    "price": 26990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ANV15 51 73UU",
+    "image": "https://product.hstatic.net/200000722513/product/nitro-v_755588bd95514b6386940d73d3951e2d_1024x1024_bc0b12132d4042eab8a07af909096236_grande.png",
+    "cpu": "i7-13620H",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "16 inch FHD 180Hz",
+    "price": 24990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ProPanel ANV15 52 59AA",
+    "image": "https://cdn.hstatic.net/products/200000722513/r-nitro-v-15-anv15-52-non-fingerprint-with-backlit-on-wp-logo-black-01_803b613ac77745a8b91ae05e5456d163_grande.png",
+    "cpu": "i5-13420H",
+    "gpu": "RTX 5050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 180Hz",
+    "price": 29990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop gaming Acer Nitro V ProPanel ANV15 41 R0Y4",
+    "image": "https://cdn.hstatic.net/products/200000722513/acer_nitro_v_15_propanel_anv15-41_-_nh_i_di_n_-_a_nh.qpgsv.002-b1_2a1519f0621848b8b9e91953a07b6005_grande.jpg",
+    "cpu": "R7-7735HS",
+    "gpu": "RTX 4050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 180Hz",
+    "price": 25990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "acer"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 15 3530 N3530-i7U161W11BLU-FP",
+    "image": "https://product.hstatic.net/200000722513/product/ava_a8b037f6920e4289bff21596106c8e86_grande.png",
+    "cpu": "i7-1355U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "15.6 inch FHD",
+    "price": 21490000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 14 5440 C5U165W11IBD2",
+    "image": "https://product.hstatic.net/200000722513/product/ava_7d9f67ec8530479b958d79d5ef0a27a7_grande.png",
+    "cpu": "Core 5 120U",
+    "gpu": "MX570A",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch 2.2K",
+    "price": 24490000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 14 5440 i5U085W11IBU",
+    "image": "https://product.hstatic.net/200000722513/product/ava_7a60a95da9ad4f79937195617962b252_grande.png",
+    "cpu": "i5-1334U",
+    "gpu": "Onboard",
+    "ram": "8GB",
+    "storage": "512GB SSD",
+    "display": "14 inch FHD+",
+    "price": 18290000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell XPS 9350 XPS9350-U5IA165W11GR-FP",
+    "image": "https://product.hstatic.net/200000722513/product/51529_laptop_dell_xps_9350_xps93_1d46c518185a488a92c40932dd4d5cf6_grande.png",
+    "cpu": "Ultra 5 226V",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "13.4 inch QHD+ Touch 120Hz",
+    "price": 54990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 16 5640 C7U161W11IBU",
+    "image": "https://product.hstatic.net/200000722513/product/ava_9ee9167a5bfd464488bfad601bf3f80c_grande.png",
+    "cpu": "Core 7 150U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "16 inch FHD+",
+    "price": 25790000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 5640 G14 N6I7512W1-IceBlue",
+    "image": "https://product.hstatic.net/200000722513/product/ava_49faeda979774294952e490d41f3c020_grande.png",
+    "cpu": "i7 150U",
+    "gpu": "MX570A",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "16 inch 2.5K",
+    "price": 30290000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 5640 N6I5419W1-IceBlue",
+    "image": "https://product.hstatic.net/200000722513/product/ava_b6f0624cda48402da828d7f326c8dcd2_grande.png",
+    "cpu": "i5-1334U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "16 inch FHD+ IPS",
+    "price": 22990000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 5440 G14 N4I7204W1-IceBlue",
+    "image": "https://product.hstatic.net/200000722513/product/ava_5ccb81a416ac429f9677cb7369968165_grande.png",
+    "cpu": "i7 150U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch FHD+ IPS",
+    "price": 24990000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 5440 G14 N4I5211W1-IceBlue",
+    "image": "https://product.hstatic.net/200000722513/product/ava_b4aa23f109fe4f8ab66cf4bbc90c9295_grande.png",
+    "cpu": "i5 120U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch FHD+ IPS",
+    "price": 22990000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 3530 N5I5007W1-Silver",
+    "image": "https://product.hstatic.net/200000722513/product/ava_6b09726b720340cc98e16dd6808c96c7_grande.png",
+    "cpu": "i5-1335U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD IPS 120Hz",
+    "price": 17990000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 3520 N5I5052W1-Silver",
+    "image": "https://product.hstatic.net/200000722513/product/ava_35d6060c96cd414088df03d901eebfe9_grande.png",
+    "cpu": "i5-1235U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD IPS",
+    "price": 15490000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 3520 N5I5011W1 Black",
+    "image": "https://product.hstatic.net/200000722513/product/ava_e6497489b28a468cb1f1d6d17a75c1e1_grande.png",
+    "cpu": "i5-1235U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD IPS 120Hz",
+    "price": 16490000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Vostro 3530 V5I3465W1 Gray",
+    "image": "https://product.hstatic.net/200000722513/product/ava_323374780a104f079d493a9001f17921_grande.png",
+    "cpu": "i3-1305U",
+    "gpu": "Onboard",
+    "ram": "8GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 120Hz",
+    "price": 12990000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 3530 N5I5791W1 Black",
+    "image": "https://product.hstatic.net/200000722513/product/inspiron-15-3530-i5u085w11blu_b60d09f21993480cadda384a5fe9c154_large_0b98f57875004b289aa90b4237c9c353_grande.png",
+    "cpu": "i5-1335U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD IPS 120Hz",
+    "price": 18490000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 3530 N3530I716W1 Silver",
+    "image": "https://product.hstatic.net/200000722513/product/dell-inspiron-3530_99379d1e575240878fb8cad02396a1ce_grande.png",
+    "cpu": "i7-1355U",
+    "gpu": "MX 550",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD",
+    "price": 22790000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron T7430 N7430I58W1 Silver",
+    "image": "https://product.hstatic.net/200000722513/product/n7430i58w1_97351009345a4702bf2d4edbf560bc3f_grande.png",
+    "cpu": "i5-1335U",
+    "gpu": "Onboard",
+    "ram": "8GB",
+    "storage": "512GB SSD",
+    "display": "14 inch FHD+",
+    "price": 18990000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+    "name": "Laptop Dell Inspiron 15 3520 P112F007 71003262",
+    "image": "https://product.hstatic.net/200000722513/product/71003262_808df7fb9700440491a3d533c64459a9_73bd092b189847fab89a14f8e369fa91_grande.png",
+    "cpu": "i7-1250U",
+    "gpu": "Onboard",
+    "ram": "8GB",
+    "storage": "256GB SSD",
+    "display": "15.6 inch FHD WVA 120Hz",
+    "price": 19990000,
+    "category": [
+      "văn phòng",
+      "dell"
+    ]
+  },
+  {
+  "name": "Laptop gaming Dell G15 5530 i9H161W11GR4060",
+  "image": "https://product.hstatic.net/200000722513/product/ava_3bcf0035952f41a2847797845ef41b81_grande.png",
+  "cpu": "i9-13900HX",
+  "gpu": "RTX 4060",
+  "ram": "16GB",
+  "storage": "1TB SSD",
+  "display": "15.6 inch FHD 165Hz",
+  "price": 40490000,
+  "category": ["gamming", "đồ hoạ", "dell"]
+},
+{
+  "name": "Laptop gaming Dell Alienware M15 R6 P109F001CBL",
+  "image": "https://product.hstatic.net/200000722513/product/52efa79f4f43d19e2285d867186c88_master_6096af6af6a94e40958269383b739a56_9598751c186e47b69b6f3145d7ea8516_master.png",
+  "cpu": "i7-11800H",
+  "gpu": "RTX 3060",
+  "ram": "32GB",
+  "storage": "1TB SSD",
+  "display": "15.6 inch FHD 165Hz",
+  "price": 44990000,
+  "category": ["gamming", "đồ hoạ", "dell"]
+},
+{
+  "name": "Laptop gaming Dell G15 5525 R5H085W11GR3050",
+  "image": "https://product.hstatic.net/200000722513/product/aming-dell-g15-5525-r5h085w11gr3050-2_81d389e8a9dc446b8c57ed476b618f2b_4bc2d24923b346caaa54c3f286a5e22b_master.png",
+  "cpu": "R5-6600H",
+  "gpu": "RTX 3050",
+  "ram": "8GB",
+  "storage": "512GB SSD",
+  "display": "15.6 inch FHD 120Hz",
+  "price": 25490000,
+  "category": ["gamming", "đồ hoạ", "dell"]
+},
+{
+  "name": "Laptop gaming Dell G15 5525 R7H165W11GR3060",
+  "image": "https://product.hstatic.net/200000722513/product/ook-g-15-5525-black-coralkb-gallery-3_39b65a463f8c4fa5adbe1264d024b4b4_4f4707c944334e32892a831dacec9676_master.png",
+  "cpu": "R7-6800H",
+  "gpu": "RTX 3060",
+  "ram": "16GB",
+  "storage": "512GB SSD",
+  "display": "15.6 inch FHD 120Hz",
+  "price": 25990000,
+  "category": ["gamming", "đồ hoạ", "dell"]
+},
+{
+  "name": "Laptop gaming Dell Alienware M15 R7 I7H165W11GR3050Ti",
+  "image": "https://product.hstatic.net/200000722513/product/laptop-alienware-m15-r7-gallery-3_e94331562e5b47d3affa1dca39efc925_fde32d7ded814579a5f1566ad743580b_master.png",
+  "cpu": "i7-12700H",
+  "gpu": "RTX 3050Ti",
+  "ram": "16GB",
+  "storage": "512GB SSD",
+  "display": "15.6 inch FHD 165Hz",
+  "price": 37990000,
+  "category": ["gamming", "đồ hoạ", "dell"]
+}
+  ,
+  {
+    "name": "Laptop MSI Prestige 16 AI+ Mercedes AMG B2VMG 088VN",
+    "image": "https://cdn.hstatic.net/products/200000722513/1024__1__0d667d989d7940c5b9384e3b838608ce_grande.png",
+    "cpu": "Ultra 9 288V",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "2TB SSD",
+    "display": "16 inch UHD+ OLED",
+    "price": 49990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Modern 15 H C13M 216VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__b61842c73fff4821a93470f41c00c2d2_grande.png",
+    "cpu": "i7-13700H",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "15.6 inch FHD 60Hz",
+    "price": 18290000,
+    "category": [
+      "văn phòng",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Modern 14 H D13MG 217VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__2__92b8449268e54110be034cb6ae6483bb_grande.png",
+    "cpu": "i7-13700H",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "14 inch FHD+ IPS",
+    "price": 17990000,
+    "category": [
+      "văn phòng",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Venture A14 AI+ A3HMG 004VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__325a259fe603436b88cbad9459bf737f_grande.png",
+    "cpu": "R5 AI 340",
+    "gpu": "Radeon",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch 2.8K OLED 120Hz",
+    "price": 23790000,
+    "category": [
+      "văn phòng",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Prestige 14 AI+ Evo C2VMG 020VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__4ce7108d02d54156b235978be0ab7e5b_grande.png",
+    "cpu": "Ultra 7 258V",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "14 inch 2.8K OLED 120Hz",
+    "price": 36990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Prestige 14 AI Evo C1MG 080VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__2458527b9b124ff8aa1707f9a659425a_grande.png",
+    "cpu": "Ultra 5 125H",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "512GB SSD",
+    "display": "14 inch 2.8K IPS 60Hz",
+    "price": 26490000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Prestige 14 AI Evo C1MG 081VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__919b0672b0984e2ab3f2a660513c0670_grande.png",
+    "cpu": "Ultra 5 125H",
+    "gpu": "Intel Arc",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "14 inch 2.8K IPS 60Hz",
+    "price": 24490000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Prestige 13 AI+ Evo A2VMG 040VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__4__ab86f4852ea441b4871cce84058c88ef_grande.png",
+    "cpu": "Ultra 7 258V",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "13.3 inch 2.8K OLED",
+    "price": 34990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Prestige 16 AI+ Evo B2VMG 016VN",
+    "image": "https://cdn.hstatic.net/products/200000722513/msi_prestige_16_ai_plus_evo_b2vm_2d24dbb665574e1ca347ec4d8857ec45_grande.png",
+    "cpu": "Ultra 9 288V",
+    "gpu": "Intel Arc",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch UHD+ OLED",
+    "price": 42990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Prestige 14 AI Studio C1UDXG 058VN",
+    "image": "https://product.hstatic.net/200000722513/product/ava_a670282dba2049a7ae704170f61415f5_grande.png",
+    "cpu": "Ultra 7 155H",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "14 inch FHD+ 144Hz",
+    "price": 27990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Modern 15 F13MG 082VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__5__c1a76aeb9348493c8aefe42dddae273d_grande.png",
+    "cpu": "i5-1335U",
+    "gpu": "Onboard",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD",
+    "price": 16490000,
+    "category": [
+      "văn phòng",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop MSI Prestige 16 AI Studio B1VFG 082VN",
+    "image": "https://product.hstatic.net/200000722513/product/ava_80efb8d938cc4c058bdaf2db97c08994_grande.png",
+    "cpu": "Ultra 9 185H",
+    "gpu": "RTX 4060",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch UHD+ OLED",
+    "price": 55990000,
+    "category": [
+      "văn phòng",
+      "AI",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Sword 16 HX B14VEKG 856VN",
+    "image": "https://product.hstatic.net/200000722513/product/ava_ecb79fdbde454bfd87bf7ccd8675e972_grande.png",
+    "cpu": "i7-14700HX",
+    "gpu": "RTX 4050",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "16 inch FHD+ IPS 165Hz",
+    "price": 31990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Thin 15 B13UC 2044VN",
+    "image": "https://product.hstatic.net/200000722513/product/thin-new_d31ff3b88e7f40e7ac88acc624e03d4f_grande.png",
+    "cpu": "i7-13620H",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD IPS 144Hz",
+    "price": 18990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana   15 B13VEK 2415VN",
+    "image": "https://product.hstatic.net/200000722513/product/ava_de2354a6925a49cba8c081119e0c7b06_grande.png",
+    "cpu": "i5-13420H",
+    "gpu": "RTX 4050",
+    "ram": "8GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 20990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Thin 15 B13UC 2081VN",
+    "image": "https://product.hstatic.net/200000722513/product/khung-laptop-23_d51fca97f93646e593987eacc22a5e25_grande.png",
+    "cpu": "i5-13420H",
+    "gpu": "RTX 3050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 17990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana 15 B13VEK 252VN",
+    "image": "https://product.hstatic.net/200000722513/product/1205vn_da651643e91047bfa9729c53f93ffc6e_large_39f1561f3448481c94add35d7fda7dc4_grande.png",
+    "cpu": "i7-13620H",
+    "gpu": "RTX 4050",
+    "ram": "8GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 22790000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana 15 B13VFK 676VN",
+    "image": "https://product.hstatic.net/200000722513/product/676vn_21da8c4630014f808b321b3d32118291_69f68ad8d3be44b385bb3da80ec4a9ee_grande.png",
+    "cpu": "i7-13620H",
+    "gpu": "RTX 4060",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 27990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Thin 15 B13UCX 2080VN",
+    "image": "https://product.hstatic.net/200000722513/product/thin-new_53b6dda3063c4b1fb550042f10500adc_grande.png",
+    "cpu": "i5-13420H",
+    "gpu": "RTX 2050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 15990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana 15 HX B14WEK 295VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__852ded286c3944d6994c2dc4b8c172f0_grande.png",
+    "cpu": "-",
+    "gpu": "RTX 5050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch QHD 165Hz",
+    "price": 33990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Stealth 18 HX AI A2XWJG 073VN",
+    "image": "https://cdn.hstatic.net/products/200000722513/1024__5__027bde764b304c53a8c3ff2542ccbfea_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5090",
+    "ram": "64GB",
+    "storage": "2TB SSD",
+    "display": "18 inch UHD+ MiniLed 120Hz",
+    "price": 122990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Vector 16 HX AI A2XWHG 470VN",
+    "image": "https://cdn.hstatic.net/products/200000722513/1024__1__f3b466a482af44589515ce953ae926b7_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5090",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch QHD+ 240Hz",
+    "price": 99990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana 15 HX B14WGK 023VN",
+    "image": "https://cdn.hstatic.net/products/200000722513/1024__1__ea3f282860f14e5c9694de03779e994c_grande.png",
+    "cpu": "i7-14650HX",
+    "gpu": "RTX 5070",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "15.6 inch QHD 165Hz",
+    "price": 39490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana 15 HX B14WGK 022VN",
+    "image": "https://cdn.hstatic.net/products/200000722513/1024__1__aa24c74b601145d9afddb33060ee5eaa_grande.png",
+    "cpu": "i9-14900HX",
+    "gpu": "RTX 5070",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "15.6 inch QHD 165Hz",
+    "price": 42990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Stealth A16 AI+ A3XWFG 018VN",
+    "image": "https://cdn.hstatic.net/products/200000722513/1024__1__94e8e1881c3747139cdaf981dc2a4523_grande.png",
+    "cpu": "R9 AI 370",
+    "gpu": "RTX 5060",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch QHD+ OLED 240Hz",
+    "price": 59990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Stealth A16 Mercedes AMG AI+ A3XWGG 032VN",
+    "image": "https://cdn.hstatic.net/products/200000722513/1024__1__1af05ad0a2fe40ea837ab59373d890ab_grande.png",
+    "cpu": "R9 AI 370",
+    "gpu": "RTX 5070",
+    "ram": "32GB",
+    "storage": "2TB SSD",
+    "display": "16 inch QHD+ OLED 240Hz",
+    "price": 78490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana 15 HX B14WFK 294VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__6ae29273ed0246599af8b47e7b1dcc70_grande.png",
+    "cpu": "-",
+    "gpu": "RTX 5060",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch QHD 165Hz",
+    "price": 35990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Raider 18 HX AI A2XWJG 692VN",
+    "image": "https://product.hstatic.net/200000722513/product/laptop_gaming_msi_raider_18_hx_ai_a2xwjg_692vn_2c455abc612946409ca1581313d42f61_grande.png",
+    "cpu": "Ultra 9 285HX",
+    "gpu": "RTX 5090",
+    "ram": "64GB",
+    "storage": "4TB SSD",
+    "display": "18 inch UHD+ MiniLed 120Hz",
+    "price": 139990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana 15 HX B14WEK 027VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__1755e5c9f3e84b71a96d115e2a57cae6_grande.png",
+    "cpu": "i7-14650HX",
+    "gpu": "RTX 5050",
+    "ram": "32GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch QHD 165Hz",
+    "price": 33790000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana 15 HX B14WFK 267VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__3e2e92ac0f084d6fadffa13d51d08c4c_grande.png",
+    "cpu": "i7-14650HX",
+    "gpu": "RTX 5060",
+    "ram": "32GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch QHD 165Hz",
+    "price": 36490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana 15 HX B14WFK 025VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__b31a262b896f4a99beab8adaad0f444b_grande.png",
+    "cpu": "i7-14650HX",
+    "gpu": "RTX 5060",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch QHD 165Hz",
+    "price": 35490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Katana 15 HX B14WFK 286VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__a46b4d625ee04fca8ad89378116c1516_grande.png",
+    "cpu": "i5-14450HX",
+    "gpu": "RTX 5050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch QHD 165Hz",
+    "price": 30990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Thin 15 B13VE 2824VN",
+    "image": "https://product.hstatic.net/200000722513/product/khung-laptop-23_acbd93cd245f40449ecac5bd3067ca68_grande.png",
+    "cpu": "i5-13420H",
+    "gpu": "RTX 4050",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "15.6 inch FHD 144Hz",
+    "price": 20990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Crosshair 16 HX AI D2XWGKG 034VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__badf47cc3a3c4f90b0640b3d45458880_grande.png",
+    "cpu": "Ultra 7 255HX",
+    "gpu": "RTX 5070",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "16 inch QHD+ 240Hz",
+    "price": 44490000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Crosshair 16 HX AI D2XWGKG 072VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__f7ee72e7aa9849e792d6886cca066166_grande.png",
+    "cpu": "Ultra 7 255HX",
+    "gpu": "RTX 5070",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch QHD+ 240Hz",
+    "price": 45990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Crosshair 16 HX AI D2XWGKG 071VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__e2ecfb43d0824bdd8ba5ae8be0a8ef7a_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5070",
+    "ram": "32GB",
+    "storage": "1TB SSD",
+    "display": "16 inch QHD+ 240Hz",
+    "price": 48990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Crosshair 16 HX AI D2XWFKG 036VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__38ec72db459e4e699a94861497a50772_grande.png",
+    "cpu": "Ultra 7 255HX",
+    "gpu": "RTX 5060",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "16 inch QHD+ 240Hz",
+    "price": 38990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Crosshair 16 HX AI D2XWFKG 070VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__3dae1070f7234b24857d0ac6528a3bd5_grande.png",
+    "cpu": "Ultra 9 275HX",
+    "gpu": "RTX 5060",
+    "ram": "16GB",
+    "storage": "1TB SSD",
+    "display": "16 inch QHD+ 240Hz",
+    "price": 40990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  },
+  {
+    "name": "Laptop gaming MSI Vector 16 HX AI A2XWHG 010VN",
+    "image": "https://product.hstatic.net/200000722513/product/1024__1__035bd6ee5a8246078c525b4bc8d2e55b_grande.png",
+    "cpu": "Ultra 7 255HX",
+    "gpu": "RTX 5070Ti",
+    "ram": "16GB",
+    "storage": "512GB SSD",
+    "display": "16 inch QHD+ 240Hz",
+    "price": 48990000,
+    "category": [
+      "gamming",
+      "đồ hoạ",
+      "msi"
+    ]
+  }
+]
