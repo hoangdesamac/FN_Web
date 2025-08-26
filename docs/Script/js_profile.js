@@ -66,7 +66,7 @@ async function populateProvinceWard(preProvince = "", preWard = "") {
         provinceListenerAttached = true;
     }
 
-    // preset nếu có
+    // preset nếu có NHÉ
     if (preProvince) {
         provinceEl.value = preProvince;
         // kích hoạt event manual để load wards
