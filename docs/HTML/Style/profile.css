@@ -237,7 +237,7 @@ select.readonly-select {
 }
 
 /* ===== CYBER ACTIONS (3 nút dưới cùng bên phải) ===== */
-.cyber-actions {
+.cyber-actions-address {
     position: absolute;
     bottom: 12px;
     right: 12px;

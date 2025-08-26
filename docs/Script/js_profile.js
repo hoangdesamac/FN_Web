@@ -359,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p><i class="fa-solid fa-phone me-2"></i>${addr.recipient_phone}</p>
                     <p><i class="fa-solid fa-location-dot me-2"></i>${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</p>
                     
-                    <div class="cyber-actions">
+                    <div class=".cyber-actions-address">
                         <!-- Nút sửa luôn có -->
                         <button class="cyber-btn cyber-btn-edit" onclick="editAddress(${addr.id})">
                             <i class="fa-solid fa-pen"></i> Sửa
