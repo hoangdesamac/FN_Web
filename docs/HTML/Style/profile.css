@@ -271,3 +271,35 @@ select.readonly-select {
     background: var(--primary);
     color: #000;
 }
+
+/* ===== MODAL MOBILE FULL WIDTH ===== */
+@media (max-width: 768px) {
+    .modal-dialog {
+        width: 95% !important;      /* modal gần full màn hình */
+        max-width: none !important;
+        margin: 0;
+    }
+
+    .modal-content {
+        border-radius: 12px;
+        padding: 12px 15px;         /* giảm padding */
+        font-size: 0.9rem;          /* chữ nhỏ hơn */
+    }
+
+    .modal-header h5,
+    .modal-title {
+        font-size: 1rem;            /* tiêu đề nhỏ lại */
+    }
+
+    .modal-body input,
+    .modal-body select,
+    .modal-body textarea {
+        font-size: 0.9rem;
+        padding: 6px 10px;          /* input gọn hơn */
+    }
+
+    .modal-footer button {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+}
