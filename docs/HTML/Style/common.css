@@ -24,7 +24,7 @@
 }
 
 body {
-    margin-top: 230px;
+    margin-top: 250px;
     font-family: 'Rajdhani', sans-serif;
     background: var(--bg-gradient);
     min-height: 100vh;
@@ -84,7 +84,7 @@ body {
     transition: transform 0.4s ease;
 }
 #header-wrapper.hide-banner {
-    transform: translateY(-115px); /* hoặc đúng chiều cao banner */
+    transform: translateY(-125px); /* hoặc đúng chiều cao banner */
 }
 
 /* Cyberpunk Hologram Banner - Đã cập nhật */
@@ -1175,9 +1175,19 @@ body {
     to { opacity: 0; transform: translateY(-20px); }
 }
 /* Tablet */
-@media (max-width: 992px) {
+@media (max-width: 769px) {
     #header-wrapper.hide-banner {
-        transform: translateY(-130px);
+        transform: translateY(-54px);
+    }
+}
+@media (min-width: 770px) and (max-width: 992px) {
+    #header-wrapper.hide-banner {
+        transform: translateY(-150px);
+    }
+}
+@media (min-width: 993px) and (max-width: 1200px) {
+    #header-wrapper.hide-banner {
+        transform: translateY(-145px);
     }
 }
 /* ==== Footer Carousel Arrows ==== */
