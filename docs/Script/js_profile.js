@@ -81,8 +81,19 @@ async function editAddress(id) {
         form.street_address.value = addr.street_address;
         form.ward.value = addr.ward || "";
         form.city.value = addr.city || "";
-        form.is_default.checked = addr.is_default;
         form.dataset.editingId = id;
+
+        const defaultCheckboxWrapper = form.querySelector(".form-check"); // wrapper chứa checkbox
+        const defaultCheckbox = form.is_default;
+
+        // Logic: nếu là địa chỉ mặc định thì ẩn tick chọn
+        if (addr.is_default) {
+            defaultCheckboxWrapper.style.display = "none";
+            defaultCheckbox.checked = true; // giữ mặc định
+        } else {
+            defaultCheckboxWrapper.style.display = "block";
+            defaultCheckbox.checked = false;
+        }
 
         document.getElementById("addressFormTitle").textContent = "Chỉnh sửa địa chỉ";
         new bootstrap.Modal(document.getElementById("addressModal")).show();
@@ -400,15 +411,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         ${addr.is_default ? `<span class="cyber-badge">Mặc định</span>` : ""}
                     </div>
                     <p><i class="fa-solid fa-phone me-2"></i>${addr.recipient_phone}</p>
-                    <p><i class="fa-solid fa-location-dot me-2"></i>${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</p>
+                    <p><i class="fa-solid fa-location-dot me-2"></i>
+                        ${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}
+                    </p>
                     
-                    <div class="cyber-actions-address">
+                    <div class="cyber-actions-address text-end">
                         <!-- Nút sửa luôn có -->
                         <button class="cyber-btn cyber-btn-edit" onclick="editAddress(${addr.id})">
                             <i class="fa-solid fa-pen"></i> Sửa
                         </button>
 
-                        <!-- Nếu không phải địa chỉ mặc định thì mới hiện nút Xóa -->
+                        <!-- Chỉ địa chỉ KHÔNG mặc định mới có Xóa -->
                         ${!addr.is_default ? `
                         <button class="cyber-btn cyber-btn-delete" onclick="deleteAddress(${addr.id})">
                             <i class="fa-solid fa-trash"></i> Xóa
@@ -423,9 +436,6 @@ document.addEventListener("DOMContentLoaded", () => {
             container.innerHTML = `<p class="text-danger">❌ Lỗi server khi tải địa chỉ!</p>`;
         }
     }
-
-
-
 
 // Submit form thêm/sửa
     document.getElementById("addressForm").addEventListener("submit", async (e) => {
@@ -470,26 +480,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Lỗi submit address form:", err);
         }
     });
-
-// Đặt mặc định
-    async function setDefaultAddress(id) {
-        try {
-            const res = await fetch(`${window.API_BASE}/api/addresses/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ is_default: true })
-            });
-            const data = await res.json();
-            if (data.success) {
-                await loadAddresses();
-            } else {
-                alert(data.error || "❌ Lỗi đặt mặc định!");
-            }
-        } catch (err) {
-            console.error("Lỗi setDefaultAddress:", err);
-        }
-    }
 
 // Nút mở modal thêm địa chỉ
     document.getElementById("addAddressBtn").addEventListener("click", () => {
