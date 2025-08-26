@@ -131,8 +131,6 @@ select.readonly-select {
     0% { opacity: 0; transform: translateY(-10px); }
     100% { opacity: 1; transform: translateY(0); }
 }
-
-/* OTP input + nút xác minh nằm cạnh nhau */
 .otp-section .input-group {
     display: flex;
     align-items: center;
@@ -149,10 +147,10 @@ select.readonly-select {
     border-color: var(--primary);
     box-shadow: 0 0 12px var(--primary), inset 0 0 10px rgba(0, 242, 255, 0.6);
     outline: none;
-    color: #000 !important;        /* chữ đen */
+    color: #000 !important;
 }
 
-/* Nút "Xác minh" */
+/* ===== OTP BUTTONS ===== */
 #verifyOtpBtn {
     font-size: 0.9rem;
     padding: 6px 12px;
@@ -168,8 +166,6 @@ select.readonly-select {
     transform: scale(1.05);
     box-shadow: 0 0 20px rgba(255, 0, 230, 0.9), 0 0 30px rgba(0, 242, 255, 0.8);
 }
-
-/* Nút "Gửi OTP" */
 #sendOtpBtn {
     font-size: 0.85rem;
     padding: 6px 10px;
@@ -191,8 +187,6 @@ select.readonly-select {
 /* ===== MESSAGE ===== */
 #profileMessage.success { color: #2ed573; font-weight: 600; }
 #profileMessage.error { color: #ff4757; font-weight: 600; }
-
-/* Màu chữ của thông báo OTP */
 .otp-section small.text-muted {
     display: block;
     margin-top: 6px;
@@ -200,6 +194,7 @@ select.readonly-select {
     color: #ccc !important;
 }
 
+/* ===== MODAL CENTER ===== */
 .modal.show .modal-dialog {
     position: fixed;
     top: 50% !important;
@@ -208,14 +203,17 @@ select.readonly-select {
     margin: 0 !important;
 }
 
+/* ===== CYBER CARD (Address) ===== */
 .cyber-card {
     background: #111827;
-    border: 2px solid #0ff;
+    border: 2px solid var(--primary);
     border-radius: 15px;
     padding: 20px;
+    padding-bottom: 60px; /* chừa chỗ cho 3 nút */
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
     margin-bottom: 15px;
     transition: all 0.3s ease;
+    position: relative;
 }
 .cyber-card:hover {
     transform: translateY(-3px);
@@ -228,8 +226,7 @@ select.readonly-select {
 .cyber-recipient {
     font-size: 18px;
     font-weight: bold;
-    color: #0ff;
-    font-family: 'Orbitron', sans-serif;
+    color: var(--primary);
 }
 .cyber-badge {
     background: linear-gradient(90deg, #ff0099, #ff6600);
@@ -238,10 +235,13 @@ select.readonly-select {
     font-size: 12px;
     border-radius: 8px;
 }
+
+/* ===== CYBER ACTIONS (3 nút dưới cùng bên phải) ===== */
 .cyber-actions {
-    margin-top: 12px;
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
     display: flex;
-    flex-wrap: wrap;
     gap: 10px;
 }
 .cyber-btn {
@@ -250,7 +250,6 @@ select.readonly-select {
     font-size: 14px;
     cursor: pointer;
     border: none;
-    font-family: 'Rajdhani', sans-serif;
     transition: 0.3s;
 }
 .cyber-btn-edit {
@@ -265,11 +264,10 @@ select.readonly-select {
 .cyber-btn-delete:hover { background: #ff3366; }
 .cyber-btn-default {
     background: transparent;
-    border: 1px solid #0ff;
-    color: #0ff;
+    border: 1px solid var(--primary);
+    color: var(--primary);
 }
 .cyber-btn-default:hover {
-    background: #0ff;
+    background: var(--primary);
     color: #000;
 }
-
