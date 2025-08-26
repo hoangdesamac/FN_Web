@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // ===== Address Book (Cyber Design) =====
+    // ===== Address Book (dùng Modal) =====
     async function loadAddresses() {
         const container = document.getElementById("addressList");
         if (!container) return;
@@ -346,30 +346,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Render danh sách Cyber Card
             container.innerHTML = data.addresses.map(addr => `
-            <div class="cyber-card ${addr.is_default ? "cyber-card-default" : ""}">
-                <div class="cyber-card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="cyber-recipient">
-                            <i class="fa-solid fa-user me-2"></i>${addr.recipient_name}
-                        </h5>
-                        ${addr.is_default ? `<span class="cyber-badge">Mặc định</span>` : ""}
-                    </div>
-                    <p><i class="fa-solid fa-phone me-2"></i>${addr.recipient_phone}</p>
-                    <p><i class="fa-solid fa-location-dot me-2"></i>${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</p>
-                    <div class="cyber-actions">
-                        <button class="cyber-btn cyber-btn-edit" onclick="editAddress(${addr.id})">
-                            <i class="fa-solid fa-pen"></i> Sửa
-                        </button>
-                        <button class="cyber-btn cyber-btn-delete" onclick="deleteAddress(${addr.id})">
-                            <i class="fa-solid fa-trash"></i> Xóa
-                        </button>
-                        ${!addr.is_default ? `
-                        <button class="cyber-btn cyber-btn-default" onclick="setDefaultAddress(${addr.id})">
+            <div class="card mb-2 p-3 ${addr.is_default ? "border-success" : ""}">
+                <p><b>${addr.recipient_name}</b> - ${addr.recipient_phone}</p>
+                <p>${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</p>
+                ${addr.is_default ? `<span class="badge bg-success">Mặc định</span>` : ""}
+                <div class="mt-2">
+                    <button class="btn btn-sm btn-primary me-2" onclick="editAddress(${addr.id})">
+                        <i class="fa-solid fa-pen"></i> Sửa
+                    </button>
+                    <button class="btn btn-sm btn-danger me-2" onclick="deleteAddress(${addr.id})">
+                        <i class="fa-solid fa-trash"></i> Xóa
+                    </button>
+                    ${!addr.is_default ? `
+                        <button class="btn btn-sm btn-outline-success" onclick="setDefaultAddress(${addr.id})">
                             <i class="fa-solid fa-check"></i> Đặt mặc định
                         </button>` : ""}
-                    </div>
                 </div>
             </div>
         `).join("");
@@ -379,7 +371,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-// Sửa địa chỉ
+// Mở modal thêm địa chỉ
+    document.getElementById("addAddressBtn").addEventListener("click", () => {
+        const form = document.getElementById("addressForm");
+        form.reset();
+        delete form.dataset.editingId;
+        document.getElementById("addressFormTitle").textContent = "Thêm địa chỉ mới";
+        new bootstrap.Modal(document.getElementById("addressModal")).show();
+    });
+
+// Sửa địa chỉ (mở modal với dữ liệu)
     async function editAddress(id) {
         try {
             const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
@@ -403,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-// Submit form thêm/sửa
+// Submit form (thêm/sửa)
     document.getElementById("addressForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -486,23 +487,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-// Nút mở modal thêm địa chỉ
-    document.getElementById("addAddressBtn").addEventListener("click", () => {
-        const form = document.getElementById("addressForm");
-        form.reset();
-        delete form.dataset.editingId;
-        document.getElementById("addressFormTitle").textContent = "Thêm địa chỉ mới";
-        new bootstrap.Modal(document.getElementById("addressModal")).show();
-    });
-
-// Khi click tab -> load
+// Khi chuyển sang tab "tab-address" thì load
     const addressTab = document.querySelector('.sidebar-menu li[data-target="tab-address"]');
     if (addressTab) {
         addressTab.addEventListener("click", () => {
             loadAddresses();
         });
     }
-
 
 
 
