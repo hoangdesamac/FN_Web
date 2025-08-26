@@ -303,3 +303,32 @@ select.readonly-select {
         padding: 6px 12px;
     }
 }
+/* ===== CUSTOM BUTTONS IN MODAL ===== */
+.modal-footer .btn-cancel {
+    background: #8000ff; /* tím neon */
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: 0.3s;
+}
+.modal-footer .btn-cancel:hover {
+    background: #a64dff;
+    box-shadow: 0 0 12px rgba(128, 0, 255, 0.7);
+}
+
+.modal-footer .btn-save {
+    background: #00cc66; /* xanh lá neon */
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: 0.3s;
+}
+.modal-footer .btn-save:hover {
+    background: #00e673;
+    box-shadow: 0 0 12px rgba(0, 204, 102, 0.7);
+}
+

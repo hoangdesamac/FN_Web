@@ -67,7 +67,7 @@ async function loadProfile() {
     }
 }
 
-// Sửa địa chỉ
+// ===== Sửa địa chỉ =====
 async function editAddress(id) {
     try {
         const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
@@ -83,19 +83,26 @@ async function editAddress(id) {
         form.city.value = addr.city || "";
         form.dataset.editingId = id;
 
-        const defaultCheckboxWrapper = form.querySelector(".form-check"); // wrapper chứa checkbox
+        const defaultCheckboxWrapper = form.querySelector(".form-check");
         const defaultCheckbox = form.is_default;
 
-        // Logic: nếu là địa chỉ mặc định thì ẩn tick chọn
+        // Logic hiển thị checkbox
         if (addr.is_default) {
-            defaultCheckboxWrapper.style.display = "none";
-            defaultCheckbox.checked = true; // giữ mặc định
+            defaultCheckboxWrapper.style.display = "none"; // ẩn nếu là mặc định
+            defaultCheckbox.checked = true;
         } else {
             defaultCheckboxWrapper.style.display = "block";
             defaultCheckbox.checked = false;
         }
 
+        // chỉnh nút và tiêu đề
         document.getElementById("addressFormTitle").textContent = "Chỉnh sửa địa chỉ";
+        const saveBtn = document.getElementById("saveAddressBtn");
+        const cancelBtn = document.getElementById("cancelAddressBtn");
+        saveBtn.textContent = "Cập nhật địa chỉ";
+        saveBtn.className = "btn btn-save";   // xanh lá
+        cancelBtn.className = "btn btn-cancel"; // tím
+
         new bootstrap.Modal(document.getElementById("addressModal")).show();
     } catch (err) {
         console.error("Lỗi editAddress:", err);
@@ -481,12 +488,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-// Nút mở modal thêm địa chỉ
+    // ===== Nút mở modal thêm địa chỉ =====
     document.getElementById("addAddressBtn").addEventListener("click", () => {
         const form = document.getElementById("addressForm");
         form.reset();
         delete form.dataset.editingId;
+
+        // tiêu đề và nút
         document.getElementById("addressFormTitle").textContent = "Thêm địa chỉ mới";
+        const saveBtn = document.getElementById("saveAddressBtn");
+        const cancelBtn = document.getElementById("cancelAddressBtn");
+        saveBtn.textContent = "Lưu địa chỉ";
+        saveBtn.className = "btn btn-save";   // xanh lá
+        cancelBtn.className = "btn btn-cancel"; // tím
+
+        // checkbox luôn hiển thị khi thêm
+        const defaultCheckboxWrapper = form.querySelector(".form-check");
+        const defaultCheckbox = form.is_default;
+        defaultCheckboxWrapper.style.display = "block";
+        defaultCheckbox.checked = false;
+
         new bootstrap.Modal(document.getElementById("addressModal")).show();
     });
 
