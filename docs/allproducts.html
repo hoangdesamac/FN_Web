@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Tất cả sản phẩm - 3TD SHOP</title>
+    <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Boxicons + FontAwesome -->
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="HTML/Style/common.css">
     <link rel="stylesheet" href="HTML/Style/allproducts.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
         window.API_BASE = "https://fn-web.onrender.com";
     </script>
@@ -26,12 +28,373 @@
 <!-- Header -->
 <div id="header-container"></div>
 
+<div class="container my-4">
+  <div class="row">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb bg-transparent p-0" style="font-size:1.1rem;">
+        <li class="breadcrumb-item">
+          <a href="index.html" style="color:#1976d2;font-weight:600;"><i class="fa fa-home"></i> Trang chủ</a>
+        </li>
+        <li class="breadcrumb-item active text-secondary" aria-current="page">PC 3TD</li>
+      </ol>
+    </nav>
+    <div class="row">
+      <!-- Banner trên bộ lọc -->
+      <div class="col-12 mb-3">
+        <img src="https://file.hstatic.net/200000722513/file/gearvn-pc-gvn-t8-header.jpg" alt="Banner GEARVN" style="width:100%;max-width:100%;border-radius:12px;box-shadow:0 0 16px var(--primary);">
+      </div>
+      
+      <aside class="col-lg-3 mb-4">
+        <!-- Sidebar PC (giữ nguyên) -->
+        <div class="product-sidebar pc-sidebar">
+          <div class="sidebar-title">Khoảng giá</div>
+          <div class="filter-section">
+            <div class="price-range mb-2">
+              <input type="text" class="price-input" id="min-price" value="0đ" readonly>
+              <span style="font-size:18px;line-height:1;">–</span>
+              <input type="text" class="price-input" id="max-price" value="200.000.000đ" readonly>
+            </div>
+            <input type="range" class="price-slider" min="0" max="200000000" step="1000000" value="0" id="price-slider">
+          </div>
+          <div class="filter-section" data-filter-group="brand">
+            <div class="sidebar-title collapsible">Thương hiệu <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-asus"><label for="brand-asus">Asus</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-dell"><label for="brand-dell">Dell</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-hp"><label for="brand-hp">HP</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-lenovo"><label for="brand-lenovo">Lenovo</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-acer"><label for="brand-acer">Acer</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-apple"><label for="brand-apple">Apple</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-phongvu"><label for="brand-phongvu">3TD</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-other"><label for="brand-other">Khác</label></div>
+            </div>
+          </div>
+          <div class="filter-section">
+            <div class="sidebar-title collapsible">Loại hàng <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="loai-thanhly"><label for="loai-thanhly">Hàng thanh lý - trưng bày lẻ</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="loai-thuong"><label for="loai-thuong">Hàng thông thường</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="series">
+            <div class="sidebar-title collapsible">Series <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-elite"><label for="series-elite">Elite Mini</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-ideacentre"><label for="series-ideacentre">IdeaCentre</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-inspiron"><label for="series-inspiron">Inspiron</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-nuc"><label for="series-nuc">NUC</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-thinkcentre"><label for="series-thinkcentre">ThinkCentre</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-prodesk"><label for="series-prodesk">ProDesk</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-optiplex"><label for="series-optiplex">OptiPlex</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-macmini"><label for="series-macmini">Mac Mini</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-phongvu-amd"><label for="series-phongvu-amd">3TD - AMD</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-phongvu-intel"><label for="series-phongvu-intel">3TD - Intel</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-thinkstation"><label for="series-thinkstation">ThinkStation</label></div>
+            </div>
+          </div>
+          <div class="filter-section">
+            <div class="sidebar-title collapsible">Nhu cầu <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="nc-gaming"><label for="nc-gaming">Gaming</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="nc-hssv"><label for="nc-hssv">Học sinh - Sinh viên</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="nc-vanphong"><label for="nc-vanphong">Văn phòng</label></div>
+            </div>
+          </div>
+          <div class="filter-section">
+            <div class="sidebar-title collapsible">PC Segment <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="seg-all"><label for="seg-all">PC All</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="seg-gaming"><label for="seg-gaming">PC Gaming</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="seg-mini"><label for="seg-mini">PC Mini</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="seg-vanphong"><label for="seg-vanphong">PC Văn Phòng</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="cpu-series">
+            <div class="sidebar-title collapsible">Series CPU <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="cpu-n"><label for="cpu-n">Core N</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="cpu-i3"><label for="cpu-i3">Core i3</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="cpu-i5"><label for="cpu-i5">Core i5</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="cpu-i7"><label for="cpu-i7">Core i7</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="cpu-i9"><label for="cpu-i9">Core i9</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="cpu-xeon"><label for="cpu-xeon">Xeon</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="cpu-ryzen3"><label for="cpu-ryzen3">Ryzen 3</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="cpu-ryzen5"><label for="cpu-ryzen5">Ryzen 5</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="cpu-ryzen7"><label for="cpu-ryzen7">Ryzen 7</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="gen">
+            <div class="sidebar-title collapsible">THẾ HỆ CPU <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-amd4000"><label for="gen-amd4000">AMD 4000 series</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-amd5000"><label for="gen-amd5000">AMD 5000 series</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-amd7000"><label for="gen-amd7000">AMD 7000 series</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-amd8000"><label for="gen-amd8000">AMD 8000 series</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-amd9000"><label for="gen-amd9000">AMD 9000 series</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-amdryzen3"><label for="gen-amdryzen3">AMD Ryzen thế hệ thứ 3</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-ultra200s"><label for="gen-ultra200s">Intel Core Ultra 200S</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-ultras1"><label for="gen-ultras1">Intel Core Ultra series 1</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-ultras2"><label for="gen-ultras2">Intel Core Ultra series 2</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-intel8"><label for="gen-intel8">Intel Core thế hệ thứ 8</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-intel10"><label for="gen-intel10">Intel Core thế hệ thứ 10</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-intel12"><label for="gen-intel12">Intel Core thế hệ thứ 12</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-intel13"><label for="gen-intel13">Intel Core thế hệ thứ 13</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gen-intel14"><label for="gen-intel14">Intel Core thế hệ thứ 14</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="ram">
+            <div class="sidebar-title collapsible">RAM <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="ram-4"><label for="ram-4">4 GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="ram-8"><label for="ram-8">8 GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="ram-16"><label for="ram-16">16 GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="ram-32"><label for="ram-32">32 GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="ram-64"><label for="ram-64">64 GB</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="gpu">
+            <div class="sidebar-title collapsible">Đồ hoạ rời <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-gtx1650"><label for="gpu-gtx1650">GeForce GTX 1650</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx3050"><label for="gpu-rtx3050">GeForce RTX 3050</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx3060"><label for="gpu-rtx3060">GeForce RTX 3060</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx4060"><label for="gpu-rtx4060">GeForce RTX 4060</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx4070"><label for="gpu-rtx4070">GeForce RTX 4070</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx4070s"><label for="gpu-rtx4070s">GeForce RTX 4070S</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx4080s"><label for="gpu-rtx4080s">GeForce RTX 4080S</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx4090"><label for="gpu-rtx4090">GeForce RTX 4090</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx5060"><label for="gpu-rtx5060">GeForce RTX 5060</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx5060ti"><label for="gpu-rtx5060ti">GeForce RTX 5060Ti</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx5070"><label for="gpu-rtx5070">GeForce RTX 5070</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx5070ti"><label for="gpu-rtx5070ti">GeForce RTX 5070Ti</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx5080"><label for="gpu-rtx5080">GeForce RTX 5080</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rtx5090"><label for="gpu-rtx5090">GeForce RTX 5090</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-onboard"><label for="gpu-onboard">Onboard</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-quadro-t400"><label for="gpu-quadro-t400">Quadro T400</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rx6500xt"><label for="gpu-rx6500xt">Radeon RX 6500 XT</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="gpu-rx6600"><label for="gpu-rx6600">Radeon RX 6600</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="ssd">
+            <div class="sidebar-title collapsible">Dung lượng SSD <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="ssd-128"><label for="ssd-128">128 GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="ssd-256"><label for="ssd-256">256 GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="ssd-512"><label for="ssd-512">512 GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="ssd-1tb"><label for="ssd-1tb">1 TB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="ssd-2tb"><label for="ssd-2tb">2 TB</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="os">
+            <div class="sidebar-title collapsible">Hệ điều hành <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="os-win10"><label for="os-win10">Windows 10 Home</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="os-win11"><label for="os-win11">Windows 11 Home</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="os-other"><label for="os-other">Khác</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="os-linux"><label for="os-linux">Linux</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="os-mac"><label for="os-mac">MacOS</label></div>
+            </div>
+          </div>
+        </div>
+        <!-- Sidebar Laptop (ẩn mặc định, hiện khi lọc laptop) -->
+        <div class="product-sidebar laptop-sidebar" style="display:none;">
+          <div class="sidebar-title">Khoảng giá</div>
+          <div class="filter-section">
+            <div class="price-range mb-2">
+              <input type="text" class="price-input" id="laptop-min-price" value="0đ" readonly>
+              <span style="font-size:18px;line-height:1;">–</span>
+              <input type="text" class="price-input" id="laptop-max-price" value="200.000.000đ" readonly>
+            </div>
+            <input type="range" class="price-slider" min="0" max="200000000" step="1000000" value="0" id="laptop-price-slider">
+          </div>
+          <div class="filter-section" data-filter-group="brand">
+            <div class="sidebar-title collapsible">Thương hiệu <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-brand-acer"><label for="laptop-brand-acer">Acer</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-brand-apple"><label for="laptop-brand-apple">Apple</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-brand-asus"><label for="laptop-brand-asus">Asus</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-brand-dell"><label for="laptop-brand-dell">Dell</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-brand-lenovo"><label for="laptop-brand-lenovo">Lenovo</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-brand-msi"><label for="laptop-brand-msi">MSI</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="series">
+            <div class="sidebar-title collapsible">Series model <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options filter-scroll" data-max-visible="6">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-expertbook"><label for="laptop-series-expertbook">ASUS ExpertBook</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-rog"><label for="laptop-series-rog">ASUS ROG Gaming</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-tuf"><label for="laptop-series-tuf">ASUS TUF Gaming</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-vivobook"><label for="laptop-series-vivobook">ASUS Vivobook</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-zenbook"><label for="laptop-series-zenbook">ASUS Zenbook</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-aspire"><label for="laptop-series-aspire">Acer Aspire</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-nitro"><label for="laptop-series-nitro">Acer Nitro</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-predator"><label for="laptop-series-predator">Acer Predator</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-swift"><label for="laptop-series-swift">Acer Swift</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-gseries"><label for="laptop-series-gseries">Dell G Series</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-inspiron"><label for="laptop-series-inspiron">Dell Inspiron</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-latitude"><label for="laptop-series-latitude">Dell Latitude</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-vostro"><label for="laptop-series-vostro">Dell Vostro</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-xps"><label for="laptop-series-xps">Dell XPS</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-ideapad"><label for="laptop-series-ideapad">Lenovo Ideapad</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-legion"><label for="laptop-series-legion">Lenovo Legion</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-thinkbook"><label for="laptop-series-thinkbook">Lenovo ThinkBook</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-thinkpad"><label for="laptop-series-thinkpad">Lenovo Thinkpad</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-yoga"><label for="laptop-series-yoga">Lenovo Yoga</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-creator"><label for="laptop-series-creator">MSI Creator</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-crosshair"><label for="laptop-series-crosshair">MSI Crosshair</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-cyborg"><label for="laptop-series-cyborg">MSI Cyborg</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-katana"><label for="laptop-series-katana">MSI Katana</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-modern"><label for="laptop-series-modern">MSI Modern</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-prestige"><label for="laptop-series-prestige">MSI Prestige</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-pulse"><label for="laptop-series-pulse">MSI Pulse</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-stealth"><label for="laptop-series-stealth">MSI Stealth</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-thin"><label for="laptop-series-thin">MSI Thin</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-vector"><label for="laptop-series-vector">MSI Vector</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-macair"><label for="laptop-series-macair">Macbook Air</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-series-macpro"><label for="laptop-series-macpro">Macbook Pro</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="need">
+            <div class="sidebar-title collapsible">Nhu cầu <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-need-business"><label for="laptop-need-business">Doanh nghiệp</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-need-gaming"><label for="laptop-need-gaming">Gaming</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-need-student"><label for="laptop-need-student">Học sinh - sinh viên</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-need-office"><label for="laptop-need-office">Văn phòng</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-need-graphics"><label for="laptop-need-graphics">Đồ họa - kỹ thuật</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="cpu-series">
+            <div class="sidebar-title collapsible">Series CPU <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-applem"><label for="laptop-cpu-applem">Apple M</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-i3"><label for="laptop-cpu-i3">Core i3</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-i5"><label for="laptop-cpu-i5">Core i5</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-i7"><label for="laptop-cpu-i7">Core i7</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-i9"><label for="laptop-cpu-i9">Core i9</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-ultra5"><label for="laptop-cpu-ultra5">Core Ultra 5</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-ultra7"><label for="laptop-cpu-ultra7">Core Ultra 7</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-ultra9"><label for="laptop-cpu-ultra9">Core Ultra 9</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-qualcomm"><label for="laptop-cpu-qualcomm">Qualcomm</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-snapdragon"><label for="laptop-cpu-snapdragon">Snapdragon</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-ryzen5"><label for="laptop-cpu-ryzen5">Ryzen 5</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-ryzen7"><label for="laptop-cpu-ryzen7">Ryzen 7</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-cpu-ryzen9"><label for="laptop-cpu-ryzen9">Ryzen 9</label></div>
+            </div>
+          </div>
+          
+          <div class="filter-section" data-filter-group="screen-size">
+            <div class="sidebar-title collapsible">Kích thước màn hình <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-size-13-14"><label for="laptop-size-13-14">Từ 13.4'' - 14''</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-size-15-15"><label for="laptop-size-15-15">Từ 15'' - 15.6''</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-size-16-16"><label for="laptop-size-16-16">Từ 16'' - 16.1''</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="ram">
+            <div class="sidebar-title collapsible">Dung lượng RAM <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ram-8"><label for="laptop-ram-8">8GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ram-12"><label for="laptop-ram-12">12GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ram-16"><label for="laptop-ram-16">16GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ram-24"><label for="laptop-ram-24">24GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ram-32"><label for="laptop-ram-32">32GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ram-64"><label for="laptop-ram-64">64GB</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="gpu">
+            <div class="sidebar-title collapsible">Chip đồ họa rời <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options filter-scroll" data-max-visible="6">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx2050"><label for="laptop-gpu-rtx2050">GeForce RTX 2050</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx3050"><label for="laptop-gpu-rtx3050">GeForce RTX 3050</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx3050ti"><label for="laptop-gpu-rtx3050ti">GeForce RTX 3050Ti</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx3060"><label for="laptop-gpu-rtx3060">GeForce RTX 3060</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx4050"><label for="laptop-gpu-rtx4050">GeForce RTX 4050</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx4060"><label for="laptop-gpu-rtx4060">GeForce RTX 4060</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx4070"><label for="laptop-gpu-rtx4070">GeForce RTX 4070</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx4080"><label for="laptop-gpu-rtx4080">GeForce RTX 4080</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx4090"><label for="laptop-gpu-rtx4090">GeForce RTX 4090</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx5050"><label for="laptop-gpu-rtx5050">GeForce RTX 5050</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx5060"><label for="laptop-gpu-rtx5060">GeForce RTX 5060</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx5070"><label for="laptop-gpu-rtx5070">GeForce RTX 5070</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx5080"><label for="laptop-gpu-rtx5080">GeForce RTX 5080</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-rtx5090"><label for="laptop-gpu-rtx5090">GeForce RTX 5090</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-gpu-onboard"><label for="laptop-gpu-onboard">Onboard graphics</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="ssd">
+            <div class="sidebar-title collapsible">Dung lượng SSD <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ssd-1tb"><label for="laptop-ssd-1tb">1TB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ssd-2tb"><label for="laptop-ssd-2tb">2TB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ssd-4tb"><label for="laptop-ssd-4tb">4TB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ssd-8tb"><label for="laptop-ssd-8tb">8TB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ssd-256"><label for="laptop-ssd-256">256GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ssd-512"><label for="laptop-ssd-512">512GB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ssd-1-5tb"><label for="laptop-ssd-1-5tb">1.5TB</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-ssd-5tb"><label for="laptop-ssd-5tb">5TB</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="resolution">
+            <div class="sidebar-title collapsible">Chuẩn phân giải <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-res-2k"><label for="laptop-res-2k">2K</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-res-2-5k"><label for="laptop-res-2-5k">2.5K</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-res-3k"><label for="laptop-res-3k">3K</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-res-4k"><label for="laptop-res-4k">4K</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-res-fhd"><label for="laptop-res-fhd">Full HD (FHD)</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-res-wqhd"><label for="laptop-res-wqhd">WQHD</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-res-wqxga"><label for="laptop-res-wqxga">WQXGA</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-res-wquxga"><label for="laptop-res-wquxga">WQUXGA</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="laptop-res-wuxga"><label for="laptop-res-wuxga">WUXGA</label></div>
+            </div>
+          </div>
+          
+        </div>
+      </aside>
+      <main class="col-lg-9">
+        <!-- Bộ lọc ngang phía trên -->
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+          
+          
+         
+          <div class="ms-auto">
+            <div class="dropdown">
+              <button class="btn btn-outline-dark dropdown-toggle sort-highlight" type="button" data-bs-toggle="dropdown"><i class="fa fa-list"></i> Xếp theo: <b>Nổi bật</b></button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Nổi bật</a></li>
+                <li><a class="dropdown-item" href="#">Giá tăng dần</a></li>
+                <li><a class="dropdown-item" href="#">Giá giảm dần</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+          
+        <div class="row" id="product-list"></div>
+        <nav aria-label="Product pagination" class="mt-4">
+          <ul class="pagination justify-content-center" id="pagination-bar">
+            <!-- Pagination will be rendered by JS -->
+          </ul>
+        </nav>
+      </main>
+    </div>
+  </div>
+</div>
 
+</div>
 <!-- Footer -->
 <div id="footer-container"></div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="Script/js_allproducts.js"></script>
+<script>
+// Gọi hàm khởi tạo tất cả logic JS cho trang này
+if (typeof setupAllProductsPage === 'function') {
+  setupAllProductsPage();
+} else {
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof setupAllProductsPage === 'function') setupAllProductsPage();
+  });
+}
+</script>
 </body>
 </html>
