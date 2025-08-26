@@ -1,3 +1,86 @@
+// CACHE + GLOBALS cho address
+let addressesCache = [];         // cập nhật trong loadAddresses()
+let provinceData = null;         // cache json danh mục tỉnh/xã
+let provinceListenerAttached = false;
+
+// Load và cache JSON (FormText/danhmucxaphuong.json)
+async function loadProvinceData() {
+    if (provinceData) return provinceData;
+    try {
+        const res = await fetch("/FormText/danhmucxaphuong.json");
+        provinceData = await res.json();
+        return provinceData;
+    } catch (err) {
+        console.error("Lỗi load danh mục tỉnh/xã:", err);
+        provinceData = {};
+        return provinceData;
+    }
+}
+
+// Điền options cho #city và #ward; preProvince/preWard nếu preset khi edit
+async function populateProvinceWard(preProvince = "", preWard = "") {
+    await loadProvinceData();
+    const provinceEl = document.getElementById("city");
+    const wardEl = document.getElementById("ward");
+    if (!provinceEl || !wardEl) return;
+
+    // reset
+    provinceEl.innerHTML = `<option value="">-- Chọn Tỉnh/Thành phố --</option>`;
+    wardEl.innerHTML = `<option value="">-- Chọn Xã/Phường --</option>`;
+
+    // thêm tỉnh
+    const provinces = Object.keys(provinceData || {}).sort((a,b) => a.localeCompare(b, 'vi'));
+    provinces.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.textContent = p;
+        provinceEl.appendChild(opt);
+    });
+
+    // helper lấy wards (flatten nếu cần)
+    const getWards = (province) => {
+        const v = provinceData[province];
+        if (!v) return [];
+        if (Array.isArray(v)) return v.slice().sort((a,b)=>a.localeCompare(b,'vi'));
+        if (typeof v === "object") {
+            // gộp tất cả xã/phường từ các key (nếu JSON có cấp huyện)
+            const merged = [];
+            for (const k in v) {
+                if (Array.isArray(v[k])) merged.push(...v[k]);
+            }
+            return [...new Set(merged)].sort((a,b)=>a.localeCompare(b,'vi'));
+        }
+        return [];
+    };
+
+    // attach change listener chỉ 1 lần (global)
+    if (!provinceListenerAttached) {
+        provinceEl.addEventListener("change", () => {
+            wardEl.innerHTML = `<option value="">-- Chọn Xã/Phường --</option>`;
+            const wards = getWards(provinceEl.value);
+            wards.forEach(w => {
+                const opt = document.createElement("option");
+                opt.value = w;
+                opt.textContent = w;
+                wardEl.appendChild(opt);
+            });
+        });
+        provinceListenerAttached = true;
+    }
+
+    // preset nếu có
+    if (preProvince) {
+        provinceEl.value = preProvince;
+        // kích hoạt event manual để load wards
+        const event = new Event('change');
+        provinceEl.dispatchEvent(event);
+        if (preWard) {
+            // chờ microtask để DOM option wards có thể được tạo — 0ms timeout an toàn
+            setTimeout(() => { wardEl.value = preWard; }, 0);
+        }
+    }
+}
+
 // ===== Helper load header/footer =====
 function loadPagePart(url, selector, callback = null) {
     fetch(url)
@@ -78,16 +161,18 @@ async function loadAddresses() {
 
         if (!data.success) {
             container.innerHTML = `<p class="text-danger">❌ Không tải được danh sách địa chỉ!</p>`;
+            addressesCache = [];
             return;
         }
 
-        if (!data.addresses.length) {
+        addressesCache = data.addresses || [];
+
+        if (!addressesCache.length) {
             container.innerHTML = `<p class="text-muted">Chưa có địa chỉ nào. Hãy thêm mới!</p>`;
             return;
         }
 
-        // Render danh sách Cyber Card
-        container.innerHTML = data.addresses.map(addr => `
+        container.innerHTML = addressesCache.map(addr => `
             <div class="cyber-card ${addr.is_default ? "cyber-card-default" : ""}">
                 <div class="cyber-card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -100,19 +185,14 @@ async function loadAddresses() {
                     <p><i class="fa-solid fa-location-dot me-2"></i>
                         ${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}
                     </p>
-                    
                     <div class="cyber-actions-address text-end">
-                        <!-- Nút sửa luôn có -->
                         <button class="cyber-btn cyber-btn-edit" onclick="editAddress(${addr.id})">
                             <i class="fa-solid fa-pen"></i> Sửa
                         </button>
-
-                        <!-- Chỉ địa chỉ KHÔNG mặc định mới có Xóa -->
                         ${!addr.is_default ? `
                         <button class="cyber-btn cyber-btn-delete" onclick="deleteAddress(${addr.id})">
                             <i class="fa-solid fa-trash"></i> Xóa
-                        </button>
-                        ` : ""}
+                        </button>` : ""}
                     </div>
                 </div>
             </div>
@@ -123,47 +203,55 @@ async function loadAddresses() {
     }
 }
 
+
 // ===== Sửa địa chỉ =====
 async function editAddress(id) {
     try {
+        // lấy data chi tiết (có thể fetch all hoặc dùng API chi tiết nếu có)
         const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
         const data = await res.json();
-        const addr = data.addresses.find(a => a.id === id);
+        const addr = (data.addresses || []).find(a => a.id === id);
         if (!addr) return alert("❌ Không tìm thấy địa chỉ!");
 
         const form = document.getElementById("addressForm");
-        form.recipient_name.value = addr.recipient_name;
-        form.recipient_phone.value = addr.recipient_phone;
-        form.street_address.value = addr.street_address;
-        form.ward.value = addr.ward || "";
-        form.city.value = addr.city || "";
+        form.recipient_name.value = addr.recipient_name || "";
+        form.recipient_phone.value = addr.recipient_phone || "";
+        form.street_address.value = addr.street_address || "";
+        // dùng populateProvinceWard để điền select và preset
+        await populateProvinceWard(addr.city || "", addr.ward || "");
         form.dataset.editingId = id;
 
         const defaultCheckboxWrapper = form.querySelector(".form-check");
         const defaultCheckbox = form.is_default;
-
-        // Logic hiển thị checkbox
         if (addr.is_default) {
-            defaultCheckboxWrapper.style.display = "none"; // ẩn nếu là mặc định
-            defaultCheckbox.checked = true;
+            // ẩn checkbox để user không uncheck địa chỉ mặc định
+            if (defaultCheckboxWrapper) defaultCheckboxWrapper.style.display = "none";
+            if (defaultCheckbox) defaultCheckbox.checked = true;
         } else {
-            defaultCheckboxWrapper.style.display = "block";
-            defaultCheckbox.checked = false;
+            if (defaultCheckboxWrapper) defaultCheckboxWrapper.style.display = "block";
+            if (defaultCheckbox) defaultCheckbox.checked = false;
         }
 
-        // chỉnh nút và tiêu đề
-        document.getElementById("addressFormTitle").textContent = "Chỉnh sửa địa chỉ";
-        const saveBtn = document.getElementById("saveAddressBtn");
-        const cancelBtn = document.getElementById("cancelAddressBtn");
-        saveBtn.textContent = "Cập nhật địa chỉ";
-        saveBtn.className = "btn btn-save";   // xanh lá
-        cancelBtn.className = "btn btn-cancel"; // tím
+        // tìm nút Lưu / Hủy trong modal (tránh ID null)
+        const modal = document.getElementById("addressModal");
+        const saveBtn = modal.querySelector('button[type="submit"][form="addressForm"]');
+        const cancelBtn = modal.querySelector('button[data-bs-dismiss="modal"]');
+        if (saveBtn) {
+            saveBtn.textContent = "Cập nhật địa chỉ";
+            saveBtn.classList.remove("neon-btn"); // nếu muốn thay style
+            saveBtn.classList.add("btn-save");
+        }
+        if (cancelBtn) {
+            cancelBtn.classList.add("btn-cancel");
+        }
 
-        new bootstrap.Modal(document.getElementById("addressModal")).show();
+        document.getElementById("addressFormTitle").textContent = "Chỉnh sửa địa chỉ";
+        new bootstrap.Modal(modal).show();
     } catch (err) {
         console.error("Lỗi editAddress:", err);
     }
 }
+
 
 // Xóa địa chỉ
 async function deleteAddress(id) {
@@ -450,13 +538,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const form = e.target;
         const id = form.dataset.editingId;
 
+        // Nếu editing một địa chỉ mặc định, force is_default = true để không bị bỏ mặc định
+        let forceDefault = false;
+        if (id) {
+            // tìm trong cache
+            const original = addressesCache.find(a => String(a.id) === String(id));
+            if (original && original.is_default) forceDefault = true;
+        }
+
         const body = {
             recipient_name: form.recipient_name.value.trim(),
             recipient_phone: form.recipient_phone.value.trim(),
             street_address: form.street_address.value.trim(),
             ward: form.ward.value.trim(),
             city: form.city.value.trim(),
-            is_default: form.is_default.checked
+            is_default: forceDefault ? true : !!form.is_default.checked
         };
 
         try {
@@ -479,7 +575,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 form.reset();
                 delete form.dataset.editingId;
                 bootstrap.Modal.getInstance(document.getElementById("addressModal")).hide();
-                await loadAddresses();
+                await loadAddresses(); // cập nhật lại cache & UI
             } else {
                 alert(data.error || "❌ Lỗi lưu địa chỉ!");
             }
@@ -489,26 +585,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ===== Nút mở modal thêm địa chỉ =====
-    document.getElementById("addAddressBtn").addEventListener("click", () => {
+    document.getElementById("addAddressBtn").addEventListener("click", async () => {
         const form = document.getElementById("addressForm");
         form.reset();
         delete form.dataset.editingId;
 
-        // tiêu đề và nút
         document.getElementById("addressFormTitle").textContent = "Thêm địa chỉ mới";
-        const saveBtn = document.getElementById("saveAddressBtn");
-        const cancelBtn = document.getElementById("cancelAddressBtn");
-        saveBtn.textContent = "Lưu địa chỉ";
-        saveBtn.className = "btn btn-save";   // xanh lá
-        cancelBtn.className = "btn btn-cancel"; // tím
 
-        // checkbox luôn hiển thị khi thêm
+        // checkbox hiển thị
         const defaultCheckboxWrapper = form.querySelector(".form-check");
         const defaultCheckbox = form.is_default;
-        defaultCheckboxWrapper.style.display = "block";
-        defaultCheckbox.checked = false;
+        if (defaultCheckboxWrapper) defaultCheckboxWrapper.style.display = "block";
+        if (defaultCheckbox) defaultCheckbox.checked = false;
 
-        new bootstrap.Modal(document.getElementById("addressModal")).show();
+        // populate tỉnh/xã (không preset)
+        await populateProvinceWard();
+
+        // nút màu
+        const modal = document.getElementById("addressModal");
+        const saveBtn = modal.querySelector('button[type="submit"][form="addressForm"]');
+        const cancelBtn = modal.querySelector('button[data-bs-dismiss="modal"]');
+        if (saveBtn) {
+            saveBtn.textContent = "Lưu địa chỉ";
+            saveBtn.classList.add("btn-save");
+        }
+        if (cancelBtn) {
+            cancelBtn.classList.add("btn-cancel");
+        }
+
+        new bootstrap.Modal(modal).show();
     });
 
 // Khi click tab -> load
@@ -518,8 +623,4 @@ document.addEventListener("DOMContentLoaded", () => {
             loadAddresses();
         });
     }
-
-
-
-
 });
