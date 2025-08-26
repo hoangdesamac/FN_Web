@@ -67,6 +67,62 @@ async function loadProfile() {
     }
 }
 
+// ===== Address Book (Cyber Design) =====
+async function loadAddresses() {
+    const container = document.getElementById("addressList");
+    if (!container) return;
+
+    try {
+        const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
+        const data = await res.json();
+
+        if (!data.success) {
+            container.innerHTML = `<p class="text-danger">❌ Không tải được danh sách địa chỉ!</p>`;
+            return;
+        }
+
+        if (!data.addresses.length) {
+            container.innerHTML = `<p class="text-muted">Chưa có địa chỉ nào. Hãy thêm mới!</p>`;
+            return;
+        }
+
+        // Render danh sách Cyber Card
+        container.innerHTML = data.addresses.map(addr => `
+            <div class="cyber-card ${addr.is_default ? "cyber-card-default" : ""}">
+                <div class="cyber-card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="cyber-recipient">
+                            <i class="fa-solid fa-user me-2"></i>${addr.recipient_name}
+                        </h5>
+                        ${addr.is_default ? `<span class="cyber-badge">Mặc định</span>` : ""}
+                    </div>
+                    <p><i class="fa-solid fa-phone me-2"></i>${addr.recipient_phone}</p>
+                    <p><i class="fa-solid fa-location-dot me-2"></i>
+                        ${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}
+                    </p>
+                    
+                    <div class="cyber-actions-address text-end">
+                        <!-- Nút sửa luôn có -->
+                        <button class="cyber-btn cyber-btn-edit" onclick="editAddress(${addr.id})">
+                            <i class="fa-solid fa-pen"></i> Sửa
+                        </button>
+
+                        <!-- Chỉ địa chỉ KHÔNG mặc định mới có Xóa -->
+                        ${!addr.is_default ? `
+                        <button class="cyber-btn cyber-btn-delete" onclick="deleteAddress(${addr.id})">
+                            <i class="fa-solid fa-trash"></i> Xóa
+                        </button>
+                        ` : ""}
+                    </div>
+                </div>
+            </div>
+        `).join("");
+    } catch (err) {
+        console.error("Lỗi load addresses:", err);
+        container.innerHTML = `<p class="text-danger">❌ Lỗi server khi tải địa chỉ!</p>`;
+    }
+}
+
 // ===== Sửa địa chỉ =====
 async function editAddress(id) {
     try {
@@ -387,62 +443,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     });
-
-    // ===== Address Book (Cyber Design) =====
-    async function loadAddresses() {
-        const container = document.getElementById("addressList");
-        if (!container) return;
-
-        try {
-            const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
-            const data = await res.json();
-
-            if (!data.success) {
-                container.innerHTML = `<p class="text-danger">❌ Không tải được danh sách địa chỉ!</p>`;
-                return;
-            }
-
-            if (!data.addresses.length) {
-                container.innerHTML = `<p class="text-muted">Chưa có địa chỉ nào. Hãy thêm mới!</p>`;
-                return;
-            }
-
-            // Render danh sách Cyber Card
-            container.innerHTML = data.addresses.map(addr => `
-            <div class="cyber-card ${addr.is_default ? "cyber-card-default" : ""}">
-                <div class="cyber-card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="cyber-recipient">
-                            <i class="fa-solid fa-user me-2"></i>${addr.recipient_name}
-                        </h5>
-                        ${addr.is_default ? `<span class="cyber-badge">Mặc định</span>` : ""}
-                    </div>
-                    <p><i class="fa-solid fa-phone me-2"></i>${addr.recipient_phone}</p>
-                    <p><i class="fa-solid fa-location-dot me-2"></i>
-                        ${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}
-                    </p>
-                    
-                    <div class="cyber-actions-address text-end">
-                        <!-- Nút sửa luôn có -->
-                        <button class="cyber-btn cyber-btn-edit" onclick="editAddress(${addr.id})">
-                            <i class="fa-solid fa-pen"></i> Sửa
-                        </button>
-
-                        <!-- Chỉ địa chỉ KHÔNG mặc định mới có Xóa -->
-                        ${!addr.is_default ? `
-                        <button class="cyber-btn cyber-btn-delete" onclick="deleteAddress(${addr.id})">
-                            <i class="fa-solid fa-trash"></i> Xóa
-                        </button>
-                        ` : ""}
-                    </div>
-                </div>
-            </div>
-        `).join("");
-        } catch (err) {
-            console.error("Lỗi load addresses:", err);
-            container.innerHTML = `<p class="text-danger">❌ Lỗi server khi tải địa chỉ!</p>`;
-        }
-    }
 
 // Submit form thêm/sửa
     document.getElementById("addressForm").addEventListener("submit", async (e) => {
