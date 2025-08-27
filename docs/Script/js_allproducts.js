@@ -1,15 +1,514 @@
+// ================== KEYBOARD ==================
+let keyboardData = [];
+function fetchKeyboardData(callback) {
+  fetch('pc-part-dataset/processed/keyboadnew.json')
+    .then(res => res.json())
+    .then(data => {
+      keyboardData = data;
+      if (typeof callback === 'function') callback(data);
+    })
+    .catch(() => { keyboardData = []; });
+}
+
+function renderKeyboardProducts() {
+  fetchKeyboardData(function() {
+    currentPage = 1;
+    filterKeyboardProducts();
+  });
+}
+
+function filterKeyboardProducts() {
+  // Lọc theo brand và price giống mouse
+  const filters = getSelectedKeyboardFilters ? getSelectedKeyboardFilters() : { brand: [], price: { min: 0, max: 200000000 } };
+  function normalize(str) {
+    return (str || '')
+      .toLowerCase()
+      .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+      .replace(/[^a-z0-9]/g, '');
+  }
+  let filtered = keyboardData.filter(item => {
+    // Brand
+    if (filters.brand && filters.brand.length) {
+      const nameNorm = normalize(item.name);
+      const match = filters.brand.some(val => nameNorm.includes(normalize(val)));
+      if (!match) return false;
+    }
+    // Price
+    // Lấy giá mới, nếu rỗng thì lấy giá cũ, chuyển về số
+    let priceStr = (item.new_price && item.new_price.trim()) ? item.new_price : item.old_price;
+    let price = parseInt((priceStr || '').replace(/\D/g, '')) || 0;
+    if (price < filters.price.min || price > filters.price.max) return false;
+    return true;
+  });
+  lastFilteredList = filtered;
+  currentPage = 1;
+  showKeyboardProductsFiltered(filtered);
+// Hàm lấy filter cho keyboard (giống mouse)
+function getSelectedKeyboardFilters() {
+  const filters = {};
+  filters.brand = Array.from(document.querySelectorAll("input[id^='keyboard-brand-']:checked")).map(cb => cb.labels[0].innerText.trim());
+  const minPrice = parseInt((document.getElementById('keyboard-min-price')?.value || '0').replace(/\D/g, '')) || 0;
+  const maxPrice = parseInt((document.getElementById('keyboard-max-price')?.value || '200000000').replace(/\D/g, '')) || 200000000;
+  filters.price = { min: minPrice, max: maxPrice };
+  return filters;
+}
+}
+
+function showKeyboardProductsFiltered(list) {
+  const totalPages = Math.ceil(list.length / productsPerPage) || 1;
+  if (currentPage > totalPages) currentPage = totalPages;
+  const startIdx = (currentPage - 1) * productsPerPage;
+  const endIdx = startIdx + productsPerPage;
+  let html = '';
+  list.slice(startIdx, endIdx).forEach(item => {
+    if (!item.name) return;
+    // Lấy giá cũ, giá mới, discount
+    let oldPrice = item.old_price || item.price_old || 0;
+    let newPrice = item.new_price || item.price || 0;
+    let discount = 0;
+    if (oldPrice && newPrice && oldPrice !== newPrice) {
+      // Loại bỏ ký tự không phải số
+      let oldNum = parseInt((oldPrice + '').replace(/\D/g, ''));
+      let newNum = parseInt((newPrice + '').replace(/\D/g, ''));
+      if (oldNum && newNum) discount = Math.round(100 * (oldNum - newNum) / oldNum);
+    }
+    // Keyboard không có desc, specs box sẽ ẩn
+    let showSpecs = false;
+    let specsText = '';
+    html += `
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
+        <div class="product-card neon-border p-3 d-flex flex-column w-100 animate__animated animate__fadeInUp" style="align-items:stretch; height:100%;">
+          <div class="product-image mb-2 mx-auto d-flex align-items-center justify-content-center" style="width:100%;max-width:220px;min-height:120px;">
+            <img src="${item.image || '#'}" alt="${item.name}" style="border-radius:8px;border:2px solid #e0e0e0;max-height:120px;object-fit:contain;background:#fff;width:100%;" loading="lazy">
+          </div>
+          <div class="product-name fw-bold mb-1 clamp-2" style="font-size:1.02rem;min-height:38px;color:var(--primary);text-shadow:0 1px 4px var(--bg-gradient);text-align:left;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${item.name}</div>
+          ${showSpecs ? `<div class="product-specs-box mb-2 mx-auto" style="font-size:0.82rem; border-radius:7px; padding:7px 10px; min-height:28px;max-width:95%">${specsText}</div>` : ''}
+          <div class="mt-auto w-100">
+            <div class="product-pricing-box w-100 d-flex align-items-center justify-content-between gap-2" style="min-height:32px;">
+              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${oldPrice && oldPrice !== '0' ? oldPrice : ''}</span>
+            </div>
+            <div class="sale-price mb-1 d-flex align-items-center" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">
+              <span>${(newPrice && newPrice !== '0') ? newPrice : (oldPrice && oldPrice !== '0' ? oldPrice : 'Liên hệ')}</span>
+              ${discount > 0 ? `<span class="discount-badge ms-2" style="font-size:0.95em;background:var(--bg-gradient,#fff0f0);color:var(--accent,#e53935);border:1px solid var(--accent,#e53935);">-${discount}%</span>` : ''}
+            </div>
+          </div>
+          <div class="product-rating mb-0 w-100" style="font-size:0.98rem;color:var(--accent,#ff9900);text-align:left;">
+            <span><i class="fa fa-star"></i> 0.0</span> <span style="color:var(--secondary,#b0b0b0);font-size:0.95em;">(0 đánh giá)</span>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('product-list').innerHTML = html || '<div class="text-center">Không có sản phẩm phù hợp.</div>';
+  renderKeyboardPagination(list.length, totalPages);
+}
+
+function renderKeyboardPagination(totalItems, totalPages) {
+  const pagBar = document.getElementById('pagination-bar');
+  if (!pagBar) return;
+  let html = '';
+  if (totalPages <= 1) {
+    pagBar.innerHTML = '';
+    return;
+  }
+  html += `<li class="page-item${currentPage === 1 ? ' disabled' : ''}"><a class="page-link" href="#" data-page="prev">&laquo;</a></li>`;
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<li class="page-item${i === currentPage ? ' active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+  }
+  html += `<li class="page-item${currentPage === totalPages ? ' disabled' : ''}"><a class="page-link" href="#" data-page="next">&raquo;</a></li>`;
+  pagBar.innerHTML = html;
+  pagBar.querySelectorAll('a.page-link').forEach(link => {
+    link.onclick = function(e) {
+      e.preventDefault();
+      let page = this.getAttribute('data-page');
+      if (page === 'prev' && currentPage > 1) currentPage--;
+      else if (page === 'next' && currentPage < totalPages) currentPage++;
+      else if (!isNaN(page)) currentPage = parseInt(page);
+      showKeyboardProductsFiltered(lastFilteredList);
+    };
+  });
+}
+
+// Biến toàn cục lưu dữ liệu chuột
+let mouseData = [];
+// Hàm fetch dữ liệu chuột đúng đường dẫn
+function fetchMouseData(callback) {
+  fetch('pc-part-dataset/processed/mousenew.json')
+    .then(res => res.json())
+    .then(data => {
+      mouseData = data;
+      if (typeof callback === 'function') callback(data);
+    })
+    .catch(() => { mouseData = []; });
+}
+
+// Hàm renderMouseProducts gọi fetchMouseData và filterMouseProducts
+function renderMouseProducts() {
+  fetchMouseData(function() {
+    currentPage = 1;
+    filterMouseProducts();
+  });
+}
+// ================== FILTER, RENDER, PHÂN TRANG CHUỘT GIỐNG LAPTOP ==================
+function getSelectedMouseFilters() {
+  // Tuỳ bạn mở rộng thêm filter, ví dụ theo brand, price...
+  const filters = {};
+  filters.brand = Array.from(document.querySelectorAll("input[id^='mouse-brand-']:checked")).map(cb => cb.labels[0].innerText.trim());
+  filters.connection = Array.from(document.querySelectorAll("input[id^='mouse-conn-']:checked")).map(cb => cb.labels[0].innerText.trim());
+  filters.need = Array.from(document.querySelectorAll("input[id^='mouse-need-']:checked")).map(cb => cb.labels[0].innerText.trim());
+  filters.dpi = Array.from(document.querySelectorAll("input[id^='mouse-dpi-']:checked")).map(cb => cb.labels[0].innerText.trim());
+  const minPrice = parseInt((document.getElementById('mouse-min-price')?.value || '0').replace(/\D/g, '')) || 0;
+  const maxPrice = parseInt((document.getElementById('mouse-max-price')?.value || '200000000').replace(/\D/g, '')) || 200000000;
+  filters.price = { min: minPrice, max: maxPrice };
+  return filters;
+}
+
+function filterMouseProducts() {
+  const filters = getSelectedMouseFilters();
+  let filtered = mouseData.filter(item => {
+    // Brand (lọc mềm: không dấu, không phân biệt hoa thường, loại bỏ ký tự đặc biệt)
+    function normalize(str) {
+      return (str || '')
+        .toLowerCase()
+        .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+        .replace(/[^a-z0-9]/g, '');
+    }
+    if (filters.brand.length) {
+      // Lấy brand từ name
+      const nameNorm = normalize(item.name);
+      const match = filters.brand.some(val => {
+        const filterVal = normalize(val);
+        return nameNorm.includes(filterVal);
+      });
+      if (!match) return false;
+    }
+    // Debug log
+    // console.log('item', item.name, 'desc', item.desc);
+    // Kết nối (connection)
+    if (filters.connection.length) {
+      let connMatch = false;
+      if (item.connection) {
+        connMatch = filters.connection.some(val => (item.connection + '').toLowerCase().includes(val.toLowerCase()));
+      } else if (Array.isArray(item.desc)) {
+        connMatch = item.desc.some(desc => filters.connection.some(val => (desc + '').toLowerCase().includes(val.toLowerCase())));
+      }
+      if (!connMatch) return false;
+    }
+    // Nhu cầu
+    if (filters.need.length) {
+      let needMatch = false;
+      if (item.need) {
+        needMatch = filters.need.some(val => (item.need + '').toLowerCase().includes(val.toLowerCase()));
+      } else if (Array.isArray(item.desc)) {
+        needMatch = item.desc.some(desc => filters.need.some(val => (desc + '').toLowerCase().includes(val.toLowerCase())));
+      }
+      if (!needMatch) return false;
+    }
+    // DPI (lọc theo desc hoặc trường dpi nếu có)
+    if (filters.dpi.length) {
+      let dpiMatch = false;
+      if (item.dpi) {
+        dpiMatch = filters.dpi.some(val => (item.dpi + '').includes(val));
+      } else if (Array.isArray(item.desc)) {
+        dpiMatch = item.desc.some(desc => filters.dpi.some(val => (desc + '').includes(val)));
+      }
+      if (!dpiMatch) return false;
+    }
+    // Price
+    const price = item.price_new || item.price || 0;
+    if (price < filters.price.min || price > filters.price.max) return false;
+    return true;
+  });
+  lastFilteredList = filtered;
+  currentPage = 1;
+  showMouseProductsFiltered(filtered);
+}
+
+function showMouseProductsFiltered(list) {
+  const totalPages = Math.ceil(list.length / productsPerPage) || 1;
+  if (currentPage > totalPages) currentPage = totalPages;
+  const startIdx = (currentPage - 1) * productsPerPage;
+  const endIdx = startIdx + productsPerPage;
+  let html = '';
+  list.slice(startIdx, endIdx).forEach(item => {
+    if (!item.name) return;
+    // Tính discount và lấy giá đúng trường dữ liệu
+    let oldPrice = item.price_old || item.old_price || 0;
+    let newPrice = item.price_new || item.price || 0;
+    let discount = oldPrice && newPrice ? Math.round(100 * (oldPrice - newPrice) / oldPrice) : 0;
+    // Hiển thị specs từ mảng desc
+    // Hàm chọn icon phù hợp cho từng mô tả
+    function getIcon(desc) {
+      if (!desc) return '';
+      const d = desc.toLowerCase();
+      if (d.includes('không dây') || d.includes('wireless')) return '<i class="bi bi-wifi"></i>';
+      if (d.includes('có dây') || d.includes('usb')) return '<i class="bi bi-usb"></i>';
+      if (d.includes('pin rời')) return '<i class="bi bi-battery"></i>';
+      if (d.includes('pin sạc')) return '<i class="bi bi-battery-charging"></i>';
+      if (d.includes('led rgb') || d.includes('rgb')) return '<i class="bi bi-lightbulb"></i>';
+      if (d.includes('dpi')) return '<i class="bi bi-bullseye"></i>';
+      if (d.includes('bluetooth')) return '<i class="bi bi-bluetooth"></i>';
+      if (d.includes('laser')) return '<i class="bi bi-activity"></i>';
+      if (d.includes('optical') || d.includes('quang')) return '<i class="bi bi-eye"></i>';
+      if (d.includes('gaming')) return '<i class="bi bi-controller"></i>';
+      return '<i class="bi bi-dot"></i>';
+    }
+    let specsText = '';
+    let showSpecs = Array.isArray(item.desc) && item.desc.length > 0;
+    if (showSpecs) {
+      specsText = '<div class="specs-grid">';
+      for (let i = 0; i < item.desc.length; i += 2) {
+        specsText += '<div class="specs-row">';
+        specsText += `<span class="spec-item">${getIcon(item.desc[i])} ${item.desc[i] || ''}</span>`;
+        specsText += `<span class="spec-item">${getIcon(item.desc[i+1])} ${item.desc[i+1] || ''}</span>`;
+        specsText += '</div>';
+      }
+      specsText += '</div>';
+    }
+    html += `
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
+        <div class="product-card neon-border p-3 d-flex flex-column w-100 animate__animated animate__fadeInUp" style="align-items:stretch; height:100%;">
+          <div class="product-image mb-2 mx-auto d-flex align-items-center justify-content-center" style="width:100%;max-width:220px;min-height:120px;">
+            <img src="${item.image || '#'}" alt="${item.name}" style="border-radius:8px;border:2px solid #e0e0e0;max-height:120px;object-fit:contain;background:#fff;width:100%;" loading="lazy">
+          </div>
+          <div class="product-name fw-bold mb-1 clamp-2" style="font-size:1.02rem;min-height:38px;color:var(--primary);text-shadow:0 1px 4px var(--bg-gradient);text-align:left;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${item.name}</div>
+          ${showSpecs ? `<div class="product-specs-box mb-2 mx-auto" style="font-size:0.82rem; border-radius:7px; padding:7px 10px; min-height:28px;max-width:95%">${specsText}</div>` : ''}
+          <div class="mt-auto w-100">
+            <div class="product-pricing-box w-100 d-flex align-items-center justify-content-between gap-2" style="min-height:32px;">
+              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${oldPrice ? oldPrice.toLocaleString('vi-VN') + '₫' : ''}</span>
+            </div>
+            <div class="sale-price mb-1 d-flex align-items-center" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">
+              <span>${(newPrice && newPrice !== '0') ? (typeof newPrice === 'number' ? newPrice.toLocaleString('vi-VN') + '₫' : newPrice) : (oldPrice && oldPrice !== '0' ? (typeof oldPrice === 'number' ? oldPrice.toLocaleString('vi-VN') + '₫' : oldPrice) : 'Liên hệ')}</span>
+              ${discount > 0 ? `<span class="discount-badge ms-2" style="font-size:0.95em;background:var(--bg-gradient,#fff0f0);color:var(--accent,#e53935);border:1px solid var(--accent,#e53935);">-${discount}%</span>` : ''}
+            </div>
+          </div>
+          <div class="product-rating mb-0 w-100" style="font-size:0.98rem;color:var(--accent,#ff9900);text-align:left;">
+            <span><i class="fa fa-star"></i> 0.0</span> <span style="color:var(--secondary,#b0b0b0);font-size:0.95em;">(0 đánh giá)</span>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('product-list').innerHTML = html || '<div class="text-center">Không có sản phẩm phù hợp.</div>';
+  renderMousePagination(list.length, totalPages);
+}
+
+function renderMousePagination(totalItems, totalPages) {
+  const pagBar = document.getElementById('pagination-bar');
+  if (!pagBar) return;
+  let html = '';
+  if (totalPages <= 1) {
+    pagBar.innerHTML = '';
+    return;
+  }
+  html += `<li class="page-item${currentPage === 1 ? ' disabled' : ''}"><a class="page-link" href="#" data-page="prev">&laquo;</a></li>`;
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<li class="page-item${i === currentPage ? ' active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+  }
+  html += `<li class="page-item${currentPage === totalPages ? ' disabled' : ''}"><a class="page-link" href="#" data-page="next">&raquo;</a></li>`;
+  pagBar.innerHTML = html;
+  pagBar.querySelectorAll('a.page-link').forEach(link => {
+    link.onclick = function(e) {
+      e.preventDefault();
+      let page = this.getAttribute('data-page');
+      if (page === 'prev' && currentPage > 1) currentPage--;
+      else if (page === 'next' && currentPage < totalPages) currentPage++;
+      else if (!isNaN(page)) currentPage = parseInt(page);
+      showMouseProductsFiltered(lastFilteredList);
+    };
+  });
+}
+
+// Nếu muốn gắn filter event cho mouse, có thể tạo hàm attachMouseFilterEvents tương tự attachLaptopFilterEvents
 // ================== KHỞI TẠO TOÀN BỘ LOGIC TRANG ALLPRODUCTS ==================
 function setupAllProductsPage() {
+  // --- SORTING LOGIC ---
+  function getSortType() {
+    const btn = document.querySelector('.sort-highlight');
+    if (!btn) return 'Nổi bật';
+    const text = btn.innerText || btn.textContent;
+    if (text.includes('Giá tăng dần')) return 'Giá tăng dần';
+    if (text.includes('Giá giảm dần')) return 'Giá giảm dần';
+    return 'Nổi bật';
+  }
+
+  function sortProducts(list, type, productType) {
+    // type: 'Nổi bật' | 'Giá tăng dần' | 'Giá giảm dần'
+    if (type === 'Giá tăng dần' || type === 'Giá giảm dần') {
+    // Lọc theo giá trước khi sort nếu có filters.price
+    let filters = null;
+    if (productType === 'laptop') {
+      filters = typeof getSelectedLaptopFilters === 'function' ? getSelectedLaptopFilters() : null;
+    } else if (productType === 'pc') {
+      filters = typeof getSelectedFilters === 'function' ? getSelectedFilters() : null;
+    }
+    if (filters && filters.price) {
+      list = list.filter(item => {
+        let price = typeof item.price === 'number' ? item.price : parseInt((item.price + '').replace(/\D/g, '')) || 0;
+        return price >= filters.price.min && price <= filters.price.max;
+      });
+    }
+      return list.slice().sort((a, b) => {
+        function extractPrice(item) {
+          if (productType === 'laptop' || productType === 'pc') {
+            return typeof item.price === 'number' ? item.price : parseInt((item.price + '').replace(/\D/g, '')) || 0;
+          } else if (productType === 'keyboard') {
+            let priceCandidates = [item.new_price, item.price, item.old_price, item.price_old];
+            for (let val of priceCandidates) {
+              if (typeof val === 'string') {
+                let num = parseInt(val.replace(/\D/g, ''));
+                if (num) return num;
+              } else if (typeof val === 'number' && val > 0) {
+                return val;
+              }
+            }
+            return 0;
+          } else if (productType === 'mouse') {
+            let priceCandidates = [item.price_new, item.new_price, item.price, item.old_price, item.price_old];
+            for (let val of priceCandidates) {
+              if (typeof val === 'string') {
+                let num = parseInt(val.replace(/\D/g, ''));
+                if (num) return num;
+              } else if (typeof val === 'number' && val > 0) {
+                return val;
+              }
+            }
+            return 0;
+          } else {
+            return 0;
+          }
+        }
+        let pa = extractPrice(a);
+        let pb = extractPrice(b);
+        if (type === 'Giá tăng dần') return pa - pb;
+        else return pb - pa;
+      });
+    }
+    return list;
+  }
+
+  // Attach event to sort dropdown
+  document.addEventListener('DOMContentLoaded', function() {
+    const sortBtn = document.querySelector('.sort-highlight');
+    if (sortBtn) {
+      const dropdown = sortBtn.parentElement?.querySelector('.dropdown-menu');
+      if (dropdown) {
+        dropdown.querySelectorAll('.dropdown-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Update button text
+            sortBtn.innerHTML = `<i class=\"fa fa-list\"></i> Xếp theo: <b>${this.innerText}</b>`;
+            // Re-render current product type with new sort
+            const params = new URLSearchParams(window.location.search);
+            const type = params.get('type');
+            if (type === 'mouse') {
+              filterMouseProducts();
+            } else if (type === 'keyboard') {
+              filterKeyboardProducts();
+            } else if (type === 'laptop') {
+              filterLaptopProducts();
+            } else {
+              filterPCProducts();
+            }
+          });
+        });
+      }
+    }
+  });
+
+  // Patch filter functions to use sorting
+  // --- KEYBOARD ---
+  const origShowKeyboardProductsFiltered = window.showKeyboardProductsFiltered;
+  window.showKeyboardProductsFiltered = function(list) {
+    const sorted = sortProducts(list, getSortType(), 'keyboard');
+    origShowKeyboardProductsFiltered.call(this, sorted);
+  };
+  // --- MOUSE ---
+  const origShowMouseProductsFiltered = window.showMouseProductsFiltered;
+  window.showMouseProductsFiltered = function(list) {
+    const sorted = sortProducts(list, getSortType(), 'mouse');
+    origShowMouseProductsFiltered.call(this, sorted);
+  };
+  // --- LAPTOP ---
+  const origShowLaptopProductsFiltered = function(list) {
+    // Gọi trực tiếp hàm gốc (không sort lại)
+    if (typeof window._origShowLaptopProductsFiltered === 'function') {
+      window._origShowLaptopProductsFiltered(list);
+      return;
+    }
+  };
+  window._origShowLaptopProductsFiltered = window.showLaptopProductsFiltered;
+  window.showLaptopProductsFiltered = function(list) {
+    const sorted = sortProducts(list, getSortType(), 'laptop');
+    origShowLaptopProductsFiltered(sorted);
+  };
+  // --- PC ---
+  const origShowPCProductsFiltered = function(list) {
+    if (typeof window._origShowPCProductsFiltered === 'function') {
+      window._origShowPCProductsFiltered(list);
+      return;
+    }
+  };
+  window._origShowPCProductsFiltered = window.showPCProductsFiltered;
+  window.showPCProductsFiltered = function(list) {
+    const sorted = sortProducts(list, getSortType(), 'pc');
+    origShowPCProductsFiltered(sorted);
+  };
+  // Gắn sự kiện filter cho mouse
+  function attachMouseFilterEvents() {
+    document.querySelectorAll('.mouse-sidebar input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', filterMouseProducts);
+    });
+    const priceSlider = document.getElementById('mouse-price-slider');
+    if (priceSlider) {
+      priceSlider.addEventListener('input', function() {
+        let val = parseInt(this.value, 10);
+        document.getElementById('mouse-min-price').value = val.toLocaleString('vi-VN') + 'đ';
+        filterMouseProducts();
+      });
+    }
+  }
+
+  // Gắn sự kiện filter cho keyboard
+  function attachKeyboardFilterEvents() {
+    document.querySelectorAll('.keyboard-sidebar input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', filterKeyboardProducts);
+    });
+    const priceSlider = document.getElementById('keyboard-price-slider');
+    if (priceSlider) {
+      priceSlider.addEventListener('input', function() {
+        let val = parseInt(this.value, 10);
+        document.getElementById('keyboard-min-price').value = val.toLocaleString('vi-VN') + 'đ';
+        filterKeyboardProducts();
+      });
+    }
+  }
   // Toggle sidebar logic
   function showSidebar(type) {
     const pcSidebar = document.querySelector('.pc-sidebar');
     const laptopSidebar = document.querySelector('.laptop-sidebar');
+    const mouseSidebar = document.querySelector('.mouse-sidebar');
+    const keyboardSidebar = document.querySelector('.keyboard-sidebar');
     if (type === 'laptop') {
       if (pcSidebar) pcSidebar.style.display = 'none';
       if (laptopSidebar) laptopSidebar.style.display = '';
+      if (mouseSidebar) mouseSidebar.style.display = 'none';
+      if (keyboardSidebar) keyboardSidebar.style.display = 'none';
+    } else if (type === 'mouse') {
+      if (pcSidebar) pcSidebar.style.display = 'none';
+      if (laptopSidebar) laptopSidebar.style.display = 'none';
+      if (mouseSidebar) mouseSidebar.style.display = '';
+      if (keyboardSidebar) keyboardSidebar.style.display = 'none';
+    } else if (type === 'keyboard') {
+      if (pcSidebar) pcSidebar.style.display = 'none';
+      if (laptopSidebar) laptopSidebar.style.display = 'none';
+      if (mouseSidebar) mouseSidebar.style.display = 'none';
+      if (keyboardSidebar) keyboardSidebar.style.display = '';
     } else {
       if (pcSidebar) pcSidebar.style.display = '';
       if (laptopSidebar) laptopSidebar.style.display = 'none';
+      if (mouseSidebar) mouseSidebar.style.display = 'none';
+      if (keyboardSidebar) keyboardSidebar.style.display = 'none';
     }
   }
 
@@ -25,11 +524,26 @@ function setupAllProductsPage() {
       showSidebar('laptop');
       renderPCProducts('all');
     });
-    // On page load, show correct sidebar based on URL param
+    // On page load, show correct content based on URL param
     const params = new URLSearchParams(window.location.search);
-    showSidebar(params.get('type') === 'laptop' ? 'laptop' : 'pc');
-    // Always attach laptop filter events on load
-    attachLaptopFilterEvents();
+    const type = params.get('type');
+    if (type === 'laptop') {
+      showSidebar('laptop');
+      renderPCProducts('all');
+      attachLaptopFilterEvents();
+    } else if (type === 'mouse') {
+      showSidebar('mouse');
+      renderMouseProducts();
+      attachMouseFilterEvents();
+    } else if (type === 'keyboard') {
+      showSidebar('keyboard');
+      renderKeyboardProducts();
+      attachKeyboardFilterEvents();
+    } else {
+      showSidebar('pc');
+      renderPCProducts('all');
+      attachFilterEvents();
+    }
   });
   // Lọc sản phẩm khi thay đổi bộ lọc
 
@@ -77,7 +591,7 @@ function setupAllProductsPage() {
   // LAPTOP filter logic
   function filterLaptopProducts() {
     const filters = getSelectedLaptopFilters();
-  let filtered = (window.laptopData || pcData).filter(item => {
+    let filtered = (window.laptopData || pcData).filter(item => {
       // Thương hiệu: so sánh không phân biệt hoa thường, loại bỏ khoảng trắng, kiểm tra cả item.brand và item.category (array)
       if (filters.brand.length) {
         const brands = [];
@@ -209,7 +723,8 @@ function setupAllProductsPage() {
         if (!match) return false;
       }
       if (filters.os.length && (!item.os || !filters.os.includes(item.os))) return false;
-      const price = item.price || 0;
+      // Giá: chỉ dùng item.price (kiểu số)
+      let price = typeof item.price === 'number' ? item.price : parseInt((item.price + '').replace(/\D/g, '')) || 0;
       if (price < filters.price.min || price > filters.price.max) return false;
       return true;
     });
@@ -268,16 +783,8 @@ function setupAllProductsPage() {
       let specsText = '<div class="specs-grid">';
       for (let i = 0; i < 5; i += 2) {
         specsText += '<div class="specs-row">';
-        if (specsArr[i]) {
-          specsText += `<span class="spec-item">${iconMap[i] || ''} ${specsArr[i]}</span>`;
-        } else {
-          specsText += '<span class="spec-item"></span>';
-        }
-        if (specsArr[i+1]) {
-          specsText += `<span class="spec-item">${iconMap[i+1] || ''} ${specsArr[i+1]}</span>`;
-        } else {
-          specsText += '<span class="spec-item"></span>';
-        }
+        specsText += `<span class="spec-item">${iconMap[i] || ''} ${specsArr[i]}</span>`;
+        specsText += `<span class="spec-item">${iconMap[i+1] || ''} ${specsArr[i+1]}</span>`;
         specsText += '</div>';
       }
       specsText += '</div>';
@@ -425,8 +932,8 @@ function setupAllProductsPage() {
       }))) return false;
       // OS
       if (filters.os.length && (!item.os || !filters.os.includes(item.os))) return false;
-      // Giá
-      const price = item.price || 0;
+      // Giá: chỉ dùng item.price (kiểu số)
+      let price = typeof item.price === 'number' ? item.price : parseInt((item.price + '').replace(/\D/g, '')) || 0;
       if (price < filters.price.min || price > filters.price.max) return false;
       return true;
     });
@@ -441,6 +948,11 @@ function setupAllProductsPage() {
     const startIdx = (currentPage - 1) * productsPerPage;
     const endIdx = startIdx + productsPerPage;
     let html = '';
+    // Only restore scroll if paginating, not filtering
+    let restoreScroll = false;
+    if (typeof window._paginationScrollY !== 'undefined') {
+      restoreScroll = true;
+    }
     list.slice(startIdx, endIdx).forEach(item => {
       if (!item.name) return;
       let discount = item.old_price && item.price ? Math.round(100 * (item.old_price - item.price) / item.old_price) : 0;
@@ -589,10 +1101,10 @@ function setupAllProductsPage() {
         currentPage = 1;
         if (type === 'laptop') {
           filterLaptopProducts();
-          attachLaptopFilterEvents();
+          attachLaptopFilterEvents && attachLaptopFilterEvents();
         } else {
           filterPCProducts();
-          attachFilterEvents();
+          attachFilterEvents && attachFilterEvents();
         }
       });
   };
@@ -643,14 +1155,22 @@ function setupAllProductsPage() {
   }
 
   // Gọi các hàm khởi tạo khi DOM đã sẵn sàng
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      setupCollapsibleSections();
-      renderPCProducts();
-    });
-  } else {
+  function runInitAllProducts() {
     setupCollapsibleSections();
-    renderPCProducts();
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get('type');
+    if (type === 'mouse') {
+      renderMouseProducts();
+    } else if (type === 'keyboard') {
+      if (typeof renderKeyboardProducts === 'function') renderKeyboardProducts();
+    } else {
+      renderPCProducts();
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runInitAllProducts);
+  } else {
+    runInitAllProducts();
   }
 }
 // ================== END KHỞI TẠO TOÀN BỘ LOGIC TRANG ALLPRODUCTS ==================
@@ -760,6 +1280,7 @@ function filterPCProducts() {
       if (filters.cpuGen.length && (!item.cpu_gen || !filters.cpuGen.includes(item.cpu_gen))) return false;
       // RAM
       if (filters.ram.length && (!item.ram || !filters.ram.some(val => {
+        // Chuẩn hóa: chỉ so sánh số và đơn vị GB
         const match = val.match(/(\d+)\s*GB/i);
         if (!match) return false;
         const num = match[1];
@@ -769,6 +1290,7 @@ function filterPCProducts() {
       if (filters.gpu.length && (!item.gpu || !filters.gpu.some(val => (item.gpu + '').includes(val)))) return false;
       // SSD
       if (filters.ssd.length && (!item.storage || !filters.ssd.some(val => {
+        // Chuẩn hóa: chỉ so sánh số và đơn vị GB/TB
         const match = val.match(/(\d+)\s*(GB|TB)/i);
         if (!match) return false;
         const num = match[1];
@@ -777,8 +1299,8 @@ function filterPCProducts() {
       }))) return false;
       // OS
       if (filters.os.length && (!item.os || !filters.os.includes(item.os))) return false;
-      // Giá
-      const price = item.price || 0;
+      // Giá: chỉ dùng item.price (kiểu số)
+      let price = typeof item.price === 'number' ? item.price : parseInt((item.price + '').replace(/\D/g, '')) || 0;
       if (price < filters.price.min || price > filters.price.max) return false;
       return true;
     });
@@ -877,55 +1399,6 @@ function showPCProductsFiltered(list) {
       delete window._paginationScrollY;
     }, 0);
   }
-}
-
-function renderPagination(totalItems, totalPages) {
-  const pagBar = document.getElementById('pagination-bar');
-  if (!pagBar) return;
-  let html = '';
-  if (totalPages <= 1) {
-    pagBar.innerHTML = '';
-    return;
-  }
-  // Jump to first
-  html += `<li class="page-item${currentPage === 1 ? ' disabled' : ''}"><a class="page-link" href="#" data-page="first">&laquo;</a></li>`;
-  // Prev page
-  html += `<li class="page-item${currentPage === 1 ? ' disabled' : ''}"><a class="page-link" href="#" data-page="prev">&lt;</a></li>`;
-  // Only show 1, 2, 3
-  for (let i = 1; i <= Math.min(3, totalPages); i++) {
-    html += `<li class="page-item${i === currentPage ? ' active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-  }
-  // Next page
-  html += `<li class="page-item${currentPage === totalPages ? ' disabled' : ''}"><a class="page-link" href="#" data-page="next">&gt;</a></li>`;
-  // Jump to last
-  html += `<li class="page-item${currentPage === totalPages ? ' disabled' : ''}"><a class="page-link" href="#" data-page="last">&raquo;</a></li>`;
-  pagBar.innerHTML = html;
-  pagBar.querySelectorAll('a.page-link').forEach(link => {
-    link.onclick = function(e) {
-      e.preventDefault();
-      let page = this.getAttribute('data-page');
-      window._paginationScrollY = window.scrollY;
-      // Always recalculate totalPages based on current filtered list
-      let total = (typeof lastFilteredList !== 'undefined' && lastFilteredList.length) ? lastFilteredList.length : (pcData ? pcData.length : 0);
-      let pages = Math.ceil(total / productsPerPage) || 1;
-      if (page === 'first') {
-        currentPage = 1;
-      } else if (page === 'last') {
-        currentPage = pages;
-      } else if (page === 'prev') {
-        currentPage = Math.max(1, currentPage - 1);
-      } else if (page === 'next') {
-        currentPage = Math.min(pages, currentPage + 1);
-      } else if (!isNaN(page)) {
-        currentPage = parseInt(page);
-      }
-      if (typeof lastFilteredList !== 'undefined' && lastFilteredList.length) {
-        showPCProductsFiltered(lastFilteredList);
-      } else {
-        showPCProducts('all');
-      }
-    };
-  });
 }
 
 function filterCategory(cat) {
