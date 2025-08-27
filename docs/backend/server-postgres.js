@@ -1002,6 +1002,22 @@ app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
     }
 });
 
+// ================== Middleware xác thực JWT ==================
+function authenticateToken(req, res, next) {
+    const token = req.cookies?.token || req.headers['authorization']?.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ success: false, error: 'Token không tồn tại' });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ success: false, error: 'Token không hợp lệ' });
+        }
+        req.user = user;
+        next();
+    });
+}
+
 // ===== Start =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
