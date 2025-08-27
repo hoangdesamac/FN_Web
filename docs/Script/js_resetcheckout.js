@@ -85,6 +85,28 @@ function initializeCartSystem() {
             const discountPercent = parseInt(discountPercentText.replace(/[^0-9]/g, '')) || 0;
             const productImage = productCard.querySelector('.product-image img')?.src || '';
 
+            // Kiểm tra đăng nhập (dựa trên localStorage có userName)
+            const isLoggedIn = !!localStorage.getItem('userName');
+            if (!isLoggedIn) {
+                // Lưu tạm sản phẩm vào localStorage
+                localStorage.setItem('pendingCartItem', JSON.stringify({
+                    id: productId,
+                    name: productName,
+                    originalPrice,
+                    salePrice,
+                    discountPercent,
+                    image: productImage,
+                    quantity: 1
+                }));
+                // Mở modal đăng nhập/đăng ký
+                if (typeof CyberModal !== "undefined" && CyberModal.open) {
+                    CyberModal.open();
+                }
+                showNotification('Vui lòng đăng nhập để thêm sản phẩm!', 'info');
+                return;
+            }
+
+            // Nếu đã đăng nhập, thêm bình thường
             addToCart(productId, productName, originalPrice, salePrice, discountPercent, productImage);
             showNotification(`Đã thêm "${productName}" vào giỏ hàng!`, 'success');
         });

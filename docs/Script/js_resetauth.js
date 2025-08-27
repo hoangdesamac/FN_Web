@@ -69,6 +69,17 @@ if (registerForm) {
             const data = await res.json();
             if (data.success) {
                 showMessage("register-error", "✅ Đăng ký thành công! Vui lòng đăng nhập.", "success");
+                // Kiểm tra và thêm sản phẩm tạm sau đăng ký
+                const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
+                if (pendingItem) {
+                    addToCart(pendingItem.id, pendingItem.name, pendingItem.originalPrice, pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image);
+                    localStorage.removeItem('pendingCartItem');
+                    showMessage("register-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng ký!`, "success");
+                }
+                // Cập nhật UI header (đề phòng hệ thống tự động đăng nhập)
+                if (typeof updateUserDisplay === "function") {
+                    updateUserDisplay();
+                }
                 setTimeout(() => {
                     if (typeof CyberModal !== "undefined" && CyberModal.showLogin) CyberModal.showLogin();
                     showMessage("register-error", "");
@@ -115,10 +126,20 @@ if (loginForm) {
                     localStorage.removeItem("avatarUrl");
                 }
 
+                // Kiểm tra và thêm sản phẩm tạm sau đăng nhập
+                const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
+                if (pendingItem) {
+                    addToCart(pendingItem.id, pendingItem.name, pendingItem.originalPrice, pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image);
+                    localStorage.removeItem('pendingCartItem');
+                    showMessage("login-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng nhập!`, "success");
+                }
+
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
+                if (typeof updateUserDisplay === "function") {
+                    updateUserDisplay();
+                }
                 window.location.reload();
-            }
-            else {
+            } else {
                 showMessage("login-error", data.error || "❌ Sai email hoặc mật khẩu!");
             }
         } catch (err) {
@@ -195,6 +216,13 @@ document.addEventListener("click", (e) => {
 
         if (loginStatus === "google") {
             checkLoginStatus();
+            // Kiểm tra và thêm sản phẩm tạm sau OAuth
+            const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
+            if (pendingItem) {
+                addToCart(pendingItem.id, pendingItem.name, pendingItem.originalPrice, pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image);
+                localStorage.removeItem('pendingCartItem');
+                showMessage("login-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng nhập!`, "success");
+            }
             if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
             window.history.replaceState({}, document.title, window.location.pathname);
         } else if (loginStatus === "failed") {
@@ -243,6 +271,13 @@ document.addEventListener("click", (e) => {
 
         if (loginStatus === "facebook") {
             checkLoginStatus();
+            // Kiểm tra và thêm sản phẩm tạm sau OAuth
+            const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
+            if (pendingItem) {
+                addToCart(pendingItem.id, pendingItem.name, pendingItem.originalPrice, pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image);
+                localStorage.removeItem('pendingCartItem');
+                showMessage("login-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng nhập!`, "success");
+            }
             if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
             window.history.replaceState({}, document.title, window.location.pathname);
         } else if (loginStatus === "failed") {
