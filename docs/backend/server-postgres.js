@@ -967,7 +967,40 @@ app.delete("/api/cart", authenticateToken, async (req, res) => {
     }
 });
 
+// ================== API GIỎ HÀNG - CẬP NHẬT SỐ LƯỢNG ==================
+app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const productId = req.params.productId;
+        const { quantity } = req.body;
 
+        if (!quantity || quantity < 1) {
+            return res.status(400).json({ success: false, error: "Số lượng không hợp lệ" });
+        }
+
+        // Cập nhật số lượng tuyệt đối
+        await pool.query(
+            `UPDATE cart_items SET quantity=$1, updated_at=NOW()
+             WHERE user_id=$2 AND product_id=$3`,
+            [quantity, userId, productId]
+        );
+
+        // Trả lại giỏ hàng mới
+        const cartRes = await pool.query(
+            `SELECT product_id AS id, name, original_price AS "originalPrice",
+                    sale_price AS "salePrice", discount_percent AS "discountPercent",
+                    image, quantity
+             FROM cart_items
+             WHERE user_id=$1`,
+            [userId]
+        );
+
+        res.json({ success: true, cart: cartRes.rows });
+    } catch (err) {
+        console.error("❌ Lỗi PUT /api/cart/:id:", err);
+        res.status(500).json({ success: false, error: "Lỗi server khi cập nhật số lượng" });
+    }
+});
 
 // ===== Start =====
 const PORT = process.env.PORT || 3000;
