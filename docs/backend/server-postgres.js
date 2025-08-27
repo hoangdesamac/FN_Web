@@ -928,25 +928,21 @@ app.post('/api/cart', async (req, res) => {
 // Xóa sản phẩm khỏi giỏ hàng
 app.delete('/api/cart/:productId', async (req, res) => {
     const token = req.cookies?.[COOKIE_NAME];
-    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+    if (!token) return res.status(401).json({ success: false, error: 'Chưa đăng nhập' });
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        const { productId } = req.params;
+        const productId = String(req.params.productId); // ép về string
 
-        const del = await pool.query(
-            `DELETE FROM cart_items WHERE user_id = $1 AND product_id = $2 RETURNING *`,
+        const result = await pool.query(
+            `DELETE FROM cart_items WHERE user_id=$1 AND product_id=$2`,
             [decoded.id, productId]
         );
 
-        if (!del.rows.length) {
-            return res.status(404).json({ success: false, error: "Sản phẩm không có trong giỏ" });
-        }
-
-        res.json({ success: true, message: "Đã xóa sản phẩm khỏi giỏ hàng" });
+        res.json({ success: true, deleted: result.rowCount });
     } catch (err) {
-        console.error("DELETE /api/cart error:", err);
-        res.status(500).json({ success: false, error: "Lỗi server" });
+        console.error('DELETE /api/cart/:id error:', err);
+        res.status(500).json({ success: false, error: 'Lỗi server' });
     }
 });
 
