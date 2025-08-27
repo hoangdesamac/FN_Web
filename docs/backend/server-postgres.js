@@ -898,35 +898,34 @@ app.post("/api/cart", authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu sản phẩm" });
         }
 
-        const upsert = await pool.query(
+        // ✅ UPSERT: nếu đã có → cộng thêm số lượng, nếu chưa → thêm mới
+        await pool.query(
             `INSERT INTO cart_items (user_id, product_id, name, original_price, sale_price, discount_percent, image, quantity)
              VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-                 ON CONFLICT (user_id, product_id)
+             ON CONFLICT (user_id, product_id)
              DO UPDATE SET
-                name=$3,
-                                     original_price=$4,
-                                     sale_price=$5,
-                                     discount_percent=$6,
-                                     image=$7,
-                                     quantity = cart_items.quantity + EXCLUDED.quantity
-                                     RETURNING product_id AS id, name, original_price AS "originalPrice",
-                                     sale_price AS "salePrice", discount_percent AS "discountPercent",
-                                     image, quantity`,
+                name = EXCLUDED.name,
+                original_price = EXCLUDED.original_price,
+                sale_price = EXCLUDED.sale_price,
+                discount_percent = EXCLUDED.discount_percent,
+                image = EXCLUDED.image,
+                quantity = cart_items.quantity + EXCLUDED.quantity,
+                created_at = NOW()`,
             [req.user.id, id, name, originalPrice, salePrice, discountPercent, image, quantity || 1]
         );
 
-        // Lấy toàn bộ giỏ hàng mới
+        // ✅ Luôn trả về giỏ hàng mới
         const cartRes = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
                     sale_price AS "salePrice", discount_percent AS "discountPercent",
                     image, quantity
              FROM cart_items
-             WHERE user_id = $1
+             WHERE user_id=$1
              ORDER BY created_at DESC`,
             [req.user.id]
         );
 
-        res.json({ success: true, item: upsert.rows[0], cart: cartRes.rows });
+        res.json({ success: true, cart: cartRes.rows });
     } catch (err) {
         console.error("❌ Lỗi POST /api/cart:", err);
         res.status(500).json({ success: false, error: "Server error" });
@@ -956,14 +955,11 @@ app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
             return res.status(404).json({ success: false, error: "Không tìm thấy sản phẩm trong giỏ" });
         }
 
+        // ✅ Trả lại giỏ hàng mới
         const cartRes = await pool.query(
-            `SELECT product_id AS id,
-                    name,
-                    original_price AS "originalPrice",
-                    sale_price AS "salePrice",
-                    discount_percent AS "discountPercent",
-                    image,
-                    quantity
+            `SELECT product_id AS id, name, original_price AS "originalPrice",
+                    sale_price AS "salePrice", discount_percent AS "discountPercent",
+                    image, quantity
              FROM cart_items
              WHERE user_id=$1
              ORDER BY created_at DESC`,
@@ -977,7 +973,6 @@ app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
     }
 });
 
-
 // DELETE 1 sản phẩm
 app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
     try {
@@ -986,6 +981,7 @@ app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
             [req.user.id, req.params.productId]
         );
 
+        // ✅ Trả lại giỏ hàng mới
         const cartRes = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
                     sale_price AS "salePrice", discount_percent AS "discountPercent",
@@ -1013,6 +1009,7 @@ app.delete("/api/cart", authenticateToken, async (req, res) => {
         res.status(500).json({ success: false, error: "Server error" });
     }
 });
+
 
 // ================== Middleware xác thực JWT ==================
 function authenticateToken(req, res, next) {
