@@ -1291,7 +1291,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (typeof initFooter === 'function') initFooter();
     });
 
-    renderCart();
     const selectAllCheckbox = document.getElementById('select-all-checkbox');
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', () => {
