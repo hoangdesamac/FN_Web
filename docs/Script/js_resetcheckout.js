@@ -728,7 +728,13 @@ function renderCart() {
     });
     if (migrated) { localStorage.setItem('cart', JSON.stringify(raw)); }
     cartCache = raw;
+
     const cartItemsContainer = document.getElementById('cart-items-container');
+    if (!cartItemsContainer) return;
+
+    // 🛠 Fix: Xoá nội dung cũ trước khi render mới
+    cartItemsContainer.innerHTML = '';
+
     const emptyCart = document.getElementById('empty-cart');
     const proceedButton = document.getElementById('proceed-to-step-2');
     const clearCartBtn = document.getElementById('clear-cart');
@@ -740,10 +746,7 @@ function renderCart() {
 
     if ((cart.length === 0) && (giftCart.length === 0)) {
         if (emptyCart) emptyCart.classList.remove('d-none');
-        if (cartItemsContainer) {
-            cartItemsContainer.classList.add('d-none');
-            cartItemsContainer.innerHTML = '';
-        }
+        cartItemsContainer.classList.add('d-none');
         const selectAllWrapper = document.querySelector('.select-all-wrapper');
         if (selectAllWrapper) selectAllWrapper.classList.add('d-none');
         const cartSummary = document.querySelector('.cart-summary');
@@ -804,6 +807,7 @@ function renderCart() {
     `;
     });
 
+    // Render quà tặng nếu có
     if (giftCart.length) {
         cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🎁 Sản phẩm tặng kèm</h5>`;
         giftCart.forEach((g, gi) => {
@@ -831,9 +835,8 @@ function renderCart() {
         cartItemsHTML += `</div>`;
     }
 
-    if (cartItemsContainer) {
-        cartItemsContainer.innerHTML = cartItemsHTML;
-    }
+    // Gắn HTML mới vào container
+    cartItemsContainer.innerHTML = cartItemsHTML;
 
     const savedSelected = JSON.parse(localStorage.getItem('selectedCart')) || [];
     selectedItems = savedSelected.filter(it => !it.isGift).map(item => item.id);
@@ -854,6 +857,7 @@ function renderCart() {
         selectAllCheckbox.checked = allChecked;
     }
 }
+
 
 function updateCartSummary(total) {
     const summaryRows = document.querySelectorAll('.cart-summary__rows .currency-value');
