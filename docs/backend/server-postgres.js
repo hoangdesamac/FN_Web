@@ -909,7 +909,7 @@ app.post("/api/cart", authenticateToken, async (req, res) => {
                 sale_price = EXCLUDED.sale_price,
                 discount_percent = EXCLUDED.discount_percent,
                 image = EXCLUDED.image,
-                quantity = cart_items.quantity + EXCLUDED.quantity,
+                quantity = EXCLUDED.quantity,
                 created_at = NOW()`,
             [req.user.id, id, name, originalPrice, salePrice, discountPercent, image, quantity || 1]
         );
