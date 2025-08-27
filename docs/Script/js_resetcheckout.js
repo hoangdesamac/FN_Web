@@ -59,19 +59,26 @@ function showStep(step) {
 }
 
 async function initializeCartSystem() {
-    // Làm mới cache + hiển thị ban đầu
-    refreshCartCache();
-    updateCartCount();
-    updateOrderCount();
-
-    if (document.getElementById('cart-items-container')) {
-        renderCart();
-    }
-
     const isLoggedIn = !!localStorage.getItem('userName');
 
     if (isLoggedIn) {
         try {
+            // Nếu có pendingCartItem (đã thêm khi chưa login) → sync ngay
+            const pending = localStorage.getItem('pendingCartItem');
+            if (pending) {
+                const item = JSON.parse(pending);
+                await addToCart(
+                    item.id,
+                    item.name,
+                    item.originalPrice,
+                    item.salePrice,
+                    item.discountPercent,
+                    item.image
+                );
+                localStorage.removeItem('pendingCartItem');
+            }
+
+            // 🔑 Luôn lấy giỏ hàng từ server
             const res = await fetch(`${window.API_BASE}/api/cart`, {
                 method: 'GET',
                 credentials: 'include'
@@ -79,32 +86,36 @@ async function initializeCartSystem() {
 
             const data = await res.json();
             if (data.success) {
-                // 🔑 Chỉ lấy dữ liệu từ server → coi server là nguồn chính
                 const serverCart = data.cart || [];
 
-                // Lưu serverCart vào local chỉ để cache
+                // Server là nguồn chính → cache vào local
                 localStorage.setItem('cart', JSON.stringify(serverCart));
                 cartCache = serverCart;
 
-                // Cập nhật UI
                 updateCartCount();
-                renderCart(serverCart);
+                updateOrderCount();
+                if (document.getElementById('cart-items-container')) {
+                    renderCart(serverCart);
+                }
             } else {
-                console.warn('⚠️ API trả về không thành công khi lấy giỏ hàng:', data.error);
+                console.warn('⚠️ API trả về lỗi khi lấy giỏ hàng:', data.error);
             }
         } catch (err) {
             console.error('❌ Lỗi khi lấy giỏ hàng từ server:', err);
         }
     } else {
-        // 🔑 Nếu chưa login → chỉ lấy từ localStorage
+        // 🔑 Nếu chưa login → chỉ dùng local
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         cartCache = localCart;
 
         updateCartCount();
-        renderCart(localCart);
+        updateOrderCount();
+        if (document.getElementById('cart-items-container')) {
+            renderCart(localCart);
+        }
     }
 
-    // Setup logic cho nút "Mua ngay"
+    // Gắn sự kiện cho nút "Mua ngay"
     document.querySelectorAll('.buy-button').forEach(button => {
         button.addEventListener('click', function () {
             const productCard = this.closest('.product-card');
@@ -116,20 +127,20 @@ async function initializeCartSystem() {
             const productId = productCard.getAttribute('data-id') || `prod_${Date.now()}`;
             const productName = productCard.querySelector('.product-name')?.textContent.trim() || 'Sản phẩm không tên';
 
-            // Lấy giá gốc & giá sale
+            // Giá gốc & sale
             const originalPriceText = productCard.querySelector('.original-price')?.textContent || '0';
             const salePriceText = productCard.querySelector('.sale-price')?.textContent || originalPriceText;
             const originalPrice = parseInt(originalPriceText.replace(/\D/g, '')) || 0;
             const salePrice = parseInt(salePriceText.replace(/\D/g, '')) || originalPrice;
 
-            // Lấy % giảm giá
+            // % giảm
             const discountPercentText = productCard.querySelector('.discount-badge')?.textContent || '0%';
             const discountPercent = parseInt(discountPercentText.replace(/[^0-9]/g, '')) || 0;
 
             const productImage = productCard.querySelector('.product-image img')?.src || '';
 
             if (!isLoggedIn) {
-                // Nếu chưa login → lưu pending để thêm vào sau khi login
+                // Nếu chưa login → lưu pending
                 localStorage.setItem('pendingCartItem', JSON.stringify({
                     id: productId,
                     name: productName,
@@ -147,20 +158,21 @@ async function initializeCartSystem() {
                 return;
             }
 
-            // Đã login → gọi addToCart
+            // Đã login → thêm thẳng vào server
             addToCart(productId, productName, originalPrice, salePrice, discountPercent, productImage);
             showNotification(`Đã thêm "${productName}" vào giỏ hàng!`, 'success');
         });
     });
 
-    // Tạo element thông báo nếu chưa có
+    // Tạo element notification nếu chưa có
     if (!document.getElementById('notification')) {
         createNotificationElement();
     }
 
-    // Xoá sản phẩm hết hạn
+    // Xoá sản phẩm hết hạn (local only)
     cleanupExpiredItems();
 }
+
 
 
 
@@ -1373,20 +1385,28 @@ function selectMethod(method) {
     }
 }
 
-window.addEventListener('storage', function(e) {
-    if (e.key === 'cart') {
-        refreshCartCache();
-        updateCartCount();
-        renderCart();
+window.addEventListener('storage', function (e) {
+    const isLoggedIn = !!localStorage.getItem('userName');
+
+    // 🔑 Nếu chưa login → đồng bộ bằng localStorage
+    if (!isLoggedIn) {
+        if (e.key === 'cart') {
+            refreshCartCache();
+            updateCartCount();
+            renderCart();
+        }
+        if (e.key === 'giftCart') {
+            updateCartCount();
+            renderCart();
+        }
     }
-    if (e.key === 'giftCart') {
-        updateCartCount();
-        renderCart();
-    }
+
+    // Orders thì vẫn sync cả 2 trạng thái
     if (e.key === 'orders') {
         updateOrderCount();
     }
 });
+
 
 window.addEventListener('scroll', function() {
     const cartHeader = document.querySelector('.cart-header');
