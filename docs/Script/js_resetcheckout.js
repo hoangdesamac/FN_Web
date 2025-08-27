@@ -451,6 +451,7 @@ function showNotification(message = 'Đã thêm sản phẩm vào giỏ hàng!',
 
 async function clearCart() {
     if (confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?')) {
+        // Dọn local cache
         saveCart([]);
         saveGiftCart([]);
         localStorage.removeItem('selectedCart');
@@ -460,24 +461,23 @@ async function clearCart() {
         // Xóa giỏ hàng trên server nếu đã đăng nhập
         const isLoggedIn = !!localStorage.getItem('userName');
         if (isLoggedIn) {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            for (const item of cart) {
-                try {
-                    await fetch(`${window.API_BASE}/api/cart/${item.id}`, {
-                        method: 'DELETE',
-                        credentials: 'include'
-                    });
-                } catch (err) {
-                    console.error('Lỗi xóa sản phẩm trên server:', err);
-                }
+            try {
+                await fetch(`${window.API_BASE}/api/cart`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+            } catch (err) {
+                console.error('Lỗi khi xóa toàn bộ giỏ hàng trên server:', err);
             }
         }
 
+        // Cập nhật giao diện
         updateCartCount();
         renderCart();
         showNotification('Đã xóa tất cả sản phẩm khỏi giỏ hàng', 'success');
     }
 }
+
 
 async function updateQuantity(index, change) {
     const cart = getCart();

@@ -946,6 +946,23 @@ app.delete('/api/cart/:productId', async (req, res) => {
     }
 });
 
+app.delete('/api/cart', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: 'Chưa đăng nhập' });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        await pool.query(`DELETE FROM cart_items WHERE user_id=$1`, [decoded.id]);
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('DELETE /api/cart error:', err);
+        res.status(500).json({ success: false, error: 'Lỗi server' });
+    }
+});
+
+
 // ===== Start =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
