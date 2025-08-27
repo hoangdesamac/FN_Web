@@ -936,9 +936,9 @@ app.post("/api/cart", authenticateToken, async (req, res) => {
 // UPDATE số lượng tuyệt đối cho 1 sản phẩm
 app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
     try {
+        const { quantity } = req.body;
         const userId = req.user.id;
         const productId = req.params.productId;
-        const { quantity } = req.body;
 
         if (!quantity || quantity < 1) {
             return res.status(400).json({ success: false, error: "Số lượng không hợp lệ" });
@@ -946,21 +946,24 @@ app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
 
         const update = await pool.query(
             `UPDATE cart_items
-             SET quantity=$1, updated_at=NOW()
+             SET quantity=$1
              WHERE user_id=$2 AND product_id=$3
-             RETURNING *`,
+                 RETURNING *`,
             [quantity, userId, productId]
         );
 
         if (update.rowCount === 0) {
-            return res.status(404).json({ success: false, error: "Không tìm thấy sản phẩm trong giỏ hàng" });
+            return res.status(404).json({ success: false, error: "Không tìm thấy sản phẩm trong giỏ" });
         }
 
-        // Trả lại giỏ hàng mới
         const cartRes = await pool.query(
-            `SELECT product_id AS id, name, original_price AS "originalPrice",
-                    sale_price AS "salePrice", discount_percent AS "discountPercent",
-                    image, quantity
+            `SELECT product_id AS id,
+                    name,
+                    original_price AS "originalPrice",
+                    sale_price AS "salePrice",
+                    discount_percent AS "discountPercent",
+                    image,
+                    quantity
              FROM cart_items
              WHERE user_id=$1
              ORDER BY created_at DESC`,
@@ -973,6 +976,7 @@ app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
         res.status(500).json({ success: false, error: "Lỗi server khi cập nhật số lượng" });
     }
 });
+
 
 // DELETE 1 sản phẩm
 app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
