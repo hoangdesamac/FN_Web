@@ -58,7 +58,7 @@ function showStep(step) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function initializeCartSystem() {
+async function initializeCartSystem() {
     refreshCartCache();
     updateCartCount();
     updateOrderCount();
@@ -66,48 +66,35 @@ function initializeCartSystem() {
         renderCart();
     }
 
-    // Đồng bộ giỏ hàng từ server nếu đã đăng nhập
     const isLoggedIn = !!localStorage.getItem('userName');
     if (isLoggedIn) {
-        fetch(`${window.API_BASE}/api/cart`, {
-            method: 'GET',
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    // Merge giỏ hàng từ server với localStorage (ưu tiên server)
-                    let localCart = JSON.parse(localStorage.getItem('cart')) || [];
-                    const serverCart = data.cart || [];
-                    // Chỉ giữ các sản phẩm từ local mà không có trên server
-                    const mergedCart = [
-                        ...serverCart,
-                        ...localCart.filter(localItem => !serverCart.some(serverItem => serverItem.id === localItem.id))
-                    ];
-                    localStorage.setItem('cart', JSON.stringify(mergedCart));
-                    cartCache = mergedCart;
-                    updateCartCount();
-                    renderCart();
-                    // Đồng bộ localCart lên server
-                    serverCart.forEach(item => {
-                        fetch(`${window.API_BASE}/api/cart`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            credentials: 'include',
-                            body: JSON.stringify({
-                                id: item.id,
-                                name: item.name,
-                                originalPrice: item.originalPrice,
-                                salePrice: item.salePrice,
-                                discountPercent: item.discountPercent,
-                                image: item.image,
-                                quantity: item.quantity || 1
-                            })
-                        }).catch(err => console.error('Lỗi đồng bộ sản phẩm:', err));
-                    });
-                }
-            })
-            .catch(err => console.error('Lỗi lấy giỏ hàng từ server:', err));
+        try {
+            const res = await fetch(`${window.API_BASE}/api/cart`, {
+                method: 'GET',
+                credentials: 'include'
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                const serverCart = data.cart || [];
+
+                // 🔑 Server là nguồn chính → lưu vào local để cache
+                localStorage.setItem('cart', JSON.stringify(serverCart));
+                cartCache = serverCart;
+
+                updateCartCount();
+                renderCart(serverCart);
+            }
+        } catch (err) {
+            console.error('Lỗi lấy giỏ hàng từ server:', err);
+        }
+    } else {
+        // 🔑 Nếu chưa đăng nhập → chỉ dùng local
+        const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+        cartCache = localCart;
+
+        updateCartCount();
+        renderCart(localCart);
     }
 
     // Logic cho nút "Mua ngay"
@@ -129,9 +116,9 @@ function initializeCartSystem() {
             const discountPercent = parseInt(discountPercentText.replace(/[^0-9]/g, '')) || 0;
             const productImage = productCard.querySelector('.product-image img')?.src || '';
 
-            // Kiểm tra đăng nhập
             const isLoggedIn = !!localStorage.getItem('userName');
             if (!isLoggedIn) {
+                // Chưa login → lưu tạm
                 localStorage.setItem('pendingCartItem', JSON.stringify({
                     id: productId,
                     name: productName,
@@ -148,6 +135,7 @@ function initializeCartSystem() {
                 return;
             }
 
+            // Đã login → thêm trực tiếp vào cart
             addToCart(productId, productName, originalPrice, salePrice, discountPercent, productImage);
             showNotification(`Đã thêm "${productName}" vào giỏ hàng!`, 'success');
         });
@@ -159,6 +147,7 @@ function initializeCartSystem() {
 
     cleanupExpiredItems();
 }
+
 
 let cartCache = null;
 let selectedItems = [];
