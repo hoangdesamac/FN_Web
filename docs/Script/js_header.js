@@ -26,6 +26,66 @@ function initCartCountEffect() {
     updateCartCount();
 }
 
+function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
+    const normalCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+    const giftCount = giftCart.reduce((total, g) => total + (g.quantity || 0), 0);
+    const cartCount = normalCount + giftCount;
+
+    // Đồng bộ giỏ hàng từ server nếu đã đăng nhập
+    const isLoggedIn = !!localStorage.getItem('userName');
+    if (isLoggedIn) {
+        fetch(`${window.API_BASE}/api/cart`, {
+            method: 'GET',
+            credentials: 'include'
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Merge giỏ hàng từ server với localStorage
+                    const serverCart = data.cart || [];
+                    const mergedCart = [
+                        ...serverCart,
+                        ...cart.filter(localItem => !serverCart.some(serverItem => serverItem.id === localItem.id))
+                    ];
+                    localStorage.setItem('cart', JSON.stringify(mergedCart));
+                    cart = mergedCart;
+                    // Cập nhật lại số lượng
+                    const updatedNormalCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+                    const updatedCartCount = updatedNormalCount + giftCount;
+
+                    const cartCountElement = document.querySelector('.cart-count');
+                    if (cartCountElement) {
+                        const oldCount = parseInt(cartCountElement.textContent || '0');
+                        if (oldCount !== updatedCartCount) {
+                            cartCountElement.classList.add('cart-count-update');
+                            setTimeout(() => {
+                                cartCountElement.classList.remove('cart-count-update');
+                            }, 500);
+                        }
+                        cartCountElement.textContent = updatedCartCount;
+                        cartCountElement.style.display = updatedCartCount > 0 ? 'inline-flex' : 'none';
+                    }
+                }
+            })
+            .catch(err => console.error('Lỗi lấy giỏ hàng từ server:', err));
+    } else {
+        const cartCountElement = document.querySelector('.cart-count');
+        if (cartCountElement) {
+            const oldCount = parseInt(cartCountElement.textContent || '0');
+            if (oldCount !== cartCount) {
+                cartCountElement.classList.add('cart-count-update');
+                setTimeout(() => {
+                    cartCountElement.classList.remove('cart-count-update');
+                }, 500);
+            }
+            cartCountElement.textContent = cartCount;
+            cartCountElement.style.display = cartCount > 0 ? 'inline-flex' : 'none';
+        }
+    }
+}
+
 function updateOrderCount() {
     const orders = JSON.parse(localStorage.getItem('orders')) || [];
     const orderCountElement = document.querySelector('.order-count');
@@ -116,7 +176,6 @@ function switchToForgot() { CyberModal.showForgot(); }
 function closeCyberModal() { CyberModal.close(); }
 
 // ================= User login state =================
-
 async function fetchUserInfo() {
     try {
         const res = await fetch(`${window.API_BASE}/api/me`, {
@@ -126,6 +185,10 @@ async function fetchUserInfo() {
         const data = await res.json();
         if (data.loggedIn) {
             localStorage.setItem('userName', data.user.lastName.trim());
+            localStorage.setItem('firstName', (data.user.firstName || "").trim());
+            localStorage.setItem('lastName', (data.user.lastName || "").trim());
+            localStorage.setItem('email', data.user.email || "");
+            localStorage.setItem('userId', data.user.id || "");
             if (data.user.avatar_url) {
                 localStorage.setItem('avatarUrl', data.user.avatar_url);
             } else {
@@ -133,6 +196,10 @@ async function fetchUserInfo() {
             }
         } else {
             localStorage.removeItem('userName');
+            localStorage.removeItem('firstName');
+            localStorage.removeItem('lastName');
+            localStorage.removeItem('email');
+            localStorage.removeItem('userId');
             localStorage.removeItem('avatarUrl');
         }
     } catch (err) {
@@ -171,17 +238,14 @@ function updateUserDisplay() {
     let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
 
-    // Giữ nguyên class cũ khi clone
     const newUserAction = userAction.cloneNode(false);
     newUserAction.className = userAction.className;
     userAction.parentNode.replaceChild(newUserAction, userAction);
     userAction = newUserAction;
 
     if (fullName !== "Người dùng") {
-        // ✅ Đã login
         const shortName = fullName.length > 14 ? fullName.slice(0, 14) + "..." : fullName;
 
-        // Avatar (server → random fallback)
         const avatarHTML = avatarUrl
             ? `<img src="${avatarUrl}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
             : generateRandomAvatar(firstName || lastName);
@@ -200,28 +264,34 @@ function updateUserDisplay() {
             </div>
         `;
 
-        // Hover dropdown
         const userMenu = userAction.querySelector('.user-menu');
         userMenu.addEventListener('mouseenter', () => userMenu.classList.add('show'));
         userMenu.addEventListener('mouseleave', () => userMenu.classList.remove('show'));
 
-        // Link đến trang profile
         document.getElementById("profileLink").addEventListener("click", () => {
             window.location.href = "profile.html";
         });
 
-        // Logout
         document.getElementById("logoutBtn").addEventListener("click", async () => {
-            await fetch(`${window.API_BASE}/api/logout`, {
-                method: "POST",
-                credentials: "include"
-            });
-            localStorage.clear();
-            window.location.reload();
+            try {
+                await fetch(`${window.API_BASE}/api/logout`, {
+                    method: "POST",
+                    credentials: "include"
+                });
+                // Chỉ xóa thông tin user, giữ giỏ hàng
+                localStorage.removeItem('userName');
+                localStorage.removeItem('firstName');
+                localStorage.removeItem('lastName');
+                localStorage.removeItem('email');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('avatarUrl');
+                localStorage.removeItem('pendingCartItem');
+                window.location.reload();
+            } catch (err) {
+                console.error("Lỗi đăng xuất:", err);
+            }
         });
-
     } else {
-        // ❌ Chưa login
         userAction.innerHTML = `
             <i class="bx bx-user-circle action-icon"></i>
             <div class="action-text">
@@ -247,7 +317,6 @@ function initCartIconClick() {
                 showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
                 return;
             }
-            // Nếu đã đăng nhập, chuyển trang bình thường
             window.location.href = 'resetcheckout.html';
         });
     }

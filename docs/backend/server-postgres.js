@@ -869,6 +869,87 @@ app.delete('/api/addresses/:id', async (req, res) => {
     }
 });
 
+// ===== Cart APIs =====
+
+// Lấy giỏ hàng của user
+app.get('/api/cart', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { rows } = await pool.query(
+            `SELECT product_id AS id, name, original_price, sale_price, discount_percent, image, quantity
+             FROM cart_items WHERE user_id = $1`,
+            [decoded.id]
+        );
+        res.json({ success: true, cart: rows });
+    } catch (err) {
+        console.error("GET /api/cart error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
+// Thêm hoặc cập nhật sản phẩm trong giỏ hàng
+app.post('/api/cart', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { id, name, originalPrice, salePrice, discountPercent, image, quantity = 1 } = req.body;
+
+        if (!id || !name || !originalPrice || !salePrice) {
+            return res.status(400).json({ success: false, error: "Thiếu dữ liệu sản phẩm" });
+        }
+
+        // Upsert: Nếu sản phẩm đã tồn tại, cập nhật quantity; nếu chưa, thêm mới
+        const upsert = await pool.query(
+            `INSERT INTO cart_items (user_id, product_id, name, original_price, sale_price, discount_percent, image, quantity)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+             ON CONFLICT (user_id, product_id)
+             DO UPDATE SET quantity = cart_items.quantity + EXCLUDED.quantity,
+                           name = EXCLUDED.name,
+                           original_price = EXCLUDED.original_price,
+                           sale_price = EXCLUDED.sale_price,
+                           discount_percent = EXCLUDED.discount_percent,
+                           image = EXCLUDED.image
+             RETURNING *`,
+            [decoded.id, id, name, originalPrice, salePrice, discountPercent || null, image || null, quantity]
+        );
+
+        res.json({ success: true, item: upsert.rows[0] });
+    } catch (err) {
+        console.error("POST /api/cart error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
+// Xóa sản phẩm khỏi giỏ hàng
+app.delete('/api/cart/:productId', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { productId } = req.params;
+
+        const del = await pool.query(
+            `DELETE FROM cart_items WHERE user_id = $1 AND product_id = $2 RETURNING *`,
+            [decoded.id, productId]
+        );
+
+        if (!del.rows.length) {
+            return res.status(404).json({ success: false, error: "Sản phẩm không có trong giỏ" });
+        }
+
+        res.json({ success: true, message: "Đã xóa sản phẩm khỏi giỏ hàng" });
+    } catch (err) {
+        console.error("DELETE /api/cart error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
 // ===== Start =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

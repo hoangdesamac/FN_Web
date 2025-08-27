@@ -8,6 +8,43 @@ function showMessage(elementId, message, type = "error") {
     }
 }
 
+// Đồng bộ giỏ hàng từ localStorage lên server
+async function syncCartToServer() {
+    try {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        for (const item of cart) {
+            await fetch(`${window.API_BASE}/api/cart`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    id: item.id,
+                    name: item.name,
+                    originalPrice: item.originalPrice,
+                    salePrice: item.salePrice,
+                    discountPercent: item.discountPercent,
+                    image: item.image,
+                    quantity: item.quantity || 1
+                })
+            });
+        }
+        // Sau khi đồng bộ, lấy giỏ hàng từ server để cập nhật localStorage
+        const res = await fetch(`${window.API_BASE}/api/cart`, {
+            method: 'GET',
+            credentials: 'include'
+        });
+        const data = await res.json();
+        if (data.success) {
+            localStorage.setItem('cart', JSON.stringify(data.cart));
+            if (typeof updateCartCount === 'function') {
+                updateCartCount();
+            }
+        }
+    } catch (err) {
+        console.error('Lỗi đồng bộ giỏ hàng:', err);
+    }
+}
+
 // ==================== KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP ====================
 async function checkLoginStatus() {
     try {
@@ -23,14 +60,16 @@ async function checkLoginStatus() {
             localStorage.setItem("firstName", (data.user.firstName || "").trim());
             localStorage.setItem("lastName", (data.user.lastName || "").trim());
             localStorage.setItem("email", data.user.email || "");
-            localStorage.setItem("userName", (data.user.lastName || "").trim()); // giữ cho header cũ
+            localStorage.setItem("userName", (data.user.lastName || "").trim());
             if (data.user.avatar_url) {
                 localStorage.setItem("avatarUrl", data.user.avatar_url);
             } else {
-                localStorage.removeItem("avatarUrl"); // để UI tự tạo avatar ngẫu nhiên
+                localStorage.removeItem("avatarUrl");
             }
+            // Đồng bộ giỏ hàng khi đăng nhập
+            await syncCartToServer();
         } else {
-            // Xóa hết nếu chưa đăng nhập
+            // Xóa thông tin user nếu chưa đăng nhập
             localStorage.removeItem("userId");
             localStorage.removeItem("firstName");
             localStorage.removeItem("lastName");
@@ -76,7 +115,7 @@ if (registerForm) {
                     localStorage.removeItem('pendingCartItem');
                     showMessage("register-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng ký!`, "success");
                 }
-                // Cập nhật UI header (đề phòng hệ thống tự động đăng nhập)
+                // Cập nhật UI header
                 if (typeof updateUserDisplay === "function") {
                     updateUserDisplay();
                 }
@@ -134,6 +173,9 @@ if (loginForm) {
                     showMessage("login-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng nhập!`, "success");
                 }
 
+                // Đồng bộ giỏ hàng sau đăng nhập
+                await syncCartToServer();
+
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
                 if (typeof updateUserDisplay === "function") {
                     updateUserDisplay();
@@ -156,8 +198,14 @@ async function logout() {
             method: "POST",
             credentials: "include"
         });
-        // Xóa hết localStorage
-        localStorage.clear();
+        // Chỉ xóa thông tin user, giữ giỏ hàng và dữ liệu khác
+        localStorage.removeItem('userId');
+        localStorage.removeItem('firstName');
+        localStorage.removeItem('lastName');
+        localStorage.removeItem('email');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('avatarUrl');
+        localStorage.removeItem('pendingCartItem');
         window.location.reload();
     } catch (err) {
         console.error("Lỗi đăng xuất:", err);
@@ -223,6 +271,8 @@ document.addEventListener("click", (e) => {
                 localStorage.removeItem('pendingCartItem');
                 showMessage("login-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng nhập!`, "success");
             }
+            // Đồng bộ giỏ hàng sau OAuth
+            syncCartToServer();
             if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
             window.history.replaceState({}, document.title, window.location.pathname);
         } else if (loginStatus === "failed") {
@@ -278,6 +328,8 @@ document.addEventListener("click", (e) => {
                 localStorage.removeItem('pendingCartItem');
                 showMessage("login-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng nhập!`, "success");
             }
+            // Đồng bộ giỏ hàng sau OAuth
+            syncCartToServer();
             if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
             window.history.replaceState({}, document.title, window.location.pathname);
         } else if (loginStatus === "failed") {
