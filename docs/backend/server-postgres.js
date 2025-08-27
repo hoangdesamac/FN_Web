@@ -879,8 +879,16 @@ app.get('/api/cart', async (req, res) => {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         const { rows } = await pool.query(
-            `SELECT product_id AS id, name, original_price, sale_price, discount_percent, image, quantity
-             FROM cart_items WHERE user_id = $1`,
+            `SELECT
+                 product_id AS id,
+                 name,
+                 original_price AS "originalPrice",
+                 sale_price AS "salePrice",
+                 discount_percent AS "discountPercent",
+                 image,
+                 quantity
+             FROM cart_items
+             WHERE user_id = $1`,
             [decoded.id]
         );
         res.json({ success: true, cart: rows });
@@ -889,6 +897,7 @@ app.get('/api/cart', async (req, res) => {
         res.status(500).json({ success: false, error: "Lỗi server" });
     }
 });
+
 
 // Thêm hoặc cập nhật sản phẩm trong giỏ hàng
 app.post('/api/cart', async (req, res) => {
