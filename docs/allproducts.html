@@ -46,8 +46,8 @@
       </div>
       
       <aside class="col-lg-3 mb-4">
-        <!-- Sidebar PC (giữ nguyên) -->
-        <div class="product-sidebar pc-sidebar">
+  <!-- Sidebar PC (giữ nguyên) -->
+  <div class="product-sidebar pc-sidebar">
           <div class="sidebar-title">Khoảng giá</div>
           <div class="filter-section">
             <div class="price-range mb-2">
@@ -194,6 +194,68 @@
               <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="os-other"><label for="os-other">Khác</label></div>
               <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="os-linux"><label for="os-linux">Linux</label></div>
               <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="os-mac"><label for="os-mac">MacOS</label></div>
+            </div>
+          </div>
+        </div>
+        <!-- Sidebar Mouse (ẩn mặc định, hiện khi lọc mouse) -->
+        <div class="product-sidebar mouse-sidebar" style="display:none;">
+          <div class="sidebar-title">Khoảng giá</div>
+          <div class="filter-section">
+            <div class="price-range mb-2">
+              <input type="text" class="price-input" id="mouse-min-price" value="0đ" readonly>
+              <span style="font-size:18px;line-height:1;">–</span>
+              <input type="text" class="price-input" id="mouse-max-price" value="20.000.000đ" readonly>
+            </div>
+            <input type="range" class="price-slider" min="0" max="20000000" step="100000" value="0" id="mouse-price-slider">
+          </div>
+          <div class="filter-section" data-filter-group="brand">
+            <div class="sidebar-title collapsible">Thương hiệu <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-brand-logitech"><label for="mouse-brand-logitech">Logitech</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-brand-rapoo"><label for="mouse-brand-rapoo">Rapoo</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-brand-asus"><label for="mouse-brand-asus">Asus</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-brand-razer"><label for="mouse-brand-razer">Razer</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-brand-edra"><label for="mouse-brand-edra">E-Dra</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-brand-dareu"><label for="mouse-brand-dareu">DareU</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-brand-akko"><label for="mouse-brand-akko">Akko</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-brand-other"><label for="mouse-brand-other">Khác</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="series">
+            <div class="sidebar-title collapsible">Kết nối <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options filter-scroll" data-max-visible="6">
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-conn-wireless"><label for="mouse-conn-wireless">Không dây (Wireless)</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-conn-bluetooth"><label for="mouse-conn-bluetooth">Bluetooth</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-conn-usb"><label for="mouse-conn-usb">USB Receiver</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-conn-wired"><label for="mouse-conn-wired">Có dây (Wired)</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-conn-2mode"><label for="mouse-conn-2mode">2 chế độ (Wired + Wireless)</label></div>
+              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="mouse-conn-other"><label for="mouse-conn-other">Khác</label></div>
+            </div>
+          </div>
+        </div>
+        <!-- Sidebar Keyboard (ẩn mặc định, hiện khi lọc keyboard) -->
+        <div class="product-sidebar keyboard-sidebar" style="display:none;">
+          <div class="sidebar-title">Khoảng giá</div>
+          <div class="filter-section">
+            <div class="price-range mb-2">
+              <input type="text" class="price-input" id="keyboard-min-price" value="0đ" readonly>
+              <span style="font-size:18px;line-height:1;">–</span>
+              <input type="text" class="price-input" id="keyboard-max-price" value="20.000.000đ" readonly>
+            </div>
+            <input type="range" class="price-slider" min="0" max="20000000" step="100000" value="0" id="keyboard-price-slider">
+
+          </div>
+          <div class="filter-section" data-filter-group="brand">
+            <div class="sidebar-title collapsible">Thương hiệu <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="keyboard-brand-akko"><label for="keyboard-brand-akko">Akko</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="keyboard-brand-leobog"><label for="keyboard-brand-leobog">Leobog</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="keyboard-brand-aula"><label for="keyboard-brand-aula">AULA</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="keyboard-brand-asus"><label for="keyboard-brand-asus">Asus</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="keyboard-brand-dareu"><label for="keyboard-brand-dareu">DareU</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="keyboard-brand-edra"><label for="keyboard-brand-edra">E-Dra</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="keyboard-brand-logitech"><label for="keyboard-brand-logitech">Logitech</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="keyboard-brand-other"><label for="keyboard-brand-other">Khác</label></div>
             </div>
           </div>
         </div>
