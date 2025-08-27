@@ -259,6 +259,65 @@
             </div>
           </div>
         </div>
+        <!-- Sidebar Display (ẩn mặc định, hiện khi lọc display) -->
+        <div class="product-sidebar display-sidebar" style="display:none;">
+          <div class="sidebar-title">Khoảng giá</div>
+          <div class="filter-section">
+            <div class="price-range mb-2">
+              <input type="text" class="price-input" id="display-min-price" value="0đ" readonly>
+              <span style="font-size:18px;line-height:1;">–</span>
+              <input type="text" class="price-input" id="display-max-price" value="100.000.000đ" readonly>
+            </div>
+            <input type="range" class="price-slider" min="0" max="100000000" step="100000" value="0" id="display-price-slider">
+          </div>
+          <div class="filter-section" data-filter-group="brand">
+            <div class="sidebar-title collapsible">Thương hiệu <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-brand-lg"><label for="display-brand-lg">LG</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-brand-samsung"><label for="display-brand-samsung">Samsung</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-brand-dell"><label for="display-brand-dell">Dell</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-brand-asus"><label for="display-brand-asus">Asus</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-brand-viewsonic"><label for="display-brand-viewsonic">ViewSonic</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-brand-msi"><label for="display-brand-msi">MSI</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-brand-philips"><label for="display-brand-philips">Philips</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-brand-other"><label for="display-brand-other">Khác</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="size">
+            <div class="sidebar-title collapsible">Kích thước màn hình <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-size-22"><label for="display-size-22">22 inch</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-size-24"><label for="display-size-24">24 inch</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-size-27"><label for="display-size-27">27 inch</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-size-32"><label for="display-size-32">32 inch</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-size-34"><label for="display-size-34">34 inch</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-size-49"><label for="display-size-49">49 inch</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="resolution">
+            <div class="sidebar-title collapsible">Chuẩn phân giải <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-res-fhd"><label for="display-res-fhd">Full HD (1920x1080)</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-res-qhd"><label for="display-res-qhd">QHD (2560x1440)</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-res-uhd"><label for="display-res-uhd">UHD/4K (3840x2160)</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-res-5k"><label for="display-res-5k">5K</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-res-8k"><label for="display-res-8k">8K</label></div>
+            </div>
+          </div>
+          <div class="filter-section" data-filter-group="refresh">
+            <div class="sidebar-title collapsible">Tần số quét <i class="fa fa-angle-down"></i></div>
+            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-refresh-60"><label for="display-refresh-60">60Hz</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-refresh-75"><label for="display-refresh-75">75Hz</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-refresh-100"><label for="display-refresh-100">100Hz</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-refresh-120"><label for="display-refresh-120">120Hz</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-refresh-144"><label for="display-refresh-144">144Hz</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-refresh-165"><label for="display-refresh-165">165Hz</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-refresh-240"><label for="display-refresh-240">240Hz</label></div>
+              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="display-refresh-360"><label for="display-refresh-360">360Hz</label></div>
+            </div>
+          </div>
+        </div>
         <!-- Sidebar Laptop (ẩn mặc định, hiện khi lọc laptop) -->
         <div class="product-sidebar laptop-sidebar" style="display:none;">
           <div class="sidebar-title">Khoảng giá</div>
