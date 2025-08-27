@@ -871,16 +871,16 @@ app.delete('/api/addresses/:id', async (req, res) => {
 
 // ==================== CART APIS ====================
 
-// GET cart
+// GET giỏ hàng
 app.get("/api/cart", authenticateToken, async (req, res) => {
     try {
         const result = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
-              sale_price AS "salePrice", discount_percent AS "discountPercent",
-              image, quantity
-       FROM cart_items
-       WHERE user_id = $1
-       ORDER BY created_at DESC`,
+                    sale_price AS "salePrice", discount_percent AS "discountPercent",
+                    image, quantity
+             FROM cart_items
+             WHERE user_id = $1
+             ORDER BY created_at DESC`,
             [req.user.id]
         );
         res.json({ success: true, cart: result.rows });
@@ -890,29 +890,32 @@ app.get("/api/cart", authenticateToken, async (req, res) => {
     }
 });
 
-// ADD or UPDATE cart item
+// ADD (hoặc cộng dồn) sản phẩm vào giỏ
 app.post("/api/cart", authenticateToken, async (req, res) => {
     try {
         const { id, name, originalPrice, salePrice, discountPercent, image, quantity } = req.body;
+        if (!id || !name) {
+            return res.status(400).json({ success: false, error: "Thiếu dữ liệu sản phẩm" });
+        }
 
         const upsert = await pool.query(
             `INSERT INTO cart_items (user_id, product_id, name, original_price, sale_price, discount_percent, image, quantity)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-       ON CONFLICT (user_id, product_id)
-       DO UPDATE SET 
-         name=$3,
-         original_price=$4,
-         sale_price=$5,
-         discount_percent=$6,
-         image=$7,
-         quantity = cart_items.quantity + EXCLUDED.quantity
-       RETURNING product_id AS id, name, original_price AS "originalPrice",
-                 sale_price AS "salePrice", discount_percent AS "discountPercent",
-                 image, quantity`,
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+                 ON CONFLICT (user_id, product_id)
+             DO UPDATE SET
+                name=$3,
+                                     original_price=$4,
+                                     sale_price=$5,
+                                     discount_percent=$6,
+                                     image=$7,
+                                     quantity = cart_items.quantity + EXCLUDED.quantity
+                                     RETURNING product_id AS id, name, original_price AS "originalPrice",
+                                     sale_price AS "salePrice", discount_percent AS "discountPercent",
+                                     image, quantity`,
             [req.user.id, id, name, originalPrice, salePrice, discountPercent, image, quantity || 1]
         );
 
-        // Lấy toàn bộ cart mới
+        // Lấy toàn bộ giỏ hàng mới
         const cartRes = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
                     sale_price AS "salePrice", discount_percent AS "discountPercent",
@@ -930,7 +933,48 @@ app.post("/api/cart", authenticateToken, async (req, res) => {
     }
 });
 
-// DELETE 1 cart item
+// UPDATE số lượng tuyệt đối cho 1 sản phẩm
+app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const productId = req.params.productId;
+        const { quantity } = req.body;
+
+        if (!quantity || quantity < 1) {
+            return res.status(400).json({ success: false, error: "Số lượng không hợp lệ" });
+        }
+
+        const update = await pool.query(
+            `UPDATE cart_items
+             SET quantity=$1, updated_at=NOW()
+             WHERE user_id=$2 AND product_id=$3
+             RETURNING *`,
+            [quantity, userId, productId]
+        );
+
+        if (update.rowCount === 0) {
+            return res.status(404).json({ success: false, error: "Không tìm thấy sản phẩm trong giỏ hàng" });
+        }
+
+        // Trả lại giỏ hàng mới
+        const cartRes = await pool.query(
+            `SELECT product_id AS id, name, original_price AS "originalPrice",
+                    sale_price AS "salePrice", discount_percent AS "discountPercent",
+                    image, quantity
+             FROM cart_items
+             WHERE user_id=$1
+             ORDER BY created_at DESC`,
+            [userId]
+        );
+
+        res.json({ success: true, cart: cartRes.rows });
+    } catch (err) {
+        console.error("❌ Lỗi PUT /api/cart/:id:", err);
+        res.status(500).json({ success: false, error: "Lỗi server khi cập nhật số lượng" });
+    }
+});
+
+// DELETE 1 sản phẩm
 app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
     try {
         await pool.query(
@@ -938,7 +982,6 @@ app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
             [req.user.id, req.params.productId]
         );
 
-        // Trả lại giỏ hàng mới
         const cartRes = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
                     sale_price AS "salePrice", discount_percent AS "discountPercent",
@@ -956,7 +999,7 @@ app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
     }
 });
 
-// CLEAR cart
+// CLEAR toàn bộ giỏ
 app.delete("/api/cart", authenticateToken, async (req, res) => {
     try {
         await pool.query(`DELETE FROM cart_items WHERE user_id=$1`, [req.user.id]);
@@ -964,41 +1007,6 @@ app.delete("/api/cart", authenticateToken, async (req, res) => {
     } catch (err) {
         console.error("❌ Lỗi DELETE /api/cart:", err);
         res.status(500).json({ success: false, error: "Server error" });
-    }
-});
-
-// ================== API GIỎ HÀNG - CẬP NHẬT SỐ LƯỢNG ==================
-app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const productId = req.params.productId;
-        const { quantity } = req.body;
-
-        if (!quantity || quantity < 1) {
-            return res.status(400).json({ success: false, error: "Số lượng không hợp lệ" });
-        }
-
-        // Cập nhật số lượng tuyệt đối
-        await pool.query(
-            `UPDATE cart_items SET quantity=$1, updated_at=NOW()
-             WHERE user_id=$2 AND product_id=$3`,
-            [quantity, userId, productId]
-        );
-
-        // Trả lại giỏ hàng mới
-        const cartRes = await pool.query(
-            `SELECT product_id AS id, name, original_price AS "originalPrice",
-                    sale_price AS "salePrice", discount_percent AS "discountPercent",
-                    image, quantity
-             FROM cart_items
-             WHERE user_id=$1`,
-            [userId]
-        );
-
-        res.json({ success: true, cart: cartRes.rows });
-    } catch (err) {
-        console.error("❌ Lỗi PUT /api/cart/:id:", err);
-        res.status(500).json({ success: false, error: "Lỗi server khi cập nhật số lượng" });
     }
 });
 
@@ -1020,7 +1028,6 @@ function authenticateToken(req, res, next) {
         next();
     });
 }
-
 
 // ===== Start =====
 const PORT = process.env.PORT || 3000;
