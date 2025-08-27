@@ -869,107 +869,104 @@ app.delete('/api/addresses/:id', async (req, res) => {
     }
 });
 
-// ===== Cart APIs =====
+// ==================== CART APIS ====================
 
-// Lấy giỏ hàng của user
-app.get('/api/cart', async (req, res) => {
-    const token = req.cookies?.[COOKIE_NAME];
-    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
-
+// GET cart
+app.get("/api/cart", authenticateToken, async (req, res) => {
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const { rows } = await pool.query(
-            `SELECT
-                 product_id AS id,
-                 name,
-                 original_price AS "originalPrice",
-                 sale_price AS "salePrice",
-                 discount_percent AS "discountPercent",
-                 image,
-                 quantity
-             FROM cart_items
-             WHERE user_id = $1`,
-            [decoded.id]
+        const result = await pool.query(
+            `SELECT product_id AS id, name, original_price AS "originalPrice",
+              sale_price AS "salePrice", discount_percent AS "discountPercent",
+              image, quantity
+       FROM cart_items
+       WHERE user_id = $1
+       ORDER BY created_at DESC`,
+            [req.user.id]
         );
-        res.json({ success: true, cart: rows });
+        res.json({ success: true, cart: result.rows });
     } catch (err) {
-        console.error("GET /api/cart error:", err);
-        res.status(500).json({ success: false, error: "Lỗi server" });
+        console.error("❌ Lỗi GET /api/cart:", err);
+        res.status(500).json({ success: false, error: "Server error" });
     }
 });
 
-
-// Thêm hoặc cập nhật sản phẩm trong giỏ hàng
-app.post('/api/cart', async (req, res) => {
-    const token = req.cookies?.[COOKIE_NAME];
-    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
-
+// ADD or UPDATE cart item
+app.post("/api/cart", authenticateToken, async (req, res) => {
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const { id, name, originalPrice, salePrice, discountPercent, image, quantity = 1 } = req.body;
+        const { id, name, originalPrice, salePrice, discountPercent, image, quantity } = req.body;
 
-        if (!id || !name || !originalPrice || !salePrice) {
-            return res.status(400).json({ success: false, error: "Thiếu dữ liệu sản phẩm" });
-        }
-
-        // Upsert: Nếu sản phẩm đã tồn tại, cập nhật quantity; nếu chưa, thêm mới
         const upsert = await pool.query(
             `INSERT INTO cart_items (user_id, product_id, name, original_price, sale_price, discount_percent, image, quantity)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-             ON CONFLICT (user_id, product_id)
-             DO UPDATE SET quantity = cart_items.quantity + EXCLUDED.quantity,
-                           name = EXCLUDED.name,
-                           original_price = EXCLUDED.original_price,
-                           sale_price = EXCLUDED.sale_price,
-                           discount_percent = EXCLUDED.discount_percent,
-                           image = EXCLUDED.image
-             RETURNING *`,
-            [decoded.id, id, name, originalPrice, salePrice, discountPercent || null, image || null, quantity]
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+       ON CONFLICT (user_id, product_id)
+       DO UPDATE SET 
+         name=$3,
+         original_price=$4,
+         sale_price=$5,
+         discount_percent=$6,
+         image=$7,
+         quantity = cart_items.quantity + EXCLUDED.quantity
+       RETURNING product_id AS id, name, original_price AS "originalPrice",
+                 sale_price AS "salePrice", discount_percent AS "discountPercent",
+                 image, quantity`,
+            [req.user.id, id, name, originalPrice, salePrice, discountPercent, image, quantity || 1]
         );
 
-        res.json({ success: true, item: upsert.rows[0] });
+        // Lấy toàn bộ cart mới
+        const cartRes = await pool.query(
+            `SELECT product_id AS id, name, original_price AS "originalPrice",
+                    sale_price AS "salePrice", discount_percent AS "discountPercent",
+                    image, quantity
+             FROM cart_items
+             WHERE user_id = $1
+             ORDER BY created_at DESC`,
+            [req.user.id]
+        );
+
+        res.json({ success: true, item: upsert.rows[0], cart: cartRes.rows });
     } catch (err) {
-        console.error("POST /api/cart error:", err);
-        res.status(500).json({ success: false, error: "Lỗi server" });
+        console.error("❌ Lỗi POST /api/cart:", err);
+        res.status(500).json({ success: false, error: "Server error" });
     }
 });
 
-// Xóa sản phẩm khỏi giỏ hàng
-app.delete('/api/cart/:productId', async (req, res) => {
-    const token = req.cookies?.[COOKIE_NAME];
-    if (!token) return res.status(401).json({ success: false, error: 'Chưa đăng nhập' });
-
+// DELETE 1 cart item
+app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const productId = String(req.params.productId); // ép về string
-
-        const result = await pool.query(
+        await pool.query(
             `DELETE FROM cart_items WHERE user_id=$1 AND product_id=$2`,
-            [decoded.id, productId]
+            [req.user.id, req.params.productId]
         );
 
-        res.json({ success: true, deleted: result.rowCount });
+        // Trả lại giỏ hàng mới
+        const cartRes = await pool.query(
+            `SELECT product_id AS id, name, original_price AS "originalPrice",
+                    sale_price AS "salePrice", discount_percent AS "discountPercent",
+                    image, quantity
+             FROM cart_items
+             WHERE user_id=$1
+             ORDER BY created_at DESC`,
+            [req.user.id]
+        );
+
+        res.json({ success: true, cart: cartRes.rows });
     } catch (err) {
-        console.error('DELETE /api/cart/:id error:', err);
-        res.status(500).json({ success: false, error: 'Lỗi server' });
+        console.error("❌ Lỗi DELETE /api/cart/:id:", err);
+        res.status(500).json({ success: false, error: "Server error" });
     }
 });
 
-app.delete('/api/cart', async (req, res) => {
-    const token = req.cookies?.[COOKIE_NAME];
-    if (!token) return res.status(401).json({ success: false, error: 'Chưa đăng nhập' });
-
+// CLEAR cart
+app.delete("/api/cart", authenticateToken, async (req, res) => {
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-
-        await pool.query(`DELETE FROM cart_items WHERE user_id=$1`, [decoded.id]);
-
-        res.json({ success: true });
+        await pool.query(`DELETE FROM cart_items WHERE user_id=$1`, [req.user.id]);
+        res.json({ success: true, cart: [] });
     } catch (err) {
-        console.error('DELETE /api/cart error:', err);
-        res.status(500).json({ success: false, error: 'Lỗi server' });
+        console.error("❌ Lỗi DELETE /api/cart:", err);
+        res.status(500).json({ success: false, error: "Server error" });
     }
 });
+
 
 
 // ===== Start =====
