@@ -1127,7 +1127,7 @@ function showConfirmation() {
         <p><strong>Tổng tiền:</strong> ${formatCurrency(total)}</p>
         <p><strong>Phương thức thanh toán:</strong> ${methodText}</p>
         <p><strong>Họ và tên:</strong> ${deliveryInfo.name}</p>
-        <p><strong>Địa chỉ:</strong> ${deliveryInfo.address}, ${deliveryInfo.ward}, ${deliveryInfo.district}, ${deliveryInfo.province}</p>
+        <p><strong>Địa chỉ:</strong> ${deliveryInfo.address}, ${deliveryInfo.ward}, ${deliveryInfo.province}</p>
         ${deliveryInfo.note ? `<p><strong>Ghi chú:</strong> ${deliveryInfo.note}</p>` : ''}
         <p><strong>Yêu cầu xuất hóa đơn:</strong> ${deliveryInfo.invoiceRequired ? 'Có' : 'Không'}</p>
     `;
