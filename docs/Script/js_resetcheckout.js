@@ -982,27 +982,74 @@ function loadDeliveryInfo() {
     if (provinceEl) provinceEl.value = delivery.province || '';
     if (wardEl) wardEl.value = delivery.ward || '';
     if (noteEl) noteEl.value = delivery.note || '';
-    if (invoiceCheckbox) invoiceCheckbox.checked = delivery.invoiceRequired || true;
+    if (invoiceCheckbox) {
+        invoiceCheckbox.checked = delivery.invoiceRequired !== undefined ? delivery.invoiceRequired : true;
+    }
+
 }
 
 function saveDeliveryInfo() {
-    const provinceSelect = document.getElementById('province');
-    const wardSelect = document.getElementById('ward');
+    const deliveryMode = document.querySelector('input[name="deliveryMode"]:checked')?.value || "custom";
+    let deliveryInfo = {};
 
-    deliveryInfo = {
-        name: document.getElementById('recipient-name').value.trim(),
-        phone: document.getElementById('recipient-phone').value.trim(),
-        province: provinceSelect.selectedOptions[0]?.textContent || '',
-        ward: wardSelect.selectedOptions[0]?.textContent || '',
-        address: document.getElementById('recipient-address').value.trim(),
-        note: document.getElementById('note').value.trim(),
-        invoiceRequired: document.getElementById('invoice-required').checked
-    };
+    if (deliveryMode === "profile") {
+        // Lấy địa chỉ mặc định từ addressesCache
+        const defaultAddr = addressesCache.find(a => a.is_default);
+        if (!defaultAddr) {
+            showNotification("Bạn chưa đặt địa chỉ mặc định trong sổ địa chỉ!", "error");
+            return;
+        }
 
-    localStorage.setItem('deliveryInfo', JSON.stringify(deliveryInfo));
+        deliveryInfo = {
+            mode: "profile",
+            name: defaultAddr.recipient_name,
+            phone: defaultAddr.recipient_phone,
+            province: defaultAddr.city || "",
+            ward: defaultAddr.ward || "",
+            address: defaultAddr.street_address || "",
+            note: document.getElementById("note").value.trim(),
+            invoiceRequired: document.getElementById("invoice-required").checked
+        };
+    } else {
+        // Nếu chọn nhập thủ công ("Thông tin khác")
+        const provinceSelect = document.getElementById("province");
+        const wardSelect = document.getElementById("ward");
+
+        deliveryInfo = {
+            mode: "form",
+            name: document.getElementById("recipient-name").value.trim(),
+            phone: document.getElementById("recipient-phone").value.trim(),
+            province: provinceSelect.selectedOptions[0]?.textContent || "",
+            ward: wardSelect.selectedOptions[0]?.textContent || "",
+            address: document.getElementById("recipient-address").value.trim(),
+            note: document.getElementById("note").value.trim(),
+            invoiceRequired: document.getElementById("invoice-required").checked
+        };
+    }
+
+    localStorage.setItem("deliveryInfo", JSON.stringify(deliveryInfo));
+    window.deliveryInfo = deliveryInfo; // gán global để render summary dùng
 }
 
 function validateDeliveryInfo() {
+    // Kiểm tra chế độ hiện tại
+    const deliveryMode = document.querySelector('input[name="deliveryMode"]:checked')?.value || "custom";
+
+    if (deliveryMode === "profile") {
+        // Nếu chọn "Của bạn" → chỉ cần kiểm tra đã có địa chỉ mặc định chưa
+        if (!addressesCache || addressesCache.length === 0) {
+            showNotification('Bạn chưa có địa chỉ trong sổ địa chỉ. Vui lòng thêm mới!', 'error');
+            return false;
+        }
+        const defaultAddr = addressesCache.find(a => a.is_default);
+        if (!defaultAddr) {
+            showNotification('Bạn chưa đặt địa chỉ mặc định. Vui lòng chọn hoặc thêm một địa chỉ!', 'error');
+            return false;
+        }
+        return true; // OK, dùng địa chỉ profile
+    }
+
+    // === Nếu là "Thông tin khác" → kiểm tra form như trước ===
     const nameEl = document.getElementById('recipient-name');
     const phoneEl = document.getElementById('recipient-phone');
     const provinceEl = document.getElementById('province');
@@ -1047,6 +1094,40 @@ function validateDeliveryInfo() {
     return isValid;
 }
 
+
+// ✅ Hàm load địa chỉ mặc định từ profile (API /api/addresses)
+async function loadDefaultAddressForCheckout() {
+    try {
+        const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
+        const data = await res.json();
+
+        if (!data.success || !data.addresses.length) {
+            console.warn("❌ Không có địa chỉ nào trong profile.");
+            return null;
+        }
+
+        window.addressesCache = data.addresses;
+        return addressesCache.find(a => a.is_default) || addressesCache[0];
+    } catch (err) {
+        console.error("❌ Lỗi loadDefaultAddressForCheckout:", err);
+        return null;
+    }
+}
+
+
+function showProfileDeliveryInfo() {
+    const defaultAddr = addressesCache.find(a => a.is_default);
+    if (defaultAddr) {
+        document.getElementById("profile-name").textContent = defaultAddr.recipient_name;
+        document.getElementById("profile-phone").textContent = defaultAddr.recipient_phone;
+        document.getElementById("profile-address").textContent =
+            `${defaultAddr.street_address}, ${defaultAddr.ward || ""}, ${defaultAddr.city || ""}`;
+        document.getElementById("profile-delivery-box").style.display = "block";
+    }
+}
+
+
+
 function renderOrderSummary() {
     const cart = JSON.parse(localStorage.getItem('selectedCart')) || [];
     const orderSummary = document.getElementById('order-summary');
@@ -1090,22 +1171,31 @@ function renderOrderSummary() {
 }
 
 function renderDeliverySummary() {
-    const summary = document.getElementById('delivery-summary');
+    const summary = document.getElementById("delivery-summary");
+    const info = window.deliveryInfo || JSON.parse(localStorage.getItem("deliveryInfo")) || null;
+
+    if (!info) {
+        summary.innerHTML = `<p class="text-danger">Chưa có thông tin giao hàng!</p>`;
+        return;
+    }
+
     summary.innerHTML = `
-        <p><strong>Họ và tên:</strong> ${deliveryInfo.name}</p>
-        <p><strong>Số điện thoại:</strong> ${deliveryInfo.phone}</p>
-        <p><strong>Địa chỉ:</strong> ${deliveryInfo.address}, ${deliveryInfo.ward}, ${deliveryInfo.province}</p>
-        ${deliveryInfo.note ? `<p><strong>Ghi chú:</strong> ${deliveryInfo.note}</p>` : ''}
-        <p><strong>Yêu cầu xuất hóa đơn:</strong> ${deliveryInfo.invoiceRequired ? 'Có' : 'Không'}</p>
+        <p><strong>Họ và tên:</strong> ${info.name || "-"}</p>
+        <p><strong>Số điện thoại:</strong> ${info.phone || "-"}</p>
+        <p><strong>Địa chỉ:</strong> ${info.address || ""}, ${info.ward || ""}, ${info.province || ""}</p>
+        ${info.note ? `<p><strong>Ghi chú:</strong> ${info.note}</p>` : ""}
+        <p><strong>Xuất hóa đơn:</strong> ${info.invoiceRequired ? "Có" : "Không"}</p>
     `;
 }
+
+
 
 function showConfirmation() {
     if (!validateDeliveryInfo()) {
         return;
     }
 
-    saveDeliveryInfo();
+    saveDeliveryInfo(); // lưu vào localStorage trước
     const cart = JSON.parse(localStorage.getItem('selectedCart')) || [];
     if (cart.length === 0) {
         showNotification('Không có sản phẩm nào được chọn!', 'error');
@@ -1122,19 +1212,25 @@ function showConfirmation() {
     const methodText = {
         cod: 'Thanh toán khi nhận hàng (COD)'
     }[selectedMethod];
+
     const total = cart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
+
+    // 🔑 Lấy thông tin giao hàng mới nhất
+    const info = getDeliveryInfo();
+
     document.getElementById('modal-summary').innerHTML = `
         <p><strong>Tổng tiền:</strong> ${formatCurrency(total)}</p>
         <p><strong>Phương thức thanh toán:</strong> ${methodText}</p>
-        <p><strong>Họ và tên:</strong> ${deliveryInfo.name}</p>
-        <p><strong>Địa chỉ:</strong> ${deliveryInfo.address}, ${deliveryInfo.ward}, ${deliveryInfo.province}</p>
-        ${deliveryInfo.note ? `<p><strong>Ghi chú:</strong> ${deliveryInfo.note}</p>` : ''}
-        <p><strong>Yêu cầu xuất hóa đơn:</strong> ${deliveryInfo.invoiceRequired ? 'Có' : 'Không'}</p>
+        <p><strong>Họ và tên:</strong> ${info.name}</p>
+        <p><strong>Địa chỉ:</strong> ${info.address}, ${info.ward}, ${info.province}</p>
+        ${info.note ? `<p><strong>Ghi chú:</strong> ${info.note}</p>` : ''}
+        <p><strong>Yêu cầu xuất hóa đơn:</strong> ${info.invoiceRequired ? 'Có' : 'Không'}</p>
     `;
 
     const modal = new bootstrap.Modal(document.getElementById('confirmation-modal'));
     modal.show();
 }
+
 
 function closeModal() {
     const modalEl = document.getElementById('confirmation-modal');
@@ -1215,6 +1311,7 @@ async function processPayment() {
         const orderId = generateOrderId();
 
         const selectedMethod = document.querySelector('input[name="payment-method"]:checked').value;
+        const deliveryInfo = getDeliveryInfo(); // ✅ lấy bằng hàm đã chuẩn hóa
 
         const order = {
             id: orderId,
@@ -1223,7 +1320,7 @@ async function processPayment() {
             status: 'Đơn hàng đang xử lý',
             createdAt: new Date().toISOString(),
             paymentMethod: selectedMethod,
-            deliveryInfo: deliveryInfo,
+            deliveryInfo,
             unseen: true
         };
 
@@ -1246,6 +1343,7 @@ async function processPayment() {
             }
         }
 
+        // Dọn localStorage
         localStorage.removeItem('cart');
         localStorage.removeItem('selectedCart');
         localStorage.removeItem('giftCart');
@@ -1256,16 +1354,18 @@ async function processPayment() {
         renderCart();
         updateOrderCount();
 
-        const savedInfo = JSON.parse(localStorage.getItem('deliveryInfo')) || {};
-        delete savedInfo.name;
-        delete savedInfo.phone;
-        delete savedInfo.address;
+        // Giữ lại note & invoiceRequired cho lần sau, xoá phần thông tin cá nhân
+        const savedInfo = {
+            note: deliveryInfo.note,
+            invoiceRequired: deliveryInfo.invoiceRequired
+        };
         localStorage.setItem('deliveryInfo', JSON.stringify(savedInfo));
 
         loadingModal.hide();
         showSuccessModal();
     }, 2000);
 }
+
 
 function formatCurrency(amount) {
     if (typeof amount === 'string') {
@@ -1300,7 +1400,7 @@ function setupPaymentMethodAnimations() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
     const totalItems = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
@@ -1309,10 +1409,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const isLoggedIn = !!localStorage.getItem('userName');
     const isLocked = localStorage.getItem('cartLocked') === 'true';
 
-// Nếu chưa đăng nhập + giỏ hàng bị khoá HOẶC có sản phẩm cũ
+    // Nếu chưa đăng nhập + giỏ hàng bị khoá HOẶC có sản phẩm cũ
     if (!isLoggedIn && (isLocked || totalItems > 0)) {
-        // ❌ Không mở modal, không showNotification ở đây
-        // ✅ Chỉ ẩn toàn bộ nội dung checkout
         const hideCheckout = () => {
             const container = document.querySelector('.checkout-container');
             if (container) {
@@ -1322,10 +1420,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         };
         hideCheckout();
-
-        return; // Dừng init tiếp
+        return; // Dừng init
     }
-
 
     // ==== Nếu qua được kiểm tra thì mới chạy phần còn lại ====
     validateGiftCartOnLoad();
@@ -1424,9 +1520,34 @@ document.addEventListener("DOMContentLoaded", function () {
         autoplay: true,
         path: '/transformanimation/emptycart.json'
     });
+
+    // ================= BƯỚC 2: Delivery Mode =================
+    await loadDefaultAddressForCheckout(); // 🆕 load dữ liệu "Của bạn"
+    showProfileDeliveryInfo();
+    const profileBox = document.getElementById("profile-delivery-box");
+    const formBox = document.getElementById("custom-delivery-form");
+
+    document.querySelectorAll("input[name='deliveryMode']").forEach(radio => {
+        radio.addEventListener("change", () => {
+            if (radio.value === "profile" && radio.checked) {
+                profileBox.style.display = "block";
+                formBox.style.display = "none";
+            }
+            if (radio.value === "custom" && radio.checked) {
+                profileBox.style.display = "none";
+                formBox.style.display = "block";
+            }
+        });
+    });
+
+    // Mặc định chọn "Của bạn"
+    const defaultRadio = document.querySelector("input[name='deliveryMode'][value='profile']");
+    if (defaultRadio) {
+        defaultRadio.checked = true;
+        profileBox.style.display = "block";
+        formBox.style.display = "none";
+    }
 });
-
-
 
 
 function selectMethod(method) {
@@ -1437,6 +1558,51 @@ function selectMethod(method) {
         selected.querySelector('input').checked = true;
     }
 }
+
+// Lấy thông tin giao hàng (Step 2) để hiển thị Step 3
+function getDeliveryInfo() {
+    const mode = document.querySelector('input[name="deliveryMode"]:checked')?.value || "custom";
+    let info = {};
+
+    if (mode === "profile") {
+        // lấy từ địa chỉ mặc định trong addressesCache
+        const defaultAddr = addressesCache.find(a => a.is_default);
+        if (defaultAddr) {
+            info = {
+                mode: "profile",
+                name: defaultAddr.recipient_name,
+                phone: defaultAddr.recipient_phone,
+                address: defaultAddr.street_address,
+                ward: defaultAddr.ward || "",
+                province: defaultAddr.city || "",
+                note: document.getElementById("note")?.value.trim() || "",
+                invoiceRequired: document.getElementById("invoice-required")?.checked ?? true
+            };
+        }
+    } else {
+        // lấy từ form nhập tay
+        const form = document.getElementById("custom-delivery-form");
+        if (form) {
+            const provinceSelect = form.querySelector("#province");
+            const wardSelect = form.querySelector("#ward");
+
+            info = {
+                mode: "form",
+                name: form.querySelector("#recipient-name")?.value.trim(),
+                phone: form.querySelector("#recipient-phone")?.value.trim(),
+                address: form.querySelector("#recipient-address")?.value.trim(),
+                ward: wardSelect?.selectedOptions[0]?.textContent || "",
+                province: provinceSelect?.selectedOptions[0]?.textContent || "",
+                note: document.getElementById("note")?.value.trim() || "",
+                invoiceRequired: document.getElementById("invoice-required")?.checked ?? true
+
+            };
+        }
+    }
+
+    return info;
+}
+
 
 window.addEventListener('storage', function (e) {
     const isLoggedIn = !!localStorage.getItem('userName');

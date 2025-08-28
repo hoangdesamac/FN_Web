@@ -99,80 +99,80 @@
     <!-- Checkout Step: Delivery -->
     <div class="checkout-step delivery-step d-none" id="step-2">
         <h2 class="cart-title mb-4">Thông tin giao hàng</h2>
-        <form class="delivery-form">
+
+        <!-- Radio chọn chế độ -->
+        <div class="delivery-option d-flex gap-4 mb-3">
+            <label class="form-check-label">
+                <input type="radio" name="deliveryMode" value="profile" class="form-check-input" checked>
+                Của bạn
+            </label>
+            <label class="form-check-label">
+                <input type="radio" name="deliveryMode" value="custom" class="form-check-input">
+                Thông tin khác
+            </label>
+        </div>
+
+        <!-- Modal nhỏ hiển thị thông tin từ Profile -->
+        <div id="profile-delivery-box" class="card p-3 mb-3" style="display:none;">
+            <h6 class="fw-bold">Thông tin giao hàng của bạn</h6>
+            <p><strong>Người nhận:</strong> <span id="profile-name"></span></p>
+            <p><strong>SĐT:</strong> <span id="profile-phone"></span></p>
+            <p><strong>Địa chỉ:</strong> <span id="profile-address"></span></p>
+        </div>
+
+        <!-- Form nhập thông tin khác -->
+        <form id="custom-delivery-form" class="delivery-form">
             <div class="row mb-3">
-                <div class="col-12">
-                    <label for="recipient-name" class="form-label">
-                        Họ và tên <i class="fas fa-asterisk text-danger required-icon"></i>
-                    </label>
-                    <input type="text" class="form-control" id="recipient-name" required>
+                <div class="col-md-6">
+                    <label for="recipient-name" class="form-label">Họ và tên <i class="fas fa-asterisk text-danger required-icon"></i></label>
+                    <input type="text" class="form-control" id="recipient-name">
                 </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-12">
-                    <label for="recipient-phone" class="form-label">
-                        Số điện thoại <i class="fas fa-asterisk text-danger required-icon"></i>
-                    </label>
-                    <input type="tel" class="form-control" id="recipient-phone" required>
+                <div class="col-md-6">
+                    <label for="recipient-phone" class="form-label">Số điện thoại <i class="fas fa-asterisk text-danger required-icon"></i></label>
+                    <input type="tel" class="form-control" id="recipient-phone">
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="province" class="form-label">
-                        Tỉnh/Thành phố <i class="fas fa-asterisk text-danger required-icon"></i>
-                    </label>
-                    <select id="province" class="form-select" required>
+                    <label for="province" class="form-label">Tỉnh/Thành phố <i class="fas fa-asterisk text-danger required-icon"></i></label>
+                    <select id="province" class="form-select">
                         <option value="">-- Chọn Tỉnh/Thành phố --</option>
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label for="ward" class="form-label">
-                        Xã/Phường <i class="fas fa-asterisk text-danger required-icon"></i>
-                    </label>
-                    <select id="ward" class="form-select" required>
-                        <option value="">-- Chọn Xã/Phường --</option>
+                    <label for="ward" class="form-label">Phường/Xã <i class="fas fa-asterisk text-danger required-icon"></i></label>
+                    <select id="ward" class="form-select">
+                        <option value="">-- Chọn Phường/Xã --</option>
                     </select>
                 </div>
             </div>
-            <div class="row mb-3">
-                <div class="col-12">
-                    <label for="recipient-address" class="form-label">
-                        Địa chỉ chi tiết <i class="fas fa-asterisk text-danger required-icon"></i>
-                    </label>
-                    <input type="text" class="form-control" id="recipient-address" required>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-12">
-                    <label for="note" class="form-label">Ghi chú (tùy chọn)</label>
-                    <textarea class="form-control" id="note"></textarea>
-                </div>
-            </div>
-
-            <!-- Checkbox và link chính sách -->
-            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                <div class="form-check m-0">
-                    <input class="form-check-input" type="checkbox" id="invoice-required" checked>
-                    <label class="form-check-label" for="invoice-required">
-                        Yêu cầu xuất hóa đơn
-                    </label>
-                </div>
-                <span class="text-decoration-underline cyber-link ms-auto" id="terms-link" role="button">
-                Chính sách điều khoản sử dụng
-            </span>
-            </div>
-
-            <!-- Nút điều hướng -->
-            <div class="step-navigation d-flex justify-content-between gap-3 mt-4">
-                <button type="button" class="btn btn-outline-primary flex-fill" onclick="showStep(1)">
-                    Quay lại
-                </button>
-                <button type="button" class="btn btn-success flex-fill" id="proceed-to-step-3">
-                    Tiếp tục
-                </button>
+            <div class="mb-3">
+                <label for="recipient-address" class="form-label">Địa chỉ chi tiết <i class="fas fa-asterisk text-danger required-icon"></i></label>
+                <input type="text" class="form-control" id="recipient-address">
             </div>
         </form>
+
+        <!-- Phần luôn hiển thị -->
+        <div id="extra-options" class="mt-4">
+            <div class="mb-3">
+                <label for="note" class="form-label">Ghi chú (tùy chọn)</label>
+                <textarea class="form-control" id="note" rows="2"></textarea>
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="checkbox" id="invoice-required" class="form-check-input" checked>
+                <label for="invoice-required" class="form-check-label">Yêu cầu xuất hóa đơn</label>
+            </div>
+
+            <p class="text-muted">Khi đặt hàng bạn đồng ý với <a href="#">chính sách</a> của chúng tôi.</p>
+
+            <div class="step-navigation d-flex justify-content-between gap-3 mt-4">
+                <button type="button" class="btn btn-outline-primary flex-fill" onclick="showStep(1)">Quay lại</button>
+                <button type="button" class="btn btn-success flex-fill" id="proceed-to-step-3">Tiếp tục</button>
+            </div>
+        </div>
     </div>
+
 
 
     <!-- Checkout Step: Payment -->
