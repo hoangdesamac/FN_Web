@@ -1284,7 +1284,6 @@ function setupPaymentMethodAnimations() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // ==== Kiểm tra login và trạng thái giỏ hàng trước khi init ====
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
     const totalItems = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
@@ -1293,20 +1292,28 @@ document.addEventListener("DOMContentLoaded", function () {
     const isLoggedIn = !!localStorage.getItem('userName');
     const isLocked = localStorage.getItem('cartLocked') === 'true';
 
+    // Nếu chưa login mà giỏ hàng có sản phẩm hoặc bị khóa → chặn ngay
     if (!isLoggedIn && (isLocked || totalItems > 0)) {
-        // Nếu modal tồn tại thì mở
         if (typeof CyberModal !== "undefined" && CyberModal.open && document.getElementById("cyber-auth-modal")) {
             CyberModal.open();
         }
-        // Hiện thông báo
+
         if (typeof showNotification === "function") {
             showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
         }
-        // Ẩn checkout container (chờ DOM có element)
-        setTimeout(() => {
-            document.querySelector('.checkout-container')?.classList.add('d-none');
-        }, 50);
-        return;
+
+        // Ẩn toàn bộ nội dung checkout
+        const hideCheckout = () => {
+            const container = document.querySelector('.checkout-container');
+            if (container) {
+                container.classList.add('d-none');
+            } else {
+                setTimeout(hideCheckout, 50);
+            }
+        };
+        hideCheckout();
+
+        return; // Dừng init tiếp
     }
 
     // ==== Nếu qua được kiểm tra thì mới chạy phần còn lại ====
