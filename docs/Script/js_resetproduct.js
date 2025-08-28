@@ -1220,6 +1220,19 @@ window.products = [
 // MAIN INIT: chạy toàn trang
 // ==========================
 $(document).ready(function () {
+    // ================== HÀM CHUẨN HÓA DÙNG CHUNG ==================
+    function normalizeName(str) {
+        return (str || '')
+            .toLowerCase()
+            .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+            .replace(/[^a-z0-9]/g, '')
+            .trim();
+    }
+    function categoryToString(category) {
+        if (Array.isArray(category)) return category.join(' ').toLowerCase();
+        if (typeof category === 'string') return category.toLowerCase();
+        return '';
+    }
     bindEventHandlers();
 
     loadPagePart("HTML/Layout/resetheader.html", "header-container", () => {
@@ -1267,49 +1280,205 @@ $(document).ready(function () {
 
 
 
-    // Giả sử `window.products` đã tồn tại hoặc khai báo ở file khác
+    // Lấy name và type từ URL
     const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
-    const product = window.products.find(p => p.id === productId);
+    const normName = urlParams.get('name');
+    const type = urlParams.get('type');
 
-    if (product) {
-        $('#productCategory').text(product.category);
-        $('#productName, #productTitle').text(product.name);
+    // Debug: log URL params
+    console.log('[DEBUG] URL params:', { normName, type });
+
+    // Hàm normalize giống bên allproducts
+    function normalizeName(str) {
+        return (str || '')
+            .toLowerCase()
+            .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+            .replace(/[^a-z0-9 ]/g, '')
+            .replace(/\s+/g, '-')
+            .trim();
+    }
+
+    // Lấy đúng danh sách sản phẩm theo type
+    // Luôn fetch theo type nếu có type (không dùng window.products cho các loại này)
+    function fetchProductsByType(type, cb) {
+        let file = '';
+        if (type === 'pc') file = 'pc-part-dataset/processed/pc.json';
+        else if (type === 'laptop') file = 'pc-part-dataset/processed/laptop.json';
+        else if (type === 'mouse') file = 'pc-part-dataset/processed/mousenew.json';
+        else if (type === 'keyboard') file = 'pc-part-dataset/processed/keyboadnew.json';
+        else if (type === 'display') file = 'pc-part-dataset/processed/display.json';
+        if (!file) {
+            console.error('[DEBUG] Không xác định được file dữ liệu cho type:', type);
+            return cb([]);
+        }
+        fetch(file)
+            .then(r => {
+                if (!r.ok) throw new Error('Fetch failed: ' + r.status);
+                return r.json();
+            })
+            .then(list => {
+                console.log('[DEBUG] Fetched product list:', list);
+                cb(list);
+            })
+            .catch((err) => {
+                console.error('[DEBUG] Lỗi fetch file:', file, err);
+                cb([]);
+            });
+    }
+
+    function renderProduct(product) {
+        // Fix riêng cho laptop: chuẩn hóa category về string nếu type=laptop
+        if (type === 'laptop') {
+            if (Array.isArray(product.category)) product.category = product.category.join(' ');
+        }
+        console.log('[DEBUG] Render product:', product);
+        if (!product) {
+            showNotFound('Không tìm thấy sản phẩm (product null)');
+            return;
+        }
+        $('#productCategory').text(product.category || '');
+        $('#productName, #productTitle').text(product.name || '');
         const ratingStars = generateStars(product.rating || 0);
         $('#productRatingSection').html(`
            <span class="stars">${ratingStars}</span>
            <a href="#tab3" class="review-link" onclick="document.querySelectorAll('.tab-btn')[2].click()">Xem đánh giá</a>
-
         `);
-        const original = parsePrice(product.originalPrice || product.price) || 0;
-        const sale = parsePrice(product.salePrice || product.price) || 0;
-
-        let discount = '';
-        if (original > sale && original > 0 && sale > 0) {
-            const percent = Math.round((1 - sale / original) * 100);
-            if (percent > 0) discount = `-${percent}%`;
+        // Hiển thị giá cho từng loại sản phẩm
+        let sale = 0, original = 0;
+        // Ưu tiên lấy giá cho bàn phím
+        if (window.location.search.includes('type=keyboard') || (product.name && product.name.toLowerCase().includes('bàn phím'))) {
+            if (product.new_price && product.old_price) {
+                sale = parsePrice(product.new_price);
+                original = parsePrice(product.old_price);
+            } else if (product.old_price) {
+                sale = parsePrice(product.old_price);
+            } else if (product.price) {
+                sale = parsePrice(product.price);
+            }
+        } else if (product.price_new && product.price_old) {
+            // Mouse: có price_new, price_old
+            sale = parsePrice(product.price_new);
+            original = parsePrice(product.price_old);
+        } else if (product.price) {
+            // PC/Laptop: chỉ có price
+            sale = parsePrice(product.price);
+        } else if (product.salePrice && product.originalPrice) {
+            sale = parsePrice(product.salePrice);
+            original = parsePrice(product.originalPrice);
         }
         $('#productPrice').text(formatPrice(sale));
-        $('#productOriginalPrice').text(original > sale ? formatPrice(original) : '');
-        $('#productDiscount').text(discount);
-        $('#productDescription').html(product.description);
-        $('.buy-now').attr('data-id', product.id);
-        $('#mainImage').attr('src', product.image);
-        $('#lightgallery a').attr('href', product.image);
-        setupThumbnails(product.thumbnails || [product.image]);
-        if (product.category?.toLowerCase() === "flash sale" || product.tags?.includes("Flash Sale")) {
-            $("#flashSaleBox").css("display", "flex");
-            startFlashSaleCountdown();
+        if (original && original > sale) {
+            $('#productOriginalPrice').text(formatPrice(original));
+            const discount = Math.round((1 - sale / original) * 100);
+            $('#productDiscount').text(`-${discount}%`);
+        } else {
+            $('#productOriginalPrice').text('');
+            $('#productDiscount').text('');
         }
-
-        $('#productSpecs').html(`
-            <tr><th>Thành phần</th><th>Chi tiết</th></tr>
-            ${product.specs.map(spec => `<tr><td>${spec.key}</td><td>${spec.value}</td></tr>`).join('')}
-        `);
-
+        $('#productDescription').html(product.description || '');
+        $('.buy-now').attr('data-id', product.id || '');
+        // Hiển thị hình ảnh đẹp hơn, căn giữa, bo góc, đổ bóng
+        // Hiển thị ảnh sắc nét nhất có thể
+        const $img = $('#mainImage');
+        $img.attr('src', product.image)
+            .css({
+                'object-fit': 'cover',
+                'width': '100%',
+                'height': '100%',
+                'max-width': '100%',
+                'max-height': '100%',
+                'border-radius': '32px',
+                'box-shadow': '0 8px 32px 0 rgba(0,0,0,0.18)',
+                'margin': '0',
+                'padding': '0',
+                'background': 'none',
+                'border': 'none',
+                'display': 'block',
+                'transition': 'box-shadow 0.3s, transform 0.3s',
+                'image-rendering': 'auto',
+                'image-rendering': 'crisp-edges',
+                'image-rendering': '-webkit-optimize-contrast',
+                'backface-visibility': 'hidden',
+                'will-change': 'transform',
+            });
+        // Nếu có ảnh độ phân giải cao hơn, dùng srcset cho màn hình retina
+        if (product.image && product.image.includes('_medium')) {
+            const highRes = product.image.replace('_medium', '_master');
+            $img.attr('srcset', `${product.image} 1x, ${highRes} 2x`);
+        }
+        $img.hover(
+            function() { $(this).css({'box-shadow': '0 16px 48px 0 rgba(0,0,0,0.22)', 'transform': 'scale(1.01)'}); },
+            function() { $(this).css({'box-shadow': '0 8px 32px 0 rgba(0,0,0,0.18)', 'transform': 'scale(1)'}); }
+        );
+        $('#lightgallery a').attr('href', product.image);
+        // Nếu có nhiều ảnh thì dùng thumbnails, còn không thì chỉ 1 ảnh
+        if (product.thumbnails && Array.isArray(product.thumbnails) && product.thumbnails.length > 1) {
+            setupThumbnails(product.thumbnails);
+        } else {
+            setupThumbnails([product.image]);
+        }
+        // Ẩn flash sale nếu không có
+        $("#flashSaleBox").css("display", "none");
+        // Hiển thị thông số kỹ thuật cho từng loại sản phẩm
+        let specsHtml = '<tr><th>Thành phần</th><th>Chi tiết</th></tr>';
+        if (
+            ((product.category?.toLowerCase()?.includes('chuột') || product.name?.toLowerCase()?.includes('chuột')) || (window.location.search.includes('type=mouse')))
+        ) {
+            // Luôn hiển thị 3 dòng cố định bên trái
+            const keysOrder = ['Kết nối', 'Pin', 'DPI'];
+            // Ưu tiên lấy từ specs dạng object
+            let specsMap = {};
+            if (product.specs && Array.isArray(product.specs)) {
+                product.specs.forEach(s => {
+                    if (s.key && s.value) specsMap[s.key.trim().toLowerCase()] = s.value;
+                });
+            }
+            // Nếu không có specs, lấy từ desc dạng text
+            let descArr = Array.isArray(product.desc) ? product.desc : [];
+            keysOrder.forEach((key, idx) => {
+                let val = specsMap[key.toLowerCase()];
+                if (!val && descArr[idx]) {
+                    // Nếu desc có dạng 'DPI - 12000' thì tách lấy số
+                    if (key === 'DPI' && /dpi/i.test(descArr[idx])) {
+                        let match = descArr[idx].match(/\d+[.,]?\d*/);
+                        val = match ? match[0] : descArr[idx];
+                    } else {
+                        val = descArr[idx];
+                    }
+                }
+                specsHtml += `<tr><td>${key}</td><td>${val || ''}</td></tr>`;
+            });
+        } else if (product.specs && Array.isArray(product.specs) && product.specs.length > 0) {
+            specsHtml += product.specs.map(spec => `<tr><td>${spec.key}</td><td>${spec.value}</td></tr>`).join('');
+        } else if (window.location.search.includes('type=display') || (product.category?.toLowerCase()?.includes('màn hình') || product.name?.toLowerCase()?.includes('màn hình'))) {
+            // Nếu là màn hình mà không có specs thì tự động lấy các trường panel, refresh_rate, size, resolution
+            const displayFields = [
+                { key: 'Tấm nền', value: product.panel },
+                { key: 'Tần số quét', value: product.refresh_rate },
+                { key: 'Kích thước', value: product.size },
+                { key: 'Độ phân giải', value: product.resolution }
+            ];
+            specsHtml += displayFields.filter(f => f.value).map(f => `<tr><td>${f.key}</td><td>${f.value}</td></tr>`).join('');
+        } else if (product.desc && Array.isArray(product.desc) && product.desc.length > 0) {
+            specsHtml += product.desc.map((d) => `<tr><td>Đặc điểm</td><td>${d}</td></tr>`).join('');
+        } else {
+            // Nếu không có specs/desc, tự tạo bảng từ các trường cơ bản
+            const fields = [
+                { key: 'CPU', value: product.cpu },
+                { key: 'GPU', value: product.gpu },
+                { key: 'RAM', value: product.ram },
+                { key: 'Ổ cứng', value: product.storage },
+                { key: 'Mainboard', value: product.mainboard },
+                { key: 'PSU', value: product.psu },
+                { key: 'Case', value: product.case },
+                { key: 'Hệ điều hành', value: product.os }
+            ];
+            specsHtml += fields.filter(f => f.value).map(f => `<tr><td>${f.key}</td><td>${f.value}</td></tr>`).join('');
+        }
+        $('#productSpecs').html(specsHtml);
         saveRecentlyViewed(prepareProduct(product));
         renderRecentlyViewed();
-        bindRecentlyViewedEvents(); // Thêm binding sự kiện
+        bindRecentlyViewedEvents();
         renderBundleProducts(product.bundle);
         renderRelatedProducts(product.related);
         checkComboGift(product);
@@ -1317,15 +1486,31 @@ $(document).ready(function () {
             const desc = $('#productDescription');
             const btn = $(this);
             const isExpanded = desc.hasClass('expanded');
-
             desc.toggleClass('expanded collapsed');
-            btn
-                .toggleClass('expanded')
-                .html(`${isExpanded ? 'Xem thêm' : 'Thu gọn'} <i class="fas fa-chevron-down"></i>`);
+            btn.toggleClass('expanded').html(`${isExpanded ? 'Xem thêm' : 'Thu gọn'} <i class="fas fa-chevron-down"></i>`);
         });
+    }
 
+    function showNotFound(msg) {
+        const message = msg || 'Sản phẩm không tồn tại.';
+        $('.container').html(`<p class="text-center" style="color:red;font-weight:bold;">${message}</p>`);
+        console.warn('[DEBUG] showNotFound:', message);
+    }
 
+    if (type && normName) {
+        fetchProductsByType(type, list => {
+            if (!Array.isArray(list)) return showNotFound('Dữ liệu sản phẩm không hợp lệ');
+            console.log('[DEBUG] Fetched list:', list);
+            const found = list.find(p => normalizeName(p.name) === normName);
+            if (found) renderProduct(found);
+            else showNotFound('Không tìm thấy sản phẩm trong file dữ liệu');
+        });
+    } else if (window.products && window.products.length) {
+        console.log('[DEBUG] window.products:', window.products);
+        const found = window.products.find(p => normalizeName(p.name) === normName);
+        if (found) renderProduct(found);
+        else showNotFound('Không tìm thấy sản phẩm trong window.products');
     } else {
-        $('.container').html('<p class="text-center">Sản phẩm không tồn tại.</p>');
+        showNotFound('Thiếu thông tin name hoặc type trên URL');
     }
 });
