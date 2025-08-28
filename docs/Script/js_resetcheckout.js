@@ -1289,22 +1289,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
     const totalItems = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
         giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
+
     const isLoggedIn = !!localStorage.getItem('userName');
+    const isLocked = localStorage.getItem('cartLocked') === 'true';
 
-    // Nếu chưa đăng nhập → luôn chặn checkout (bất kể giỏ hàng rỗng hay có)
-    if (!isLoggedIn) {
-        // Nếu giỏ hàng đang bị đánh dấu locked (logout trước đó)
-        const isLocked = localStorage.getItem('cartLocked') === 'true';
-        if (isLocked || totalItems > 0) {
-            if (typeof CyberModal !== "undefined" && CyberModal.open) {
-                CyberModal.open();
-            }
-            // Ẩn toàn bộ checkout cho tới khi login
-            document.querySelector('.checkout-container')?.classList.add('d-none');
-            return;
+    if (!isLoggedIn && (isLocked || totalItems > 0)) {
+        // Nếu modal tồn tại thì mở
+        if (typeof CyberModal !== "undefined" && CyberModal.open && document.getElementById("cyber-auth-modal")) {
+            CyberModal.open();
         }
+        // Hiện thông báo
+        if (typeof showNotification === "function") {
+            showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
+        }
+        // Ẩn checkout container (chờ DOM có element)
+        setTimeout(() => {
+            document.querySelector('.checkout-container')?.classList.add('d-none');
+        }, 50);
+        return;
     }
-
 
     // ==== Nếu qua được kiểm tra thì mới chạy phần còn lại ====
     validateGiftCartOnLoad();
@@ -1331,6 +1334,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (typeof initFooter === 'function') initFooter();
     });
 
+    // ==== Các event khác ====
     const selectAllCheckbox = document.getElementById('select-all-checkbox');
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', () => {
@@ -1343,19 +1347,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetch("/FormText/tree.json")
         .then(res => res.json())
-        .then(data => {
-            setupAddressDropdownsFromTree(data);
-        })
-        .catch(err => {
-            console.error("Lỗi khi tải tree.json:", err);
-        });
+        .then(data => setupAddressDropdownsFromTree(data))
+        .catch(err => console.error("Lỗi khi tải tree.json:", err));
 
     setupPaymentMethodAnimations();
 
     document.querySelectorAll('.method-option').forEach(option => {
-        option.addEventListener('click', () => {
-            selectMethod(option.dataset.method);
-        });
+        option.addEventListener('click', () => selectMethod(option.dataset.method));
     });
 
     const proceedStep2Btn = document.getElementById('proceed-to-step-2');
@@ -1393,14 +1391,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const clearCartBtn = document.getElementById('clear-cart');
-    if (clearCartBtn) {
-        clearCartBtn.addEventListener('click', clearCart);
-    }
+    if (clearCartBtn) clearCartBtn.addEventListener('click', clearCart);
 
     const paymentBtn = document.getElementById('payment-btn');
-    if (paymentBtn) {
-        paymentBtn.addEventListener('click', showConfirmation);
-    }
+    if (paymentBtn) paymentBtn.addEventListener('click', showConfirmation);
 
     const termsLink = document.getElementById('terms-link');
     if (termsLink) {
@@ -1418,6 +1412,7 @@ document.addEventListener("DOMContentLoaded", function () {
         path: '/transformanimation/emptycart.json'
     });
 });
+
 
 
 
