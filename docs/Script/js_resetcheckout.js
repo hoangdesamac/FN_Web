@@ -1284,33 +1284,6 @@ function setupPaymentMethodAnimations() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-
-    // ====== CHẶN TRUY CẬP CHECKOUT NẾU CHƯA ĐĂNG NHẬP ======
-    if (!localStorage.getItem('userName')) {
-        // Ẩn các phần checkout
-        const checkoutContainer = document.querySelector('.checkout-container');
-        if (checkoutContainer) {
-            checkoutContainer.innerHTML = `
-            <div class="alert alert-warning text-center p-4 mt-4">
-                <h5>Bạn cần đăng nhập để xem giỏ hàng!</h5>
-                <button class="btn btn-primary mt-3" onclick="if (typeof CyberModal !== 'undefined') CyberModal.open();">
-                    Đăng nhập ngay
-                </button>
-            </div>
-        `;
-        }
-
-        // Xóa số lượng giỏ hàng
-        const cartCountEl = document.querySelector('.cart-count');
-        if (cartCountEl) {
-            cartCountEl.style.display = 'none';
-        }
-
-        return; // Không chạy các script liên quan đến giỏ hàng
-    }
-
-    // =======================================================
-
     validateGiftCartOnLoad();
     initializeCartSystem();
     loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {

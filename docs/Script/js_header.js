@@ -315,21 +315,31 @@ function updateUserDisplay() {
 // ================= Xử lý click icon giỏ hàng =================
 function initCartIconClick() {
     const cartIcon = document.querySelector('.cyber-action .bx-cart');
-    if (cartIcon) {
-        cartIcon.closest('.cyber-action').addEventListener('click', (e) => {
-            e.preventDefault();
-            const isLoggedIn = !!localStorage.getItem('userName');
-            if (!isLoggedIn) {
-                if (typeof CyberModal !== "undefined" && CyberModal.open) {
-                    CyberModal.open();
-                }
-                showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
-                return;
+    if (!cartIcon) return;
+
+    cartIcon.closest('.cyber-action').addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const isLoggedIn = !!localStorage.getItem('userName');
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
+        const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
+            giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
+
+        // Nếu chưa đăng nhập nhưng giỏ hàng có sản phẩm → mở modal đăng nhập
+        if (!isLoggedIn && cartCount > 0) {
+            if (typeof CyberModal !== "undefined" && CyberModal.open) {
+                CyberModal.open();
             }
-            window.location.href = 'resetcheckout.html';
-        });
-    }
+            showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
+            return;
+        }
+
+        // Nếu giỏ hàng trống hoặc đã đăng nhập → vào trang giỏ hàng bình thường
+        window.location.href = 'resetcheckout.html';
+    });
 }
+
 
 // ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {
