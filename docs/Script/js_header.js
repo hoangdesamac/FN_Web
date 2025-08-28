@@ -313,39 +313,38 @@ function updateUserDisplay() {
 }
 
 // ================= Xử lý click icon giỏ hàng =================
-function initCartIconClick() {
-    const cartIcon = document.querySelector('.cyber-action .bx-cart');
-    if (!cartIcon) return;
+// Dùng event delegation để không bị mất event khi DOM thay đổi
+document.addEventListener('click', (e) => {
+    const cartIcon = e.target.closest('.cyber-action .bx-cart');
+    if (!cartIcon) return; // Không click vào icon giỏ hàng thì bỏ qua
 
-    cartIcon.closest('.cyber-action').addEventListener('click', (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        const isLoggedIn = !!localStorage.getItem('userName');
-        const isLocked = localStorage.getItem('cartLocked') === 'true';
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
-        const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
-            giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
+    const isLoggedIn = !!localStorage.getItem('userName');
+    const isLocked = localStorage.getItem('cartLocked') === 'true';
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
+    const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
+        giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-        // 🟢 Trường hợp chưa đăng nhập
-        if (!isLoggedIn) {
-            if (isLocked || cartCount > 0) {
-                // Giỏ bị khoá hoặc còn sản phẩm → chặn, mở modal login
-                CyberModal.open?.();
+    // 🟢 Trường hợp chưa đăng nhập
+    if (!isLoggedIn) {
+        if (isLocked || cartCount > 0) {
+            // Giỏ bị khoá hoặc còn sản phẩm → chặn, mở modal login
+            CyberModal.open?.();
+            if (typeof showNotification === "function") {
                 showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
-            } else {
-                // Giỏ trống → vẫn cho xem trang checkout trống
-                window.location.href = 'resetcheckout.html';
             }
-            return;
+        } else {
+            // Giỏ trống → vẫn cho xem trang checkout trống
+            window.location.href = 'resetcheckout.html';
         }
+        return;
+    }
 
-        // 🟢 Đã đăng nhập → vào bình thường
-        window.location.href = 'resetcheckout.html';
-    });
-}
-
-
+    // 🟢 Đã đăng nhập → vào bình thường
+    window.location.href = 'resetcheckout.html';
+});
 
 
 
@@ -364,5 +363,4 @@ function initHeader() {
     initHexagonBackground();
     initCategoryDropdown();
     initResponsiveHandler();
-    initCartIconClick();
 }
