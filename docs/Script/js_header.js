@@ -287,9 +287,9 @@ function updateUserDisplay() {
                 localStorage.removeItem('avatarUrl');
                 localStorage.removeItem('pendingCartItem');
 
-                // Xóa giỏ hàng để không còn hiển thị sau khi đăng xuất
-                localStorage.removeItem('cart');
-                localStorage.removeItem('giftCart');
+                // Đánh dấu giỏ hàng bị khoá sau khi đăng xuất (không xoá dữ liệu để giữ trạng thái)
+                localStorage.setItem('cartLocked', 'true');
+
 
                 // Cập nhật lại số lượng hiển thị
                 updateCartCount();

@@ -66,6 +66,10 @@ async function checkLoginStatus() {
             } else {
                 localStorage.removeItem("avatarUrl");
             }
+
+            // 🔓 Mở khoá giỏ hàng khi đã đăng nhập
+            localStorage.removeItem("cartLocked");
+
             // Đồng bộ giỏ hàng khi đăng nhập
             await syncCartToServer();
         } else {
@@ -165,6 +169,9 @@ if (loginForm) {
                     localStorage.removeItem("avatarUrl");
                 }
 
+                // 🔓 Mở khoá giỏ hàng khi login thành công
+                localStorage.removeItem("cartLocked");
+
                 // Kiểm tra và thêm sản phẩm tạm sau đăng nhập
                 const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
                 if (pendingItem) {
@@ -190,9 +197,6 @@ if (loginForm) {
         }
     });
 }
-
-
-
 
 // ==================== QUÊN MẬT KHẨU ====================
 const forgotForm = document.getElementById("forgotForm");
@@ -245,7 +249,11 @@ document.addEventListener("click", (e) => {
         const loginStatus = urlParams.get("login");
 
         if (loginStatus === "google") {
+            // 🔓 Mở khoá giỏ hàng
+            localStorage.removeItem("cartLocked");
+
             checkLoginStatus();
+
             // Kiểm tra và thêm sản phẩm tạm sau OAuth
             const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
             if (pendingItem) {
@@ -302,7 +310,11 @@ document.addEventListener("click", (e) => {
         const loginStatus = urlParams.get("login");
 
         if (loginStatus === "facebook") {
+            // 🔓 Mở khoá giỏ hàng
+            localStorage.removeItem("cartLocked");
+
             checkLoginStatus();
+
             // Kiểm tra và thêm sản phẩm tạm sau OAuth
             const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
             if (pendingItem) {

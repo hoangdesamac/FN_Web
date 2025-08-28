@@ -1291,15 +1291,20 @@ document.addEventListener("DOMContentLoaded", function () {
         giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
     const isLoggedIn = !!localStorage.getItem('userName');
 
-    // Nếu có sản phẩm mà chưa đăng nhập → mở modal login
-    if (!isLoggedIn && totalItems > 0) {
-        if (typeof CyberModal !== "undefined" && CyberModal.open) {
-            CyberModal.open();
+    // Nếu chưa đăng nhập → luôn chặn checkout (bất kể giỏ hàng rỗng hay có)
+    if (!isLoggedIn) {
+        // Nếu giỏ hàng đang bị đánh dấu locked (logout trước đó)
+        const isLocked = localStorage.getItem('cartLocked') === 'true';
+        if (isLocked || totalItems > 0) {
+            if (typeof CyberModal !== "undefined" && CyberModal.open) {
+                CyberModal.open();
+            }
+            // Ẩn toàn bộ checkout cho tới khi login
+            document.querySelector('.checkout-container')?.classList.add('d-none');
+            return;
         }
-        // Ẩn nội dung giỏ hàng, chỉ hiển thị modal
-        document.querySelector('.checkout-container')?.classList.add('d-none');
-        return; // Không chạy các script giỏ hàng
     }
+
 
     // ==== Nếu qua được kiểm tra thì mới chạy phần còn lại ====
     validateGiftCartOnLoad();
