@@ -191,26 +191,8 @@ if (loginForm) {
     });
 }
 
-// ==================== ĐĂNG XUẤT ====================
-async function logout() {
-    try {
-        await fetch(`${window.API_BASE}/api/logout`, {
-            method: "POST",
-            credentials: "include"
-        });
-        // Chỉ xóa thông tin user, giữ giỏ hàng và dữ liệu khác
-        localStorage.removeItem('userId');
-        localStorage.removeItem('firstName');
-        localStorage.removeItem('lastName');
-        localStorage.removeItem('email');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('avatarUrl');
-        localStorage.removeItem('pendingCartItem');
-        window.location.reload();
-    } catch (err) {
-        console.error("Lỗi đăng xuất:", err);
-    }
-}
+
+
 
 // ==================== QUÊN MẬT KHẨU ====================
 const forgotForm = document.getElementById("forgotForm");

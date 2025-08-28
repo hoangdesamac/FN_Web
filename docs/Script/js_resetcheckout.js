@@ -1273,6 +1273,17 @@ function setupPaymentMethodAnimations() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
+    // ====== CHẶN TRUY CẬP CHECKOUT NẾU CHƯA ĐĂNG NHẬP ======
+    if (!localStorage.getItem('userName')) {
+        showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1500);
+        return; // Dừng các script còn lại
+    }
+    // =======================================================
+
     validateGiftCartOnLoad();
     initializeCartSystem();
     loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {
@@ -1383,6 +1394,7 @@ document.addEventListener("DOMContentLoaded", function () {
         path: '/transformanimation/emptycart.json'
     });
 });
+
 
 function selectMethod(method) {
     document.querySelectorAll('.method-option').forEach(opt => opt.classList.remove('selected', 'cod'));

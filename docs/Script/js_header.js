@@ -278,7 +278,7 @@ function updateUserDisplay() {
                     method: "POST",
                     credentials: "include"
                 });
-                // Chỉ xóa thông tin user, giữ giỏ hàng
+                // Xóa thông tin user
                 localStorage.removeItem('userName');
                 localStorage.removeItem('firstName');
                 localStorage.removeItem('lastName');
@@ -286,11 +286,20 @@ function updateUserDisplay() {
                 localStorage.removeItem('userId');
                 localStorage.removeItem('avatarUrl');
                 localStorage.removeItem('pendingCartItem');
+
+                // Xóa giỏ hàng để không còn hiển thị sau khi đăng xuất
+                localStorage.removeItem('cart');
+                localStorage.removeItem('giftCart');
+
+                // Cập nhật lại số lượng hiển thị
+                updateCartCount();
+
                 window.location.reload();
             } catch (err) {
                 console.error("Lỗi đăng xuất:", err);
             }
         });
+
     } else {
         userAction.innerHTML = `
             <i class="bx bx-user-circle action-icon"></i>
