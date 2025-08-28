@@ -1,3 +1,16 @@
+// ================== HÀM CHUẨN HÓA DÙNG CHUNG ==================
+function normalizeName(str) {
+  return (str || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+    .replace(/[^a-z0-9]/g, '')
+    .trim();
+}
+function categoryToString(category) {
+  if (Array.isArray(category)) return category.join(' ').toLowerCase();
+  if (typeof category === 'string') return category.toLowerCase();
+  return '';
+}
 // ================== DISPLAY ==================
 // Patch lại để luôn sort lại khi gọi, giống mouse
 const origShowDisplayProductsFiltered = window.showDisplayProductsFiltered || showDisplayProductsFiltered;
@@ -187,6 +200,18 @@ function showDisplayProductsFiltered(list) {
   });
   document.getElementById('product-list').innerHTML = html || '<div class="text-center">Không có sản phẩm phù hợp.</div>';
   renderDisplayPagination(list.length, totalPages);
+  // Add click handler for product cards (Display)
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function() {
+      const nameElem = card.querySelector('.product-name');
+      let prodName = nameElem ? nameElem.textContent.trim() : '';
+      if (prodName) {
+        const normName = encodeURIComponent(prodName.normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase());
+        window.location.href = `resetproduct.html?name=${normName}&type=display`;
+      }
+    });
+  });
 }
 
 function renderDisplayPagination(totalItems, totalPages) {
@@ -317,6 +342,18 @@ function showKeyboardProductsFiltered(list) {
   });
   document.getElementById('product-list').innerHTML = html || '<div class="text-center">Không có sản phẩm phù hợp.</div>';
   renderKeyboardPagination(list.length, totalPages);
+  // Add click handler for product cards (Keyboard)
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function() {
+      const nameElem = card.querySelector('.product-name');
+      let prodName = nameElem ? nameElem.textContent.trim() : '';
+      if (prodName) {
+        const normName = encodeURIComponent(prodName.normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase());
+        window.location.href = `resetproduct.html?name=${normName}&type=keyboard`;
+      }
+    });
+  });
 }
 
 function renderKeyboardPagination(totalItems, totalPages) {
@@ -507,6 +544,18 @@ function showMouseProductsFiltered(list) {
   });
   document.getElementById('product-list').innerHTML = html || '<div class="text-center">Không có sản phẩm phù hợp.</div>';
   renderMousePagination(list.length, totalPages);
+  // Add click handler for product cards (Mouse)
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function() {
+      const nameElem = card.querySelector('.product-name');
+      let prodName = nameElem ? nameElem.textContent.trim() : '';
+      if (prodName) {
+        const normName = encodeURIComponent(prodName.normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase());
+        window.location.href = `resetproduct.html?name=${normName}&type=mouse`;
+      }
+    });
+  });
 }
 
 function renderMousePagination(totalItems, totalPages) {
@@ -536,6 +585,20 @@ function renderMousePagination(totalItems, totalPages) {
 }
 
 // Nếu muốn gắn filter event cho mouse, có thể tạo hàm attachMouseFilterEvents tương tự attachLaptopFilterEvents
+// ================== HÀM CHUẨN HÓA DÙNG CHUNG ==================
+function normalizeName(str) {
+  return (str || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+    .replace(/[^a-z0-9]/g, '')
+    .trim();
+}
+
+function categoryToString(category) {
+  if (Array.isArray(category)) return category.join(' ').toLowerCase();
+  if (typeof category === 'string') return category.toLowerCase();
+  return '';
+}
 // ================== KHỞI TẠO TOÀN BỘ LOGIC TRANG ALLPRODUCTS ==================
 function setupAllProductsPage() {
   // --- SORTING LOGIC ---
@@ -1082,6 +1145,18 @@ function setupAllProductsPage() {
     });
     document.getElementById('product-list').innerHTML = html || '<div class="text-center">Không có sản phẩm phù hợp.</div>';
     renderLaptopPagination(sorted.length, totalPages);
+    // Add click handler for product cards (Laptop)
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function() {
+        const nameElem = card.querySelector('.product-name');
+        let prodName = nameElem ? nameElem.textContent.trim() : '';
+        if (prodName) {
+          const normName = encodeURIComponent(prodName.normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase());
+          window.location.href = `resetproduct.html?name=${normName}&type=laptop`;
+        }
+      });
+    });
     if (restoreScroll) {
       setTimeout(() => {
         window.scrollTo({ top: window._paginationScrollY });
@@ -1303,6 +1378,18 @@ function setupAllProductsPage() {
     });
     document.getElementById('product-list').innerHTML = html || '<div class="text-center">Không có sản phẩm phù hợp.</div>';
     renderPagination(sorted.length, totalPages);
+    // Add click handler for product cards (PC)
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function() {
+        const nameElem = card.querySelector('.product-name');
+        let prodName = nameElem ? nameElem.textContent.trim() : '';
+        if (prodName) {
+          const normName = encodeURIComponent(prodName.normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '-').toLowerCase());
+          window.location.href = `resetproduct.html?name=${normName}&type=pc`;
+        }
+      });
+    });
   }
 
   function renderPagination(totalItems, totalPages) {

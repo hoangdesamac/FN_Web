@@ -12,7 +12,8 @@
       "asus",
       "gamming",
       "TUF"
-    ]
+    ],
+    "description": "Laptop doanh nhân bền bỉ, hiệu năng mạnh mẽ, phù hợp cho công việc văn phòng và di chuyển nhiều."
   },
   {
     "name": "Laptop ASUS Zenbook 14 OLED UX3405MA PP152W",
@@ -27,7 +28,8 @@
       "gamming",
       "asus",
       "ROG"
-    ]
+    ],
+    "description": "Màn hình OLED sắc nét, cấu hình mạnh, lý tưởng cho sáng tạo nội dung, thiết kế đồ hoạ, đa nhiệm." 
   },
   {
     "name": "Laptop ASUS Zenbook S 14 OLED UX5406SA PV140WS",
@@ -41,7 +43,8 @@
     "category": [
       "văn phòng",
       "asus"
-    ]
+    ],
+    "description": "Thiết kế siêu mỏng nhẹ, màn hình 3K OLED, hiệu năng cao, phù hợp doanh nhân, sáng tạo, di chuyển nhiều." 
   },
   {
     "name": "Laptop ASUS Vivobook 15 OLED A1505VA MA468W",
@@ -55,7 +58,8 @@
     "category": [
       "dell",
       "văn phòng"
-    ]
+    ],
+    "description": "Màn hình OLED sống động, cấu hình ổn định, phù hợp sinh viên, nhân viên văn phòng, người dùng phổ thông." 
   },
   {
     "name": "Laptop ASUS Vivobook 14 OLED A1405VA KM257W",
@@ -69,7 +73,8 @@
     "category": [
       "msi",
       "gamming"
-    ]
+    ],
+    "description": "Nhỏ gọn, màn hình OLED sắc nét, hiệu năng tốt cho học tập, làm việc, giải trí cơ bản." 
   },
   {
     "name": "Laptop ASUS Zenbook 14 UX3407QA QD299WS",
@@ -84,7 +89,8 @@
       "văn phòng",
       "AI",
       "laptop asus"
-    ]
+    ],
+    "description": "Hiệu năng ổn định, màn hình OLED chất lượng cao, thiết kế hiện đại cho dân văn phòng." 
   },
   {
     "name": "Laptop ASUS Zenbook 14 UM3406KA PP555WS",
@@ -99,7 +105,8 @@
       "văn phòng",
       "AI",
       "laptop asus"
-    ]
+    ],
+    "description": "Laptop AMD Ryzen AI, màn hình OLED 3K, phù hợp cho công việc sáng tạo, học tập, giải trí cao cấp." 
   },
   {
     "name": "Laptop ASUS Zenbook 14 OLED UX3402VA KM203W",
@@ -113,7 +120,8 @@
     "category": [
       "văn phòng",
       "laptop asus"
-    ]
+    ],
+    "description": "Màn hình OLED 2K8, cấu hình tốt, phù hợp cho dân văn phòng, học sinh, sinh viên cần máy bền bỉ." 
   },
   {
     "name": "Laptop ASUS Vivobook 16 M1607KA MB091WS",
@@ -128,7 +136,8 @@
       "văn phòng",
       "AI",
       "laptop asus"
-    ]
+    ],
+    "description": "Màn hình lớn 16 inch, hiệu năng AMD Ryzen AI, phù hợp cho học tập, làm việc, giải trí đa phương tiện." 
   },
   {
     "name": "Laptop ASUS Expertbook P1403CVA-i516-50W",
@@ -142,7 +151,8 @@
     "category": [
       "văn phòng",
       "laptop asus"
-    ]
+    ],
+    "description": "Laptop văn phòng bền bỉ, cấu hình ổn định, phù hợp cho công việc di động, học tập, hội họp." 
   },
   {
     "name": "Laptop ASUS ExpertBook P1 P1503CVA i5SE16 50W",
@@ -156,7 +166,8 @@
     "category": [
       "văn phòng",
       "laptop asus"
-    ]
+    ],
+    "description": "Thiết kế chắc chắn, màn hình lớn, hiệu năng ổn định, phù hợp cho doanh nghiệp, văn phòng, học sinh." 
   },
   {
     "name": "Laptop gaming ASUS ROG Strix G18 G815LW S9164W",
@@ -172,7 +183,8 @@
       "đồ hoạ",
       "ROG",
       "asus"
-    ]
+    ],
+    "description": "Laptop gaming cao cấp với màn hình lớn, tần số quét 240Hz, cấu hình mạnh mẽ cho trải nghiệm chơi game mượt mà."
   },
   {
     "name": "Laptop gaming ASUS ROG Zephyrus G16 GU605CX QR147W",
@@ -188,7 +200,8 @@
       "đồ hoạ",
       "ROG",
       "asus"
-    ]
+    ],
+    "description": "Hiệu năng đỉnh cao với CPU Ultra 9 và GPU RTX 5090, màn hình 240Hz cho trải nghiệm chơi game và làm việc đồ hoạ chuyên nghiệp."
   },
   {
     "name": "Laptop gaming ASUS ROG Strix G16 G615LW S5219W",
@@ -204,7 +217,8 @@
       "đồ hoạ",
       "ROG",
       "asus"
-    ]
+    ],
+    "description": "Laptop gaming mạnh mẽ với màn hình WQXGA 240Hz, cấu hình cao, thiết kế tản nhiệt hiệu quả cho game thủ chuyên nghiệp."
   },
   {
     "name": "Laptop gaming ASUS ROG Strix G16 G615LR S5289W",
@@ -220,7 +234,8 @@
       "đồ hoạ",
       "ROG",
       "asus"
-    ]
+    ],
+    "description": "Cấu hình mạnh mẽ với GPU RTX 5070Ti, màn hình 240Hz cho trải nghiệm chơi game mượt mà, thiết kế tinh tế."
   },
   {
     "name": "Laptop gaming ASUS V16 V3607VH RP024W",
@@ -236,7 +251,8 @@
       "đồ hoạ",
       "TUF",
       "asus"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng ổn định, màn hình 144Hz cho trải nghiệm chơi game và giải trí đa phương tiện."
   },
   {
     "name": "Laptop gaming ASUS V16 V3607VH RP025W",
@@ -252,7 +268,8 @@
       "đồ hoạ",
       "TUF",
       "asus"
-    ]
+    ],
+    "description": "Cấu hình mạnh mẽ với CPU Core i7 và GPU RTX 5050, màn hình 144Hz cho trải nghiệm chơi game và làm việc đồ hoạ."
   },
   {
     "name": "Laptop gaming ASUS ROG Strix G16 G615LW S5135W",
@@ -268,7 +285,8 @@
       "đồ hoạ",
       "ROG",
       "asus"
-    ]
+    ],
+    "description": "Laptop gaming cao cấp với hiệu năng đỉnh cao, màn hình 240Hz, thiết kế tản nhiệt tối ưu cho game thủ chuyên nghiệp."
   },
   {
     "name": "Laptop gaming ASUS ROG Flow Z13 GZ302EA RU145WS",
@@ -284,7 +302,8 @@
       "đồ hoạ",
       "ROG",
       "asus"
-    ]
+    ],
+    "description": "Laptop 2 trong 1 mạnh mẽ với màn hình cảm ứng 13.4 inch, hiệu năng Ryzen AI MAX+ 395, phù hợp cho sáng tạo nội dung và giải trí."
   },
   {
     "name": "Laptop gaming ASUS ROG Strix SCAR 18 G835LX SA208W",
@@ -302,7 +321,8 @@
       "ROG",
       "asus",
       "AI"
-    ]
+    ],
+    "description": "Laptop gaming siêu mạnh với màn hình 18 inch QHD+ 240Hz, cấu hình đỉnh cao, thiết kế tản nhiệt tiên tiến."
   },
   {
     "name": "Laptop gaming ASUS ROG Zephyrus G16 GU605CR QR107W",
@@ -320,7 +340,8 @@
       "ROG",
       "asus",
       "AI"
-    ]
+    ],
+    "description": "Hiệu năng mạnh mẽ với GPU RTX 5070Ti, màn hình OLED 240Hz cho trải nghiệm chơi game và làm việc đồ hoạ chuyên nghiệp."
   },
   {
     "name": "Laptop gaming ASUS TUF Gaming F16 FX607VJ RL034W",
@@ -338,7 +359,8 @@
       "ROG",
       "asus",
       "AI"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng ổn định, màn hình 144Hz cho trải nghiệm chơi game và giải trí đa phương tiện."
   },
   {
     "name": "Laptop gaming ASUS TUF F16 FX608JMR RV048W",
@@ -356,7 +378,8 @@
       "ROG",
       "asus",
       "AI"
-    ]
+    ],
+    "description": "Cấu hình mạnh mẽ với CPU Core i7 và GPU RTX 5060, màn hình 165Hz cho trải nghiệm chơi game và làm việc đồ hoạ chuyên nghiệp."
   },
   {
     "name": "Laptop gaming ASUS TUF Gaming F16 FX608JH RV039W",
@@ -374,7 +397,8 @@
       "ROG",
       "asus",
       "AI"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng ổn định, màn hình 165Hz cho trải nghiệm chơi game và giải trí đa phương tiện."
   },
   {
     "name": "Laptop Lenovo Yoga Slim 7 14IMH9 83CV00AJVN",
@@ -389,7 +413,8 @@
       "lenovo",
       "văn phòng",
       "AI"
-    ]
+    ],
+    "description": "Laptop mỏng nhẹ, hiệu năng cao, màn hình OLED sắc nét, phù hợp cho doanh nhân, học sinh, sinh viên."
   },
   {
     "name": "Laptop Lenovo Yoga Slim 7 14IMH9 83CV00AHVN",
@@ -404,7 +429,8 @@
       "lenovo",
       "văn phòng",
       "AI"
-    ]
+    ],
+    "description": "Thiết kế thanh lịch, hiệu năng ổn định, màn hình OLED chất lượng cao, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop Lenovo ThinkPad X9-14 Gen 1 21QA006GVN",
@@ -419,7 +445,8 @@
       "lenovo",
       "văn phòng",
       "AI"
-    ]
+    ],
+    "description": "Laptop ThinkPad bền bỉ, hiệu năng cao, màn hình OLED sắc nét, phù hợp cho doanh nhân, người làm việc văn phòng."
   },
   {
     "name": "Laptop Lenovo ThinkPad X9-15 Gen 1 21Q60055VN",
@@ -434,7 +461,8 @@
       "lenovo",
       "văn phòng",
       "AI"
-    ]
+    ],
+    "description": "Màn hình cảm ứng 2.8K OLED, cấu hình mạnh mẽ, thiết kế sang trọng, phù hợp cho doanh nhân, người làm việc sáng tạo."
   },
   {
     "name": "Laptop Lenovo ThinkPad X1 Carbon Gen 13 21NX003DVN",
@@ -449,7 +477,8 @@
       "lenovo",
       "văn phòng",
       "AI"
-    ]
+    ],
+    "description": "Laptop X1 Carbon siêu nhẹ, bền bỉ, hiệu năng cao, màn hình IPS chất lượng, phù hợp cho doanh nhân, người thường xuyên di chuyển."
   },
   {
     "name": "Laptop Lenovo V14 G4 IRU 83A000BEVN",
@@ -463,7 +492,8 @@
     "category": [
       "lenovo",
       "văn phòng"
-    ]
+    ],
+    "description": "Laptop văn phòng với cấu hình cơ bản, màn hình FHD IPS, phù hợp cho học tập, làm việc văn phòng."
   },
   {
     "name": "Laptop Lenovo Yoga Slim 9 14ILL10 83CX001AVN",
@@ -478,7 +508,8 @@
       "lenovo",
       "văn phòng",
       "AI"
-    ]
+    ],
+    "description": "Màn hình 4K OLED sắc nét, cấu hình mạnh mẽ, thiết kế sang trọng, phù hợp cho người làm sáng tạo nội dung, đồ hoạ."
   },
   {
     "name": "Laptop Lenovo IdeaPad Slim 5 14AKP10 83HX001JVN",
@@ -493,7 +524,8 @@
       "lenovo",
       "văn phòng",
       "AI"
-    ]
+    ],
+    "description": "Laptop IdeaPad với hiệu năng AMD Ryzen 7, màn hình OLED chất lượng cao, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop Lenovo IdeaPad Slim 3 14IRH10 83K0000BVN",
@@ -507,7 +539,8 @@
     "category": [
       "lenovo",
       "văn phòng"
-    ]
+    ],
+    "description": "Laptop IdeaPad Slim 3 với thiết kế mỏng nhẹ, hiệu năng ổn định, màn hình OLED sắc nét, phù hợp cho học sinh, sinh viên."
   },
   {
     "name": "Laptop Lenovo IdeaPad Slim 3 15IRH10 83K1000JVN",
@@ -521,7 +554,8 @@
     "category": [
       "lenovo",
       "văn phòng"
-    ]
+    ],
+    "description": "Laptop IdeaPad Slim 3 với màn hình lớn 15.3 inch, hiệu năng mạnh mẽ, phù hợp cho làm việc và giải trí đa phương tiện."
   },
   {
     "name": "Laptop Lenovo Yoga Pro 7 14IMH9 83E2005DVN",
@@ -536,7 +570,8 @@
       "lenovo",
       "văn phòng",
       "AI"
-    ]
+    ],
+    "description": "Laptop Yoga Pro 7 với hiệu năng cao, màn hình OLED 2.8K sắc nét, card đồ hoạ rời RTX 4050, phù hợp cho sáng tạo nội dung và giải trí."
   },
   {
     "name": "Laptop Lenovo Yoga Slim 7 14IMH9 83CV008EVN",
@@ -551,7 +586,8 @@
       "lenovo",
       "văn phòng",
       "AI"
-    ]
+    ],
+    "description": "Thiết kế thanh lịch, hiệu năng ổn định, màn hình OLED chất lượng cao, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop Lenovo Yoga Pro 7 14IMH9 83E2006MVN",
@@ -566,7 +602,8 @@
       "lenovo",
       "văn phòng",
       "AI"
-    ]
+    ],
+    "description": "Laptop Yoga Pro 7 với hiệu năng cao, màn hình OLED 2.8K sắc nét, card đồ hoạ rời RTX 4050, phù hợp cho sáng tạo nội dung và giải trí."
   },
   {
     "name": "Laptop gaming Lenovo LOQ 15IRX9 83DV013PVN",
@@ -581,7 +618,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với cấu hình cơ bản, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop gaming Lenovo LOQ 15IRX9 83DV01ALVN",
@@ -596,7 +634,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Lenovo LOQ 15AHP10 83JG0047VN",
@@ -611,7 +650,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng ổn định, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop gaming Lenovo Legion Pro 7 16IAX10H 83F5008WVN",
@@ -626,7 +666,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming cao cấp với hiệu năng đỉnh cao, màn hình OLED 240Hz, thiết kế tản nhiệt tối ưu cho game thủ chuyên nghiệp."
   },
   {
     "name": "Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN",
@@ -641,7 +682,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng ổn định, màn hình OLED 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Lenovo LOQ 15IAX9E 83LK0079VN",
@@ -656,7 +698,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với cấu hình cơ bản, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop gaming Lenovo Legion 7 16IAX10 83KY001VVN",
@@ -671,7 +714,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 240Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Lenovo LOQ 15IRX10 83JE006PVN",
@@ -686,7 +730,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Lenovo Legion 7 16IAX10 83KY001UVN",
@@ -701,7 +746,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 240Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Lenovo Legion 5 15IRX10 83LY00A7VN",
@@ -716,7 +762,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình OLED 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Lenovo Legion 5 15IRX10 83LY004GVN",
@@ -731,7 +778,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình OLED 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Lenovo Legion Pro 5 16IAX10 83F3002GVN",
@@ -746,7 +794,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình OLED 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Lenovo Legion 5 15IAX10 83F0003BVN",
@@ -761,7 +810,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình OLED 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Lenovo Legion Pro 5 16IAX10 83F3003VVN",
@@ -776,7 +826,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình OLED 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Lenovo Legion 5 15IAX10 83F0003CVN",
@@ -791,7 +842,8 @@
       "gamming",
       "đồ hoạ",
       "lenovo"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình OLED 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop Acer Aspire Lite 14 AL14 71P 55P9",
@@ -805,7 +857,8 @@
     "category": [
       "văn phòng",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Aspire Lite 14 với thiết kế mỏng nhẹ, hiệu năng ổn định, phù hợp cho học tập và làm việc văn phòng."
   },
   {
     "name": "Laptop Acer Aspire Lite AL15 72P 581V",
@@ -819,7 +872,8 @@
     "category": [
       "văn phòng",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Aspire Lite 15 với màn hình lớn, hiệu năng ổn định, phù hợp cho học tập và làm việc văn phòng."
   },
   {
     "name": "Laptop Acer Aspire Lite AL15 72P 7232",
@@ -833,7 +887,8 @@
     "category": [
       "văn phòng",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Aspire Lite 15 với hiệu năng mạnh mẽ, màn hình lớn, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop Acer Aspire Go AG14 71M 7681",
@@ -847,7 +902,8 @@
     "category": [
       "văn phòng",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Aspire Go 14 với thiết kế mỏng nhẹ, hiệu năng ổn định, phù hợp cho học tập và làm việc văn phòng."
   },
   {
     "name": "Laptop Acer Aspire Go AG14 71M 57WR",
@@ -861,7 +917,8 @@
     "category": [
       "văn phòng",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Aspire Go 14 với thiết kế mỏng nhẹ, hiệu năng ổn định, phù hợp cho học tập và làm việc văn phòng."
   },
   {
     "name": "Laptop Acer Swift Go SFG14 74 58FJ",
@@ -876,7 +933,8 @@
       "văn phòng",
       "AI",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Swift Go 14 với thiết kế siêu mỏng nhẹ, hiệu năng cao, màn hình OLED sắc nét, phù hợp cho doanh nhân, học sinh, sinh viên."
   },
   {
     "name": "Laptop Acer Swift X14 SFX14 72G 79UW",
@@ -891,7 +949,8 @@
       "văn phòng",
       "AI",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Swift X14 với hiệu năng đỉnh cao, màn hình OLED 120Hz sắc nét, card đồ hoạ RTX 4070, phù hợp cho sáng tạo nội dung và giải trí đồ hoạ."
   },
   {
     "name": "Laptop Acer Swift X14 SFX14 72G 77F9",
@@ -906,7 +965,8 @@
       "văn phòng",
       "AI",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Swift X14 với thiết kế mỏng nhẹ, hiệu năng cao, màn hình OLED 120Hz sắc nét, phù hợp cho doanh nhân, học sinh, sinh viên."
   },
   {
     "name": "Laptop Acer Swift 14 AI SF14 51 53P9",
@@ -921,7 +981,8 @@
       "văn phòng",
       "AI",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Swift 14 AI với hiệu năng cao, màn hình OLED 3K sắc nét, phù hợp cho doanh nhân, học sinh, sinh viên."
   },
   {
     "name": "Laptop Acer Swift X14 SFX14 71G 78SY",
@@ -936,7 +997,8 @@
       "văn phòng",
       "AI",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Swift X14 với hiệu năng đỉnh cao, màn hình OLED 2.8K sắc nét, card đồ hoạ RTX 4050, phù hợp cho sáng tạo nội dung và giải trí đồ hoạ."
   },
   {
     "name": "Laptop Acer Swift Go 14 SFG14 73 57FZ",
@@ -951,7 +1013,8 @@
       "văn phòng",
       "AI",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Swift Go 14 với thiết kế siêu mỏng nhẹ, hiệu năng ổn định, màn hình OLED sắc nét, phù hợp cho doanh nhân, học sinh, sinh viên."
   },
   {
     "name": "Laptop Acer Swift Go 14 SFG14 73 75YM",
@@ -966,7 +1029,8 @@
       "văn phòng",
       "AI",
       "acer"
-    ]
+    ],
+    "description": "Laptop Acer Swift Go 14 với thiết kế siêu mỏng nhẹ, hiệu năng ổn định, màn hình OLED sắc nét, phù hợp cho doanh nhân, học sinh, sinh viên."
   },
   {
     "name": "Laptop Dell Inspirion N3530 i5U165W11SLU (1334U)",
@@ -980,7 +1044,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron N3530 với cấu hình cơ bản, màn hình FHD 120Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop gaming Acer Nitro V ANV16 41 R4KD",
@@ -995,7 +1060,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 2K 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Nitro V ANV16 41 R7EN",
@@ -1010,7 +1076,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với cấu hình mạnh mẽ, màn hình 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Nitro V ANV16 41 R36Y",
@@ -1025,7 +1092,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Nitro V ANV15 51 91T5",
@@ -1040,7 +1108,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng đỉnh cao, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Nitro V ANV15 51 53DM",
@@ -1055,7 +1124,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với cấu hình cơ bản, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop gaming Acer Aspire 7 A715 59G 57TU",
@@ -1070,7 +1140,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với cấu hình cơ bản, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop gaming Acer Aspire 7 A715 59G 73LB",
@@ -1085,7 +1156,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Nitro Lite 16 NL16 71G 56WQ",
@@ -1100,7 +1172,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với cấu hình cơ bản, màn hình 165Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop gaming Acer Nitro Lite 16 NL16 71G 71UJ",
@@ -1115,7 +1188,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Nitro V ProPanel ANV15 52 72BM",
@@ -1130,7 +1204,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 180Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Predator Helios 16 AI PH16 73 93HD",
@@ -1145,7 +1220,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming cao cấp với hiệu năng đỉnh cao, màn hình OLED 240Hz, thiết kế tản nhiệt tối ưu cho game thủ chuyên nghiệp."
   },
   {
     "name": "Laptop gaming Acer Nitro V 16S Propanel ANV16S 61 R9ZV",
@@ -1160,7 +1236,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 180Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Predator Helios 16 AI PH16 73 950C",
@@ -1175,7 +1252,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming siêu mạnh với hiệu năng đỉnh cao, màn hình OLED 240Hz, thiết kế tản nhiệt tối ưu cho game thủ chuyên nghiệp."
   },
   {
     "name": "Laptop gaming Acer Predator Helios PHN16 73 757W",
@@ -1190,7 +1268,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 2K+ 240Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Predator Helios Neo 16S PHN16S 71 94T0",
@@ -1205,7 +1284,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình OLED 240Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Predator Helios Neo 16S PHN16S 71 95MS",
@@ -1220,7 +1300,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình OLED 240Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Predator Helios 18 PH18 73 98AQ",
@@ -1235,7 +1316,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming siêu mạnh với hiệu năng đỉnh cao, màn hình 4K Mini Led 120Hz, thiết kế tản nhiệt tối ưu cho game thủ chuyên nghiệp."
   },
   {
     "name": "Laptop gaming Acer Predator Helios 18 PH18 73 93P0",
@@ -1250,7 +1332,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình WQXGA Mini Led 250Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Nitro V ANV15 51 73BT",
@@ -1265,7 +1348,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với cấu hình cơ bản, màn hình 180Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop gaming Acer Nitro V ANV15 51 500A",
@@ -1280,7 +1364,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng ổn định, màn hình 180Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop gaming Acer Nitro V ANV15 51 76B9",
@@ -1295,7 +1380,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 180Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Nitro V ANV15 51 73UU",
@@ -1310,7 +1396,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 180Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Nitro V ProPanel ANV15 52 59AA",
@@ -1325,7 +1412,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 180Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming Acer Nitro V ProPanel ANV15 41 R0Y4",
@@ -1340,7 +1428,8 @@
       "gamming",
       "đồ hoạ",
       "acer"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 180Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop Dell Inspiron 15 3530 N3530-i7U161W11BLU-FP",
@@ -1354,7 +1443,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 15 với hiệu năng mạnh mẽ, màn hình FHD sắc nét, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop Dell Inspiron 14 5440 C5U165W11IBD2",
@@ -1369,7 +1459,8 @@
       "văn phòng",
       "AI",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 14 với thiết kế mỏng nhẹ, hiệu năng ổn định, màn hình 2.2K sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop Dell Inspiron 14 5440 i5U085W11IBU",
@@ -1383,7 +1474,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 14 với cấu hình cơ bản, màn hình FHD+ sắc nét, phù hợp cho học tập và làm việc văn phòng."
   },
   {
     "name": "Laptop Dell XPS 9350 XPS9350-U5IA165W11GR-FP",
@@ -1398,7 +1490,8 @@
       "văn phòng",
       "AI",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell XPS 9350 với thiết kế sang trọng, hiệu năng cao, màn hình cảm ứng QHD+ 120Hz sắc nét, phù hợp cho doanh nhân và người làm sáng tạo nội dung."
   },
   {
     "name": "Laptop Dell Inspiron 16 5640 C7U161W11IBU",
@@ -1412,7 +1505,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 16 với hiệu năng mạnh mẽ, màn hình FHD+ sắc nét, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop Dell Inspiron 5640 G14 N6I7512W1-IceBlue",
@@ -1427,7 +1521,8 @@
       "văn phòng",
       "AI",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 5640 với thiết kế hiện đại, hiệu năng cao, màn hình 2.5K sắc nét, phù hợp cho doanh nhân và người làm sáng tạo nội dung."
   },
   {
     "name": "Laptop Dell Inspiron 5640 N6I5419W1-IceBlue",
@@ -1441,7 +1536,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 5640 với cấu hình ổn định, màn hình FHD+ IPS sắc nét, phù hợp cho học tập và làm việc văn phòng."
   },
   {
     "name": "Laptop Dell Inspiron 5440 G14 N4I7204W1-IceBlue",
@@ -1455,7 +1551,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 5440 với thiết kế mỏng nhẹ, hiệu năng ổn định, màn hình FHD+ IPS sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop Dell Inspiron 5440 G14 N4I5211W1-IceBlue",
@@ -1469,7 +1566,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 5440 với cấu hình cơ bản, màn hình FHD+ IPS sắc nét, phù hợp cho học tập và làm việc văn phòng."
   },
   {
     "name": "Laptop Dell Inspiron 3530 N5I5007W1-Silver",
@@ -1483,7 +1581,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 3530 với thiết kế hiện đại, hiệu năng ổn định, màn hình FHD IPS 120Hz sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop Dell Inspiron 3520 N5I5052W1-Silver",
@@ -1497,7 +1596,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 3520 với cấu hình cơ bản, màn hình FHD IPS sắc nét, phù hợp cho học tập và làm việc văn phòng."
   },
   {
     "name": "Laptop Dell Inspiron 3520 N5I5011W1 Black",
@@ -1511,7 +1611,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 3520 với thiết kế hiện đại, hiệu năng ổn định, màn hình FHD IPS 120Hz sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop Dell Vostro 3530 V5I3465W1 Gray",
@@ -1525,7 +1626,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Vostro 3530 với cấu hình cơ bản, màn hình FHD 120Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop Dell Inspiron 3530 N5I5791W1 Black",
@@ -1539,7 +1641,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 3530 với hiệu năng mạnh mẽ, màn hình FHD IPS 120Hz sắc nét, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop Dell Inspiron 3530 N3530I716W1 Silver",
@@ -1554,7 +1657,8 @@
       "văn phòng",
       "AI",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 3530 với thiết kế sang trọng, hiệu năng cao, màn hình FHD sắc nét, phù hợp cho doanh nhân và người làm sáng tạo nội dung."
   },
   {
     "name": "Laptop Dell Inspiron T7430 N7430I58W1 Silver",
@@ -1568,7 +1672,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron T7430 với cấu hình cơ bản, màn hình FHD+ sắc nét, phù hợp cho học tập và làm việc văn phòng."
   },
   {
     "name": "Laptop Dell Inspiron 15 3520 P112F007 71003262",
@@ -1582,7 +1687,8 @@
     "category": [
       "văn phòng",
       "dell"
-    ]
+    ],
+    "description": "Laptop Dell Inspiron 15 với thiết kế hiện đại, hiệu năng ổn định, màn hình FHD WVA 120Hz sắc nét, phù hợp cho học tập và làm việc."
   },
   {
   "name": "Laptop gaming Dell G15 5530 i9H161W11GR4060",
@@ -1593,7 +1699,8 @@
   "storage": "1TB SSD",
   "display": "15.6 inch FHD 165Hz",
   "price": 40490000,
-  "category": ["gamming", "đồ hoạ", "dell"]
+  "category": ["gamming", "đồ hoạ", "dell"],
+  "description": "Laptop gaming với hiệu năng đỉnh cao, màn hình 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
 },
 {
   "name": "Laptop gaming Dell Alienware M15 R6 P109F001CBL",
@@ -1604,7 +1711,8 @@
   "storage": "1TB SSD",
   "display": "15.6 inch FHD 165Hz",
   "price": 44990000,
-  "category": ["gamming", "đồ hoạ", "dell"]
+  "category": ["gamming", "đồ hoạ", "dell"],
+  "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
 },
 {
   "name": "Laptop gaming Dell G15 5525 R5H085W11GR3050",
@@ -1615,7 +1723,8 @@
   "storage": "512GB SSD",
   "display": "15.6 inch FHD 120Hz",
   "price": 25490000,
-  "category": ["gamming", "đồ hoạ", "dell"]
+  "category": ["gamming", "đồ hoạ", "dell"],
+  "description": "Laptop gaming với cấu hình cơ bản, màn hình 120Hz, phù hợp cho học tập, làm việc và giải trí."
 },
 {
   "name": "Laptop gaming Dell G15 5525 R7H165W11GR3060",
@@ -1626,7 +1735,8 @@
   "storage": "512GB SSD",
   "display": "15.6 inch FHD 120Hz",
   "price": 25990000,
-  "category": ["gamming", "đồ hoạ", "dell"]
+  "category": ["gamming", "đồ hoạ", "dell"],
+  "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 120Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
 },
 {
   "name": "Laptop gaming Dell Alienware M15 R7 I7H165W11GR3050Ti",
@@ -1637,7 +1747,8 @@
   "storage": "512GB SSD",
   "display": "15.6 inch FHD 165Hz",
   "price": 37990000,
-  "category": ["gamming", "đồ hoạ", "dell"]
+  "category": ["gamming", "đồ hoạ", "dell"],
+  "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 165Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
 }
   ,
   {
@@ -1653,7 +1764,8 @@
       "văn phòng",
       "AI",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Prestige 16 AI với hiệu năng đỉnh cao, màn hình UHD+ OLED sắc nét, phù hợp cho doanh nhân và người làm sáng tạo nội dung."
   },
   {
     "name": "Laptop MSI Modern 15 H C13M 216VN",
@@ -1667,7 +1779,8 @@
     "category": [
       "văn phòng",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Modern 15 với thiết kế thanh lịch, hiệu năng ổn định, màn hình FHD sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop MSI Modern 14 H D13MG 217VN",
@@ -1681,7 +1794,8 @@
     "category": [
       "văn phòng",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Modern 14 với thiết kế mỏng nhẹ, hiệu năng cao, màn hình FHD+ IPS sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop MSI Venture A14 AI+ A3HMG 004VN",
@@ -1695,7 +1809,8 @@
     "category": [
       "văn phòng",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Venture A14 AI với hiệu năng ổn định, màn hình OLED 2.8K sắc nét, phù hợp cho học tập và làm việc văn phòng."
   },
   {
     "name": "Laptop MSI Prestige 14 AI+ Evo C2VMG 020VN",
@@ -1710,7 +1825,8 @@
       "văn phòng",
       "AI",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Prestige 14 AI với hiệu năng đỉnh cao, màn hình OLED 2.8K sắc nét, phù hợp cho doanh nhân và người làm sáng tạo nội dung."
   },
   {
     "name": "Laptop MSI Prestige 14 AI Evo C1MG 080VN",
@@ -1725,7 +1841,8 @@
       "văn phòng",
       "AI",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Prestige 14 AI với thiết kế thanh lịch, hiệu năng ổn định, màn hình IPS 2.8K sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop MSI Prestige 14 AI Evo C1MG 081VN",
@@ -1740,7 +1857,8 @@
       "văn phòng",
       "AI",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Prestige 14 AI với thiết kế mỏng nhẹ, hiệu năng ổn định, màn hình IPS 2.8K sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop MSI Prestige 13 AI+ Evo A2VMG 040VN",
@@ -1755,7 +1873,8 @@
       "văn phòng",
       "AI",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Prestige 13 AI với thiết kế siêu mỏng nhẹ, hiệu năng cao, màn hình OLED 2.8K sắc nét, phù hợp cho doanh nhân và người làm sáng tạo nội dung."
   },
   {
     "name": "Laptop MSI Prestige 16 AI+ Evo B2VMG 016VN",
@@ -1770,7 +1889,8 @@
       "văn phòng",
       "AI",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Prestige 16 AI với hiệu năng đỉnh cao, màn hình UHD+ OLED sắc nét, phù hợp cho doanh nhân và người làm sáng tạo nội dung."
   },
   {
     "name": "Laptop MSI Prestige 14 AI Studio C1UDXG 058VN",
@@ -1785,7 +1905,8 @@
       "văn phòng",
       "AI",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Prestige 14 Studio với hiệu năng mạnh mẽ, màn hình FHD+ 144Hz sắc nét, card đồ hoạ RTX 3050, phù hợp cho sáng tạo nội dung và giải trí đồ hoạ."
   },
   {
     "name": "Laptop MSI Modern 15 F13MG 082VN",
@@ -1799,7 +1920,8 @@
     "category": [
       "văn phòng",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Modern 15 với thiết kế thanh lịch, hiệu năng ổn định, màn hình FHD sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop MSI Prestige 16 AI Studio B1VFG 082VN",
@@ -1814,7 +1936,8 @@
       "văn phòng",
       "AI",
       "msi"
-    ]
+    ],
+    "description": "Laptop MSI Prestige 16 Studio với hiệu năng đỉnh cao, màn hình UHD+ OLED sắc nét, card đồ hoạ RTX 4060, phù hợp cho sáng tạo nội dung và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Sword 16 HX B14VEKG 856VN",
@@ -1829,7 +1952,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình FHD+ 165Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Thin 15 B13UC 2044VN",
@@ -1844,7 +1968,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với thiết kế mỏng nhẹ, hiệu năng ổn định, màn hình FHD IPS 144Hz sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop gaming MSI Katana   15 B13VEK 2415VN",
@@ -1859,7 +1984,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với cấu hình cơ bản, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí."
   },
   {
     "name": "Laptop gaming MSI Thin 15 B13UC 2081VN",
@@ -1874,7 +2000,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với thiết kế mỏng nhẹ, hiệu năng ổn định, màn hình FHD 144Hz sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop gaming MSI Katana 15 B13VEK 252VN",
@@ -1889,7 +2016,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Katana 15 B13VFK 676VN",
@@ -1904,7 +2032,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình 144Hz, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Thin 15 B13UCX 2080VN",
@@ -1919,7 +2048,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với thiết kế mỏng nhẹ, hiệu năng ổn định, màn hình FHD 144Hz sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop gaming MSI Katana 15 HX B14WEK 295VN",
@@ -1934,7 +2064,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD 165Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Stealth 18 HX AI A2XWJG 073VN",
@@ -1949,7 +2080,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming siêu mạnh với hiệu năng đỉnh cao, màn hình UHD+ MiniLed 120Hz, thiết kế tản nhiệt tối ưu cho game thủ chuyên nghiệp."
   },
   {
     "name": "Laptop gaming MSI Vector 16 HX AI A2XWHG 470VN",
@@ -1964,7 +2096,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng đỉnh cao, màn hình QHD+ 240Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Katana 15 HX B14WGK 023VN",
@@ -1979,7 +2112,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD 165Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Katana 15 HX B14WGK 022VN",
@@ -1994,7 +2128,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng đỉnh cao, màn hình QHD 165Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Stealth A16 AI+ A3XWFG 018VN",
@@ -2009,7 +2144,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng đỉnh cao, màn hình OLED 240Hz sắc nét, card đồ hoạ RTX 5060, phù hợp cho sáng tạo nội dung và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Stealth A16 Mercedes AMG AI+ A3XWGG 032VN",
@@ -2024,7 +2160,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming siêu mạnh với hiệu năng đỉnh cao, màn hình OLED 240Hz sắc nét, card đồ hoạ RTX 5070, phù hợp cho sáng tạo nội dung và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Katana 15 HX B14WFK 294VN",
@@ -2039,7 +2176,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD 165Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Raider 18 HX AI A2XWJG 692VN",
@@ -2054,7 +2192,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming siêu mạnh với hiệu năng đỉnh cao, màn hình UHD+ MiniLed 120Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Katana 15 HX B14WEK 027VN",
@@ -2069,7 +2208,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD 165Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Katana 15 HX B14WFK 267VN",
@@ -2084,7 +2224,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD 165Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Katana 15 HX B14WFK 025VN",
@@ -2099,7 +2240,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD 165Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Katana 15 HX B14WFK 286VN",
@@ -2114,7 +2256,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD 165Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Thin 15 B13VE 2824VN",
@@ -2129,7 +2272,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với thiết kế mỏng nhẹ, hiệu năng ổn định, màn hình FHD 144Hz sắc nét, phù hợp cho học tập và làm việc."
   },
   {
     "name": "Laptop gaming MSI Crosshair 16 HX AI D2XWGKG 034VN",
@@ -2144,7 +2288,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD+ 240Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Crosshair 16 HX AI D2XWGKG 072VN",
@@ -2159,7 +2304,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD+ 240Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Crosshair 16 HX AI D2XWGKG 071VN",
@@ -2174,7 +2320,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD+ 240Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Crosshair 16 HX AI D2XWFKG 036VN",
@@ -2189,7 +2336,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD+ 240Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Crosshair 16 HX AI D2XWFKG 070VN",
@@ -2204,7 +2352,8 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD+ 240Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   },
   {
     "name": "Laptop gaming MSI Vector 16 HX AI A2XWHG 010VN",
@@ -2219,6 +2368,7 @@
       "gamming",
       "đồ hoạ",
       "msi"
-    ]
+    ],
+    "description": "Laptop gaming với hiệu năng mạnh mẽ, màn hình QHD+ 240Hz sắc nét, phù hợp cho học tập, làm việc và giải trí đồ hoạ."
   }
 ]

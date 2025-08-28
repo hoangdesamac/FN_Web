@@ -9,7 +9,8 @@
 			"old_price": "4.190.000₫",
 			"price": "3.050.000₫",
 			"discount": "-27%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "Màn hình LG 24GS60F-B 24 inch IPS, tần số quét 180Hz, hỗ trợ HDR10 và G-Sync, phù hợp cho game thủ cần hình ảnh mượt mà, sắc nét."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/asus_xg259cms_gearvn_6c2308acee8a467d96ea13b8ac20c5f8_medium.jpg",
@@ -20,7 +21,8 @@
 			"resolution": "Full HD (1920 x 1080)",
 			"old_price": "8.490.000₫",
 			"price": "7.590.000₫",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "ASUS ROG Strix XG259CMS 25 inch Fast IPS, tần số quét 310Hz, phản hồi 1ms, hỗ trợ G-Sync, lý tưởng cho eSports và game tốc độ cao."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/gearvn-man-hinh-cong-asus-rog-swift-pg49wcd-1_f6750e9eb7e143169d8b53e36a77e6b0_grande.png",
@@ -32,7 +34,8 @@
 			"old_price": "54.990.000₫",
 			"price": "51.990.000₫",
 			"discount": "-5%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "Màn hình cong Asus ROG Swift PG49WCD 49 inch QD-OLED, độ phân giải 2K, tần số quét 144Hz, thiết kế siêu rộng cho trải nghiệm chơi game đỉnh cao."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/vn-odyssey-neo-g9-g95nc-ls57cg952nexxv-537933911_3923e3e9cf374fafb9ead3a36151d0e4_grande.png",
@@ -44,7 +47,8 @@
 			"old_price": "59.990.000₫",
 			"price": "45.990.000₫",
 			"discount": "-23%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "Samsung Odyssey NEO G9 LS57CG952 57 inch cong, độ phân giải 4K, tần số quét 240Hz, tấm nền VA, phù hợp cho game thủ chuyên nghiệp và đa nhiệm."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/gearvn-man-hinh-cong-asus-rog-swift-pg34wcdm-1_5a24f0c3ac764de5b5bc28a08e27a7e3_grande.png",
@@ -54,7 +58,8 @@
 			"resolution": "2K (3440 x 1440)",
 			"size": "34 inch",
 			"old_price": "39.990.000₫",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "Asus ROG Swift PG34WCDM 34 inch cong, OLED, độ phân giải 2K, tần số quét 144Hz, hỗ trợ USBC, tối ưu cho game thủ và thiết kế đồ họa."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/samsung_ls49dg930sexxv_gearvn_b475b324cf5b4d8e89855eba7d33871c_grande.jpg",
@@ -66,7 +71,8 @@
 			"old_price": "45.990.000₫",
 			"price": "36.890.000₫",
 			"discount": "-20%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "Samsung Odyssey G9 LS49DG930 49 inch cong, OLED, độ phân giải 2K, tần số quét 240Hz, trải nghiệm hình ảnh siêu rộng và mượt mà."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/vn-odyssey-oled-g9-g95sc-ls49cg954sexxv-538666884_ac5167d3b17a441fac0fc47136fd2515_grande.png",
@@ -78,7 +84,8 @@
 			"old_price": "39.990.000₫",
 			"price": "33.590.000₫",
 			"discount": "-16%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "Samsung Odyssey G9 LS49CG954SE 49 inch cong, OLED, độ phân giải 2K, tần số quét 240Hz, thiết kế cho game thủ cao cấp."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/msi_mpg_491cqpx_qd-oled_gearvn_16d6d879bc8043558d736779ff8c3f6d_grande.jpg",
@@ -90,7 +97,8 @@
 			"old_price": "39.900.000₫",
 			"price": "29.490.000₫",
 			"discount": "-26%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "MSI MPG 491CQPX QD-OLED 49 inch cong, QD-OLED, độ phân giải 2K, tần số quét 240Hz, hỗ trợ USBC, chuyên game và đa nhiệm."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/lg_45gs95qe_oled_gearvn_03df3c02fdaa4615a1c9bf54a5e7579d_grande.jpg",
@@ -102,7 +110,8 @@
 			"old_price": "41.290.000₫",
 			"price": "28.990.000₫",
 			"discount": "-30%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "LG 45GS95QE-B UltraGear 45 inch OLED, độ phân giải 2K, tần số quét 240Hz, hỗ trợ G-Sync, dành cho game thủ chuyên nghiệp."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/gearvn-man-hinh-cong-dell-ultrasharp-u3824dw-38-ips-2k-usbc-1_7ced41099af44790b2296456884a5e0e_grande.jpg",
@@ -114,7 +123,8 @@
 			"old_price": "30.990.000₫",
 			"price": "28.990.000₫",
 			"discount": "-6%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "Dell UltraSharp U3824DW 38 inch cong, IPS, độ phân giải 2K, hỗ trợ USBC, phù hợp cho công việc sáng tạo và đa nhiệm."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/adsadf_7a23b313c75c4259ada8975e007a013c_grande.png",
@@ -126,7 +136,8 @@
 			"old_price": "33.990.000₫",
 			"price": "28.490.000₫",
 			"discount": "-16%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "LG 38WR85QC-W 38 inch cong, Nano IPS, độ phân giải 2K, tần số quét 144Hz, hỗ trợ G-Sync, tối ưu cho giải trí và làm việc."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/vn-odyssey-oled-g9-g93sc-ls49cg934sexxv-537211056_dbea4e5b6bbe46858c9889a0f7e02846_grande.png",
@@ -138,7 +149,8 @@
 			"old_price": "39.990.000₫",
 			"price": "28.490.000₫",
 			"discount": "-29%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "Samsung Odyssey G9 LS49CG934 49 inch cong, OLED, độ phân giải 2K, tần số quét 240Hz, trải nghiệm chơi game siêu rộng."
 		},
 		{
 			"image": "https://product.hstatic.net/200000722513/product/lg_32gs95uv_gearvn_130117e8fe6449fb88955a61405acd6d_grande.jpg",
@@ -150,7 +162,8 @@
 			"old_price": "31.990.000₫",
 			"price": "27.890.000₫",
 			"discount": "-13%",
-			"bestsaler": true
+			"bestsaler": true,
+			"description": "LG 32GS95UV-B 32 inch OLED, độ phân giải 4K, tần số quét 240Hz, Dual Mode, chuyên game với hình ảnh sắc nét."
 		},
 		
 	
@@ -164,7 +177,8 @@
 		"old_price": "3.600.000₫",
 		"price": "1.590.000₫",
 		"discount": "-56%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ViewSonic VA2215-H 22 inch VA, tần số quét 100Hz, Full HD, phù hợp cho văn phòng và giải trí cơ bản."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/1_6bf24e36cbd34fd990728781a18e1653_befa433a45b84594bf6aa5a5c8526365_medium.jpg",
@@ -176,7 +190,8 @@
 		"old_price": "4.550.000₫",
 		"price": "1.990.000₫",
 		"discount": "-56%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "Viewsonic VA2432-H 24 inch IPS, tần số quét 100Hz, viền mỏng, Full HD, lý tưởng cho làm việc và học tập."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/asus_vg249q3a_gearvn_05c634ab235d40f8baa5a512bf005b16_medium.jpg",
@@ -188,7 +203,8 @@
 		"old_price": "3.990.000₫",
 		"price": "2.990.000₫",
 		"discount": "-25%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "Asus TUF GAMING VG249Q3A 24 inch Fast IPS, tần số quét 180Hz, hỗ trợ G-Sync, chuyên game tốc độ cao."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/va2708-2k-mhd_gearvn_b12ff93a3b144d268bccd83e4f66802b_medium.jpg",
@@ -200,7 +216,8 @@
 		"old_price": "4.190.000₫",
 		"price": "3.690.000₫",
 		"discount": "-12%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ViewSonic VA2708-2K-MHD 27 inch IPS, độ phân giải 2K, tần số quét 100Hz, phù hợp cho công việc và giải trí."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/large01_c6adf3377eb1458d9b04ad0655dd24ec_medium.jpg",
@@ -212,7 +229,8 @@
 		"old_price": "7.990.000₫",
 		"price": "6.090.000₫",
 		"discount": "-24%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "LG 27GR75Q-B UltraGear 27 inch IPS, độ phân giải 2K, tần số quét 165Hz, hỗ trợ G-Sync, tối ưu cho game thủ."
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/view_td2455_gearvn_50bed5dd2908402684544e6842e5fe3b_grande.jpg",
@@ -224,7 +242,8 @@
 		"old_price": "10.990.000₫",
 		"price": "9.090.000₫",
 		"discount": "-17%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ViewSonic TD2455 24 inch cảm ứng, IPS, Full HD, hỗ trợ USBC, phù hợp cho thuyết trình và làm việc sáng tạo."
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/view_vp2456a_gearvn_d787d732d11c44938e47df4263d7163b_grande.jpg",
@@ -236,7 +255,8 @@
 		"old_price": "6.590.000₫",
 		"price": "5.290.000₫",
 		"discount": "-20%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ViewSonic ColorPro VP2456A 24 inch IPS, tần số quét 120Hz, hỗ trợ USBC, chuyên đồ họa và thiết kế."
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/philips_27m2n3500pa_gearvn_01fb01855cfe479eb9f9da52350a0e1d_grande.jpg",
@@ -248,7 +268,8 @@
 		"old_price": "5.990.000₫",
 		"price": "5.190.000₫",
 		"discount": "-13%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "Philips 27M2N3500PA 27 inch IPS, độ phân giải 2K, tần số quét 260Hz, chuyên game với hình ảnh mượt mà."
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/lg_29u531a-w_gearvn_803970ad14ac4104a6368d8b1fdc6d0d_grande.jpg",
@@ -260,7 +281,8 @@
 		"old_price": "5.990.000₫",
 		"price": "4.990.000₫",
 		"discount": "-17%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "LG 29U531A-W 29 inch IPS, tần số quét 100Hz, hỗ trợ USBC, HDR10, màn hình siêu rộng cho đa nhiệm."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/asus_pa248qv-p_gearvn_c08f0cb35843439781bcafc88e906969_bfdb177dcca04fb3bec044e1dd5aa76a_grande.jpg",
@@ -272,7 +294,8 @@
 		"old_price": "6.290.000₫",
 		"price": "4.890.000₫",
 		"discount": "-22%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ASUS ProArt PA248QV 24 inch IPS, tần số quét 75Hz, tỉ lệ 16:10, chuyên đồ họa và thiết kế."
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/aoc_cs25g_310hz_gearvn_7654b3610132408cbc1c6c0dd1964d6d_grande.jpg",
@@ -284,7 +307,8 @@
 		"old_price": "5.090.000₫",
 		"price": "4.790.000₫",
 		"discount": "-6%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "AOC CS25G 25 inch Fast IPS, tần số quét 310Hz, hỗ trợ G-Sync, chuyên game eSports."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_xg2709a_gearvn_b7d49c8c636841afaa774e6b9a4bfc8f_grande.jpg",
@@ -296,7 +320,8 @@
 		"old_price": "5.790.000₫",
 		"price": "4.690.000₫",
 		"discount": "-19%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ViewSonic XG2709A 27 inch IPS, tần số quét 240Hz, chuyên game với hình ảnh mượt mà."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_vx2780-2k-shdj-2_gearvn_83d6b7c5d3104589aac3919a29212b5c_grande.jpg",
@@ -308,7 +333,8 @@
 		"old_price": "6.790.000₫",
 		"price": "4.690.000₫",
 		"discount": "-31%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ViewSonic VX2780-2K-SHDJ-2 27 inch IPS, độ phân giải 2K, tần số quét 100Hz, phù hợp cho làm việc và giải trí."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/acer_vg271u_m3_gearvn_9a36f6ad9acb457594121de26949c60b_grande.jpg",
@@ -320,7 +346,8 @@
 		"old_price": "5.490.000₫",
 		"price": "4.690.000₫",
 		"discount": "-15%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "Acer VG271U M3 27 inch IPS, độ phân giải 2K, tần số quét 180Hz, chuyên game tốc độ cao."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/msi_mag_255pxf_gearvn_ba67f26790de4f1e873619bbe5ba750c_grande.jpg",
@@ -332,7 +359,8 @@
 		"old_price": "5.990.000₫",
 		"price": "4.590.000₫",
 		"discount": "-23%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "MSI MAG 255PXF 25 inch Rapid IPS, tần số quét 300Hz, hỗ trợ G-Sync, chuyên game FPS."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/vn-odyssey-g5-g55c-ls27cg552eexxv-538902440_78a9c69df6074de698740d3fa28e55a5_grande.png",
@@ -344,7 +372,8 @@
 		"old_price": "7.790.000₫",
 		"price": "4.590.000₫",
 		"discount": "-41%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "Samsung LS27CG552 27 inch cong, VA, độ phân giải 2K, tần số quét 165Hz, chuyên game."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/msi_mag_255xf_gearvn_1c860101b3084c2791b881c9ceff3e90_grande.jpg",
@@ -356,7 +385,8 @@
 		"old_price": "4.990.000₫",
 		"price": "4.390.000₫",
 		"discount": "-12%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "MSI MAG 255XF 25 inch Rapid IPS, tần số quét 300Hz, hỗ trợ FreeSync Premium, tối ưu cho game thủ."
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/aoc_q27g40e_gearvn_a88df3095a384461803faf087b75ff31_grande.jpg",
@@ -368,7 +398,8 @@
 		"old_price": "5.990.000₫",
 		"price": "4.290.000₫",
 		"discount": "-28%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "AOC Q27G40E 27 inch Fast IPS, độ phân giải 2K, tần số quét 180Hz, chuyên game tốc độ cao."
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/lg_24u631a-b_gearvn_59c7eaa3afbf411ba45c0c33191e45a1_grande.jpg",
@@ -380,7 +411,8 @@
 		"old_price": "4.990.000₫",
 		"price": "4.290.000₫",
 		"discount": "-14%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "LG 24U631A-B 24 inch IPS, độ phân giải 2K, tần số quét 100Hz, hỗ trợ USBC, phù hợp cho đa nhiệm."
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/philips_27m3n3540q_gearvn_be2bc92e70844225b6b1911f4b5e099f_grande.jpg",
@@ -392,7 +424,8 @@
 		"old_price": "4.990.000₫",
 		"price": "4.290.000₫",
 		"discount": "-14%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "Philips 27M3N3540Q 27 inch IPS, độ phân giải 2K, tần số quét 210Hz, chuyên game và giải trí."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/aoc_q27g11e_gearvn_94906e7b704c43b9bdf3511170a0c375_grande.jpg",
@@ -404,7 +437,8 @@
 		"old_price": "5.990.000₫",
 		"price": "4.190.000₫",
 		"discount": "-30%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "AOC Q27G11E 27 inch IPS, độ phân giải 2K, tần số quét 180Hz, chuyên game tốc độ cao."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_vx2480-2k-shd-2_gearvn_b9e8f3e912fc412ebac88da2393098a4_grande.jpg",
@@ -416,7 +450,8 @@
 		"old_price": "4.990.000₫",
 		"price": "3.990.000₫",
 		"discount": "-20%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ViewSonic VX2480-2K-SHD-2 24 inch IPS, độ phân giải 2K, tần số quét 100Hz, phù hợp cho làm việc và học tập."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/lg_27gs65f-b_gearvn_2650af629116476588bb61972092b90f_grande.jpg",
@@ -428,7 +463,8 @@
 		"old_price": "5.490.000₫",
 		"price": "3.990.000₫",
 		"discount": "-27%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "LG 27GS65F-B 27 inch IPS, tần số quét 180Hz, hỗ trợ HDR10, G-Sync, chuyên game."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_vx2428aj-bl_gearvn_a1a9750917fe420cb7d880b162d6a1e9_grande.jpg",
@@ -440,7 +476,8 @@
 		"old_price": "4.390.000₫",
 		"price": "3.890.000₫",
 		"discount": "-11%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ViewSonic VX2428AJ-BL 24 inch IPS, tần số quét 240Hz, hỗ trợ G-Sync, chuyên game tốc độ cao."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_vx2428aj-pk_gearvn_f927d9d003a243798e1048dde61c689a_grande.jpg",
@@ -452,7 +489,8 @@
 		"old_price": "4.390.000₫",
 		"price": "3.890.000₫",
 		"discount": "-11%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ViewSonic VX2428AJ-PK 24 inch IPS, tần số quét 240Hz, hỗ trợ G-Sync, chuyên game tốc độ cao."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/acer_sa272u_e_white_gearvn_c53945d4b6bb414aa4220e59388b74ce_grande.jpg",
@@ -464,7 +502,8 @@
 		"old_price": "4.590.000₫",
 		"price": "3.890.000₫",
 		"discount": "-15%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "Acer SA272U-E White 27 inch IPS, độ phân giải 2K, tần số quét 100Hz, thiết kế hiện đại, phù hợp cho văn phòng."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_vx2779a-hd-pro_gearvn_4df9dc714ab141f59c8be5a894f1ff2a_grande.jpg",
@@ -476,7 +515,8 @@
 		"old_price": "5.590.000₫",
 		"price": "3.890.000₫",
 		"discount": "-30%",
-		"bestsaler": true
+		"bestsaler": true,
+		"description": "ViewSonic VX2779A-HD-PRO 27 inch IPS, tần số quét 240Hz, phản hồi 1ms, chuyên game tốc độ cao."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/samsung_ls27fg900xexxv_gearvn_1598edbbd3c44199bab00d600a3a59f5_grande.jpg",
@@ -487,7 +527,8 @@
 		"resolution": "4K (3840 x 2160)",
 		"old_price": "49.990.000₫",
 		"price": "36.990.000₫",
-		"discount": "-26%"
+		"discount": "-26%",
+		"description": "Samsung Odyssey 3D LS27FG900XEXXV 27 inch IPS, độ phân giải 4K, tần số quét 165Hz, hình ảnh sắc nét, chuyên game."
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/aorus_fo27q5p_gearvn_126548821d8342ea862b394c11a839fe_grande.jpg",
@@ -498,7 +539,8 @@
 		"size": "27 inch",
 		"old_price": "34.990.000₫",
 		"price": "33.990.000₫",
-		"discount": "-3%"
+		"discount": "-3%",
+		"description": "AORUS FO27Q5P 27 inch OLED, độ phân giải 2K, tần số quét 500Hz, chuyên game tốc độ cao."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/asus_pg27aqdp_gearvn_06c16bec410f483d8593c8c09a08ecba_grande.jpg",
@@ -509,7 +551,8 @@
 		"panel": "WOLED",
 		"old_price": "39.990.000₫",
 		"price": "32.990.000₫",
-		"discount": "-18%"
+		"discount": "-18%",
+		"description": "Asus ROG Swift PG27AQDP 27 inch WOLED, độ phân giải 2K, tần số quét 480Hz, hỗ trợ G-Sync, chuyên game eSports."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/asus_pg27ucdm_gearvn_55106f235c574cb3924def5fd8566ea8_grande.jpg",
@@ -520,7 +563,8 @@
 		"panel": "QD-OLED",
 		"old_price": "39.990.000₫",
 		"price": "31.990.000₫",
-		"discount": "-20%"
+		"discount": "-20%",
+		"description": "Asus ROG Swift PG27UCDM 27 inch QD-OLED, độ phân giải 4K, tần số quét 240Hz, hỗ trợ G-Sync, chuyên game và đồ họa."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/msi_mpg_272urx_qd-oled_4k_gearvn_abe92b3d8d224d4a8a74c5014fe6bf12_grande.jpg",
@@ -531,7 +575,8 @@
 		"size": "27 inch",
 		"old_price": "39.990.000₫",
 		"price": "31.190.000₫",
-		"discount": "-22%"
+		"discount": "-22%",
+		"description": "MSI MPG 272URX QD-OLED 27 inch, độ phân giải 4K, tần số quét 240Hz, chuyên game với hình ảnh sống động."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/asus_xg27acdng_gearvn_8bfe7dca6acf43739cd59902da11452d_grande.jpg",
@@ -542,7 +587,8 @@
 		"size": "27 inch",
 		"old_price": "27.990.000₫",
 		"price": "26.490.000₫",
-		"discount": "-5%"
+		"discount": "-5%",
+		"description": "Asus ROG Strix XG27ACDNG 27 inch QD-OLED, độ phân giải 2K, tần số quét 360Hz, chuyên game tốc độ cao."
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/msi_272qp_qd-oled_x50_gearvn_84135b887b8646958535ff9a7795d753_grande.jpg",
@@ -553,7 +599,8 @@
 		"refresh_rate": "500 Hz",
 		"old_price": "26.990.000₫",
 		"price": "25.990.000₫",
-		"discount": "-4%"
+		"discount": "-4%",
+		"description": "MSI MAG 272QP QD-OLED X50 27 inch, độ phân giải 2K, tần số quét 500Hz, chuyên game FPS."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/lg_27gx790a-b_gearvn_18880ec6e5a944c2b29c76d85d44d243_grande.jpg",
@@ -564,7 +611,8 @@
 		"panel": "OLED",
 		"old_price": "30.990.000₫",
 		"price": "22.490.000₫",
-		"discount": "-27%"
+		"discount": "-27%",
+		"description": "LG 27GX790A UltraGear 27 inch OLED, độ phân giải 2K, tần số quét 480Hz, hỗ trợ G-Sync, chuyên game tốc độ cao."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/vn-viewfinity-s9-27s90pc-ls27c900paexxv-536835804_7e09900130ec4f708fa6c24684fe7d54_grande.png",
@@ -575,7 +623,8 @@
 		"panel": "IPS",
 		"old_price": "29.990.000₫",
 		"price": "21.490.000₫",
-		"discount": "-28%"
+		"discount": "-28%",
+		"description": "Samsung ViewFinity LS27C900PA 27 inch IPS, độ phân giải 5K, tần số quét 60Hz, hỗ trợ USBC, chuyên đồ họa."
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/lg_27g850a-b_gearvn_70f8b32c27f844179e1f16166ca9a418_grande.jpg",
@@ -586,6 +635,7 @@
 		"resolution": "4K (3840 x 2160)",
 		"old_price": "23.990.000₫",
 		"price": "20.990.000₫",
-		"discount": "-13%"
+		"discount": "-13%",
+		"description": "LG 27G850A-B 27 inch Nano IPS Black, độ phân giải 4K, tần số quét 240Hz, FHD 480Hz, chuyên game và giải trí."
 	}
 ]
