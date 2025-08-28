@@ -124,7 +124,12 @@ async function initializeCartSystem() {
                 return;
             }
 
-            const productId = productCard.getAttribute('data-id') || `prod_${Date.now()}`;
+            const productId = productCard.getAttribute('data-id');
+            if (!productId) {
+                console.error("Thiếu productId, không thể thêm sản phẩm vào giỏ!");
+                return;
+            }
+
             const productName = productCard.querySelector('.product-name')?.textContent.trim() || 'Sản phẩm không tên';
 
             // Giá gốc & sale

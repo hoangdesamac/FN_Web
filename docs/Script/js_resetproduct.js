@@ -862,7 +862,7 @@ window.products = [
         reviews: [],
         bundle: [
             {
-                id: "asus-tuf-m4-wireless",
+                id: "mouse-asus-tuf-m4-wireless",
                 name: "Chuột Gaming Asus TUF M4 Wireless",
                 image: "https://product.hstatic.net/200000722513/product/tuf-gaming-m4-wireless-02_56fe3b15890748738508eb07f20c43c5_large_thumb_d7bfc6df9d2d4aeb9fc22906a8fee7ae_master.jpg",
                 originalPrice: "1.190.000₫",
@@ -872,7 +872,7 @@ window.products = [
                 reviews: 0
             },
             {
-                id: "edra-ek375w-ek398w",
+                id: "keyboard-edra-ek375w-ek398w-white-black-green",
                 name: "Bàn phím E-Dra EK375W EK398W (White + Black + Green)",
                 image: "https://cdn.hstatic.net/products/200000722513/imgi_3_594_ek398w_black_white_green_1__fd6be6580b244eb38d0ad895cc97d764_master.jpg",
                 originalPrice: "1.090.000₫",
@@ -1102,7 +1102,7 @@ window.products = [
         reviews: [],
         bundle: [
             {
-                id: "asus-tuf-m4-wireless",
+                id: "mouse-asus-tuf-m4-wireless",
                 name: "Chuột Gaming Asus TUF M4 Wireless",
                 image: "https://product.hstatic.net/200000722513/product/tuf-gaming-m4-wireless-02_56fe3b15890748738508eb07f20c43c5_large_thumb_d7bfc6df9d2d4aeb9fc22906a8fee7ae_master.jpg",
                 originalPrice: "1.190.000₫",
@@ -1112,7 +1112,7 @@ window.products = [
                 reviews: 0
             },
             {
-                id: "edra-ek375w-ek398w",
+                id: "keyboard-edra-ek375w-ek398w-white-black-green",
                 name: "Bàn phím E-Dra EK375W EK398W (White + Black + Green)",
                 image: "https://cdn.hstatic.net/products/200000722513/imgi_3_594_ek398w_black_white_green_1__fd6be6580b244eb38d0ad895cc97d764_master.jpg",
                 originalPrice: "1.090.000₫",
