@@ -317,35 +317,32 @@ document.addEventListener('click', (e) => {
     const cartIcon = e.target.closest('.cyber-action .bx-cart');
     if (!cartIcon) return;
 
-    e.preventDefault();
+    e.preventDefault(); // ❌ Chặn redirect
 
     const isLoggedIn = !!localStorage.getItem('userName');
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
-    const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
-        giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-    // 🟢 Trường hợp chưa đăng nhập
     if (!isLoggedIn) {
-        const modalEl = document.getElementById("cyber-auth-modal");
+        console.log("⛔ Chưa đăng nhập → chặn vào checkout");
 
+        const modalEl = document.getElementById("cyber-auth-modal");
         if (modalEl) {
-            modalEl.style.display = "flex";   // ép modal hiển thị
+            modalEl.style.display = "flex";
             CyberModal.showLogin?.();
+            console.log("✅ Modal login đã được gọi");
         } else {
-            console.error("❌ Không tìm thấy #cyber-auth-modal trong DOM!");
+            console.warn("⚠️ Không tìm thấy #cyber-auth-modal");
         }
 
         if (typeof showNotification === "function") {
-            showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
+            showNotification("Vui lòng đăng nhập để xem giỏ hàng!", "info");
         }
-
-        return; // luôn chặn, không cho sang checkout
+        return; // DỪNG → KHÔNG redirect
     }
 
-    // 🟢 Đã đăng nhập → vào checkout bình thường
+    // Đã login thì mới vào checkout
     window.location.href = 'resetcheckout.html';
 });
+
 
 
 
