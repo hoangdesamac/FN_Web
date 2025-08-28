@@ -286,11 +286,13 @@ function updateUserDisplay() {
                 localStorage.removeItem('userId');
                 localStorage.removeItem('avatarUrl');
                 localStorage.removeItem('pendingCartItem');
-
-                // Đánh dấu giỏ hàng bị khoá sau khi đăng xuất (không xoá dữ liệu để giữ trạng thái)
-                localStorage.setItem('cartLocked', 'true');
-
-
+                // Kiểm tra giỏ hàng trước khi set cờ
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                if (cart.length > 0) {
+                    localStorage.setItem('cartLocked', 'true');
+                } else {
+                    localStorage.removeItem('cartLocked');
+                }
                 // Cập nhật lại số lượng hiển thị
                 updateCartCount();
 
