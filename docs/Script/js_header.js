@@ -327,28 +327,25 @@ function initCartIconClick() {
         const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
             giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-        // Nếu giỏ hàng bị khóa (logout trước đó) → bắt đăng nhập
+        // Chưa login + giỏ bị khoá → chặn
         if (!isLoggedIn && isLocked) {
-            if (typeof CyberModal !== "undefined" && CyberModal.open) {
-                CyberModal.open();
-            }
+            CyberModal.open?.();
             showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
             return;
         }
 
-        // Nếu chưa đăng nhập nhưng giỏ hàng có sản phẩm → cũng bắt đăng nhập
+        // Chưa login + giỏ có sản phẩm → chặn
         if (!isLoggedIn && cartCount > 0) {
-            if (typeof CyberModal !== "undefined" && CyberModal.open) {
-                CyberModal.open();
-            }
+            CyberModal.open?.();
             showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
             return;
         }
 
-        // Nếu giỏ hàng trống hoặc đã đăng nhập → cho vào trang checkout
+        // Đã login hoặc chưa login + giỏ trống → cho vào checkout
         window.location.href = 'resetcheckout.html';
     });
 }
+
 
 
 
