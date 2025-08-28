@@ -1292,17 +1292,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const isLoggedIn = !!localStorage.getItem('userName');
     const isLocked = localStorage.getItem('cartLocked') === 'true';
 
-    // Nếu chưa login mà giỏ hàng có sản phẩm hoặc bị khóa → chặn ngay
+// Nếu chưa đăng nhập + giỏ hàng bị khoá HOẶC có sản phẩm cũ
     if (!isLoggedIn && (isLocked || totalItems > 0)) {
-        if (typeof CyberModal !== "undefined" && CyberModal.open && document.getElementById("cyber-auth-modal")) {
-            CyberModal.open();
-        }
-
-        if (typeof showNotification === "function") {
-            showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
-        }
-
-        // Ẩn toàn bộ nội dung checkout
+        // ❌ Không mở modal, không showNotification ở đây
+        // ✅ Chỉ ẩn toàn bộ nội dung checkout
         const hideCheckout = () => {
             const container = document.querySelector('.checkout-container');
             if (container) {
@@ -1315,6 +1308,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         return; // Dừng init tiếp
     }
+
 
     // ==== Nếu qua được kiểm tra thì mới chạy phần còn lại ====
     validateGiftCartOnLoad();

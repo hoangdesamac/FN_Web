@@ -327,27 +327,24 @@ function initCartIconClick() {
         const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
             giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-        // 🔒 Chưa đăng nhập
+        // 🟢 Trường hợp chưa đăng nhập
         if (!isLoggedIn) {
-            if (cartCount === 0 && !isLocked) {
-                // ✅ Cho phép vào checkout để hiển thị giỏ hàng trống
-                window.location.href = 'resetcheckout.html';
+            if (isLocked || cartCount > 0) {
+                // Giỏ bị khoá hoặc còn sản phẩm → chặn, mở modal login
+                CyberModal.open?.();
+                showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
             } else {
-                // ❌ Giỏ có sản phẩm HOẶC giỏ đang bị khóa → bắt buộc login
-                if (typeof CyberModal !== "undefined" && CyberModal.open) {
-                    CyberModal.open();
-                }
-                if (typeof showNotification === "function") {
-                    showNotification('Vui lòng đăng nhập để xem giỏ hàng của bạn!', 'info');
-                }
+                // Giỏ trống → vẫn cho xem trang checkout trống
+                window.location.href = 'resetcheckout.html';
             }
             return;
         }
 
-        // 🟢 Đã đăng nhập → vào checkout bình thường
+        // 🟢 Đã đăng nhập → vào bình thường
         window.location.href = 'resetcheckout.html';
     });
 }
+
 
 
 
