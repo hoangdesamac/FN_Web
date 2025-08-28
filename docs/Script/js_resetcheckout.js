@@ -1284,8 +1284,27 @@ function setupPaymentMethodAnimations() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    // ==== Kiểm tra login và trạng thái giỏ hàng trước khi init ====
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
+    const totalItems = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
+        giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
+    const isLoggedIn = !!localStorage.getItem('userName');
+
+    // Nếu có sản phẩm mà chưa đăng nhập → mở modal login
+    if (!isLoggedIn && totalItems > 0) {
+        if (typeof CyberModal !== "undefined" && CyberModal.open) {
+            CyberModal.open();
+        }
+        // Ẩn nội dung giỏ hàng, chỉ hiển thị modal
+        document.querySelector('.checkout-container')?.classList.add('d-none');
+        return; // Không chạy các script giỏ hàng
+    }
+
+    // ==== Nếu qua được kiểm tra thì mới chạy phần còn lại ====
     validateGiftCartOnLoad();
     initializeCartSystem();
+
     loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {
         initHeader();
         const checkDomReady = () => {
@@ -1394,6 +1413,7 @@ document.addEventListener("DOMContentLoaded", function () {
         path: '/transformanimation/emptycart.json'
     });
 });
+
 
 
 function selectMethod(method) {
