@@ -424,6 +424,16 @@ function animateCartIcon() {
 }
 
 function updateCartCount() {
+    // Kiểm tra trạng thái đăng nhập trước
+    const isLoggedIn = !!localStorage.getItem('userName');
+    if (!isLoggedIn) {
+        const cartCountElement = document.querySelector('.cart-count');
+        if (cartCountElement) {
+            cartCountElement.style.display = 'none';
+        }
+        return; // Dừng luôn, không tính giỏ hàng
+    }
+
     const cart = getCart();
     validateGiftCartOnLoad();
     const giftCart = getGiftCart();
@@ -455,6 +465,7 @@ function updateCartCount() {
         cartCountElement.style.display = cartCount > 0 ? 'inline-flex' : 'none';
     }
 }
+
 
 function createNotificationElement() {
     const oldNotification = document.getElementById('notification');
@@ -1276,12 +1287,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ====== CHẶN TRUY CẬP CHECKOUT NẾU CHƯA ĐĂNG NHẬP ======
     if (!localStorage.getItem('userName')) {
-        showNotification('Vui lòng đăng nhập để xem giỏ hàng!', 'info');
-        setTimeout(() => {
-            window.location.href = "index.html";
-        }, 1500);
-        return; // Dừng các script còn lại
+        // Ẩn các phần checkout
+        const checkoutContainer = document.querySelector('.checkout-container');
+        if (checkoutContainer) {
+            checkoutContainer.innerHTML = `
+            <div class="alert alert-warning text-center p-4 mt-4">
+                <h5>Bạn cần đăng nhập để xem giỏ hàng!</h5>
+                <button class="btn btn-primary mt-3" onclick="if (typeof CyberModal !== 'undefined') CyberModal.open();">
+                    Đăng nhập ngay
+                </button>
+            </div>
+        `;
+        }
+
+        // Xóa số lượng giỏ hàng
+        const cartCountEl = document.querySelector('.cart-count');
+        if (cartCountEl) {
+            cartCountEl.style.display = 'none';
+        }
+
+        return; // Không chạy các script liên quan đến giỏ hàng
     }
+
     // =======================================================
 
     validateGiftCartOnLoad();
