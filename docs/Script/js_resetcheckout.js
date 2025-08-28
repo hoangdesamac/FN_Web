@@ -889,7 +889,6 @@ function renderCart() {
     }
 }
 
-
 function updateCartSummary(total) {
     const summaryRows = document.querySelectorAll('.cart-summary__rows .currency-value');
     const shippingFee = total >= 500000 ? 0 : 30000;
@@ -900,6 +899,72 @@ function updateCartSummary(total) {
     }
 }
 
+let provinceDataCheckout = null;
+let provinceListenerAttachedCheckout = false;
+
+async function loadProvinceDataCheckout() {
+    if (provinceDataCheckout) return provinceDataCheckout;
+    try {
+        const res = await fetch("/FormText/danhmucxaphuong.json");
+        provinceDataCheckout = await res.json();
+        return provinceDataCheckout;
+    } catch (err) {
+        console.error("Lỗi load danh mục tỉnh/xã:", err);
+        provinceDataCheckout = [];
+        return provinceDataCheckout;
+    }
+}
+
+async function populateProvinceWardCheckout(preProvince = "", preWard = "") {
+    await loadProvinceDataCheckout();
+    const provinceEl = document.getElementById("province");
+    const wardEl = document.getElementById("ward");
+    if (!provinceEl || !wardEl) return;
+
+    provinceEl.innerHTML = `<option value="">-- Chọn Tỉnh/Thành phố --</option>`;
+    wardEl.innerHTML = `<option value="">-- Chọn Xã/Phường --</option>`;
+
+    provinceDataCheckout
+        .slice()
+        .sort((a,b) => a.tentinhmoi.localeCompare(b.tentinhmoi, 'vi'))
+        .forEach(p => {
+            const opt = document.createElement("option");
+            opt.value = p.tentinhmoi;
+            opt.textContent = p.tentinhmoi;
+            provinceEl.appendChild(opt);
+        });
+
+    const getWards = (provinceName) => {
+        const province = provinceDataCheckout.find(p => p.tentinhmoi === provinceName);
+        if (!province || !province.phuongxa) return [];
+        return province.phuongxa
+            .map(x => x.tenphuongxa)
+            .sort((a,b) => a.localeCompare(b, 'vi'));
+    };
+
+    if (!provinceListenerAttachedCheckout) {
+        provinceEl.addEventListener("change", () => {
+            wardEl.innerHTML = `<option value="">-- Chọn Xã/Phường --</option>`;
+            const wards = getWards(provinceEl.value);
+            wards.forEach(w => {
+                const opt = document.createElement("option");
+                opt.value = w;
+                opt.textContent = w;
+                wardEl.appendChild(opt);
+            });
+        });
+        provinceListenerAttachedCheckout = true;
+    }
+
+    if (preProvince) {
+        provinceEl.value = preProvince;
+        provinceEl.dispatchEvent(new Event("change"));
+        if (preWard) {
+            setTimeout(() => { wardEl.value = preWard; }, 0);
+        }
+    }
+}
+
 function loadDeliveryInfo() {
     const delivery = JSON.parse(localStorage.getItem('deliveryInfo')) || {};
 
@@ -907,7 +972,6 @@ function loadDeliveryInfo() {
     const phoneEl = document.getElementById('recipient-phone');
     const addressEl = document.getElementById('recipient-address');
     const provinceEl = document.getElementById('province');
-    const districtEl = document.getElementById('district');
     const wardEl = document.getElementById('ward');
     const noteEl = document.getElementById('note');
     const invoiceCheckbox = document.getElementById('invoice-required');
@@ -916,7 +980,6 @@ function loadDeliveryInfo() {
     if (phoneEl) phoneEl.value = delivery.phone || '';
     if (addressEl) addressEl.value = delivery.address || '';
     if (provinceEl) provinceEl.value = delivery.province || '';
-    if (districtEl) districtEl.value = delivery.district || '';
     if (wardEl) wardEl.value = delivery.ward || '';
     if (noteEl) noteEl.value = delivery.note || '';
     if (invoiceCheckbox) invoiceCheckbox.checked = delivery.invoiceRequired || true;
@@ -924,14 +987,12 @@ function loadDeliveryInfo() {
 
 function saveDeliveryInfo() {
     const provinceSelect = document.getElementById('province');
-    const districtSelect = document.getElementById('district');
     const wardSelect = document.getElementById('ward');
 
     deliveryInfo = {
         name: document.getElementById('recipient-name').value.trim(),
         phone: document.getElementById('recipient-phone').value.trim(),
         province: provinceSelect.selectedOptions[0]?.textContent || '',
-        district: districtSelect.selectedOptions[0]?.textContent || '',
         ward: wardSelect.selectedOptions[0]?.textContent || '',
         address: document.getElementById('recipient-address').value.trim(),
         note: document.getElementById('note').value.trim(),
@@ -945,11 +1006,10 @@ function validateDeliveryInfo() {
     const nameEl = document.getElementById('recipient-name');
     const phoneEl = document.getElementById('recipient-phone');
     const provinceEl = document.getElementById('province');
-    const districtEl = document.getElementById('district');
     const wardEl = document.getElementById('ward');
     const addressEl = document.getElementById('recipient-address');
 
-    [nameEl, phoneEl, provinceEl, districtEl, wardEl, addressEl].forEach(el => el.classList.remove('input-invalid'));
+    [nameEl, phoneEl, provinceEl, wardEl, addressEl].forEach(el => el.classList.remove('input-invalid'));
 
     let isValid = true;
 
@@ -967,11 +1027,6 @@ function validateDeliveryInfo() {
 
     if (!provinceEl.value) {
         provinceEl.classList.add('input-invalid');
-        isValid = false;
-    }
-
-    if (!districtEl.value) {
-        districtEl.classList.add('input-invalid');
         isValid = false;
     }
 
@@ -1039,7 +1094,7 @@ function renderDeliverySummary() {
     summary.innerHTML = `
         <p><strong>Họ và tên:</strong> ${deliveryInfo.name}</p>
         <p><strong>Số điện thoại:</strong> ${deliveryInfo.phone}</p>
-        <p><strong>Địa chỉ:</strong> ${deliveryInfo.address}, ${deliveryInfo.ward}, ${deliveryInfo.district}, ${deliveryInfo.province}</p>
+        <p><strong>Địa chỉ:</strong> ${deliveryInfo.address}, ${deliveryInfo.ward}, ${deliveryInfo.province}</p>
         ${deliveryInfo.note ? `<p><strong>Ghi chú:</strong> ${deliveryInfo.note}</p>` : ''}
         <p><strong>Yêu cầu xuất hóa đơn:</strong> ${deliveryInfo.invoiceRequired ? 'Có' : 'Không'}</p>
     `;
@@ -1229,59 +1284,6 @@ function updateOrderCount() {
     }
 }
 
-function setupAddressDropdownsFromTree(data) {
-    const provinceSelect = document.getElementById('province');
-    const districtSelect = document.getElementById('district');
-    const wardSelect = document.getElementById('ward');
-
-    if (!provinceSelect || !districtSelect || !wardSelect) return;
-
-    provinceSelect.innerHTML = '<option value="">Chọn tỉnh/thành phố</option>';
-    for (const [provinceCode, provinceObj] of Object.entries(data)) {
-        const opt = document.createElement('option');
-        opt.value = provinceCode;
-        opt.textContent = provinceObj.name;
-        provinceSelect.appendChild(opt);
-    }
-
-    provinceSelect.addEventListener('change', () => {
-        const provinceCode = provinceSelect.value;
-        districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
-        wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-
-        if (!provinceCode || !data[provinceCode]) return;
-
-        const districts = data[provinceCode]['quan-huyen'];
-        for (const [districtCode, districtObj] of Object.entries(districts)) {
-            const opt = document.createElement('option');
-            opt.value = districtCode;
-            opt.textContent = districtObj.name;
-            districtSelect.appendChild(opt);
-        }
-    });
-
-    districtSelect.addEventListener('change', () => {
-        const provinceCode = provinceSelect.value;
-        const districtCode = districtSelect.value;
-        wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-
-        if (
-            !provinceCode ||
-            !districtCode ||
-            !data[provinceCode] ||
-            !data[provinceCode]['quan-huyen'][districtCode]
-        ) return;
-
-        const wards = data[provinceCode]['quan-huyen'][districtCode]['xa-phuong'];
-        for (const [wardCode, wardObj] of Object.entries(wards)) {
-            const opt = document.createElement('option');
-            opt.value = wardCode;
-            opt.textContent = wardObj.name;
-            wardSelect.appendChild(opt);
-        }
-    });
-}
-
 function setupPaymentMethodAnimations() {
     const animations = [
         { containerId: 'lottie-cod', path: '/transformanimation/cod.json' }
@@ -1360,12 +1362,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     loadDeliveryInfo();
-
-    fetch("/FormText/tree.json")
-        .then(res => res.json())
-        .then(data => setupAddressDropdownsFromTree(data))
-        .catch(err => console.error("Lỗi khi tải tree.json:", err));
-
+    populateProvinceWardCheckout();
     setupPaymentMethodAnimations();
 
     document.querySelectorAll('.method-option').forEach(option => {
