@@ -1120,21 +1120,25 @@ async function loadAndRenderProfileAddresses() {
         // Render radio list
         const html = sorted.map(addr => `
     <div class="form-check address-card">
+        <!-- Radio góc trái -->
         <input type="radio" 
                name="profile-address" 
                id="profile-address-${addr.id}" 
                value="${addr.id}" 
-               class="form-check-input"
+               class="form-check-input position-absolute top-0 start-0 m-2"
                ${addr.is_default ? "checked" : ""}>
-        <label for="profile-address-${addr.id}" class="form-check-label d-block">
-            <div><strong>Người nhận:</strong> <strong>${addr.recipient_name}</strong></div>
+
+        <!-- Badge mặc định góc phải -->
+        ${addr.is_default ? `<span class="badge-default">Mặc định</span>` : ""}
+
+        <!-- Nội dung -->
+        <label for="profile-address-${addr.id}" class="form-check-label d-block mt-4">
+            <div><strong>Người nhận:</strong> ${addr.recipient_name}</div>
             <div><strong>SĐT:</strong> ${addr.recipient_phone}</div>
             <div><strong>Địa chỉ:</strong> ${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</div>
         </label>
-        ${addr.is_default ? `<span class="badge-default">Mặc định</span>` : ""}
     </div>
 `).join("");
-
 
         document.getElementById("profile-addresses-list").innerHTML = html;
 

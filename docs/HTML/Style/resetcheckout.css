@@ -440,11 +440,13 @@
     transform: translateY(-2px);
 }
 
-/* Radio input */
-#profile-addresses-list .form-check-input {
-    margin-right: 0.6rem;
+/* Radio luôn cố định góc trái trên */
+.address-card .form-check-input {
+    position: absolute;
+    top: 10px;
+    left: 10px;
     accent-color: var(--primary, #00f2ff);
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 /* Label hiển thị nội dung */
