@@ -2,6 +2,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/lg_24gs60f-b_gearvn_d49057760de2459899aa429092fc505f_medium.jpg",
 			"name": "Màn hình LG 24GS60F-B 24\" IPS 180Hz HDR10 Gsync chuyên game",
+			"data-id": "man-hinh-lg-24gs60f-b-24-ips-180hz-hdr10-gsync-chuyen-game",
 			"refresh_rate": "180 Hz",
 			"resolution": "Full HD (1920 x 1080)",
 			"size": "24 inch",
@@ -15,6 +16,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/asus_xg259cms_gearvn_6c2308acee8a467d96ea13b8ac20c5f8_medium.jpg",
 			"name": "Màn hình ASUS ROG Strix XG259CMS 25\" Fast IPS 310Hz 1ms G-Sync",
+			"data-id": "man-hinh-asus-rog-strix-xg259cms-25-fast-ips-310hz-1ms-g-sync",
 			"panel": "Fast IPS",
 			"refresh_rate": "310 Hz",
 			"size": "25 inch",
@@ -27,6 +29,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/gearvn-man-hinh-cong-asus-rog-swift-pg49wcd-1_f6750e9eb7e143169d8b53e36a77e6b0_grande.png",
 			"name": "Màn hình cong Asus ROG Swift PG49WCD 49\" QD-OLED 2K 144Hz chuyên game",
+			"data-id": "man-hinh-cong-asus-rog-swift-pg49wcd-49-qd-oled-2k-144hz-chuyen-game",
 			"panel": "OLED",
 			"size": "49 inch",
 			"refresh_rate": "144 Hz",
@@ -40,6 +43,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/vn-odyssey-neo-g9-g95nc-ls57cg952nexxv-537933911_3923e3e9cf374fafb9ead3a36151d0e4_grande.png",
 			"name": "Màn hình cong Samsung Odyssey NEO G9 LS57CG952 57\" 4K 240Hz",
+			"data-id": "man-hinh-cong-samsung-odyssey-neo-g9-ls57cg952-57-4k-240hz",
 			"refresh_rate": "240 Hz",
 			"resolution": "4K (7680 x 2160)",
 			"size": "57 inch",
@@ -53,6 +57,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/gearvn-man-hinh-cong-asus-rog-swift-pg34wcdm-1_5a24f0c3ac764de5b5bc28a08e27a7e3_grande.png",
 			"name": "Màn hình cong Asus ROG Swift PG34WCDM 34\" OLED 2K 240Hz USBC chuyên game",
+			"data-id": "man-hinh-cong-asus-rog-swift-pg34wcdm-34-oled-2k-240hz-usbc-chuyen-game",
 			"panel": "OLED",
 			"refresh_rate": "144 Hz",
 			"resolution": "2K (3440 x 1440)",
@@ -64,6 +69,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/samsung_ls49dg930sexxv_gearvn_b475b324cf5b4d8e89855eba7d33871c_grande.jpg",
 			"name": "Màn hình cong Samsung Odyssey G9 LS49DG930 49\" OLED 2K 240Hz USBC",
+			"data-id": "man-hinh-cong-samsung-odyssey-g9-ls49dg930-49-oled-2k-240hz-usbc",
 			"refresh_rate": "240 Hz",
 			"size": "49 inch",
 			"resolution": "2K (5120 x 1440)",
@@ -77,6 +83,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/vn-odyssey-oled-g9-g95sc-ls49cg954sexxv-538666884_ac5167d3b17a441fac0fc47136fd2515_grande.png",
 			"name": "Màn hình cong Samsung Odyssey G9 LS49CG954SE 49\" OLED 2K 240Hz",
+			"data-id": "man-hinh-cong-samsung-odyssey-g9-ls49cg954se-49-oled-2k-240hz",
 			"size": "49 inch",
 			"resolution": "2K (5120 x 1440)",
 			"panel": "OLED",
@@ -90,6 +97,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/msi_mpg_491cqpx_qd-oled_gearvn_16d6d879bc8043558d736779ff8c3f6d_grande.jpg",
 			"name": "Màn hình cong MSI MPG 491CQPX QD-OLED 49\" QD-OLED 2K 240Hz USBC chuyên game",
+			"data-id": "man-hinh-cong-msi-mpg-491cqpx-qd-oled-49-qd-oled-2k-240hz-usbc-chuyen-game",
 			"panel": "QD-OLED",
 			"resolution": "2K (5120 x 1440)",
 			"refresh_rate": "240 Hz",
@@ -103,6 +111,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/lg_45gs95qe_oled_gearvn_03df3c02fdaa4615a1c9bf54a5e7579d_grande.jpg",
 			"name": "Màn hình LG 45GS95QE-B UltraGear 45\" OLED 2K 240Hz G-Sync",
+			"data-id": "man-hinh-lg-45gs95qe-b-ultragear-45-oled-2k-240hz-g-sync",
 			"panel": "OLED",
 			"refresh_rate": "240 Hz",
 			"resolution": "2K (3440 x 1440)",
@@ -116,6 +125,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/gearvn-man-hinh-cong-dell-ultrasharp-u3824dw-38-ips-2k-usbc-1_7ced41099af44790b2296456884a5e0e_grande.jpg",
 			"name": "Màn hình cong Dell UltraSharp U3824DW 38\" IPS 2K USBC",
+			"data-id": "man-hinh-cong-dell-ultrasharp-u3824dw-38-ips-2k-usbc",
 			"size": "38 inch",
 			"refresh_rate": "60Hz",
 			"panel": "IPS",
@@ -129,6 +139,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/adsadf_7a23b313c75c4259ada8975e007a013c_grande.png",
 			"name": "Màn hình cong LG 38WR85QC-W 38\" Nano IPS 2K 144Hz Gsync",
+			"data-id": "man-hinh-cong-lg-38wr85qc-w-38-nano-ips-2k-144hz-gsync",
 			"refresh_rate": "144Hz",
 			"panel": "IPS",
 			"resolution": "2K (3840 x 1600)",
@@ -142,6 +153,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/vn-odyssey-oled-g9-g93sc-ls49cg934sexxv-537211056_dbea4e5b6bbe46858c9889a0f7e02846_grande.png",
 			"name": "Màn hình cong Samsung Odyssey G9 LS49CG934 49\" OLED 2K 240Hz",
+			"data-id": "man-hinh-cong-samsung-odyssey-g9-ls49cg934-49-oled-2k-240hz",
 			"resolution": "2K (5120 x 1440)",
 			"refresh_rate": "240 Hz",
 			"panel": "OLED",
@@ -155,6 +167,7 @@
 		{
 			"image": "https://product.hstatic.net/200000722513/product/lg_32gs95uv_gearvn_130117e8fe6449fb88955a61405acd6d_grande.jpg",
 			"name": "Màn hình LG 32GS95UV-B 32\" OLED 4K 240Hz Dual Mode chuyên game",
+			"data-id": "man-hinh-lg-32gs95uv-b-32-oled-4k-240hz-dual-mode-chuyen-game",
 			"resolution": "4K (3840 x 2160)",
 			"size": "32 inch",
 			"refresh_rate": "240 Hz",
@@ -169,7 +182,8 @@
 	
 	{
 		"image": "https://product.hstatic.net/200000722513/product/viewsonic_va2215-h_gearvn_032d5d53effc48a2887c2879e6bc5cff_dec3d4588289443ca5c2a2b5ce995e02_medium.jpg",
-		"name": "Màn hình ViewSonic VA2215-H 22\" 100Hz FHD",
+			"name": "Màn hình ViewSonic VA2215-H 22\" 100Hz FHD",
+			"data-id": "man-hinh-viewsonic-va2215-h-22-100hz-fhd",
 		"panel": "VA",
 		"resolution": "Full HD (1920 x 1080)",
 		"size": "22 inch",
@@ -182,7 +196,8 @@
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/1_6bf24e36cbd34fd990728781a18e1653_befa433a45b84594bf6aa5a5c8526365_medium.jpg",
-		"name": "Màn hình Viewsonic VA2432-H 24\" IPS 100Hz viền mỏng",
+			"name": "Màn hình Viewsonic VA2432-H 24\" IPS 100Hz viền mỏng",
+			"data-id": "man-hinh-viewsonic-va2432-h-24-ips-100hz-vien-mong",
 		"resolution": "Full HD (1920 x 1080)",
 		"size": "24 inch",
 		"panel": "IPS",
@@ -208,7 +223,8 @@
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/va2708-2k-mhd_gearvn_b12ff93a3b144d268bccd83e4f66802b_medium.jpg",
-		"name": "Màn hình ViewSonic VA2708-2K-MHD 27\" IPS 2K 100Hz",
+			"name": "Màn hình ViewSonic VA2708-2K-MHD 27\" IPS 2K 100Hz",
+			"data-id": "man-hinh-viewsonic-va2708-2k-mhd-27-ips-2k-100hz",
 		"refresh_rate": "100 Hz",
 		"size": "27 inch",
 		"resolution": "2K (2560 x 1440)",
@@ -221,7 +237,8 @@
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/large01_c6adf3377eb1458d9b04ad0655dd24ec_medium.jpg",
-		"name": "Màn hình LG 27GR75Q-B UltraGear 27\" IPS 2K 165Hz Gsync chuyên game",
+			"name": "Màn hình LG 27GR75Q-B UltraGear 27\" IPS 2K 165Hz Gsync chuyên game",
+			"data-id": "man-hinh-lg-27gr75q-b-ultragear-27-ips-2k-165hz-gsync-chuyen-game",
 		"size": "27 inch",
 		"panel": "IPS",
 		"refresh_rate": "165Hz",
@@ -234,7 +251,8 @@
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/view_td2455_gearvn_50bed5dd2908402684544e6842e5fe3b_grande.jpg",
-		"name": "Màn hình cảm ứng ViewSonic TD2455 24\" IPS USBC",
+			"name": "Màn hình cảm ứng ViewSonic TD2455 24\" IPS USBC",
+			"data-id": "man-hinh-cam-ung-viewsonic-td2455-24-ips-usbc",
 		"resolution": "Full HD (1920 x 1080)",
 		"panel": "IPS",
 		"refresh_rate": "60 Hz",
@@ -247,7 +265,8 @@
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/view_vp2456a_gearvn_d787d732d11c44938e47df4263d7163b_grande.jpg",
-		"name": "Màn hình ViewSonic ColorPro VP2456A 24\" IPS 120Hz USBC chuyên đồ hoạ",
+			"name": "Màn hình ViewSonic ColorPro VP2456A 24\" IPS 120Hz USBC chuyên đồ hoạ",
+			"data-id": "man-hinh-viewsonic-colorpro-vp2456a-24-ips-120hz-usbc-chuyen-do-hoa",
 		"resolution": "Full HD (1920 x 1080)",
 		"panel": "IPS",
 		"size": "24 inch",
@@ -260,7 +279,8 @@
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/philips_27m2n3500pa_gearvn_01fb01855cfe479eb9f9da52350a0e1d_grande.jpg",
-		"name": "Màn hình Philips 27M2N3500PA 27\" IPS 2K 260Hz chuyên game",
+			"name": "Màn hình Philips 27M2N3500PA 27\" IPS 2K 260Hz chuyên game",
+			"data-id": "man-hinh-philips-27m2n3500pa-27-ips-2k-260hz-chuyen-game",
 		"refresh_rate": "260 Hz",
 		"size": "27 inch",
 		"panel": "IPS",
@@ -273,7 +293,8 @@
 	},
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/lg_29u531a-w_gearvn_803970ad14ac4104a6368d8b1fdc6d0d_grande.jpg",
-		"name": "Màn hình LG 29U531A-W 29\" IPS 100Hz USBC HDR10 UWFHD",
+			"name": "Màn hình LG 29U531A-W 29\" IPS 100Hz USBC HDR10 UWFHD",
+			"data-id": "man-hinh-lg-29u531a-w-29-ips-100hz-usbc-hdr10-uwfhd",
 		"refresh_rate": "100 Hz",
 		"resolution": "Full HD (1920 x 1080)",
 		"panel": "IPS",
@@ -286,7 +307,8 @@
 	},
 	{
 		"image": "https://product.hstatic.net/200000722513/product/asus_pa248qv-p_gearvn_c08f0cb35843439781bcafc88e906969_bfdb177dcca04fb3bec044e1dd5aa76a_grande.jpg",
-		"name": "Màn hình ASUS ProArt PA248QV 24\" IPS 75Hz 16:10 chuyên đồ họa",
+			"name": "Màn hình ASUS ProArt PA248QV 24\" IPS 75Hz 16:10 chuyên đồ họa",
+			"data-id": "man-hinh-asus-proart-pa248qv-24-ips-75hz-16-10-chuyen-do-hoa",
 		"refresh_rate": "75Hz",
 		"resolution": "Full HD (1920 x 1080)",
 		"size": "24 inch",
@@ -300,6 +322,7 @@
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/aoc_cs25g_310hz_gearvn_7654b3610132408cbc1c6c0dd1964d6d_grande.jpg",
 		"name": "Màn hình AOC CS25G 25\" Fast IPS 310Hz Gsync chuyên game",
+		"data-id": "man-hinh-aoc-cs25g-25-fast-ips-310hz-gsync-chuyen-game",
 		"refresh_rate": "310 Hz",
 		"size": "25 inch",
 		"resolution": "Full HD (1920 x 1080)",
@@ -313,6 +336,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_xg2709a_gearvn_b7d49c8c636841afaa774e6b9a4bfc8f_grande.jpg",
 		"name": "Màn hình ViewSonic XG2709A 27\" IPS 240Hz chuyên game",
+		"data-id": "man-hinh-viewsonic-xg2709a-27-ips-240hz-chuyen-game",
 		"panel": "IPS",
 		"size": "27 inch",
 		"resolution": "Full HD (1920 x 1080)",
@@ -326,6 +350,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_vx2780-2k-shdj-2_gearvn_83d6b7c5d3104589aac3919a29212b5c_grande.jpg",
 		"name": "Màn hình ViewSonic VX2780-2K-SHDJ-2 27\" IPS 2K 100Hz",
+		"data-id": "man-hinh-viewsonic-vx2780-2k-shdj-2-27-ips-2k-100hz",
 		"size": "27 inch",
 		"refresh_rate": "100 Hz",
 		"panel": "IPS",
@@ -339,6 +364,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/acer_vg271u_m3_gearvn_9a36f6ad9acb457594121de26949c60b_grande.jpg",
 		"name": "Màn hình Acer VG271U M3 27\" IPS 2K 180Hz chuyên game",
+		"data-id": "man-hinh-acer-vg271u-m3-27-ips-2k-180hz-chuyen-game",
 		"size": "27 inch",
 		"refresh_rate": "180 Hz",
 		"panel": "IPS",
@@ -352,6 +378,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/msi_mag_255pxf_gearvn_ba67f26790de4f1e873619bbe5ba750c_grande.jpg",
 		"name": "Màn hình MSI MAG 255PXF 25\" Rapid IPS 300Hz Gsync chuyên game",
+		"data-id": "man-hinh-msi-mag-255pxf-25-rapid-ips-300hz-gsync-chuyen-game",
 		"panel": "IPS",
 		"size": "25 inch",
 		"refresh_rate": "300 Hz",
@@ -365,6 +392,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/vn-odyssey-g5-g55c-ls27cg552eexxv-538902440_78a9c69df6074de698740d3fa28e55a5_grande.png",
 		"name": "Màn hình cong Samsung LS27CG552 27\" 2K 165Hz chuyên game",
+		"data-id": "man-hinh-cong-samsung-ls27cg552-27-2k-165hz-chuyen-game",
 		"size": "27 inch",
 		"refresh_rate": "165 Hz",
 		"resolution": "2K (2560 x 1440)",
@@ -378,6 +406,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/msi_mag_255xf_gearvn_1c860101b3084c2791b881c9ceff3e90_grande.jpg",
 		"name": "Màn hình MSI MAG 255XF 25\" Rapid IPS 300Hz FreeSync Premium chuyên game",
+		"data-id": "man-hinh-msi-mag-255xf-25-rapid-ips-300hz-freesync-premium-chuyen-game",
 		"resolution": "Full HD (1920 x 1080)",
 		"refresh_rate": "300 Hz",
 		"size": "25 inch",
@@ -391,6 +420,7 @@
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/aoc_q27g40e_gearvn_a88df3095a384461803faf087b75ff31_grande.jpg",
 		"name": "Màn hình AOC Q27G40E 27\" Fast IPS 2K 180Hz chuyên game",
+		"data-id": "man-hinh-aoc-q27g40e-27-fast-ips-2k-180hz-chuyen-game",
 		"panel": "Fast IPS",
 		"refresh_rate": "180 Hz",
 		"resolution": "2K (2560 x 1440)",
@@ -404,6 +434,7 @@
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/lg_24u631a-b_gearvn_59c7eaa3afbf411ba45c0c33191e45a1_grande.jpg",
 		"name": "Màn hình LG 24U631A-B 24\" IPS 2K 100Hz USBC",
+		"data-id": "man-hinh-lg-24u631a-b-24-ips-2k-100hz-usbc",
 		"panel": "IPS",
 		"resolution": "2K (2560 x 1440)",
 		"refresh_rate": "100 Hz",
@@ -417,6 +448,7 @@
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/philips_27m3n3540q_gearvn_be2bc92e70844225b6b1911f4b5e099f_grande.jpg",
 		"name": "Màn hình Philips 27M3N3540Q 27\" IPS 2K 210Hz chuyên game",
+		"data-id": "man-hinh-philips-27m3n3540q-27-ips-2k-210hz-chuyen-game",
 		"resolution": "2K (2560 x 1440)",
 		"refresh_rate": "210 Hz",
 		"panel": "IPS",
@@ -430,6 +462,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/aoc_q27g11e_gearvn_94906e7b704c43b9bdf3511170a0c375_grande.jpg",
 		"name": "Màn hình AOC Q27G11E 27\" IPS 2K 180Hz chuyên game",
+		"data-id": "man-hinh-aoc-q27g11e-27-ips-2k-180hz-chuyen-game",
 		"refresh_rate": "180 Hz",
 		"size": "27 inch",
 		"panel": "IPS",
@@ -443,6 +476,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_vx2480-2k-shd-2_gearvn_b9e8f3e912fc412ebac88da2393098a4_grande.jpg",
 		"name": "Màn hình ViewSonic VX2480-2K-SHD-2 24\" IPS 2K 100Hz",
+		"data-id": "man-hinh-viewsonic-vx2480-2k-shd-2-24-ips-2k-100hz",
 		"resolution": "2K (2560 x 1440)",
 		"refresh_rate": "100 Hz",
 		"size": "24 inch",
@@ -456,6 +490,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/lg_27gs65f-b_gearvn_2650af629116476588bb61972092b90f_grande.jpg",
 		"name": "Màn hình LG 27GS65F-B 27\" IPS 180Hz HDR10 Gsync chuyên game",
+		"data-id": "man-hinh-lg-27gs65f-b-27-ips-180hz-hdr10-gsync-chuyen-game",
 		"refresh_rate": "180 Hz",
 		"panel": "IPS",
 		"resolution": "Full HD (1920 x 1080)",
@@ -469,6 +504,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_vx2428aj-bl_gearvn_a1a9750917fe420cb7d880b162d6a1e9_grande.jpg",
 		"name": "Màn hình ViewSonic VX2428AJ-BL 24\" IPS 240Hz Gsync chuyên game",
+		"data-id": "man-hinh-viewsonic-vx2428aj-bl-24-ips-240hz-gsync-chuyen-game",
 		"size": "24 inch",
 		"resolution": "Full HD (1920 x 1080)",
 		"panel": "IPS",
@@ -482,6 +518,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_vx2428aj-pk_gearvn_f927d9d003a243798e1048dde61c689a_grande.jpg",
 		"name": "Màn hình ViewSonic VX2428AJ-PK 24\" IPS 240Hz Gsync chuyên game",
+		"data-id": "man-hinh-viewsonic-vx2428aj-pk-24-ips-240hz-gsync-chuyen-game",
 		"size": "24 inch",
 		"resolution": "Full HD (1920 x 1080)",
 		"refresh_rate": "240 Hz",
@@ -495,6 +532,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/acer_sa272u_e_white_gearvn_c53945d4b6bb414aa4220e59388b74ce_grande.jpg",
 		"name": "Màn hình Acer SA272U-E White 27\" IPS 2K 100Hz",
+		"data-id": "man-hinh-acer-sa272u-e-white-27-ips-2k-100hz",
 		"panel": "IPS",
 		"size": "27 inch",
 		"refresh_rate": "100 Hz",
@@ -508,6 +546,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/view_vx2779a-hd-pro_gearvn_4df9dc714ab141f59c8be5a894f1ff2a_grande.jpg",
 		"name": "Màn hình ViewSonic VX2779A-HD-PRO 27\" IPS 240Hz 1ms chuyên game",
+		"data-id": "man-hinh-viewsonic-vx2779a-hd-pro-27-ips-240hz-1ms-chuyen-game",
 		"refresh_rate": "240 Hz",
 		"resolution": "Full HD (1920 x 1080)",
 		"size": "27 inch",
@@ -521,6 +560,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/samsung_ls27fg900xexxv_gearvn_1598edbbd3c44199bab00d600a3a59f5_grande.jpg",
 		"name": "Màn hình Samsung Odyssey 3D LS27FG900XEXXV 27\" IPS 4K 165Hz",
+		"data-id": "man-hinh-samsung-odyssey-3d-ls27fg900xexxv-27-ips-4k-165hz",
 		"size": "27 inch",
 		"panel": "IPS",
 		"refresh_rate": "165 Hz",
@@ -533,6 +573,7 @@
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/aorus_fo27q5p_gearvn_126548821d8342ea862b394c11a839fe_grande.jpg",
 		"name": "Màn hình AORUS FO27Q5P 27\" OLED 2K 500Hz chuyên game",
+		"data-id": "man-hinh-aorus-fo27q5p-27-oled-2k-500hz-chuyen-game",
 		"panel": "QD-OLED",
 		"refresh_rate": "500 Hz",
 		"resolution": "2K (2560 x 1440)",
@@ -545,6 +586,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/asus_pg27aqdp_gearvn_06c16bec410f483d8593c8c09a08ecba_grande.jpg",
 		"name": "Màn hình Asus ROG Swift PG27AQDP 27\" WOLED 2K 480Hz Gsync chuyên game",
+		"data-id": "man-hinh-asus-rog-swift-pg27aqdp-27-woled-2k-480hz-gsync-chuyen-game",
 		"refresh_rate": "480 Hz",
 		"size": "27 inch",
 		"resolution": "2K (2560 x 1440)",
@@ -557,6 +599,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/asus_pg27ucdm_gearvn_55106f235c574cb3924def5fd8566ea8_grande.jpg",
 		"name": "Màn hình Asus ROG Swift PG27UCDM 27\" QD-OLED 4K 240Hz Gsync chuyên game",
+		"data-id": "man-hinh-asus-rog-swift-pg27ucdm-27-qd-oled-4k-240hz-gsync-chuyen-game",
 		"size": "27 inch",
 		"refresh_rate": "240 Hz",
 		"resolution": "4K (3840 x 2160)",
@@ -569,6 +612,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/msi_mpg_272urx_qd-oled_4k_gearvn_abe92b3d8d224d4a8a74c5014fe6bf12_grande.jpg",
 		"name": "Màn hình MSI MPG 272URX QD-OLED 27\" QD-OLED 4K 240Hz chuyên game",
+		"data-id": "man-hinh-msi-mpg-272urx-qd-oled-27-qd-oled-4k-240hz-chuyen-game",
 		"refresh_rate": "240 Hz",
 		"resolution": "4K (3840 x 2160)",
 		"panel": "QD-OLED",
@@ -581,6 +625,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/asus_xg27acdng_gearvn_8bfe7dca6acf43739cd59902da11452d_grande.jpg",
 		"name": "Màn hình Asus ROG Strix XG27ACDNG 27\" QD-OLED 2K 360Hz chuyên game",
+		"data-id": "man-hinh-asus-rog-strix-xg27acdng-27-qd-oled-2k-360hz-chuyen-game",
 		"resolution": "2K (2560 x 1440)",
 		"panel": "QD-OLED",
 		"refresh_rate": "360 Hz",
@@ -593,6 +638,7 @@
 	{
 		"image": "https://cdn.hstatic.net/products/200000722513/msi_272qp_qd-oled_x50_gearvn_84135b887b8646958535ff9a7795d753_grande.jpg",
 		"name": "Màn hình MSI MAG 272QP QD-OLED X50 27\" QD-OLED 2K 500Hz chuyên game",
+		"data-id": "man-hinh-msi-mag-272qp-qd-oled-x50-27-qd-oled-2k-500hz-chuyen-game",
 		"resolution": "2K (2560 x 1440)",
 		"panel": "QD-OLED",
 		"size": "27 inch",
@@ -605,6 +651,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/lg_27gx790a-b_gearvn_18880ec6e5a944c2b29c76d85d44d243_grande.jpg",
 		"name": "Màn hình LG 27GX790A UltraGear 27\" OLED 2K 480Hz Gsync chuyên game",
+		"data-id": "man-hinh-lg-27gx790a-ultragear-27-oled-2k-480hz-gsync-chuyen-game",
 		"size": "27 inch",
 		"refresh_rate": "480 Hz",
 		"resolution": "2K (2560 x 1440)",
@@ -617,6 +664,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/vn-viewfinity-s9-27s90pc-ls27c900paexxv-536835804_7e09900130ec4f708fa6c24684fe7d54_grande.png",
 		"name": "Màn hình Samsung ViewFinity LS27C900PA 27\" IPS 5K USBC chuyên đồ họa",
+		"data-id": "man-hinh-samsung-viewfinity-ls27c900pa-27-ips-5k-usbc-chuyen-do-hoa",
 		"refresh_rate": "60 Hz",
 		"resolution": "5K (5120 x 2880)",
 		"size": "27 inch",
@@ -629,6 +677,7 @@
 	{
 		"image": "https://product.hstatic.net/200000722513/product/lg_27g850a-b_gearvn_70f8b32c27f844179e1f16166ca9a418_grande.jpg",
 		"name": "Màn hình LG 27G850A-B 27\" Nano IPS Black 4K 240Hz-FHD 480Hz chuyên game",
+		"data-id": "man-hinh-lg-27g850a-b-27-nano-ips-black-4k-240hz-fhd-480hz-chuyen-game",
 		"refresh_rate": "240 Hz",
 		"size": "27 inch",
 		"panel": "Nano IPS Black",

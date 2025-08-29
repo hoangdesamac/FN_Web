@@ -1,6 +1,7 @@
 [
   {
-    "name": "PC Intel i7-14700F/ VGA RTX 3060",
+  "name": "PC Intel i7-14700F/ VGA RTX 3060",
+  "data-id": "pc-intel-i7-14700f-vga-rtx-3060",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 3060",
@@ -14,7 +15,8 @@
     ,"price": 21500000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RTX 3060 Ti",
+  "name": "PC Intel i7-14700F/ VGA RTX 3060 Ti",
+  "data-id": "pc-intel-i7-14700f-vga-rtx-3060-ti",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 3060 Ti",
@@ -28,7 +30,8 @@
     ,"price": 22900000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RTX 3070",
+  "name": "PC Intel i7-14700F/ VGA RTX 3070",
+  "data-id": "pc-intel-i7-14700f-vga-rtx-3070",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 3070",
@@ -42,7 +45,8 @@
     ,"price": 25900000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RTX 4060",
+  "name": "PC Intel i7-14700F/ VGA RTX 4060",
+  "data-id": "pc-intel-i7-14700f-vga-rtx-4060",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 4060",
@@ -56,7 +60,8 @@
     ,"price": 20900000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RTX 4060 Ti",
+  "name": "PC Intel i7-14700F/ VGA RTX 4060 Ti",
+  "data-id": "pc-intel-i7-14700f-vga-rtx-4060-ti",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 4060 Ti",
@@ -70,7 +75,8 @@
     ,"price": 22500000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RTX 4070",
+  "name": "PC Intel i7-14700F/ VGA RTX 4070",
+  "data-id": "pc-intel-i7-14700f-vga-rtx-4070",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 4070",
@@ -84,7 +90,8 @@
     ,"price": 26900000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RX 6600",
+  "name": "PC Intel i7-14700F/ VGA RX 6600",
+  "data-id": "pc-intel-i7-14700f-vga-rx-6600",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 6600",
@@ -98,7 +105,8 @@
     ,"price": 18500000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RX 6700 XT",
+  "name": "PC Intel i7-14700F/ VGA RX 6700 XT",
+  "data-id": "pc-intel-i7-14700f-vga-rx-6700-xt",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 6700 XT",
@@ -112,7 +120,8 @@
     ,"price": 20500000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RX 6750 XT",
+  "name": "PC Intel i7-14700F/ VGA RX 6750 XT",
+  "data-id": "pc-intel-i7-14700f-vga-rx-6750-xt",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 6750 XT",
@@ -126,7 +135,8 @@
     ,"price": 21500000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RX 7600",
+  "name": "PC Intel i7-14700F/ VGA RX 7600",
+  "data-id": "pc-intel-i7-14700f-vga-rx-7600",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 7600",
@@ -140,7 +150,8 @@
     ,"price": 19500000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RX 7700 XT",
+  "name": "PC Intel i7-14700F/ VGA RX 7700 XT",
+  "data-id": "pc-intel-i7-14700f-vga-rx-7700-xt",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 7700 XT",
@@ -154,7 +165,8 @@
     ,"price": 22500000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RX 7800 XT",
+  "name": "PC Intel i7-14700F/ VGA RX 7800 XT",
+  "data-id": "pc-intel-i7-14700f-vga-rx-7800-xt",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 7800 XT",
@@ -168,7 +180,8 @@
     ,"price": 24900000
   },
   {
-    "name": "PC Intel i5-13400F/ VGA RTX 4060",
+  "name": "PC Intel i5-13400F/ VGA RTX 4060",
+  "data-id": "pc-intel-i5-13400f-vga-rtx-4060",
     "image": "https://product.hstatic.net/200000722513/product/luxs_2304c8fb845340a68d18cac9c3f298db_grande.png",
     "cpu": "Intel Core i5-13400F",
     "gpu": "NVIDIA GeForce RTX 4060",
@@ -182,7 +195,8 @@
     ,"price": 17500000
   },
   {
-    "name": "PC Intel Ryzen 5 5600X/ VGA RTX 4060",
+  "name": "PC Intel Ryzen 5 5600X/ VGA RTX 4060",
+  "data-id": "pc-intel-ryzen-5-5600x-vga-rtx-4060",
     "image": "https://product.hstatic.net/200000722513/product/luxs_2304c8fb845340a68d18cac9c3f298db_grande.png",
     "cpu": "AMD Ryzen R5 5600X",
     "gpu": "NVIDIA GeForce RTX 4060",
@@ -196,7 +210,8 @@
     ,"price": 16500000
   },
   {
-    "name": "PC Intel Ryzen 5 5600X/ VGA RX 7600",
+  "name": "PC Intel Ryzen 5 5600X/ VGA RX 7600",
+  "data-id": "pc-intel-ryzen-5-5600x-vga-rx-7600",
     "image": "https://product.hstatic.net/200000722513/product/luxs_2304c8fb845340a68d18cac9c3f298db_grande.png",
     "cpu": "AMD Ryzen R5 5600X",
     "gpu": "AMD Radeon RX 7600",
@@ -210,7 +225,8 @@
     ,"price": 15500000
   },
   {
-    "name": "PC INT x MSI Dragon GODLIKE (Intel Core Ultra 9 285K/RTX 5090)",
+  "name": "PC INT x MSI Dragon GODLIKE (Intel Core Ultra 9 285K/RTX 5090)",
+  "data-id": "pc-int-x-msi-dragon-godlike-intel-core-ultra-9-285k-rtx-5090",
     "image": "https://product.hstatic.net/200000722513/product/pc_msi_rtx_5090_-_5_68d07b59f2ad428b8f054c885a8d966b_master.png",
     "cpu": "Intel Core Ultra 9 285K",
     "gpu": "NVIDIA GeForce RTX 5090",
@@ -224,7 +240,8 @@
     "price": 182990000
   },
   {
-    "name": "PC AMD x ASUS - Extreme (AMD Ryzen 9 9950X3D/VGA RTX 5090)",
+  "name": "PC AMD x ASUS - Extreme (AMD Ryzen 9 9950X3D/VGA RTX 5090)",
+  "data-id": "pc-amd-x-asus-extreme-amd-ryzen-9-9950x3d-vga-rtx-5090",
     "image": "https://cdn.hstatic.net/products/200000722513/nen_trang_web_7_854706637506408c9382cfce61f80b2b_master.png",
     "cpu": "AMD Ryzen R9 9950X3D",
     "gpu": "NVIDIA GeForce RTX 5090",
@@ -238,7 +255,8 @@
     "price": 199990000
   },
   {
-    "name": "PC Intel i3-12100F/ VGA RX 6500XT (Powered by ASUS)",
+  "name": "PC Intel i3-12100F/ VGA RX 6500XT (Powered by ASUS)",
+  "data-id": "pc-intel-i3-12100f-vga-rx-6500xt-powered-by-asus",
     "image": "https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_master.png",
     "cpu": "Intel Core i3-12100F",
     "gpu": "AMD Radeon RX 6500XT",
@@ -252,7 +270,8 @@
     "price": 10490000
   },
   {
-    "name": "PC Intel i3-12100F/ VGA RTX 3050",
+  "name": "PC Intel i3-12100F/ VGA RTX 3050",
+  "data-id": "pc-intel-i3-12100f-vga-rtx-3050",
     "image": "https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_master.png",
     "cpu": "Intel Core i3-12100F",
     "gpu": "NVIDIA GeForce RTX 3050",
@@ -266,7 +285,8 @@
     "price": 12490000
   },
   {
-    "name": "PC Intel i5-12400F/ VGA RTX 3050",
+  "name": "PC Intel i5-12400F/ VGA RTX 3050",
+  "data-id": "pc-intel-i5-12400f-vga-rtx-3050",
     "image": "https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_master.png",
     "cpu": "Intel Core i5-12400F",
     "gpu": "NVIDIA GeForce RTX 3050",
@@ -280,7 +300,8 @@
     "price": 14290000
   },
   {
-    "name": "PC Intel Core Ultra 7 265KF/ VGA RTX 5080 (Powered by MSI)",
+  "name": "PC Intel Core Ultra 7 265KF/ VGA RTX 5080 (Powered by MSI)",
+  "data-id": "pc-intel-core-ultra-7-265kf-vga-rtx-5080-powered-by-msi",
     "image": "https://product.hstatic.net/200000722513/product/msi_4080_super_white_-_3_a5d5635b419c4365903479a05227ed1d_master.png",
     "cpu": "Intel Core Ultra 7 265KF",
     "gpu": "NVIDIA GeForce RTX 5080",
@@ -294,7 +315,8 @@
     "price": 70990000
   },
   {
-    "name": "PC Intel Core Ultra 7 265KF/ VGA RTX 5080",
+  "name": "PC Intel Core Ultra 7 265KF/ VGA RTX 5080",
+  "data-id": "pc-intel-core-ultra-7-265kf-vga-rtx-5080",
     "image": "https://product.hstatic.net/200000722513/product/pc_gvn_coolermaster_nen_trang_website_8_6683a09f958341f1b3bd8990e297a366_master.png",
     "cpu": "Intel Core Ultra 7 265KF",
     "gpu": "NVIDIA GeForce RTX 5080",
@@ -308,7 +330,8 @@
     "price": 71190000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RTX 5070",
+  "name": "PC Intel i7-14700F/ VGA RTX 5070",
+  "data-id": "pc-intel-i7-14700f-vga-rtx-5070",
     "image": "https://product.hstatic.net/200000722513/product/smart_47167eeee1924076ab176aeb1d424827_master.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 5070",
@@ -322,7 +345,8 @@
     "price": 46990000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RTX 5060",
+  "name": "PC Intel i7-14700F/ VGA RTX 5060",
+  "data-id": "pc-intel-i7-14700f-vga-rtx-5060",
     "image": "https://product.hstatic.net/200000722513/product/smart_47167eeee1924076ab176aeb1d424827_master.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 5060",
@@ -336,7 +360,8 @@
     "price": 33790000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RTX 4070 Super",
+  "name": "PC Intel i7-14700F/ VGA RTX 4070 Super",
+  "data-id": "pc-intel-i7-14700f-vga-rtx-4070-super",
     "image": "https://product.hstatic.net/200000722513/product/smart_47167eeee1924076ab176aeb1d424827_master.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 4070Sup",
@@ -350,7 +375,8 @@
     "price": 41990000
   },
   {
-    "name": "PC Intel i7-14700F/ VGA RTX 5060Ti",
+  "name": "PC Intel i7-14700F/ VGA RTX 5060Ti",
+  "data-id": "pc-intel-i7-14700f-vga-rtx-5060ti",
     "image": "https://product.hstatic.net/200000722513/product/smart_47167eeee1924076ab176aeb1d424827_master.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 5060Ti",
