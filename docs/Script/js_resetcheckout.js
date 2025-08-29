@@ -1119,20 +1119,21 @@ async function loadAndRenderProfileAddresses() {
 
         // Render radio list
         const html = sorted.map(addr => `
-            <div class="form-check mb-2">
-                <input type="radio" 
-                       name="profile-address" 
-                       id="profile-address-${addr.id}" 
-                       value="${addr.id}" 
-                       class="form-check-input"
-                       ${addr.is_default ? "checked" : ""}>
-                <label for="profile-address-${addr.id}" class="form-check-label">
-                    <strong>${addr.recipient_name}</strong> (${addr.recipient_phone})<br>
-                    ${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}
-                    ${addr.is_default ? `<span class="badge bg-success ms-2">Mặc định</span>` : ""}
-                </label>
-            </div>
-        `).join("");
+    <div class="form-check mb-3 p-2 border rounded">
+        <input type="radio" 
+               name="profile-address" 
+               id="profile-address-${addr.id}" 
+               value="${addr.id}" 
+               class="form-check-input"
+               ${addr.is_default ? "checked" : ""}>
+        <label for="profile-address-${addr.id}" class="form-check-label d-block">
+            <div><strong>Người nhận:</strong> <strong>${addr.recipient_name}</strong></div>
+            <div><strong>SĐT:</strong> ${addr.recipient_phone}</div>
+            <div><strong>Địa chỉ:</strong> ${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</div>
+            ${addr.is_default ? `<span class="badge bg-success mt-1">Mặc định</span>` : ""}
+        </label>
+    </div>
+`).join("");
 
         document.getElementById("profile-addresses-list").innerHTML = html;
 
