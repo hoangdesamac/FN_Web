@@ -2,7 +2,6 @@
 function initHeaderScrollEffect() {
     const header = document.querySelector('.cyber-header');
     if (!header) return;
-
     window.addEventListener('scroll', () => {
         header.classList.toggle('scrolled', window.scrollY > 50);
     });
@@ -11,7 +10,6 @@ function initHeaderScrollEffect() {
 function initBannerHeaderWrapper() {
     const wrapper = document.getElementById('header-wrapper');
     if (!wrapper) return;
-
     window.addEventListener('scroll', () => {
         if (window.scrollY > 100) {
             wrapper.classList.add('hide-banner');
@@ -26,15 +24,14 @@ function initCartCountEffect() {
     updateCartCount();
 }
 
+// 🛒 Giỏ hàng
 function updateCartCount() {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
-    const normalCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-    const giftCount = giftCart.reduce((total, g) => total + (g.quantity || 0), 0);
-    const cartCount = normalCount + giftCount;
+    const cartCountElement = document.querySelector('.cart-count');
+    if (!cartCountElement) return;
 
-    // Đồng bộ giỏ hàng từ server nếu đã đăng nhập
     const isLoggedIn = !!localStorage.getItem('userName');
+    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
+
     if (isLoggedIn) {
         fetch(`${window.API_BASE}/api/cart`, {
             method: 'GET',
@@ -43,55 +40,45 @@ function updateCartCount() {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    // Merge giỏ hàng từ server với localStorage
                     const serverCart = data.cart || [];
-                    const mergedCart = [
-                        ...serverCart,
-                        ...cart.filter(localItem => !serverCart.some(serverItem => serverItem.id === localItem.id))
-                    ];
-                    localStorage.setItem('cart', JSON.stringify(mergedCart));
-                    cart = mergedCart;
-                    // Cập nhật lại số lượng
-                    const updatedNormalCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-                    const updatedCartCount = updatedNormalCount + giftCount;
+                    const count = serverCart.reduce((t, i) => t + (i.quantity || 1), 0) +
+                        giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-                    const cartCountElement = document.querySelector('.cart-count');
-                    if (cartCountElement) {
-                        const oldCount = parseInt(cartCountElement.textContent || '0');
-                        if (oldCount !== updatedCartCount) {
-                            cartCountElement.classList.add('cart-count-update');
-                            setTimeout(() => {
-                                cartCountElement.classList.remove('cart-count-update');
-                            }, 500);
-                        }
-                        cartCountElement.textContent = updatedCartCount;
-                        cartCountElement.style.display = updatedCartCount > 0 ? 'inline-flex' : 'none';
-                    }
+                    cartCountElement.textContent = count;
+                    cartCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
                 }
             })
             .catch(err => console.error('Lỗi lấy giỏ hàng từ server:', err));
     } else {
-        const cartCountElement = document.querySelector('.cart-count');
-        if (cartCountElement) {
-            const oldCount = parseInt(cartCountElement.textContent || '0');
-            if (oldCount !== cartCount) {
-                cartCountElement.classList.add('cart-count-update');
-                setTimeout(() => {
-                    cartCountElement.classList.remove('cart-count-update');
-                }, 500);
-            }
-            cartCountElement.textContent = cartCount;
-            cartCountElement.style.display = cartCount > 0 ? 'inline-flex' : 'none';
-        }
+        // ❌ Chưa login → luôn ẩn icon số lượng
+        cartCountElement.style.display = "none";
     }
 }
 
-function updateOrderCount() {
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+// 📦 Đơn hàng
+async function updateOrderCount() {
     const orderCountElement = document.querySelector('.order-count');
-    if (orderCountElement) {
-        orderCountElement.textContent = orders.length;
-        orderCountElement.style.display = orders.length > 0 ? 'inline-flex' : 'none';
+    if (!orderCountElement) return;
+
+    const isLoggedIn = !!localStorage.getItem('userName');
+    if (isLoggedIn) {
+        try {
+            const res = await fetch(`${window.API_BASE}/api/orders`, {
+                method: "GET",
+                credentials: "include"
+            });
+            const data = await res.json();
+            if (data.success) {
+                const count = data.orders.length;
+                orderCountElement.textContent = count;
+                orderCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
+            }
+        } catch (err) {
+            console.error("Lỗi lấy đơn hàng từ server:", err);
+        }
+    } else {
+        orderCountElement.style.display = "none";
     }
 }
 
@@ -137,7 +124,6 @@ function initResponsiveHandler() {
     function updateLayout() {
         searchContainer.style.maxWidth = window.innerWidth <= 768 ? '100%' : '500px';
     }
-
     updateLayout();
     window.addEventListener('resize', updateLayout);
 }
@@ -169,7 +155,6 @@ const CyberModal = {
         document.getElementById("auth-forgot")?.classList.remove("d-none");
     }
 };
-
 function switchToRegister() { CyberModal.showRegister(); }
 function switchToLogin() { CyberModal.showLogin(); }
 function switchToForgot() { CyberModal.showForgot(); }
@@ -231,7 +216,6 @@ function generateRandomAvatar(name) {
 function updateUserDisplay() {
     const firstName = localStorage.getItem('firstName') || "";
     const lastName = localStorage.getItem('lastName') || "";
-    const email = localStorage.getItem('email') || "";
     const avatarUrl = localStorage.getItem('avatarUrl');
     const fullName = `${firstName} ${lastName}`.trim() || lastName || firstName || "Người dùng";
 
@@ -245,7 +229,6 @@ function updateUserDisplay() {
 
     if (fullName !== "Người dùng") {
         const shortName = fullName.length > 14 ? fullName.slice(0, 14) + "..." : fullName;
-
         const avatarHTML = avatarUrl
             ? `<img src="${avatarUrl}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
             : generateRandomAvatar(firstName || lastName);
@@ -278,24 +261,8 @@ function updateUserDisplay() {
                     method: "POST",
                     credentials: "include"
                 });
-                // Xóa thông tin user
-                localStorage.removeItem('userName');
-                localStorage.removeItem('firstName');
-                localStorage.removeItem('lastName');
-                localStorage.removeItem('email');
-                localStorage.removeItem('userId');
-                localStorage.removeItem('avatarUrl');
-                localStorage.removeItem('pendingCartItem');
-                // Kiểm tra giỏ hàng trước khi set cờ
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                if (cart.length > 0) {
-                    localStorage.setItem('cartLocked', 'true');
-                } else {
-                    localStorage.removeItem('cartLocked');
-                }
-                // Cập nhật lại số lượng hiển thị
+                localStorage.clear();
                 updateCartCount();
-
                 window.location.reload();
             } catch (err) {
                 console.error("Lỗi đăng xuất:", err);
@@ -320,32 +287,46 @@ function initCartIconClick() {
     if (!cartLink) return;
 
     cartLink.addEventListener('click', (e) => {
-        e.preventDefault(); // ❌ Chặn redirect mặc định
+        e.preventDefault();
 
         const isLoggedIn = !!localStorage.getItem('userName');
-        const isLocked = localStorage.getItem('cartLocked') === 'true';
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
         const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
             giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-        // 🟢 Trường hợp chưa đăng nhập
         if (!isLoggedIn) {
-            if (isLocked || cartCount > 0) {
-                // Có sản phẩm hoặc giỏ bị khoá → chặn, mở modal login
+            if (cartCount > 0) {
                 CyberModal.open?.();
                 if (typeof showNotification === "function") {
                     showNotification("Vui lòng đăng nhập để xem giỏ hàng!", "info");
                 }
             } else {
-                // Giỏ trống → vẫn cho phép vào checkout (hiện giỏ trống)
                 window.location.href = 'resetcheckout.html';
             }
             return;
         }
-
-        // 🟢 Đã login → vào checkout bình thường
         window.location.href = 'resetcheckout.html';
+    });
+}
+
+// ================= Xử lý click icon đơn hàng =================
+function initOrderIconClick() {
+    const orderLink = document.querySelector('a.cyber-action[href="resetlookup.html"]');
+    if (!orderLink) return;
+
+    orderLink.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const isLoggedIn = !!localStorage.getItem('userName');
+        if (!isLoggedIn) {
+            CyberModal.open?.();
+            if (typeof showNotification === "function") {
+                showNotification("Vui lòng đăng nhập để xem đơn hàng!", "info");
+            }
+            return;
+        }
+        window.location.href = 'resetlookup.html';
     });
 }
 
@@ -353,6 +334,8 @@ function initCartIconClick() {
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchUserInfo();
     updateUserDisplay();
+    updateCartCount();
+    updateOrderCount();
 });
 
 // ================= Init toàn bộ header =================
@@ -365,4 +348,5 @@ function initHeader() {
     initCategoryDropdown();
     initResponsiveHandler();
     initCartIconClick();
+    initOrderIconClick();
 }

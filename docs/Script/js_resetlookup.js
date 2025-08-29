@@ -78,9 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // === Load FOOTER ===
     loadPagePart("HTML/Layout/resetfooter.html", "#footer-container");
 
-    // === Các phần xử lý riêng của lookup ===
-    renderOrders(JSON.parse(localStorage.getItem('orders')) || []);
-
     // === Khởi tạo Flatpickr cho các input date ===
     initializeFlatpickr('start-date', '.start-date-icon');
     initializeFlatpickr('end-date', '.end-date-icon');
@@ -154,7 +151,7 @@ function getPaymentMethodText(method) {
 }
 
 // Render orders
-function renderOrders(ordersToRender) {
+async function renderOrders(ordersToRender) {
     const ordersContainer = document.getElementById('orders-container');
     const emptyOrders = document.getElementById('empty-orders');
     const searchingAnimation = document.getElementById('searching-animation');
@@ -179,13 +176,12 @@ function renderOrders(ordersToRender) {
         if (ordersToRender.length === 0) {
             ordersContainer.innerHTML = '';
 
-            const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
-            if (allOrders.length === 0) {
+            if (serverOrders.length === 0) {
                 // Không có đơn hàng thật → Show emptyOrders
                 emptyOrders.classList.remove('d-none');
                 ordersContainer.classList.remove('d-none');
             } else {
-                // Có đơn hàng nhưng lọc không khớp → Ẩn hết!
+                // Có đơn hàng nhưng lọc không khớp → Ẩn hết
                 emptyOrders.classList.add('d-none');
                 ordersContainer.classList.add('d-none');
 
@@ -218,7 +214,6 @@ function renderOrders(ordersToRender) {
             emptyOrders.classList.add('d-none');
         }
 
-
         ordersContainer.innerHTML = '';
         const newOrder = ordersToRender.find(order => order.unseen === true);
         if (newOrder) {
@@ -228,8 +223,6 @@ function renderOrders(ordersToRender) {
                 newCardSound.play();
             }
         }
-
-        let localOrdersChanged = false;
 
         ordersToRender.forEach((order, index) => {
             const orderCard = document.createElement('div');
@@ -253,7 +246,6 @@ function renderOrders(ordersToRender) {
                     : Math.round(100 - (item.salePrice / item.originalPrice * 100))
                 }%
                 </span>
-
               </div>
             </div>
           </div>
@@ -393,15 +385,28 @@ function renderOrders(ordersToRender) {
             }, index * 150);
 
             const orderItem = document.getElementById(`order-item-${index}`);
-            orderItem.addEventListener('click', function(e) {
+            orderItem.addEventListener('click', async function (e) {
                 if (!e.target.closest('.order-actions') && !e.target.closest('.btn-reward')) {
                     toggleCard(index);
+
                     if (order.unseen) {
                         order.unseen = false;
-                        localOrdersChanged = true;
-                        let orders = JSON.parse(localStorage.getItem('orders')) || [];
-                        orders = orders.map(o => o.id === order.id ? { ...o, unseen: false } : o);
-                        localStorage.setItem('orders', JSON.stringify(orders));
+                        serverOrders = serverOrders.map(o => o.id === order.id ? { ...o, unseen: false } : o);
+
+                        // ✅ Đồng bộ unseen về server
+                        try {
+                            await fetch(`/api/orders/${order.id}`, {
+                                method: "PATCH",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                                },
+                                body: JSON.stringify({ unseen: false })
+                            });
+                        } catch (err) {
+                            console.error("❌ Lỗi đồng bộ unseen:", err);
+                        }
+
                         const unseenDot = orderItem.querySelector('.unseen-indicator');
                         if (unseenDot) unseenDot.remove();
                     }
@@ -409,15 +414,10 @@ function renderOrders(ordersToRender) {
             });
         });
 
-        // ✅ Sau toàn bộ: update số lượng trên header
-        if (localOrdersChanged) {
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            localStorage.setItem('orders', JSON.stringify(orders));
-        }
+        // ✅ Update số lượng trên header
         updateOrderCount();
     }, 1200);
 }
-
 
 // Toggle card
 function toggleCard(index) {
@@ -431,23 +431,27 @@ function toggleCard(index) {
 // Claim reward
 function claimReward(orderId, event) {
     event.stopPropagation();
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
-    const orderIndex = orders.findIndex(order => order.id === orderId);
-    if (orderIndex === -1) {
+
+    const order = serverOrders.find(o => o.id === orderId);
+    if (!order) {
         showToast('Không tìm thấy đơn hàng!');
         return;
     }
-    const order = orders[orderIndex];
+
     if (order.status === 'Đơn hàng đã hủy') {
-        showRewardPopup('Đơn hàng đã bị hủy, tiến hành mua lại và hoàn tất các thủ tục để nhận phần thưởng này!');
+        showRewardPopup('Đơn hàng đã bị hủy, hãy mua lại và hoàn tất thủ tục để nhận phần thưởng này!');
         return;
     }
+
     if (order.status !== 'Đơn hàng đã hoàn thành') {
-        showRewardPopup('Hoàn tất nhận hàng để tiến hành nhận thưởng');
+        showRewardPopup('Hãy hoàn tất nhận hàng để tiến hành nhận thưởng');
         return;
     }
-    showToast('Bạn đã nhận được thưởng cho đơn hàng này!');
+
+    // ✅ Ở đây bạn có thể thêm logic gọi API thưởng (nếu cần), tạm thời chỉ hiện toast
+    showToast('🎉 Bạn đã nhận được thưởng cho đơn hàng này!');
 }
+
 
 // Show reward popup
 function showRewardPopup(message) {
@@ -463,77 +467,130 @@ function closeRewardPopup() {
 }
 
 // Cancel order
-function cancelOrder(orderId) {
-    if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {
-        let orders = JSON.parse(localStorage.getItem('orders')) || [];
-        const orderIndex = orders.findIndex(order => order.id === orderId);
+async function cancelOrder(orderId) {
+    if (!orderId) return;
 
-        if (orderIndex === -1) {
-            showToast('Không tìm thấy đơn hàng!');
+    try {
+        // Tìm đơn trong cache server
+        const order = serverOrders.find(o => o.id === orderId);
+
+        if (!order) {
+            showToast("Không tìm thấy đơn hàng!");
             return;
         }
 
-        const order = orders[orderIndex];
-        if (order.status === 'Đơn hàng đã hủy') {
-            if (confirm('Sau khi xóa hoàn toàn đơn này bạn sẽ không thể tiếp tục mua lại đơn này nữa!')) {
-                orders.splice(orderIndex, 1);
-                showToast('Đơn hàng đã được xóa hoàn toàn!');
-            } else {
-                return;
+        // Nếu đơn đã hủy rồi → cho phép xóa hẳn
+        if (order.status === "Đơn hàng đã hủy") {
+            if (confirm("Sau khi xóa hoàn toàn đơn này bạn sẽ không thể mua lại nữa. Bạn chắc chắn muốn xoá?")) {
+                const res = await fetch(`${window.API_BASE}/api/orders/${orderId}`, {
+                    method: "DELETE",
+                    credentials: "include"
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast("Đơn hàng đã được xoá hoàn toàn!");
+                    await fetchOrdersFromServer(); // 🔑 refresh lại từ server
+                } else {
+                    showToast("❌ Không thể xoá đơn: " + (data.error || ""));
+                }
             }
-        } else {
-            order.status = 'Đơn hàng đã hủy';
-            showToast('Đơn hàng đã được hủy!');
+            return;
         }
 
-        orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        localStorage.setItem('orders', JSON.stringify(orders));
-        renderOrders(orders);
-        updateOrderCount();
+        // Nếu đơn chưa hủy → gọi API cập nhật trạng thái
+        if (confirm("Bạn có chắc muốn hủy đơn hàng này?")) {
+            const res = await fetch(`${window.API_BASE}/api/orders/${orderId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ status: "Đơn hàng đã hủy" })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                showToast("Đơn hàng đã được hủy!");
+                await fetchOrdersFromServer(); // 🔑 refresh lại từ server
+            } else {
+                showToast("❌ Không thể hủy đơn: " + (data.error || ""));
+            }
+        }
+    } catch (err) {
+        console.error("❌ Lỗi cancelOrder:", err);
+        showToast("Có lỗi xảy ra khi hủy đơn hàng!");
     }
 }
+
+
 
 // Rebuy order
-function rebuyOrder(orderId) {
-    let orders = JSON.parse(localStorage.getItem('orders')) || [];
-    const orderIndex = orders.findIndex(order => order.id === orderId);
+async function rebuyOrder(orderId) {
+    try {
+        // 🔎 Tìm đơn từ cache server
+        const order = serverOrders.find(o => o.id === orderId);
 
-    if (orderIndex === -1) {
-        showToast('Không tìm thấy đơn hàng!');
-        return;
-    }
-
-    const order = orders[orderIndex];
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    order.items.forEach(item => {
-        const cartItem = {
-            id: item.id || `${order.id}-${item.name}-${Date.now()}`,
-            name: item.name,
-            originalPrice: item.originalPrice,
-            salePrice: item.salePrice,
-            discountPercent: item.discountPercent !== undefined
-                ? item.discountPercent
-                : Math.round(100 - (item.salePrice / item.originalPrice * 100)),
-            image: item.image,
-            quantity: item.quantity,
-            addedAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-        };
-        const existingItemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
-        if (existingItemIndex !== -1) {
-            cart[existingItemIndex].quantity += item.quantity;
-            cart[existingItemIndex].updatedAt = new Date().toISOString();
-        } else {
-            cart.push(cartItem);
+        if (!order) {
+            showToast("Không tìm thấy đơn hàng!");
+            return;
         }
-    });
-    localStorage.setItem('cart', JSON.stringify(cart));
-    orders.splice(orderIndex, 1);
-    localStorage.setItem('orders', JSON.stringify(orders));
-    renderOrders(orders);
-    showToast(`Đã xóa đơn hàng #${orderId} và thêm sản phẩm vào giỏ hàng! Chuyển đến trang thanh toán...`);
-    setTimeout(() => window.location.href = 'resetcheckout.html', 800);
+
+        // 1️⃣ Thêm lại sản phẩm vào giỏ (API server)
+        for (const item of order.items) {
+            try {
+                const res = await fetch(`${window.API_BASE}/api/cart`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        productId: item.id,
+                        name: item.name,
+                        originalPrice: item.originalPrice,
+                        salePrice: item.salePrice,
+                        discountPercent: item.discountPercent !== undefined
+                            ? item.discountPercent
+                            : Math.round(100 - (item.salePrice / item.originalPrice * 100)),
+                        image: item.image,
+                        quantity: item.quantity
+                    })
+                });
+
+                const data = await res.json();
+                if (!data.success) {
+                    console.warn("⚠️ Lỗi thêm vào giỏ:", data.error || item.name);
+                }
+            } catch (err) {
+                console.error("❌ Lỗi khi thêm vào giỏ:", err);
+            }
+        }
+
+        // 2️⃣ Hỏi có muốn xoá luôn đơn cũ không
+        if (confirm(`Bạn có muốn xóa đơn hàng #${orderId} sau khi mua lại không?`)) {
+            const delRes = await fetch(`${window.API_BASE}/api/orders/${orderId}`, {
+                method: "DELETE",
+                credentials: "include"
+            });
+            const delData = await delRes.json();
+            if (delData.success) {
+                showToast(`Đã mua lại và xoá đơn hàng #${orderId}!`);
+                await fetchOrdersFromServer(); // reload orders từ server
+            } else {
+                showToast("❌ Không thể xoá đơn: " + (delData.error || ""));
+            }
+        } else {
+            showToast(`Đã thêm sản phẩm từ đơn #${orderId} vào giỏ hàng!`);
+        }
+
+        // 3️⃣ Chuyển sang checkout
+        setTimeout(() => {
+            window.location.href = "resetcheckout.html";
+        }, 800);
+
+    } catch (err) {
+        console.error("❌ Lỗi rebuyOrder:", err);
+        showToast("Có lỗi xảy ra khi mua lại đơn hàng!");
+    }
 }
+
+
 
 async function toBase64Image(url) {
     try {
@@ -655,9 +712,8 @@ function createApprovalSealBase64() {
 
 // ✅ Hàm chính: Xuất PDF với watermark trung tâm + watermark con
 async function exportToPDF(orderId) {
-
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
-    const order = orders.find(o => o.id === orderId);
+    // 🔹 Tìm đơn trong serverOrders (fetch từ server trước đó)
+    const order = serverOrders.find(o => o.id === orderId);
     if (!order) {
         showToast('Không tìm thấy đơn hàng!');
         return;
@@ -667,141 +723,127 @@ async function exportToPDF(orderId) {
     const formattedDate = new Date(order.createdAt).toLocaleString('vi-VN');
     const { points } = calculatePointsAndTier(order);
 
-
+    // === Convert image URL thành base64 (proxy hoặc local) ===
     function proxifyImageURL(url) {
-        // Nếu là link http/https thì proxy, còn nếu là local (Images/Logo.jpg) thì trả về null để không fetch proxy
         if (!url) return null;
         if (/^https?:\/\//i.test(url)) {
             return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
         }
-        // Local path, trả về null để không fetch proxy
-        return null;
+        return null; // local thì không proxy
     }
 
-    // === Convert product images to base64 (hỗ trợ cả bundle và lẻ) ===
     const flatItems = [];
     order.items.forEach(item => {
-        if(item.isBundle && Array.isArray(item.parts)) {
-            flatItems.push({
-                ...item,
-                _isBundleHeader: true
-            });
+        if (item.isBundle && Array.isArray(item.parts)) {
+            flatItems.push({ ...item, _isBundleHeader: true });
             item.parts.forEach(part => {
-                // Đảm bảo part có đủ trường quantity, originalPrice, salePrice, price, image, discountPercent
                 flatItems.push({
                     ...part,
                     _isBundlePart: true,
                     bundleName: item.name,
-                    quantity: part.quantity !== undefined ? part.quantity : 1,
-                    originalPrice: typeof part.originalPrice === 'number' ? part.originalPrice : (typeof part.price === 'number' ? part.price : 0),
-                    salePrice: typeof part.salePrice === 'number' ? part.salePrice : (typeof part.price === 'number' ? part.price : 0),
-                    price: typeof part.price === 'number' ? part.price : 0,
+                    quantity: part.quantity ?? 1,
+                    originalPrice: typeof part.originalPrice === 'number' ? part.originalPrice : (part.price || 0),
+                    salePrice: typeof part.salePrice === 'number' ? part.salePrice : (part.price || 0),
+                    price: part.price || 0,
                     image: part.image || item.image || 'Images/Logo.jpg',
-                    discountPercent: typeof part.discountPercent === 'number' ? part.discountPercent : 0
+                    discountPercent: part.discountPercent ?? 0
                 });
             });
         } else {
-            // Đảm bảo item lẻ cũng có đủ trường quantity, originalPrice, salePrice, price, image, discountPercent
             flatItems.push({
                 ...item,
-                quantity: item.quantity !== undefined ? item.quantity : 1,
-                originalPrice: typeof item.originalPrice === 'number' ? item.originalPrice : (typeof item.price === 'number' ? item.price : 0),
-                salePrice: typeof item.salePrice === 'number' ? item.salePrice : (typeof item.price === 'number' ? item.price : 0),
-                price: typeof item.price === 'number' ? item.price : 0,
+                quantity: item.quantity ?? 1,
+                originalPrice: item.originalPrice ?? (item.price || 0),
+                salePrice: item.salePrice ?? (item.price || 0),
+                price: item.price || 0,
                 image: item.image || 'Images/Logo.jpg',
-                discountPercent: typeof item.discountPercent === 'number' ? item.discountPercent : 0
+                discountPercent: item.discountPercent ?? 0
             });
         }
     });
 
-        const productImages = await Promise.all(
-            flatItems.map(async item => {
-                if(item._isBundleHeader) return null;
-                // Nếu là local path (không phải http/https), bỏ qua proxy và cố gắng lấy base64 nếu có trên server
-                if(item.image && !/^https?:\/\//i.test(item.image)) {
-                    // Tạo 1 img element ẩn để convert
-                    return await new Promise(resolve => {
-                        const img = new window.Image();
-                        img.crossOrigin = 'anonymous';
-                        img.src = item.image;
-                        img.onload = function() {
-                            try {
-                                const canvas = document.createElement('canvas');
-                                canvas.width = img.width;
-                                canvas.height = img.height;
-                                const ctx = canvas.getContext('2d');
-                                ctx.drawImage(img, 0, 0);
-                                resolve(canvas.toDataURL('image/png'));
-                            } catch(e) { resolve(undefined); }
-                        };
-                        img.onerror = function() { resolve(undefined); };
-                    });
-                }
-                // Nếu là link http/https thì fetch qua proxy như cũ
-                const imgUrl = item.image ? proxifyImageURL(item.image) : null;
-                if(!imgUrl) return undefined;
-                try {
-                    const response = await fetch(imgUrl, { mode: 'cors' });
-                    const blob = await response.blob();
-                    return await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => resolve(reader.result);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(blob);
-                    });
-                } catch (err) {
-                    console.warn('Không thể lấy ảnh qua proxy:', item.image, err);
-                    return undefined;
-                }
-            })
-        );
+    const productImages = await Promise.all(
+        flatItems.map(async (item) => {
+            if (item._isBundleHeader) return null;
+            if (item.image && !/^https?:\/\//i.test(item.image)) {
+                return await new Promise(resolve => {
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    img.src = item.image;
+                    img.onload = function() {
+                        try {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                            resolve(canvas.toDataURL('image/png'));
+                        } catch (e) { resolve(undefined); }
+                    };
+                    img.onerror = () => resolve(undefined);
+                });
+            }
+            const imgUrl = item.image ? proxifyImageURL(item.image) : null;
+            if (!imgUrl) return undefined;
+            try {
+                const response = await fetch(imgUrl, { mode: 'cors' });
+                const blob = await response.blob();
+                return await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+            } catch {
+                return undefined;
+            }
+        })
+    );
 
-        // === Table rows (hỗ trợ bundle) ===
-        const productTable = [
-                [
-                        { text: 'Ảnh', bold: true, alignment: 'center' },
-                        { text: 'Tên sản phẩm', bold: true, alignment: 'left' },
-                        { text: 'SL', bold: true, alignment: 'center' },
-                        { text: 'Giá gốc', bold: true, alignment: 'center' },
-                        { text: 'Giảm giá', bold: true, alignment: 'center' },
-                        { text: 'Giá ưu đãi', bold: true, alignment: 'center' },
-                        { text: 'Thành tiền', bold: true, alignment: 'center' }
-                ],
-                ...flatItems.map((item, i) => {
-                    if(item._isBundleHeader) {
-                        return [
-                            { text: '', colSpan: 1, border: [false,false,false,false] },
-                            { text: `🖥️ ${item.name} (PC tự build)`, colSpan: 6, bold: true, fillColor: '#e3f2fd', color: '#1976d2', alignment: 'left', margin: [0,4,0,4] },
-                            {},{},{},{},{}
-                        ];
-                    } else if(item._isBundlePart) {
-                        return [
-                            item.image ? { image: productImages[i], width: 32, height: 32, alignment: 'center' } : '',
-                            { text: '↳ ' + item.name, alignment: 'left', italics: true },
-                            { text: item.quantity ? item.quantity.toString() : '1', alignment: 'center' },
-                            { text: formatCurrency(item.originalPrice), alignment: 'center' },
-                            { text: item.discountPercent !== undefined ? `${item.discountPercent}%` : '', alignment: 'center' },
-                            { text: formatCurrency(item.salePrice||item.price), alignment: 'center' },
-                            { text: formatCurrency((item.salePrice||item.price) * (item.quantity||1)), alignment: 'center' }
-                        ];
-                    } else {
-                        return [
-                            item.image ? { image: productImages[i], width: 40, height: 40, alignment: 'center' } : 'Không ảnh',
-                            { text: item.name, alignment: 'left' },
-                            { text: item.quantity ? item.quantity.toString() : '1', alignment: 'center' },
-                            { text: formatCurrency(item.originalPrice), alignment: 'center' },
-                            { text: item.discountPercent !== undefined ? `${item.discountPercent}%` : '', alignment: 'center' },
-                            { text: formatCurrency(item.salePrice||item.price), alignment: 'center' },
-                            { text: formatCurrency((item.salePrice||item.price) * (item.quantity||1)), alignment: 'center' }
-                        ];
-                    }
-                })
-        ];
+    // === Tạo bảng sản phẩm ===
+    const productTable = [
+        [
+            { text: 'Ảnh', bold: true, alignment: 'center' },
+            { text: 'Tên sản phẩm', bold: true },
+            { text: 'SL', bold: true, alignment: 'center' },
+            { text: 'Giá gốc', bold: true, alignment: 'center' },
+            { text: 'Giảm giá', bold: true, alignment: 'center' },
+            { text: 'Giá ưu đãi', bold: true, alignment: 'center' },
+            { text: 'Thành tiền', bold: true, alignment: 'center' }
+        ],
+        ...flatItems.map((item, i) => {
+            if (item._isBundleHeader) {
+                return [
+                    { text: '', border: [false,false,false,false] },
+                    { text: `🖥️ ${item.name} (PC tự build)`, colSpan: 6, bold: true, fillColor: '#e3f2fd', color: '#1976d2' },
+                    {},{},{},{},{}
+                ];
+            } else if (item._isBundlePart) {
+                return [
+                    item.image ? { image: productImages[i], width: 32, height: 32 } : '',
+                    { text: '↳ ' + item.name, italics: true },
+                    { text: item.quantity.toString(), alignment: 'center' },
+                    { text: formatCurrency(item.originalPrice), alignment: 'center' },
+                    { text: `${item.discountPercent}%`, alignment: 'center' },
+                    { text: formatCurrency(item.salePrice || item.price), alignment: 'center' },
+                    { text: formatCurrency((item.salePrice || item.price) * item.quantity), alignment: 'center' }
+                ];
+            } else {
+                return [
+                    item.image ? { image: productImages[i], width: 40, height: 40 } : 'Không ảnh',
+                    { text: item.name },
+                    { text: item.quantity.toString(), alignment: 'center' },
+                    { text: formatCurrency(item.originalPrice), alignment: 'center' },
+                    { text: `${item.discountPercent}%`, alignment: 'center' },
+                    { text: formatCurrency(item.salePrice || item.price), alignment: 'center' },
+                    { text: formatCurrency((item.salePrice || item.price) * item.quantity), alignment: 'center' }
+                ];
+            }
+        })
+    ];
 
-    // === Logo Base64 ===
+    // === Logo + watermark ===
     const logoBase64 = await toBase64Image("Image_Showroom/Slogan_w.jpg");
-
-    // === Watermark toàn trang ===
     const fullWatermarkBase64 = createFullWatermarkBase64();
 
     const docDefinition = {
@@ -809,12 +851,7 @@ async function exportToPDF(orderId) {
             {
                 columns: [
                     logoBase64 ? { image: logoBase64, width: 80 } : { text: '', width: 80 },
-                    {
-                        text: 'HÓA ĐƠN BÁN HÀNG',
-                        style: 'header',
-                        alignment: 'center',
-                        width: '*'
-                    },
+                    { text: 'HÓA ĐƠN BÁN HÀNG', style: 'header', alignment: 'center', width: '*' },
                     { text: '', width: 80 }
                 ]
             },
@@ -832,35 +869,21 @@ async function exportToPDF(orderId) {
                     body: productTable
                 }
             },
-            {
-                text: `\nTổng cộng: ${formatCurrency(order.total)}`,
-                alignment: 'right',
-                bold: true
-            },
+            { text: `\nTổng cộng: ${formatCurrency(order.total)}`, alignment: 'right', bold: true },
             { text: '\nThông tin khách hàng:', style: 'subheader' },
             { text: `Người nhận: ${delivery.name || 'Không có'}` },
             { text: `Điện thoại: ${delivery.phone || 'Không có'}` },
-            {
-                text: `Địa chỉ: ${delivery.address || ''}, ${delivery.ward || ''}, ${delivery.district || ''}, ${delivery.province || ''}`
-            },
+            { text: `Địa chỉ: ${delivery.address || ''}, ${delivery.ward || ''}, ${delivery.district || ''}, ${delivery.province || ''}` },
             { text: `Phương thức thanh toán: ${getPaymentMethodText(order.paymentMethod)}` },
             delivery.note ? { text: `Ghi chú: ${delivery.note}` } : null,
-            { text: '\nCảm ơn quý khách đã mua sắm tại 3TD Shop!', italics: true, alignment: 'center', color: 'black' },
-            {
-                image: createApprovalSealBase64(),
-                width: 100,
-                alignment: 'right',
-                margin: [0, 10, 0, 0]
-            }
+            { text: '\nCảm ơn quý khách đã mua sắm tại 3TD Shop!', italics: true, alignment: 'center' },
+            { image: createApprovalSealBase64(), width: 100, alignment: 'right', margin: [0, 10, 0, 0] }
         ],
         styles: {
             header: { fontSize: 18, bold: true, color: '#1e88e5' },
             subheader: { fontSize: 15, bold: true, margin: [0, 10, 0, 5] }
         },
-        defaultStyle: {
-            font: 'Roboto',
-            fontSize: 10
-        },
+        defaultStyle: { font: 'Roboto', fontSize: 10 },
         pageSize: 'A4',
         pageMargins: [40, 60, 40, 60],
         background: function (currentPage, pageSize) {
@@ -868,7 +891,7 @@ async function exportToPDF(orderId) {
                 image: fullWatermarkBase64,
                 width: pageSize.width,
                 height: pageSize.height,
-                opacity: 1, // base64 có opacity sẵn
+                opacity: 1,
                 absolutePosition: { x: 0, y: 0 }
             };
         }
@@ -878,6 +901,7 @@ async function exportToPDF(orderId) {
 }
 
 
+
 // Apply filters
 function applyFilters() {
     const productKeyword = document.getElementById('product-keyword')?.value.trim().toLowerCase();
@@ -885,8 +909,7 @@ function applyFilters() {
     const endDate = document.getElementById('end-date')?.value;
     const statusFilter = document.getElementById('status-filter')?.value;
 
-    let filteredOrders = JSON.parse(localStorage.getItem('orders')) || [];
-
+    let filteredOrders = [...serverOrders];
     if (startDate && endDate) {
         const start = new Date(startDate);
         const end = new Date(endDate);
@@ -930,27 +953,68 @@ function debounce(func, wait) {
 }
 
 // Event listeners
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // 🔒 Chặn mở khi chưa login
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+        if (typeof CyberModal !== "undefined" && CyberModal.open) {
+            CyberModal.open();
+        } else {
+            window.location.href = "index.html";
+        }
+        return; // ⛔ stop luôn
+    }
+
+    // ✅ Nếu đã login thì load orders
+    await fetchOrdersFromServer();
+
+    // Giữ nguyên logic filter bên dưới
     const productKeywordInput = document.getElementById('product-keyword');
     if (productKeywordInput) {
         productKeywordInput.addEventListener('input', debounce(applyFilters, 300));
     }
 
-    const filterElements = [document.getElementById('start-date'), document.getElementById('end-date'), document.getElementById('status-filter')];
+    const filterElements = [
+        document.getElementById('start-date'),
+        document.getElementById('end-date'),
+        document.getElementById('status-filter')
+    ];
     filterElements.forEach(el => {
         if (el) el.addEventListener('change', applyFilters);
     });
 });
 
-// Update order count
-function updateOrderCount() {
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
-    const orderCountElement = document.querySelector('.order-count');
-    if (orderCountElement) {
-        orderCountElement.textContent = orders.length;
-        orderCountElement.style.display = orders.length > 0 ? 'inline-flex' : 'none';
+let serverOrders = []; // đặt ở đầu file
+async function fetchOrdersFromServer() {
+    try {
+        const res = await fetch(`${window.API_BASE}/api/orders`, {
+            method: "GET",
+            credentials: "include"
+        });
+        const data = await res.json();
+        if (data.success) {
+            serverOrders = data.orders;   // chỉ giữ trong biến
+            renderOrders(serverOrders);
+        } else {
+            console.warn("⚠️ Không lấy được orders:", data.error);
+            renderOrders([]);
+        }
+    } catch (err) {
+        console.error("❌ Lỗi fetch orders:", err);
+        renderOrders([]);
     }
 }
+
+
+// Update order count
+function updateOrderCount() {
+    const orderCountElement = document.querySelector('.order-count');
+    if (orderCountElement) {
+        orderCountElement.textContent = serverOrders.length;
+        orderCountElement.style.display = serverOrders.length > 0 ? 'inline-flex' : 'none';
+    }
+}
+
 /**
  * Hàm khởi tạo datepicker Flatpickr cho các input ngày
  * @param {string} inputId - ID của input cần gắn Flatpickr

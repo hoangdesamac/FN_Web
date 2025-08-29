@@ -1030,6 +1030,167 @@ function authenticateToken(req, res, next) {
     });
 }
 
+// ==================== ORDERS APIS ====================
+
+// Lấy danh sách đơn hàng của user
+app.get("/api/orders", authenticateToken, async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT id, items, total, status, delivery_info AS "deliveryInfo",
+                    payment_method AS "paymentMethod", created_at AS "createdAt",
+                    unseen
+             FROM orders
+             WHERE user_id = $1
+             ORDER BY created_at DESC`,
+            [req.user.id]
+        );
+
+        const orders = result.rows.map(o => ({
+            ...o,
+            items: JSON.parse(o.items) // parse JSON string thành array
+        }));
+
+        res.json({ success: true, orders });
+    } catch (err) {
+        console.error("❌ Lỗi GET /api/orders:", err);
+        res.status(500).json({ success: false, error: "Server error" });
+    }
+});
+
+// Lấy chi tiết 1 đơn hàng theo id (và đánh dấu đã xem unseen=false)
+app.get("/api/orders/:id", authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Lấy đơn hàng
+        const result = await pool.query(
+            `SELECT id, items, total, status, delivery_info AS "deliveryInfo",
+                    payment_method AS "paymentMethod", created_at AS "createdAt", unseen
+             FROM orders
+             WHERE id=$1 AND user_id=$2`,
+            [id, req.user.id]
+        );
+
+        if (!result.rows.length) {
+            return res.status(404).json({ success: false, error: "Không tìm thấy đơn hàng" });
+        }
+
+        // ✅ Cập nhật unseen = false khi xem chi tiết
+        await pool.query(
+            `UPDATE orders SET unseen=false WHERE id=$1 AND user_id=$2`,
+            [id, req.user.id]
+        );
+
+        const order = {
+            ...result.rows[0],
+            items: JSON.parse(result.rows[0].items),
+            unseen: false
+        };
+
+        res.json({ success: true, order });
+    } catch (err) {
+        console.error("❌ Lỗi GET /api/orders/:id:", err);
+        res.status(500).json({ success: false, error: "Server error" });
+    }
+});
+
+// Tạo đơn hàng mới (checkout)
+app.post("/api/orders", authenticateToken, async (req, res) => {
+    try {
+        const { items, total, deliveryInfo, paymentMethod } = req.body;
+
+        if (!items || !Array.isArray(items) || !total) {
+            return res.status(400).json({ success: false, error: "Thiếu dữ liệu đơn hàng" });
+        }
+
+        // ✅ Kiểm tra giỏ hàng trong DB (chặn fake checkout)
+        const cartCheck = await pool.query(
+            "SELECT COUNT(*) FROM cart_items WHERE user_id=$1",
+            [req.user.id]
+        );
+        if (parseInt(cartCheck.rows[0].count) === 0) {
+            return res.status(400).json({ success: false, error: "Giỏ hàng trống" });
+        }
+
+        const insert = await pool.query(
+            `INSERT INTO orders (user_id, items, total, delivery_info, payment_method, unseen)
+             VALUES ($1, $2, $3, $4, $5, true)
+                 RETURNING id, items, total, status, delivery_info AS "deliveryInfo", 
+                       payment_method AS "paymentMethod", created_at AS "createdAt", unseen`,
+            [req.user.id, JSON.stringify(items), total, deliveryInfo || null, paymentMethod || null]
+        );
+
+        // ✅ Xóa giỏ hàng sau khi checkout
+        await pool.query(`DELETE FROM cart_items WHERE user_id=$1`, [req.user.id]);
+
+        const order = {
+            ...insert.rows[0],
+            items: JSON.parse(insert.rows[0].items)
+        };
+
+        res.json({ success: true, order });
+    } catch (err) {
+        console.error("❌ Lỗi POST /api/orders:", err);
+        res.status(500).json({ success: false, error: "Server error" });
+    }
+});
+
+// Cập nhật trạng thái đơn (VD: hủy đơn, xác nhận, hoàn tất...)
+app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
+    try {
+        const { status, unseen } = req.body;
+        const { id } = req.params;
+
+        if (!status && typeof unseen === "undefined") {
+            return res.status(400).json({ success: false, error: "Thiếu dữ liệu cập nhật" });
+        }
+
+        const update = await pool.query(
+            `UPDATE orders
+             SET status = COALESCE($1, status),
+                 unseen = COALESCE($2, unseen)
+             WHERE id=$3 AND user_id=$4
+                 RETURNING id, items, total, status, delivery_info AS "deliveryInfo", 
+                       payment_method AS "paymentMethod", created_at AS "createdAt", unseen`,
+            [status || null, typeof unseen !== "undefined" ? unseen : null, id, req.user.id]
+        );
+
+        if (!update.rows.length) {
+            return res.status(404).json({ success: false, error: "Không tìm thấy đơn hàng" });
+        }
+
+        const order = {
+            ...update.rows[0],
+            items: JSON.parse(update.rows[0].items)
+        };
+
+        res.json({ success: true, order });
+    } catch (err) {
+        console.error("❌ Lỗi PATCH /api/orders/:id:", err);
+        res.status(500).json({ success: false, error: "Server error" });
+    }
+});
+
+// Xóa đơn hàng (nếu cần cho user)
+app.delete("/api/orders/:id", authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const del = await pool.query(
+            `DELETE FROM orders WHERE id=$1 AND user_id=$2 RETURNING id`,
+            [id, req.user.id]
+        );
+
+        if (!del.rows.length) {
+            return res.status(404).json({ success: false, error: "Không tìm thấy đơn hàng" });
+        }
+
+        res.json({ success: true, message: "Đã xoá đơn hàng" });
+    } catch (err) {
+        console.error("❌ Lỗi DELETE /api/orders/:id:", err);
+        res.status(500).json({ success: false, error: "Server error" });
+    }
+});
+
 // ===== Start =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

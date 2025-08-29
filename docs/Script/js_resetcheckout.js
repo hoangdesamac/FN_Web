@@ -1324,64 +1324,80 @@ async function processPayment() {
     }
 
     setTimeout(async () => {
-        const cart = JSON.parse(localStorage.getItem('selectedCart')) || [];
-        let orders = JSON.parse(localStorage.getItem('orders')) || [];
-        orders.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-        const orderId = generateOrderId();
-
-        const selectedMethod = document.querySelector('input[name="payment-method"]:checked').value;
-        const deliveryInfo = getDeliveryInfo(); // ✅ lấy bằng hàm đã chuẩn hóa
-
-        const order = {
-            id: orderId,
-            items: cart,
-            total: cart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0),
-            status: 'Đơn hàng đang xử lý',
-            createdAt: new Date().toISOString(),
-            paymentMethod: selectedMethod,
-            deliveryInfo,
-            unseen: true
-        };
-
-        orders.push(order);
-        localStorage.setItem('orders', JSON.stringify(orders));
-        console.log('Đơn hàng mới được tạo từ checkout:', order);
-
-        // Xóa giỏ hàng trên server nếu đã đăng nhập
-        const isLoggedIn = !!localStorage.getItem('userName');
-        if (isLoggedIn) {
-            for (const item of cart) {
-                try {
-                    await fetch(`${window.API_BASE}/api/cart/${item.id}`, {
-                        method: 'DELETE',
-                        credentials: 'include'
-                    });
-                } catch (err) {
-                    console.error('Lỗi xóa sản phẩm trên server:', err);
-                }
+        try {
+            const cart = JSON.parse(localStorage.getItem("selectedCart")) || [];
+            if (cart.length === 0) {
+                loadingModal.hide();
+                showToast("❌ Giỏ hàng trống, không thể thanh toán!");
+                return;
             }
+
+            const selectedMethod = document.querySelector('input[name="payment-method"]:checked')?.value || "COD";
+            const deliveryInfo = getDeliveryInfo(); // ✅ lấy bằng hàm chuẩn hóa
+            const total = cart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
+
+            // 1️⃣ Gửi yêu cầu tạo đơn hàng lên server
+            const res = await fetch(`${window.API_BASE}/api/orders`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                    items: cart,
+                    total,
+                    paymentMethod: selectedMethod,
+                    deliveryInfo
+                })
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                console.error("❌ Lỗi khi tạo đơn:", data.error || data.message);
+                showToast("Không thể tạo đơn hàng. Vui lòng thử lại!");
+                loadingModal.hide();
+                return;
+            }
+
+            console.log("✅ Đơn hàng mới từ server:", data.order);
+
+            // 2️⃣ Luôn gọi xoá giỏ hàng server (dù backend có tự xoá hay không)
+            try {
+                await fetch(`${window.API_BASE}/api/cart`, {
+                    method: "DELETE",
+                    credentials: "include"
+                });
+                console.log("🗑️ Đã xoá giỏ hàng server sau khi tạo đơn.");
+            } catch (err) {
+                console.warn("⚠️ Không xoá được giỏ hàng server:", err);
+            }
+
+            // 3️⃣ Dọn localStorage
+            localStorage.removeItem("cart");
+            localStorage.removeItem("selectedCart");
+            localStorage.removeItem("giftCart");
+            cartCache = [];
+            selectedItems = [];
+
+            // Giữ lại note & invoiceRequired cho lần sau
+            const savedInfo = {
+                note: deliveryInfo.note,
+                invoiceRequired: deliveryInfo.invoiceRequired
+            };
+            localStorage.setItem("deliveryInfo", JSON.stringify(savedInfo));
+
+            // 4️⃣ Cập nhật lại UI
+            updateCartCount();
+            renderCart();
+            updateOrderCount();
+
+            // 5️⃣ Đóng loading và mở modal thành công
+            loadingModal.hide();
+            showSuccessModal();
+
+        } catch (err) {
+            console.error("❌ Lỗi processPayment:", err);
+            showToast("Có lỗi xảy ra khi xử lý thanh toán!");
+            loadingModal.hide();
         }
-
-        // Dọn localStorage
-        localStorage.removeItem('cart');
-        localStorage.removeItem('selectedCart');
-        localStorage.removeItem('giftCart');
-        cartCache = [];
-        selectedItems = [];
-
-        updateCartCount();
-        renderCart();
-        updateOrderCount();
-
-        // Giữ lại note & invoiceRequired cho lần sau, xoá phần thông tin cá nhân
-        const savedInfo = {
-            note: deliveryInfo.note,
-            invoiceRequired: deliveryInfo.invoiceRequired
-        };
-        localStorage.setItem('deliveryInfo', JSON.stringify(savedInfo));
-
-        loadingModal.hide();
-        showSuccessModal();
     }, 2000);
 }
 
@@ -1394,14 +1410,37 @@ function formatCurrency(amount) {
     return amount.toLocaleString('vi-VN') + '₫';
 }
 
-function updateOrderCount() {
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+async function updateOrderCount() {
     const orderCountElement = document.querySelector('.order-count');
-    if (orderCountElement) {
-        orderCountElement.textContent = orders.length;
-        orderCountElement.style.display = orders.length > 0 ? 'inline-flex' : 'none';
+    if (!orderCountElement) return;
+
+    const isLoggedIn = !!localStorage.getItem('userName');
+
+    if (isLoggedIn) {
+        try {
+            const res = await fetch(`${window.API_BASE}/api/orders`, {
+                method: "GET",
+                credentials: "include"
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                const count = data.orders.length;
+                orderCountElement.textContent = count;
+                orderCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
+            } else {
+                orderCountElement.style.display = "none";
+            }
+        } catch (err) {
+            console.error("Lỗi lấy đơn hàng từ server:", err);
+            orderCountElement.style.display = "none";
+        }
+    } else {
+        // ❌ Chưa login → luôn ẩn
+        orderCountElement.style.display = "none";
     }
 }
+
 
 function setupPaymentMethodAnimations() {
     const animations = [
