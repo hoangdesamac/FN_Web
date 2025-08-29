@@ -648,6 +648,24 @@
     gap: 10px;
 }
 
+/* Cyber Gaming Scrollbar */
+#terms-modal .modal-content::-webkit-scrollbar {
+    width: 10px;
+}
+#terms-modal .modal-content::-webkit-scrollbar-track {
+    background: rgba(20, 20, 40, 0.6);
+    border-radius: 8px;
+}
+#terms-modal .modal-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00f2ff, #ff00e6);
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 242, 255, 0.6),
+    0 0 12px rgba(255, 0, 230, 0.6);
+}
+#terms-modal .modal-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ff00e6, #00f2ff);
+}
+
 /* 12. Notifications */
 /* 12.1 Custom Notification Modal */
 .notification.success {
