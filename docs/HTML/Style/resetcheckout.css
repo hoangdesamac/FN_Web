@@ -390,19 +390,19 @@
 
 /* ==== Cyber Gaming Design cho Profile Delivery Box ==== */
 #profile-delivery-box {
-    background: linear-gradient(135deg, rgba(0, 242, 255, 0.1), rgba(255, 0, 230, 0.1));
+    background: linear-gradient(135deg, rgba(0, 242, 255, 0.08), rgba(255, 0, 230, 0.08));
     border: 2px solid var(--primary, #00f2ff);
     border-radius: 16px;
     padding: 1.2rem;
-    box-shadow: 0 0 15px rgba(0, 242, 255, 0.4),
-    0 0 25px rgba(255, 0, 230, 0.3);
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.3),
+    0 0 25px rgba(255, 0, 230, 0.2);
     color: #fff;
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease-in-out;
 }
 
-/* Hiệu ứng viền neon khi hover */
+/* Hiệu ứng viền neon khi hover toàn bộ box */
 #profile-delivery-box:hover {
     border-color: var(--secondary, #ff00e6);
     box-shadow: 0 0 20px rgba(0, 242, 255, 0.6),
@@ -421,32 +421,68 @@
     text-shadow: 0 0 8px var(--primary, #00f2ff);
 }
 
-/* Thông tin từng dòng */
-#profile-delivery-box p {
-    margin: 0.3rem 0;
+/* ==== Card cho từng địa chỉ ==== */
+#profile-addresses-list .address-card {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(0, 242, 255, 0.4);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Hover card */
+#profile-addresses-list .address-card:hover {
+    border-color: var(--secondary, #ff00e6);
+    box-shadow: 0 0 12px rgba(0, 242, 255, 0.5),
+    0 0 20px rgba(255, 0, 230, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Radio input */
+#profile-addresses-list .form-check-input {
+    margin-right: 0.6rem;
+    accent-color: var(--primary, #00f2ff);
+    transform: scale(1.2);
+}
+
+/* Label hiển thị nội dung */
+#profile-addresses-list .form-check-label {
+    display: block;
     font-size: 0.95rem;
-    line-height: 1.4;
     color: #e0e0e0;
+    cursor: pointer;
+}
+
+/* Từng dòng thông tin */
+#profile-addresses-list .form-check-label div {
+    margin: 0.3rem 0;
+    line-height: 1.4;
 }
 
 /* Highlight label (Người nhận, SĐT, Địa chỉ) */
-#profile-delivery-box strong {
+#profile-addresses-list strong {
     color: var(--secondary, #ff00e6);
     text-shadow: 0 0 6px var(--secondary, #ff00e6);
 }
 
-.badge.bg-cyber {
+/* Badge Mặc định ở góc phải trên card */
+#profile-addresses-list .badge-default {
+    position: absolute;
+    top: 8px;
+    right: 12px;
     background: linear-gradient(45deg, #00f2ff, #ff00e6);
     color: #fff;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: bold;
-    padding: 0.3rem 0.6rem;
-    border-radius: 8px;
-    box-shadow: 0 0 8px rgba(0, 242, 255, 0.7), 0 0 12px rgba(255, 0, 230, 0.7);
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 242, 255, 0.7),
+    0 0 10px rgba(255, 0, 230, 0.6);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-
 
 /* 9. Payment Section */
 .info-card, .payment-card {
