@@ -993,24 +993,30 @@ function saveDeliveryInfo() {
     let deliveryInfo = {};
 
     if (deliveryMode === "profile") {
-        // Lấy địa chỉ mặc định từ addressesCache
-        const defaultAddr = addressesCache.find(a => a.is_default);
-        if (!defaultAddr) {
-            showNotification("Bạn chưa đặt địa chỉ mặc định trong sổ địa chỉ!", "error");
+        const selectedId = document.querySelector('input[name="profile-address"]:checked')?.value;
+        if (!selectedId) {
+            showNotification("❌ Vui lòng chọn một địa chỉ giao hàng!", "error");
+            return;
+        }
+
+        const addr = addressesCache.find(a => a.id == selectedId);
+        if (!addr) {
+            showNotification("❌ Không tìm thấy địa chỉ đã chọn!", "error");
             return;
         }
 
         deliveryInfo = {
             mode: "profile",
-            name: defaultAddr.recipient_name,
-            phone: defaultAddr.recipient_phone,
-            province: defaultAddr.city || "",
-            ward: defaultAddr.ward || "",
-            address: defaultAddr.street_address || "",
+            name: addr.recipient_name,
+            phone: addr.recipient_phone,
+            province: addr.city || "",
+            ward: addr.ward || "",
+            address: addr.street_address || "",
             note: document.getElementById("note").value.trim(),
             invoiceRequired: document.getElementById("invoice-required").checked
         };
-    } else {
+    }
+    else {
         // Nếu chọn nhập thủ công ("Thông tin khác")
         const provinceSelect = document.getElementById("province");
         const wardSelect = document.getElementById("ward");
@@ -1036,17 +1042,16 @@ function validateDeliveryInfo() {
     const deliveryMode = document.querySelector('input[name="deliveryMode"]:checked')?.value || "custom";
 
     if (deliveryMode === "profile") {
-        // Nếu chọn "Của bạn" → chỉ cần kiểm tra đã có địa chỉ mặc định chưa
-        if (!addressesCache || addressesCache.length === 0) {
-            showNotification('Bạn chưa có địa chỉ trong sổ địa chỉ. Vui lòng thêm mới!', 'error');
+        if (!addressesCache || !addressesCache.length) {
+            showNotification('❌ Bạn chưa có địa chỉ trong sổ địa chỉ!', 'error');
             return false;
         }
-        const defaultAddr = addressesCache.find(a => a.is_default);
-        if (!defaultAddr) {
-            showNotification('Bạn chưa đặt địa chỉ mặc định. Vui lòng chọn hoặc thêm một địa chỉ!', 'error');
+        const selectedId = document.querySelector('input[name="profile-address"]:checked')?.value;
+        if (!selectedId) {
+            showNotification('❌ Vui lòng chọn một địa chỉ!', 'error');
             return false;
         }
-        return true; // OK, dùng địa chỉ profile
+        return true;
     }
 
     // === Nếu là "Thông tin khác" → kiểm tra form như trước ===
@@ -1094,39 +1099,47 @@ function validateDeliveryInfo() {
     return isValid;
 }
 
-
-// ✅ Hàm load địa chỉ mặc định từ profile (API /api/addresses)
-async function loadDefaultAddressForCheckout() {
+async function loadAndRenderProfileAddresses() {
     try {
         const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
         const data = await res.json();
 
         if (!data.success || !data.addresses.length) {
-            console.warn("❌ Không có địa chỉ nào trong profile.");
-            return null;
+            document.getElementById("profile-addresses-list").innerHTML =
+                `<p class="text-danger">❌ Bạn chưa có địa chỉ nào trong sổ địa chỉ!</p>`;
+            window.addressesCache = [];
+            return;
         }
 
-        window.addressesCache = data.addresses;
-        return addressesCache.find(a => a.is_default) || addressesCache[0];
+        // Sắp xếp: mặc định (is_default) lên đầu
+        const sorted = data.addresses.slice().sort((a, b) => b.is_default - a.is_default);
+
+        // Cache để dùng ở saveDeliveryInfo(), getDeliveryInfo()
+        window.addressesCache = sorted;
+
+        // Render radio list
+        const html = sorted.map(addr => `
+            <div class="form-check mb-2">
+                <input type="radio" 
+                       name="profile-address" 
+                       id="profile-address-${addr.id}" 
+                       value="${addr.id}" 
+                       class="form-check-input"
+                       ${addr.is_default ? "checked" : ""}>
+                <label for="profile-address-${addr.id}" class="form-check-label">
+                    <strong>${addr.recipient_name}</strong> (${addr.recipient_phone})<br>
+                    ${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}
+                    ${addr.is_default ? `<span class="badge bg-success ms-2">Mặc định</span>` : ""}
+                </label>
+            </div>
+        `).join("");
+
+        document.getElementById("profile-addresses-list").innerHTML = html;
+
     } catch (err) {
-        console.error("❌ Lỗi loadDefaultAddressForCheckout:", err);
-        return null;
+        console.error("❌ Lỗi loadAndRenderProfileAddresses:", err);
     }
 }
-
-
-function showProfileDeliveryInfo() {
-    const defaultAddr = addressesCache.find(a => a.is_default);
-    if (defaultAddr) {
-        document.getElementById("profile-name").textContent = defaultAddr.recipient_name;
-        document.getElementById("profile-phone").textContent = defaultAddr.recipient_phone;
-        document.getElementById("profile-address").textContent =
-            `${defaultAddr.street_address}, ${defaultAddr.ward || ""}, ${defaultAddr.city || ""}`;
-        document.getElementById("profile-delivery-box").style.display = "block";
-    }
-}
-
-
 
 function renderOrderSummary() {
     const cart = JSON.parse(localStorage.getItem('selectedCart')) || [];
@@ -1522,25 +1535,25 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     // ================= BƯỚC 2: Delivery Mode =================
-    await loadDefaultAddressForCheckout(); // 🆕 load dữ liệu "Của bạn"
-    showProfileDeliveryInfo();
     const profileBox = document.getElementById("profile-delivery-box");
     const formBox = document.getElementById("custom-delivery-form");
 
-    document.querySelectorAll("input[name='deliveryMode']").forEach(radio => {
-        radio.addEventListener("change", () => {
-            if (radio.value === "profile" && radio.checked) {
+// Tải và render sổ địa chỉ ngay từ đầu
+    await loadAndRenderProfileAddresses();
+    document.querySelectorAll('input[name="deliveryMode"]').forEach(input => {
+        input.addEventListener("change", e => {
+            if (e.target.value === "profile") {
                 profileBox.style.display = "block";
                 formBox.style.display = "none";
-            }
-            if (radio.value === "custom" && radio.checked) {
+                loadAndRenderProfileAddresses(); // 🆕 load + render luôn khi chọn
+            } else {
                 profileBox.style.display = "none";
                 formBox.style.display = "block";
             }
         });
     });
 
-    // Mặc định chọn "Của bạn"
+// Mặc định chọn "Của bạn"
     const defaultRadio = document.querySelector("input[name='deliveryMode'][value='profile']");
     if (defaultRadio) {
         defaultRadio.checked = true;
@@ -1548,7 +1561,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         formBox.style.display = "none";
     }
 });
-
 
 function selectMethod(method) {
     document.querySelectorAll('.method-option').forEach(opt => opt.classList.remove('selected', 'cod'));
@@ -1563,23 +1575,23 @@ function selectMethod(method) {
 function getDeliveryInfo() {
     const mode = document.querySelector('input[name="deliveryMode"]:checked')?.value || "custom";
     let info = {};
-
     if (mode === "profile") {
-        // lấy từ địa chỉ mặc định trong addressesCache
-        const defaultAddr = addressesCache.find(a => a.is_default);
-        if (defaultAddr) {
+        const selectedId = document.querySelector('input[name="profile-address"]:checked')?.value;
+        const addr = addressesCache.find(a => a.id == selectedId);
+        if (addr) {
             info = {
                 mode: "profile",
-                name: defaultAddr.recipient_name,
-                phone: defaultAddr.recipient_phone,
-                address: defaultAddr.street_address,
-                ward: defaultAddr.ward || "",
-                province: defaultAddr.city || "",
+                name: addr.recipient_name,
+                phone: addr.recipient_phone,
+                address: addr.street_address,
+                ward: addr.ward || "",
+                province: addr.city || "",
                 note: document.getElementById("note")?.value.trim() || "",
                 invoiceRequired: document.getElementById("invoice-required")?.checked ?? true
             };
         }
-    } else {
+    }
+    else {
         // lấy từ form nhập tay
         const form = document.getElementById("custom-delivery-form");
         if (form) {
@@ -1599,10 +1611,8 @@ function getDeliveryInfo() {
             };
         }
     }
-
     return info;
 }
-
 
 window.addEventListener('storage', function (e) {
     const isLoggedIn = !!localStorage.getItem('userName');
@@ -1625,7 +1635,6 @@ window.addEventListener('storage', function (e) {
         updateOrderCount();
     }
 });
-
 
 window.addEventListener('scroll', function() {
     const cartHeader = document.querySelector('.cart-header');
