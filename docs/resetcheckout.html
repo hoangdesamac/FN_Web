@@ -154,24 +154,39 @@
 
         <!-- Phần luôn hiển thị -->
         <div id="extra-options" class="mt-4">
+            <!-- Ghi chú -->
             <div class="mb-3">
                 <label for="note" class="form-label">Ghi chú (tùy chọn)</label>
                 <textarea class="form-control" id="note" rows="2"></textarea>
             </div>
-            <div class="d-flex align-items-center justify-content-between mb-3">
+
+            <!-- Hai checkbox trên cùng 1 hàng -->
+            <div class="d-flex flex-wrap align-items-center gap-4 mb-3">
+                <!-- Xuất hóa đơn -->
                 <div class="form-check mb-0">
                     <input type="checkbox" id="invoice-required" class="form-check-input" checked>
-                    <label for="invoice-required" class="form-check-label">Yêu cầu xuất hóa đơn</label>
+                    <label for="invoice-required" class="form-check-label">Xuất hóa đơn</label>
                 </div>
-                <a href="#" class="text-cyber fw-semibold ms-3" data-bs-toggle="modal" data-bs-target="#terms-modal">
-                    Chính sách và điều khoản sử dụng
-                </a>
+
+                <!-- Đồng ý chính sách -->
+                <div class="form-check mb-0">
+                    <input type="checkbox" id="agree-terms" class="form-check-input">
+                    <label for="agree-terms" class="form-check-label">
+                        Đồng ý với
+                        <a href="#" class="text-cyber fw-bold" data-bs-toggle="modal" data-bs-target="#terms-modal">
+                            Chính sách & Điều khoản sử dụng
+                        </a>
+                    </label>
+                </div>
             </div>
+
+            <!-- Nút điều hướng -->
             <div class="step-navigation d-flex justify-content-between gap-3 mt-4">
                 <button type="button" class="btn btn-outline-primary flex-fill" onclick="showStep(1)">Quay lại</button>
                 <button type="button" class="btn btn-success flex-fill" id="proceed-to-step-3">Tiếp tục</button>
             </div>
         </div>
+
     </div>
 
 
@@ -256,28 +271,75 @@
     <!-- Modal: Terms and Conditions -->
     <div class="modal fade" id="terms-modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content cyber-modal text-light" style="background: rgba(10,10,30,0.95); backdrop-filter: blur(6px); border: 1px solid var(--cyber-primary);">
-                <h2 class="text-center mb-3">Chính sách và Điều khoản sử dụng</h2>
+            <div class="modal-content cyber-modal text-light"
+                 style="background: rgba(10,10,30,0.95); backdrop-filter: blur(6px); border: 1px solid var(--cyber-primary);">
+
+                <h2 class="text-center mb-3">Chính sách & Điều khoản 3TDShop</h2>
+
                 <div style="max-height: 400px; overflow-y: auto;" class="px-3">
                     <p>
-                        Chúng tôi cam kết bảo mật thông tin cá nhân của bạn. Khi chọn xuất hóa đơn, thông tin sẽ được lưu lại để đối chiếu khi có khiếu nại. Việc sử dụng dịch vụ đồng nghĩa với việc bạn đồng ý với các điều khoản này.
+                        Tại <strong>3TDShop</strong>, chúng tôi mong muốn mang lại trải nghiệm mua sắm trực tuyến
+                        <em>dễ dùng – dễ tương tác – dễ kết nối</em>, đồng thời đảm bảo quyền lợi và sự an toàn dữ liệu cho khách hàng.
                     </p>
+
+                    <h5 class="mt-3 text-cyber">1. Bảo mật & xử lý dữ liệu</h5>
+                    <ul>
+                        <li>Thông tin cá nhân được thu thập chỉ nhằm phục vụ đơn hàng & chăm sóc khách hàng.</li>
+                        <li>Mọi dữ liệu đều được bảo mật, không chia sẻ cho bên thứ ba khi chưa có sự đồng ý của bạn.</li>
+                        <li>Bạn có quyền yêu cầu chỉnh sửa hoặc <u>xóa dữ liệu</u> khi không còn sử dụng dịch vụ.</li>
+                    </ul>
+
+                    <h5 class="mt-3 text-cyber">2. Trách nhiệm của khách hàng</h5>
+                    <ul>
+                        <li>Cung cấp thông tin chính xác (họ tên, số điện thoại, địa chỉ).</li>
+                        <li>Kiểm tra kỹ giỏ hàng và đơn hàng trước khi xác nhận.</li>
+                        <li>Tôn trọng các quy định mua sắm và thanh toán của hệ thống.</li>
+                    </ul>
+
+                    <h5 class="mt-3 text-cyber">3. Xuất hóa đơn theo yêu cầu</h5>
+                    <ul>
+                        <li>Hóa đơn chỉ được phát hành nếu bạn <strong>tích chọn “Xuất hóa đơn”</strong> trước khi hoàn tất đặt hàng.</li>
+                        <li>Thông tin xuất hóa đơn cần chính xác ngay tại thời điểm mua hàng.</li>
+                        <li>Hóa đơn điện tử sẽ được gửi qua email đã đăng ký.</li>
+                        <li>3TDShop không cấp lại hóa đơn nếu bạn bỏ chọn lúc đầu.</li>
+                    </ul>
+
+                    <h5 class="mt-3 text-cyber">4. Cam kết dịch vụ</h5>
                     <p>
-                        - Bạn cần cung cấp thông tin chính xác khi đặt hàng.<br>
-                        - Hóa đơn sẽ không được cấp lại nếu bạn không chọn yêu cầu lúc đầu.<br>
-                        - Mọi hành vi gian lận sẽ bị từ chối xử lý đơn hàng.
-                    </p>
-                    <p>
-                        Mọi thắc mắc vui lòng liên hệ bộ phận CSKH của chúng tôi qua email hoặc hotline hỗ trợ 24/7.
+                        Chúng tôi luôn nỗ lực tối đa để mang lại trải nghiệm mua sắm an toàn và tiện lợi.
+                        Mọi thắc mắc hoặc khiếu nại, vui lòng liên hệ bộ phận <strong>Hỗ trợ khách hàng 24/7</strong> qua hotline hoặc email.
                     </p>
                 </div>
+
                 <div class="modal-buttons d-flex justify-content-center mt-4">
-                    <button class="btn btn-success" data-bs-dismiss="modal">OK</button>
+                    <button class="btn btn-success" data-bs-dismiss="modal">Tôi đã hiểu</button>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Modal: Cảnh báo chưa đồng ý -->
+    <div class="modal fade" id="must-agree-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content cyber-modal text-light text-center"
+                 style="background: rgba(20,20,40,0.95); backdrop-filter: blur(6px); border: 1px solid #ffcc00; box-shadow: 0 0 12px rgba(255, 204, 0, 0.5);">
 
+                <h4 class="mb-3 text-warning">
+                    <i class="fa fa-exclamation-triangle me-2"></i> Thông báo từ 3TDShop
+                </h4>
+
+                <p class="px-3">
+                    Bạn cần <strong>đọc và đồng ý</strong> với
+                    <span class="text-cyber">Chính sách &amp; Điều khoản sử dụng</span>
+                    của dịch vụ <span class="fw-bold text-cyber">3TDShop</span> trước khi tiếp tục.
+                </p>
+                <p class="text-muted small">Việc này nhằm đảm bảo quyền lợi và sự bảo mật thông tin cho bạn.</p>
+
+                <div class="modal-buttons d-flex justify-content-center mt-4">
+                    <button class="btn btn-warning px-4 fw-bold" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 <div id="footer-container"></div>
@@ -297,9 +359,6 @@
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet" />
 <!-- Tom Select JS -->
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
-
-
-
 <!-- Custom JS -->
 <script src="Script/js_header.js" defer></script>
 <script src="Script/js_resetcheckout.js" defer></script>

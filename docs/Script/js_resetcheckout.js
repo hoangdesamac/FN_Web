@@ -1509,14 +1509,25 @@ document.addEventListener("DOMContentLoaded", async function () {
     const proceedStep3Btn = document.getElementById('proceed-to-step-3');
     if (proceedStep3Btn) {
         proceedStep3Btn.addEventListener('click', () => {
-            if (validateDeliveryInfo()) {
-                saveDeliveryInfo();
-                renderOrderSummary();
-                renderDeliverySummary();
-                showStep(3);
+            // 1. Kiểm tra form giao hàng
+            if (!validateDeliveryInfo()) return;
+
+            // 2. Kiểm tra đã tick đồng ý điều khoản chưa
+            const agreeCheckbox = document.getElementById('agree-terms');
+            if (!agreeCheckbox || !agreeCheckbox.checked) {
+                const mustAgreeModal = new bootstrap.Modal(document.getElementById('must-agree-modal'));
+                mustAgreeModal.show();
+                return;
             }
+
+            // 3. Nếu hợp lệ thì lưu & sang Step 3
+            saveDeliveryInfo();
+            renderOrderSummary();
+            renderDeliverySummary();
+            showStep(3);
         });
     }
+
 
     const clearCartBtn = document.getElementById('clear-cart');
     if (clearCartBtn) clearCartBtn.addEventListener('click', clearCart);
