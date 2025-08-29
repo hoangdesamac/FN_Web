@@ -162,14 +162,15 @@
                 <label for="note" class="form-label">Ghi chú (tùy chọn)</label>
                 <textarea class="form-control" id="note" rows="2"></textarea>
             </div>
-
-            <div class="form-check mb-3">
-                <input type="checkbox" id="invoice-required" class="form-check-input" checked>
-                <label for="invoice-required" class="form-check-label">Yêu cầu xuất hóa đơn</label>
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="form-check mb-0">
+                    <input type="checkbox" id="invoice-required" class="form-check-input" checked>
+                    <label for="invoice-required" class="form-check-label">Yêu cầu xuất hóa đơn</label>
+                </div>
+                <a href="#" class="text-cyber fw-semibold ms-3" data-bs-toggle="modal" data-bs-target="#terms-modal">
+                    Chính sách và điều khoản sử dụng
+                </a>
             </div>
-
-            <p class="text-muted">Khi đặt hàng bạn đồng ý với <a href="#">chính sách</a> của chúng tôi.</p>
-
             <div class="step-navigation d-flex justify-content-between gap-3 mt-4">
                 <button type="button" class="btn btn-outline-primary flex-fill" onclick="showStep(1)">Quay lại</button>
                 <button type="button" class="btn btn-success flex-fill" id="proceed-to-step-3">Tiếp tục</button>
