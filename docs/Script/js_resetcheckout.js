@@ -1307,11 +1307,14 @@ function goToLookup() {
 }
 
 async function processPayment() {
+    // Đóng modal thanh toán
     closeModal();
+
     const loadingModal = new bootstrap.Modal(document.getElementById('loading-overlay'));
     loadingModal.show();
 
     try {
+        // Lottie animation
         lottie.loadAnimation({
             container: document.getElementById('loading-lottie'),
             renderer: 'svg',
@@ -1320,20 +1323,26 @@ async function processPayment() {
             path: '/transformanimation/processpayment.json'
         });
     } catch (error) {
-        console.error("Lỗi khi tải Lottie animation:", error);
+        console.error("⚠️ Lỗi khi tải Lottie animation:", error);
     }
 
+    // Giả lập delay xử lý thanh toán
     setTimeout(async () => {
         try {
-            const cart = JSON.parse(localStorage.getItem("selectedCart")) || [];
+            let cart = JSON.parse(localStorage.getItem("selectedCart")) || [];
+
             if (cart.length === 0) {
                 loadingModal.hide();
-                showToast("❌ Giỏ hàng trống, không thể thanh toán!");
+                showNotification("❌ Giỏ hàng trống, không thể thanh toán!", "error");
                 return;
             }
 
-            const selectedMethod = document.querySelector('input[name="payment-method"]:checked')?.value || "COD";
-            const deliveryInfo = getDeliveryInfo(); // ✅ lấy bằng hàm chuẩn hóa
+            // 🔎 Sanitize cart (fix lỗi JSON string trong items)
+            cart = cart.map(it => typeof it === "string" ? JSON.parse(it) : it);
+
+            const selectedMethod =
+                document.querySelector('input[name="payment-method"]:checked')?.value || "COD";
+            const deliveryInfo = getDeliveryInfo(); // lấy info chuẩn
             const total = cart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
 
             // 1️⃣ Gửi yêu cầu tạo đơn hàng lên server
@@ -1350,16 +1359,17 @@ async function processPayment() {
             });
 
             const data = await res.json();
+
             if (!res.ok || !data.success) {
                 console.error("❌ Lỗi khi tạo đơn:", data.error || data.message);
-                showToast("Không thể tạo đơn hàng. Vui lòng thử lại!");
+                showNotification("Không thể tạo đơn hàng. Vui lòng thử lại!", "error");
                 loadingModal.hide();
                 return;
             }
 
             console.log("✅ Đơn hàng mới từ server:", data.order);
 
-            // 2️⃣ Luôn gọi xoá giỏ hàng server (dù backend có tự xoá hay không)
+            // 2️⃣ Luôn xoá giỏ hàng trên server (phòng backend chưa xoá)
             try {
                 await fetch(`${window.API_BASE}/api/cart`, {
                     method: "DELETE",
@@ -1379,8 +1389,8 @@ async function processPayment() {
 
             // Giữ lại note & invoiceRequired cho lần sau
             const savedInfo = {
-                note: deliveryInfo.note,
-                invoiceRequired: deliveryInfo.invoiceRequired
+                note: deliveryInfo?.note || "",
+                invoiceRequired: deliveryInfo?.invoiceRequired || false
             };
             localStorage.setItem("deliveryInfo", JSON.stringify(savedInfo));
 
@@ -1395,11 +1405,12 @@ async function processPayment() {
 
         } catch (err) {
             console.error("❌ Lỗi processPayment:", err);
-            showToast("Có lỗi xảy ra khi xử lý thanh toán!");
+            showNotification("Có lỗi xảy ra khi xử lý thanh toán!", "error");
             loadingModal.hide();
         }
     }, 2000);
 }
+
 
 
 function formatCurrency(amount) {
