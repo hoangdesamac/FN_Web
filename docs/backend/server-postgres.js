@@ -1037,8 +1037,7 @@ app.get("/api/orders", authenticateToken, async (req, res) => {
     try {
         const result = await pool.query(
             `SELECT id, items, total, status, delivery_info AS "deliveryInfo",
-                    payment_method AS "paymentMethod", created_at AS "createdAt",
-                    unseen
+                    payment_method AS "paymentMethod", created_at AS "createdAt", unseen
              FROM orders
              WHERE user_id = $1
              ORDER BY created_at DESC`,
@@ -1047,8 +1046,10 @@ app.get("/api/orders", authenticateToken, async (req, res) => {
 
         const orders = result.rows.map(o => ({
             ...o,
-            // items là jsonb → pg trả object rồi, nếu string thì parse
-            items: typeof o.items === "string" ? JSON.parse(o.items) : o.items
+            items: typeof o.items === "string" ? JSON.parse(o.items) : o.items,
+            deliveryInfo: o.deliveryInfo && typeof o.deliveryInfo === "string"
+                ? JSON.parse(o.deliveryInfo)
+                : o.deliveryInfo
         }));
 
         res.json({ success: true, orders });
@@ -1086,6 +1087,9 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
             items: typeof result.rows[0].items === "string"
                 ? JSON.parse(result.rows[0].items)
                 : result.rows[0].items,
+            deliveryInfo: result.rows[0].deliveryInfo && typeof result.rows[0].deliveryInfo === "string"
+                ? JSON.parse(result.rows[0].deliveryInfo)
+                : result.rows[0].deliveryInfo,
             unseen: false
         };
 
@@ -1117,10 +1121,15 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
         const insert = await pool.query(
             `INSERT INTO orders (user_id, items, total, delivery_info, payment_method, unseen)
              VALUES ($1, $2, $3, $4, $5, true)
-                 RETURNING id, items, total, status, delivery_info AS "deliveryInfo", 
-                       payment_method AS "paymentMethod", created_at AS "createdAt", unseen`,
-            // ❌ KHÔNG JSON.stringify nữa, vì items & deliveryInfo là jsonb
-            [req.user.id, items, total, deliveryInfo || null, paymentMethod || null]
+                 RETURNING id, items, total, status, delivery_info AS "deliveryInfo",
+                           payment_method AS "paymentMethod", created_at AS "createdAt", unseen`,
+            [
+                req.user.id,
+                items, // jsonb
+                total,
+                deliveryInfo || null, // jsonb hoặc null
+                paymentMethod || null
+            ]
         );
 
         // ✅ Xoá giỏ hàng
@@ -1130,7 +1139,10 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             ...insert.rows[0],
             items: typeof insert.rows[0].items === "string"
                 ? JSON.parse(insert.rows[0].items)
-                : insert.rows[0].items
+                : insert.rows[0].items,
+            deliveryInfo: insert.rows[0].deliveryInfo && typeof insert.rows[0].deliveryInfo === "string"
+                ? JSON.parse(insert.rows[0].deliveryInfo)
+                : insert.rows[0].deliveryInfo
         };
 
         res.json({ success: true, order });
@@ -1155,9 +1167,14 @@ app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
              SET status = COALESCE($1, status),
                  unseen = COALESCE($2, unseen)
              WHERE id=$3 AND user_id=$4
-                 RETURNING id, items, total, status, delivery_info AS "deliveryInfo", 
+                 RETURNING id, items, total, status, delivery_info AS "deliveryInfo",
                        payment_method AS "paymentMethod", created_at AS "createdAt", unseen`,
-            [status || null, typeof unseen !== "undefined" ? unseen : null, id, req.user.id]
+            [
+                status || null,
+                typeof unseen !== "undefined" ? unseen : null,
+                id,
+                req.user.id
+            ]
         );
 
         if (!update.rows.length) {
@@ -1168,7 +1185,10 @@ app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
             ...update.rows[0],
             items: typeof update.rows[0].items === "string"
                 ? JSON.parse(update.rows[0].items)
-                : update.rows[0].items
+                : update.rows[0].items,
+            deliveryInfo: update.rows[0].deliveryInfo && typeof update.rows[0].deliveryInfo === "string"
+                ? JSON.parse(update.rows[0].deliveryInfo)
+                : update.rows[0].deliveryInfo
         };
 
         res.json({ success: true, order });
