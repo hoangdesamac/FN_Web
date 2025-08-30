@@ -1047,7 +1047,8 @@ app.get("/api/orders", authenticateToken, async (req, res) => {
 
         const orders = result.rows.map(o => ({
             ...o,
-            items: JSON.parse(o.items) // parse JSON string thành array
+            // items là jsonb → pg trả object rồi, nếu string thì parse
+            items: typeof o.items === "string" ? JSON.parse(o.items) : o.items
         }));
 
         res.json({ success: true, orders });
@@ -1062,7 +1063,6 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Lấy đơn hàng
         const result = await pool.query(
             `SELECT id, items, total, status, delivery_info AS "deliveryInfo",
                     payment_method AS "paymentMethod", created_at AS "createdAt", unseen
@@ -1075,7 +1075,7 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
             return res.status(404).json({ success: false, error: "Không tìm thấy đơn hàng" });
         }
 
-        // ✅ Cập nhật unseen = false khi xem chi tiết
+        // ✅ Đánh dấu đã xem
         await pool.query(
             `UPDATE orders SET unseen=false WHERE id=$1 AND user_id=$2`,
             [id, req.user.id]
@@ -1083,7 +1083,9 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
 
         const order = {
             ...result.rows[0],
-            items: JSON.parse(result.rows[0].items),
+            items: typeof result.rows[0].items === "string"
+                ? JSON.parse(result.rows[0].items)
+                : result.rows[0].items,
             unseen: false
         };
 
@@ -1103,7 +1105,7 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu đơn hàng" });
         }
 
-        // ✅ Kiểm tra giỏ hàng trong DB (chặn fake checkout)
+        // ✅ Kiểm tra giỏ hàng trong DB
         const cartCheck = await pool.query(
             "SELECT COUNT(*) FROM cart_items WHERE user_id=$1",
             [req.user.id]
@@ -1117,15 +1119,18 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
              VALUES ($1, $2, $3, $4, $5, true)
                  RETURNING id, items, total, status, delivery_info AS "deliveryInfo", 
                        payment_method AS "paymentMethod", created_at AS "createdAt", unseen`,
-            [req.user.id, JSON.stringify(items), total, deliveryInfo || null, paymentMethod || null]
+            // ❌ KHÔNG JSON.stringify nữa, vì items & deliveryInfo là jsonb
+            [req.user.id, items, total, deliveryInfo || null, paymentMethod || null]
         );
 
-        // ✅ Xóa giỏ hàng sau khi checkout
+        // ✅ Xoá giỏ hàng
         await pool.query(`DELETE FROM cart_items WHERE user_id=$1`, [req.user.id]);
 
         const order = {
             ...insert.rows[0],
-            items: JSON.parse(insert.rows[0].items)
+            items: typeof insert.rows[0].items === "string"
+                ? JSON.parse(insert.rows[0].items)
+                : insert.rows[0].items
         };
 
         res.json({ success: true, order });
@@ -1161,7 +1166,9 @@ app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
 
         const order = {
             ...update.rows[0],
-            items: JSON.parse(update.rows[0].items)
+            items: typeof update.rows[0].items === "string"
+                ? JSON.parse(update.rows[0].items)
+                : update.rows[0].items
         };
 
         res.json({ success: true, order });
