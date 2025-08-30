@@ -1225,7 +1225,8 @@ $(document).ready(function () {
         return (str || '')
             .toLowerCase()
             .normalize('NFD').replace(/\p{Diacritic}/gu, '')
-            .replace(/[^a-z0-9]/g, '')
+            .replace(/[^a-z0-9 ]/g, '')
+            .replace(/\s+/g, '-')
             .trim();
     }
     function categoryToString(category) {
@@ -1243,63 +1244,32 @@ $(document).ready(function () {
     loadPagePart("HTML/Layout/resetfooter.html", "footer-container");
 
     window.showTab = function (tabId, event = null) {
-        // 1. Ẩn toàn bộ nội dung tab và bỏ trạng thái active ở các nút
         $('.tab-content').removeClass('active');
         $('.tab-btn').removeClass('active');
-
-        // 2. Hiện nội dung tab được chọn
         $(`#${tabId}`).addClass('active');
-
-        // 3. Nếu sự kiện đến từ click thật (VD click vào button)
-        if (event) {
-            $(event.currentTarget).addClass('active');
-        } else {
-            // 4. Nếu là gọi gián tiếp (VD: từ link "Xem đánh giá")
-            // → tìm đúng nút .tab-btn có onclick gọi tabId
+        if (event) $(event.currentTarget).addClass('active');
+        else {
             const $btn = $(`.tab-btn`).filter(function () {
                 return $(this).attr('onclick')?.includes(tabId);
             });
-
-            // 👉 Gán class active và mô phỏng hiệu ứng như click thật
             $btn.addClass('active');
-
-            // (Tùy chọn) Nếu bạn muốn hiệu ứng ripple/click thì có thể gọi $btn.trigger('click');
-            // Nhưng ở đây ta không gọi lại vì đã xử lý nội dung tab rồi
         }
-
-        // 5. Nếu là tab đánh giá → scroll xuống
         if (tabId === 'tab3') {
             const targetOffset = document.querySelector('.product-tabs').offsetTop - 60;
-            window.scrollTo({
-                top: targetOffset,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: targetOffset, behavior: 'smooth' });
         }
     };
 
-
-
-
-    // Lấy name và type từ URL
+    // Lấy id, name và type từ URL
     const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
     const normName = urlParams.get('name');
     const type = urlParams.get('type');
 
     // Debug: log URL params
-    console.log('[DEBUG] URL params:', { normName, type });
-
-    // Hàm normalize giống bên allproducts
-    function normalizeName(str) {
-        return (str || '')
-            .toLowerCase()
-            .normalize('NFD').replace(/\p{Diacritic}/gu, '')
-            .replace(/[^a-z0-9 ]/g, '')
-            .replace(/\s+/g, '-')
-            .trim();
-    }
+    console.log('[DEBUG] URL params:', { productId, normName, type });
 
     // Lấy đúng danh sách sản phẩm theo type
-    // Luôn fetch theo type nếu có type (không dùng window.products cho các loại này)
     function fetchProductsByType(type, cb) {
         let file = '';
         if (type === 'pc') file = 'pc-part-dataset/processed/pc.json';
@@ -1327,10 +1297,7 @@ $(document).ready(function () {
     }
 
     function renderProduct(product) {
-        // Fix riêng cho laptop: chuẩn hóa category về string nếu type=laptop
-        if (type === 'laptop') {
-            if (Array.isArray(product.category)) product.category = product.category.join(' ');
-        }
+        if (type === 'laptop' && Array.isArray(product.category)) product.category = product.category.join(' ');
         console.log('[DEBUG] Render product:', product);
         if (!product) {
             showNotFound('Không tìm thấy sản phẩm (product null)');
@@ -1343,9 +1310,7 @@ $(document).ready(function () {
            <span class="stars">${ratingStars}</span>
            <a href="#tab3" class="review-link" onclick="document.querySelectorAll('.tab-btn')[2].click()">Xem đánh giá</a>
         `);
-        // Hiển thị giá cho từng loại sản phẩm
         let sale = 0, original = 0;
-        // Ưu tiên lấy giá cho bàn phím
         if (window.location.search.includes('type=keyboard') || (product.name && product.name.toLowerCase().includes('bàn phím'))) {
             if (product.new_price && product.old_price) {
                 sale = parsePrice(product.new_price);
@@ -1356,11 +1321,9 @@ $(document).ready(function () {
                 sale = parsePrice(product.price);
             }
         } else if (product.price_new && product.price_old) {
-            // Mouse: có price_new, price_old
             sale = parsePrice(product.price_new);
             original = parsePrice(product.price_old);
         } else if (product.price) {
-            // PC/Laptop: chỉ có price
             sale = parsePrice(product.price);
         } else if (product.salePrice && product.originalPrice) {
             sale = parsePrice(product.salePrice);
@@ -1377,8 +1340,6 @@ $(document).ready(function () {
         }
         $('#productDescription').html(product.description || '');
         $('.buy-now').attr('data-id', product.id || '');
-        // Hiển thị hình ảnh đẹp hơn, căn giữa, bo góc, đổ bóng
-        // Hiển thị ảnh sắc nét nhất có thể
         const $img = $('#mainImage');
         $img.attr('src', product.image)
             .css({
@@ -1401,7 +1362,6 @@ $(document).ready(function () {
                 'backface-visibility': 'hidden',
                 'will-change': 'transform',
             });
-        // Nếu có ảnh độ phân giải cao hơn, dùng srcset cho màn hình retina
         if (product.image && product.image.includes('_medium')) {
             const highRes = product.image.replace('_medium', '_master');
             $img.attr('srcset', `${product.image} 1x, ${highRes} 2x`);
@@ -1411,34 +1371,27 @@ $(document).ready(function () {
             function() { $(this).css({'box-shadow': '0 8px 32px 0 rgba(0,0,0,0.18)', 'transform': 'scale(1)'}); }
         );
         $('#lightgallery a').attr('href', product.image);
-        // Nếu có nhiều ảnh thì dùng thumbnails, còn không thì chỉ 1 ảnh
         if (product.thumbnails && Array.isArray(product.thumbnails) && product.thumbnails.length > 1) {
             setupThumbnails(product.thumbnails);
         } else {
             setupThumbnails([product.image]);
         }
-        // Ẩn flash sale nếu không có
         $("#flashSaleBox").css("display", "none");
-        // Hiển thị thông số kỹ thuật cho từng loại sản phẩm
         let specsHtml = '<tr><th>Thành phần</th><th>Chi tiết</th></tr>';
         if (
             ((product.category?.toLowerCase()?.includes('chuột') || product.name?.toLowerCase()?.includes('chuột')) || (window.location.search.includes('type=mouse')))
         ) {
-            // Luôn hiển thị 3 dòng cố định bên trái
             const keysOrder = ['Kết nối', 'Pin', 'DPI'];
-            // Ưu tiên lấy từ specs dạng object
             let specsMap = {};
             if (product.specs && Array.isArray(product.specs)) {
                 product.specs.forEach(s => {
                     if (s.key && s.value) specsMap[s.key.trim().toLowerCase()] = s.value;
                 });
             }
-            // Nếu không có specs, lấy từ desc dạng text
             let descArr = Array.isArray(product.desc) ? product.desc : [];
             keysOrder.forEach((key, idx) => {
                 let val = specsMap[key.toLowerCase()];
                 if (!val && descArr[idx]) {
-                    // Nếu desc có dạng 'DPI - 12000' thì tách lấy số
                     if (key === 'DPI' && /dpi/i.test(descArr[idx])) {
                         let match = descArr[idx].match(/\d+[.,]?\d*/);
                         val = match ? match[0] : descArr[idx];
@@ -1451,7 +1404,6 @@ $(document).ready(function () {
         } else if (product.specs && Array.isArray(product.specs) && product.specs.length > 0) {
             specsHtml += product.specs.map(spec => `<tr><td>${spec.key}</td><td>${spec.value}</td></tr>`).join('');
         } else if (window.location.search.includes('type=display') || (product.category?.toLowerCase()?.includes('màn hình') || product.name?.toLowerCase()?.includes('màn hình'))) {
-            // Nếu là màn hình mà không có specs thì tự động lấy các trường panel, refresh_rate, size, resolution
             const displayFields = [
                 { key: 'Tấm nền', value: product.panel },
                 { key: 'Tần số quét', value: product.refresh_rate },
@@ -1462,7 +1414,6 @@ $(document).ready(function () {
         } else if (product.desc && Array.isArray(product.desc) && product.desc.length > 0) {
             specsHtml += product.desc.map((d) => `<tr><td>Đặc điểm</td><td>${d}</td></tr>`).join('');
         } else {
-            // Nếu không có specs/desc, tự tạo bảng từ các trường cơ bản
             const fields = [
                 { key: 'CPU', value: product.cpu },
                 { key: 'GPU', value: product.gpu },
@@ -1497,20 +1448,43 @@ $(document).ready(function () {
         console.warn('[DEBUG] showNotFound:', message);
     }
 
-    if (type && normName) {
+    // Nếu có id (từ index) → tìm trong window.products hoặc fetch all types
+    if (productId) {
+        // Kiểm tra trong window.products trước (dữ liệu từ index)
+        const foundInWindow = window.products.find(p => p.id === productId);
+        if (foundInWindow) {
+            renderProduct(foundInWindow);
+        } else {
+            // Nếu không tìm thấy, fetch tất cả types để tìm theo id
+            const allTypes = ['pc', 'laptop', 'mouse', 'keyboard', 'display'];
+            let allProducts = [];
+            let promises = allTypes.map(t => new Promise(resolve => {
+                fetchProductsByType(t, list => {
+                    allProducts = allProducts.concat(list);
+                    resolve();
+                });
+            }));
+            Promise.all(promises).then(() => {
+                console.log('[DEBUG] Fetched all types lists:', allProducts);
+                const found = allProducts.find(p => p.id === productId);
+                if (found) renderProduct(found);
+                else showNotFound(`Không tìm thấy sản phẩm với ID: ${productId}`);
+            }).catch(err => {
+                console.error('[DEBUG] Lỗi fetch all types:', err);
+                showNotFound('Lỗi tải dữ liệu sản phẩm');
+            });
+        }
+        // Nếu có type và name (từ allproducts) → giữ logic cũ
+    } else if (type && normName) {
         fetchProductsByType(type, list => {
             if (!Array.isArray(list)) return showNotFound('Dữ liệu sản phẩm không hợp lệ');
-            console.log('[DEBUG] Fetched list:', list);
+            console.log('[DEBUG] Fetched list for type ' + type + ':', list);
             const found = list.find(p => normalizeName(p.name) === normName);
             if (found) renderProduct(found);
-            else showNotFound('Không tìm thấy sản phẩm trong file dữ liệu');
+            else showNotFound('Không tìm thấy sản phẩm trong file dữ liệu cho type: ' + type);
         });
-    } else if (window.products && window.products.length) {
-        console.log('[DEBUG] window.products:', window.products);
-        const found = window.products.find(p => normalizeName(p.name) === normName);
-        if (found) renderProduct(found);
-        else showNotFound('Không tìm thấy sản phẩm trong window.products');
+        // Nếu thiếu cả id, name, type → not found
     } else {
-        showNotFound('Thiếu thông tin name hoặc type trên URL');
+        showNotFound('Thiếu thông tin id, name hoặc type trên URL');
     }
 });
