@@ -384,12 +384,12 @@ async function renderOrders(ordersToRender) {
                         );
 
                         try {
-                            await fetch(`/api/orders/${order.id}`, {
+                            await fetch(`${window.API_BASE}/api/orders/${order.id}`, {
                                 method: "PATCH",
                                 headers: {
-                                    "Content-Type": "application/json",
-                                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                                    "Content-Type": "application/json"
                                 },
+                                credentials: "include",
                                 body: JSON.stringify({ unseen: false })
                             });
                         } catch (err) {
