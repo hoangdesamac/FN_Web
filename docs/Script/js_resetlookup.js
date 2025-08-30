@@ -313,7 +313,7 @@ async function renderOrders(ordersToRender) {
             orderCard.innerHTML = `
                 <div class="order-item ${statusClass}" id="order-item-${index}" data-order-id="${order.id}">
                   <div class="order-front">
-                    <button class="btn btn-reward" onclick="claimReward('${order.id}', event)">
+                    <button class="btn btn-reward" onclick="claimReward(${order.id}, event)">
                       <i class='bx bx-gift'></i> Nhận thưởng
                     </button>
                     <div class="order-profile">
@@ -349,9 +349,9 @@ async function renderOrders(ordersToRender) {
                     </div>
                     <div class="order-total">Tổng cộng: ${formatCurrency(total)}</div>
                     <div class="order-actions d-flex gap-2">
-                      <button class="btn btn-cancel" onclick="cancelOrder('${order.id}')"><i class='bx bx-trash'></i> Hủy đơn</button>
-                      ${!deliveryInfo.invoiceRequired ? '' : `<button class="btn btn-invoice" onclick="exportToPDF('${order.id}')"><i class='bx bx-download'></i> Xuất HĐ</button>`}
-                      ${order.status === 'Đơn hàng đã hủy' ? `<button class="btn btn-rebuy" onclick="rebuyOrder('${order.id}')"><i class='bx bx-cart'></i> Mua lại</button>` : ''}
+                      <button class="btn btn-cancel" onclick="cancelOrder(${order.id})"><i class='bx bx-trash'></i> Hủy đơn</button>
+                      ${!deliveryInfo.invoiceRequired ? '' : `<button class="btn btn-invoice" onclick="exportToPDF(${order.id})"><i class='bx bx-download'></i> Xuất đơn</button>`}
+                      ${order.status === 'Đơn hàng đã hủy' ? `<button class="btn btn-rebuy" onclick="rebuyOrder(${order.id})"><i class='bx bx-cart'></i> Mua lại</button>` : ''}
                     </div>
                   </div>
                 </div>
