@@ -1036,8 +1036,10 @@ function authenticateToken(req, res, next) {
 app.get("/api/orders", authenticateToken, async (req, res) => {
     try {
         const result = await pool.query(
-            `SELECT id, items, total, status, delivery_info AS "deliveryInfo",
-                    payment_method AS "paymentMethod", created_at AS "createdAt", unseen
+            `SELECT id, items, total, status,
+                    delivery_info AS "deliveryInfo",
+                    payment_method AS "paymentMethod",
+                    created_at AS "createdAt", unseen
              FROM orders
              WHERE user_id = $1
              ORDER BY created_at DESC`,
@@ -1065,8 +1067,10 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
         const { id } = req.params;
 
         const result = await pool.query(
-            `SELECT id, items, total, status, delivery_info AS "deliveryInfo",
-                    payment_method AS "paymentMethod", created_at AS "createdAt", unseen
+            `SELECT id, items, total, status,
+                    delivery_info AS "deliveryInfo",
+                    payment_method AS "paymentMethod",
+                    created_at AS "createdAt", unseen
              FROM orders
              WHERE id=$1 AND user_id=$2`,
             [id, req.user.id]
@@ -1118,21 +1122,24 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, error: "Giỏ hàng trống" });
         }
 
+        // ✅ Luôn stringify khi insert vào jsonb
         const insert = await pool.query(
             `INSERT INTO orders (user_id, items, total, delivery_info, payment_method, unseen)
-             VALUES ($1, $2, $3, $4, $5, true)
-                 RETURNING id, items, total, status, delivery_info AS "deliveryInfo",
-                           payment_method AS "paymentMethod", created_at AS "createdAt", unseen`,
+             VALUES ($1, $2::jsonb, $3, $4::jsonb, $5, true)
+                 RETURNING id, items, total, status,
+                       delivery_info AS "deliveryInfo",
+                       payment_method AS "paymentMethod",
+                       created_at AS "createdAt", unseen`,
             [
                 req.user.id,
-                items, // jsonb
+                JSON.stringify(items),
                 total,
-                deliveryInfo || null, // jsonb hoặc null
+                deliveryInfo ? JSON.stringify(deliveryInfo) : null,
                 paymentMethod || null
             ]
         );
 
-        // ✅ Xoá giỏ hàng
+        // ✅ Xoá giỏ hàng sau khi đặt đơn
         await pool.query(`DELETE FROM cart_items WHERE user_id=$1`, [req.user.id]);
 
         const order = {
@@ -1167,8 +1174,10 @@ app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
              SET status = COALESCE($1, status),
                  unseen = COALESCE($2, unseen)
              WHERE id=$3 AND user_id=$4
-                 RETURNING id, items, total, status, delivery_info AS "deliveryInfo",
-                       payment_method AS "paymentMethod", created_at AS "createdAt", unseen`,
+                 RETURNING id, items, total, status,
+                       delivery_info AS "deliveryInfo",
+                       payment_method AS "paymentMethod",
+                       created_at AS "createdAt", unseen`,
             [
                 status || null,
                 typeof unseen !== "undefined" ? unseen : null,
@@ -1217,6 +1226,7 @@ app.delete("/api/orders/:id", authenticateToken, async (req, res) => {
         res.status(500).json({ success: false, error: "Server error" });
     }
 });
+
 
 // ===== Start =====
 const PORT = process.env.PORT || 3000;

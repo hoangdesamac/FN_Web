@@ -1306,21 +1306,47 @@ function goToLookup() {
     window.location.href = 'resetlookup.html';
 }
 
+// Hàm chuẩn hoá dữ liệu giỏ hàng trước khi gửi server
+function sanitizeCart(cart) {
+    return cart.map(item => {
+        let cleanItem = { ...item };
+
+        // Ép kiểu số
+        cleanItem.originalPrice = Number(cleanItem.originalPrice) || 0;
+        cleanItem.salePrice = Number(cleanItem.salePrice) || 0;
+        cleanItem.quantity = Number(cleanItem.quantity) || 1;
+
+        // Chuẩn hoá image → luôn là string URL
+        if (typeof cleanItem.image === "object" && cleanItem.image !== null) {
+            cleanItem.image = cleanItem.image.src || "";
+        } else if (typeof cleanItem.image !== "string") {
+            cleanItem.image = "";
+        }
+
+        // Xoá các field undefined (Postgres jsonb không nhận undefined)
+        Object.keys(cleanItem).forEach(k => {
+            if (cleanItem[k] === undefined) delete cleanItem[k];
+        });
+
+        return cleanItem;
+    });
+}
+
 async function processPayment() {
     // Đóng modal thanh toán
     closeModal();
 
-    const loadingModal = new bootstrap.Modal(document.getElementById('loading-overlay'));
+    const loadingModal = new bootstrap.Modal(document.getElementById("loading-overlay"));
     loadingModal.show();
 
     try {
-        // Lottie animation
+        // Hiển thị animation loading
         lottie.loadAnimation({
-            container: document.getElementById('loading-lottie'),
-            renderer: 'svg',
+            container: document.getElementById("loading-lottie"),
+            renderer: "svg",
             loop: true,
             autoplay: true,
-            path: '/transformanimation/processpayment.json'
+            path: "/transformanimation/processpayment.json"
         });
     } catch (error) {
         console.error("⚠️ Lỗi khi tải Lottie animation:", error);
@@ -1337,12 +1363,13 @@ async function processPayment() {
                 return;
             }
 
-            // 🔎 Sanitize cart (fix lỗi JSON string trong items)
-            cart = cart.map(it => typeof it === "string" ? JSON.parse(it) : it);
+            // 🔎 Chuẩn hoá dữ liệu giỏ hàng
+            cart = cart.map(it => (typeof it === "string" ? JSON.parse(it) : it));
+            cart = sanitizeCart(cart);
 
             const selectedMethod =
                 document.querySelector('input[name="payment-method"]:checked')?.value || "COD";
-            const deliveryInfo = getDeliveryInfo(); // lấy info chuẩn
+            const deliveryInfo = getDeliveryInfo(); // lấy info chuẩn từ form
             const total = cart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
 
             // 1️⃣ Gửi yêu cầu tạo đơn hàng lên server
@@ -1369,7 +1396,7 @@ async function processPayment() {
 
             console.log("✅ Đơn hàng mới từ server:", data.order);
 
-            // 2️⃣ Luôn xoá giỏ hàng trên server (phòng backend chưa xoá)
+            // 2️⃣ Xoá giỏ hàng trên server (phòng backend chưa xoá)
             try {
                 await fetch(`${window.API_BASE}/api/cart`, {
                     method: "DELETE",
@@ -1402,7 +1429,6 @@ async function processPayment() {
             // 5️⃣ Đóng loading và mở modal thành công
             loadingModal.hide();
             showSuccessModal();
-
         } catch (err) {
             console.error("❌ Lỗi processPayment:", err);
             showNotification("Có lỗi xảy ra khi xử lý thanh toán!", "error");
@@ -1410,8 +1436,6 @@ async function processPayment() {
         }
     }, 2000);
 }
-
-
 
 function formatCurrency(amount) {
     if (typeof amount === 'string') {
