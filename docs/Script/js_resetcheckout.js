@@ -1104,48 +1104,43 @@ async function loadAndRenderProfileAddresses() {
         const res = await fetch(`${window.API_BASE}/api/addresses`, { credentials: "include" });
         const data = await res.json();
 
+        const container = document.getElementById("profile-addresses-list");
+        if (!container) {
+            console.warn("⚠️ Không tìm thấy #profile-addresses-list trong DOM");
+            return;
+        }
+
         if (!data.success || !data.addresses.length) {
-            document.getElementById("profile-addresses-list").innerHTML =
-                `<p class="text-danger">❌ Bạn chưa có địa chỉ nào trong sổ địa chỉ!</p>`;
+            container.innerHTML = `<p class="text-danger">❌ Bạn chưa có địa chỉ nào trong sổ địa chỉ!</p>`;
             window.addressesCache = [];
             return;
         }
 
-        // Sắp xếp: mặc định (is_default) lên đầu
+        // sắp xếp mặc định lên đầu
         const sorted = data.addresses.slice().sort((a, b) => b.is_default - a.is_default);
-
-        // Cache để dùng ở saveDeliveryInfo(), getDeliveryInfo()
         window.addressesCache = sorted;
 
-        // Render radio list
-        const html = sorted.map(addr => `
-    <div class="form-check address-card">
-        <!-- Radio góc trái -->
-        <input type="radio" 
-               name="profile-address" 
-               id="profile-address-${addr.id}" 
-               value="${addr.id}" 
-               class="form-check-input position-absolute top-0 start-0 m-2"
-               ${addr.is_default ? "checked" : ""}>
-
-        <!-- Badge mặc định góc phải -->
-        ${addr.is_default ? `<span class="badge-default">Mặc định</span>` : ""}
-
-        <!-- Nội dung -->
-        <label for="profile-address-${addr.id}" class="form-check-label d-block mt-4">
-            <div><strong>Người nhận:</strong> ${addr.recipient_name}</div>
-            <div><strong>SĐT:</strong> ${addr.recipient_phone}</div>
-            <div><strong>Địa chỉ:</strong> ${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</div>
-        </label>
-    </div>
-`).join("");
-
-        document.getElementById("profile-addresses-list").innerHTML = html;
-
+        container.innerHTML = sorted.map(addr => `
+            <div class="form-check address-card">
+                <input type="radio" 
+                       name="profile-address" 
+                       id="profile-address-${addr.id}" 
+                       value="${addr.id}" 
+                       class="form-check-input position-absolute top-0 start-0 m-2"
+                       ${addr.is_default ? "checked" : ""}>
+                ${addr.is_default ? `<span class="badge-default">Mặc định</span>` : ""}
+                <label for="profile-address-${addr.id}" class="form-check-label d-block mt-4">
+                    <div><strong>Người nhận:</strong> ${addr.recipient_name}</div>
+                    <div><strong>SĐT:</strong> ${addr.recipient_phone}</div>
+                    <div><strong>Địa chỉ:</strong> ${addr.street_address}, ${addr.ward || ""}, ${addr.city || ""}</div>
+                </label>
+            </div>
+        `).join("");
     } catch (err) {
         console.error("❌ Lỗi loadAndRenderProfileAddresses:", err);
     }
 }
+
 
 function renderOrderSummary() {
     const cart = JSON.parse(localStorage.getItem('selectedCart')) || [];
