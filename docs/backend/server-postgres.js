@@ -1032,11 +1032,27 @@ function authenticateToken(req, res, next) {
 
 // ==================== ORDERS APIS ====================
 
+// Sinh mã đơn hàng với định dạng DH-YYYYMMDD-XXXXX
+function generateOrderCode() {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const dd = String(now.getDate()).padStart(2, "0");
+
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let randomPart = "";
+    for (let i = 0; i < 5; i++) {
+        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    return `DH-${yyyy}${mm}${dd}-${randomPart}`;
+}
+
 // Lấy danh sách đơn hàng của user
 app.get("/api/orders", authenticateToken, async (req, res) => {
     try {
         const result = await pool.query(
-            `SELECT id, items, total, status,
+            `SELECT id, order_code AS "orderCode", items, total, status,
                     delivery_info AS "deliveryInfo",
                     payment_method AS "paymentMethod",
                     created_at AS "createdAt", unseen
@@ -1061,13 +1077,13 @@ app.get("/api/orders", authenticateToken, async (req, res) => {
     }
 });
 
-// Lấy chi tiết 1 đơn hàng theo id (và đánh dấu đã xem unseen=false)
+// Lấy chi tiết 1 đơn hàng
 app.get("/api/orders/:id", authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
 
         const result = await pool.query(
-            `SELECT id, items, total, status,
+            `SELECT id, order_code AS "orderCode", items, total, status,
                     delivery_info AS "deliveryInfo",
                     payment_method AS "paymentMethod",
                     created_at AS "createdAt", unseen
@@ -1113,7 +1129,7 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu đơn hàng" });
         }
 
-        // ✅ Kiểm tra giỏ hàng trong DB
+        // ✅ Kiểm tra giỏ hàng
         const cartCheck = await pool.query(
             "SELECT COUNT(*) FROM cart_items WHERE user_id=$1",
             [req.user.id]
@@ -1122,16 +1138,24 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, error: "Giỏ hàng trống" });
         }
 
-        // ✅ Luôn stringify khi insert vào jsonb
+        // ✅ Sinh mã đơn hàng unique
+        let orderCode, exists = true;
+        while (exists) {
+            orderCode = generateOrderCode();
+            const check = await pool.query("SELECT 1 FROM orders WHERE order_code=$1", [orderCode]);
+            exists = check.rows.length > 0;
+        }
+
         const insert = await pool.query(
-            `INSERT INTO orders (user_id, items, total, delivery_info, payment_method, unseen)
-             VALUES ($1, $2::jsonb, $3, $4::jsonb, $5, true)
-                 RETURNING id, items, total, status,
-                       delivery_info AS "deliveryInfo",
-                       payment_method AS "paymentMethod",
-                       created_at AS "createdAt", unseen`,
+            `INSERT INTO orders (user_id, order_code, items, total, delivery_info, payment_method, unseen)
+             VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6, true)
+                 RETURNING id, order_code AS "orderCode", items, total, status,
+                           delivery_info AS "deliveryInfo",
+                           payment_method AS "paymentMethod",
+                           created_at AS "createdAt", unseen`,
             [
                 req.user.id,
+                orderCode,
                 JSON.stringify(items),
                 total,
                 deliveryInfo ? JSON.stringify(deliveryInfo) : null,
@@ -1139,7 +1163,7 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             ]
         );
 
-        // ✅ Xoá giỏ hàng sau khi đặt đơn
+        // ✅ Xoá giỏ hàng
         await pool.query(`DELETE FROM cart_items WHERE user_id=$1`, [req.user.id]);
 
         const order = {
@@ -1159,7 +1183,7 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
     }
 });
 
-// Cập nhật trạng thái đơn (VD: hủy đơn, xác nhận, hoàn tất...)
+// Cập nhật trạng thái đơn
 app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
     try {
         const { status, unseen } = req.body;
@@ -1174,10 +1198,10 @@ app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
              SET status = COALESCE($1, status),
                  unseen = COALESCE($2, unseen)
              WHERE id=$3 AND user_id=$4
-                 RETURNING id, items, total, status,
-                       delivery_info AS "deliveryInfo",
-                       payment_method AS "paymentMethod",
-                       created_at AS "createdAt", unseen`,
+                 RETURNING id, order_code AS "orderCode", items, total, status,
+                           delivery_info AS "deliveryInfo",
+                           payment_method AS "paymentMethod",
+                           created_at AS "createdAt", unseen`,
             [
                 status || null,
                 typeof unseen !== "undefined" ? unseen : null,
@@ -1207,7 +1231,7 @@ app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
     }
 });
 
-// Xóa đơn hàng (nếu cần cho user)
+// Xóa đơn hàng
 app.delete("/api/orders/:id", authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -1226,6 +1250,7 @@ app.delete("/api/orders/:id", authenticateToken, async (req, res) => {
         res.status(500).json({ success: false, error: "Server error" });
     }
 });
+
 
 
 // ===== Start =====

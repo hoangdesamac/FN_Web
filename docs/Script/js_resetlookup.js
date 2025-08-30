@@ -160,14 +160,14 @@ async function renderOrders(ordersToRender) {
     emptyOrders.classList.add('d-none');
     searchingAnimation.classList.remove('d-none');
 
-    // Skeleton
+    // Skeleton loading
     ordersContainer.innerHTML = `
-    <div class="order-item skeleton p-3 rounded">
-      <div class="skeleton-header bg-light mb-3" style="height: 40px;"></div>
-      <div class="skeleton-product bg-light mb-3" style="height: 70px;"></div>
-      <div class="skeleton-details bg-light" style="height: 100px;"></div>
-    </div>
-  `;
+        <div class="order-item skeleton p-3 rounded">
+          <div class="skeleton-header bg-light mb-3" style="height: 40px;"></div>
+          <div class="skeleton-product bg-light mb-3" style="height: 70px;"></div>
+          <div class="skeleton-details bg-light" style="height: 100px;"></div>
+        </div>
+    `;
 
     setTimeout(() => {
         searchingAnimation.classList.add('d-none');
@@ -177,44 +177,24 @@ async function renderOrders(ordersToRender) {
             ordersContainer.innerHTML = '';
 
             if (serverOrders.length === 0) {
-                // Không có đơn hàng thật → Show emptyOrders
-                emptyOrders.classList.remove('d-none');
+                emptyOrders.classList.remove('d-none'); // Không có đơn nào thật
                 ordersContainer.classList.remove('d-none');
             } else {
-                // Có đơn hàng nhưng lọc không khớp → Ẩn hết
-                emptyOrders.classList.add('d-none');
+                emptyOrders.classList.add('d-none'); // Có đơn thật nhưng lọc không khớp
                 ordersContainer.classList.add('d-none');
-
-                const productKeyword = document.getElementById('product-keyword')?.value.trim();
-                const statusFilter = document.getElementById('status-filter')?.value;
-                const startDate = document.getElementById('start-date')?.value;
-                const endDate = document.getElementById('end-date')?.value;
-
-                let message = 'Không tìm thấy đơn hàng phù hợp';
-                if (statusFilter && statusFilter !== 'all') {
-                    message += ` với trạng thái "${statusFilter}"`;
-                }
-                if (productKeyword) {
-                    message += `, tên chứa "${productKeyword}"`;
-                }
-                if (startDate || endDate) {
-                    message += ` trong khoảng `;
-                    if (startDate) message += `từ ${startDate} `;
-                    if (endDate) message += `đến ${endDate}`;
-                }
-                message += '.';
-                showToast(message);
+                showToast("Không tìm thấy đơn hàng phù hợp.");
             }
 
             updateOrderCount();
             return;
         } else {
-            // ✅ Khi tìm thấy → bật hiển thị lại!
             ordersContainer.classList.remove('d-none');
             emptyOrders.classList.add('d-none');
         }
 
         ordersContainer.innerHTML = '';
+
+        // Nếu có đơn unseen → phát âm thanh
         const newOrder = ordersToRender.find(order => order.unseen === true);
         if (newOrder) {
             const newCardSound = document.getElementById('newcard-sound');
@@ -227,29 +207,31 @@ async function renderOrders(ordersToRender) {
         ordersToRender.forEach((order, index) => {
             const orderCard = document.createElement('div');
             orderCard.className = 'order-card';
-            const total = order.total;
-            let productsHTML = '';
-            const firstItem = order.items[0];
 
+            const total = order.total;
+            const firstItem = order.items[0];
+            let productsHTML = '';
+
+            // Render từng sản phẩm trong đơn
             order.items.forEach(item => {
                 productsHTML += `
-          <div class="order-product d-flex align-items-center mb-2">
-            <img src="${item.image}" alt="${item.name}" class="me-3">
-            <div class="order-product-info">
-              <p class="order-product-name">${item.name} (x${item.quantity})</p>
-              <div class="price-section">
-                <span class="original-price me-2">${formatCurrency(item.originalPrice)}</span>
-                <span class="sale-price">${formatCurrency(item.salePrice)}</span>
-                <span class="discount-badge badge bg-danger ms-2">
-                   -${item.discountPercent !== undefined
+                  <div class="order-product d-flex align-items-center mb-2">
+                    <img src="${item.image}" alt="${item.name}" class="me-3">
+                    <div class="order-product-info">
+                      <p class="order-product-name">${item.name} (x${item.quantity})</p>
+                      <div class="price-section">
+                        <span class="original-price me-2">${formatCurrency(item.originalPrice)}</span>
+                        <span class="sale-price">${formatCurrency(item.salePrice)}</span>
+                        <span class="discount-badge badge bg-danger ms-2">
+                           -${item.discountPercent !== undefined
                     ? item.discountPercent
                     : Math.round(100 - (item.salePrice / item.originalPrice * 100))
                 }%
-                </span>
-              </div>
-            </div>
-          </div>
-        `;
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                `;
             });
 
             const createdAt = new Date(order.createdAt);
@@ -267,6 +249,7 @@ async function renderOrders(ordersToRender) {
             let lottieAnimation = '';
             let trackingSteps = [];
 
+            // Mapping trạng thái
             switch (order.status) {
                 case 'Đơn hàng đang xử lý':
                     statusClass = 'processing';
@@ -309,70 +292,74 @@ async function renderOrders(ordersToRender) {
             }
 
             const { points } = calculatePointsAndTier(order);
+
             const trackingTimelineHTML = `
-        <div class="tracking-timeline">
-          ${trackingSteps.map((step, i) => `
-            <div class="tracking-step ${step.status}">
-              <div class="step-icon">${i + 1}</div>
-              <div class="step-content">
-                <div class="step-title">${step.title}</div>
-                <div class="step-time">${step.time}</div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
+                <div class="tracking-timeline">
+                  ${trackingSteps.map((step, i) => `
+                    <div class="tracking-step ${step.status}">
+                      <div class="step-icon">${i + 1}</div>
+                      <div class="step-content">
+                        <div class="step-title">${step.title}</div>
+                        <div class="step-time">${step.time}</div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+            `;
 
             const unseenIndicator = order.unseen ? '<span class="unseen-indicator"></span>' : '';
 
+            // Render card
             orderCard.innerHTML = `
-        <div class="order-item ${statusClass}" id="order-item-${index}" data-order-id="${order.id}">
-          <div class="order-front">
-            <button class="btn btn-reward" onclick="claimReward('${order.id}', event)">
-              <i class='bx bx-gift'></i> Nhận thưởng
-            </button>
-            <div class="order-profile">
-              <div class="order-avatar-wrapper">
-                <img src="${firstItem.image}" alt="Avatar" class="order-avatar">
-              </div>
-              <div>
-                <h3 class="order-number-circle">${order.id}${unseenIndicator}</h3>
-                <div class="points-badge">
-                  <i class='bx bx-medal'></i> ${points} điểm
+                <div class="order-item ${statusClass}" id="order-item-${index}" data-order-id="${order.id}">
+                  <div class="order-front">
+                    <button class="btn btn-reward" onclick="claimReward('${order.id}', event)">
+                      <i class='bx bx-gift'></i> Nhận thưởng
+                    </button>
+                    <div class="order-profile">
+                      <div class="order-avatar-wrapper">
+                        <img src="${firstItem.image}" alt="Avatar" class="order-avatar">
+                      </div>
+                      <div>
+                        <h3 class="order-number-circle">${order.orderCode}${unseenIndicator}</h3>
+                        <div class="points-badge">
+                          <i class='bx bx-medal'></i> ${points} điểm
+                        </div>
+                      </div>
+                    </div>
+                    <div class="order-status ${statusClass}">
+                      <lottie-player src="${lottieAnimation}" background="transparent" speed="1"
+                        style="width: 30px; height: 30px;" loop autoplay></lottie-player>
+                      ${order.status}
+                    </div>
+                    ${trackingTimelineHTML}
+                    <div class="flip-hint">Nhấn để xem chi tiết sản phẩm</div>
+                  </div>
+                  <div class="order-back">
+                    <h3>Chi tiết đơn hàng #${order.orderCode}</h3>
+                    <div class="order-products">${productsHTML}</div>
+                    <div class="order-delivery-info">
+                      <h4><i class='bx bx-map'></i> Thông tin giao hàng</h4>
+                      <p><strong>Người nhận:</strong> ${deliveryInfo.name || 'Không có thông tin'}</p>
+                      <p><strong>SĐT:</strong> ${deliveryInfo.phone || 'Không có thông tin'}</p>
+                      <p><strong>Địa chỉ:</strong> ${deliveryInfo.address || ''}, ${deliveryInfo.ward || ''}, ${deliveryInfo.district || ''}, ${deliveryInfo.province || ''}</p>
+                      <p><strong>Thanh toán:</strong> ${getPaymentMethodText(order.paymentMethod)}</p>
+                      ${deliveryInfo.note ? `<p><strong>Ghi chú:</strong> ${deliveryInfo.note}</p>` : ''}
+                      <p><strong>Xuất HĐ:</strong> ${deliveryInfo.invoiceRequired ? 'Có' : 'Không'}</p>
+                    </div>
+                    <div class="order-total">Tổng cộng: ${formatCurrency(total)}</div>
+                    <div class="order-actions d-flex gap-2">
+                      <button class="btn btn-cancel" onclick="cancelOrder('${order.id}')"><i class='bx bx-trash'></i> Hủy đơn</button>
+                      ${!deliveryInfo.invoiceRequired ? '' : `<button class="btn btn-invoice" onclick="exportToPDF('${order.id}')"><i class='bx bx-download'></i> Xuất HĐ</button>`}
+                      ${order.status === 'Đơn hàng đã hủy' ? `<button class="btn btn-rebuy" onclick="rebuyOrder('${order.id}')"><i class='bx bx-cart'></i> Mua lại</button>` : ''}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="order-status ${statusClass}">
-              <lottie-player src="${lottieAnimation}" background="transparent" speed="1" style="width: 30px; height: 30px;" loop autoplay></lottie-player>
-              ${order.status}
-            </div>
-            ${trackingTimelineHTML}
-            <div class="flip-hint">Nhấn để xem chi tiết sản phẩm</div>
-          </div>
-          <div class="order-back">
-            <h3>Chi tiết đơn hàng #${order.id}</h3>
-            <div class="order-products">${productsHTML}</div>
-            <div class="order-delivery-info">
-              <h4><i class='bx bx-map'></i> Thông tin giao hàng</h4>
-              <p><strong>Người nhận:</strong> ${deliveryInfo.name || 'Không có thông tin'}</p>
-              <p><strong>Số điện thoại:</strong> ${deliveryInfo.phone || 'Không có thông tin'}</p>
-              <p><strong>Địa chỉ:</strong> ${deliveryInfo.address || ''}, ${deliveryInfo.ward || ''}, ${deliveryInfo.district || ''}, ${deliveryInfo.province || ''}</p>
-              <p><strong>Phương thức thanh toán:</strong> ${getPaymentMethodText(order.paymentMethod)}</p>
-              ${deliveryInfo.note ? `<p><strong>Ghi chú:</strong> ${deliveryInfo.note}</p>` : ''}
-              <p><strong>Yêu cầu xuất hóa đơn:</strong> ${deliveryInfo.invoiceRequired ? 'Có' : 'Không'}</p>
-            </div>
-            <div class="order-total">Tổng cộng: ${formatCurrency(total)}</div>
-            <div class="order-actions d-flex gap-2">
-              <button class="btn btn-cancel" onclick="cancelOrder('${order.id}')"><i class='bx bx-trash'></i> Hủy đơn hàng</button>
-              ${!deliveryInfo.invoiceRequired ? '' : `<button class="btn btn-invoice" onclick="exportToPDF('${order.id}')"><i class='bx bx-download'></i> Xuất hóa đơn</button>`}
-              ${order.status === 'Đơn hàng đã hủy' ? `<button class="btn btn-rebuy" onclick="rebuyOrder('${order.id}')"><i class='bx bx-cart'></i> Mua lại đơn</button>` : ''}
-            </div>
-          </div>
-        </div>
-      `;
+            `;
 
             ordersContainer.appendChild(orderCard);
 
+            // Animation
             setTimeout(() => {
                 orderCard.classList.add('slide-in');
                 if (order.status === 'Đơn hàng đã hoàn thành') {
@@ -384,6 +371,7 @@ async function renderOrders(ordersToRender) {
                 }
             }, index * 150);
 
+            // Event flip + unseen sync
             const orderItem = document.getElementById(`order-item-${index}`);
             orderItem.addEventListener('click', async function (e) {
                 if (!e.target.closest('.order-actions') && !e.target.closest('.btn-reward')) {
@@ -391,9 +379,10 @@ async function renderOrders(ordersToRender) {
 
                     if (order.unseen) {
                         order.unseen = false;
-                        serverOrders = serverOrders.map(o => o.id === order.id ? { ...o, unseen: false } : o);
+                        serverOrders = serverOrders.map(o =>
+                            o.id === order.id ? { ...o, unseen: false } : o
+                        );
 
-                        // ✅ Đồng bộ unseen về server
                         try {
                             await fetch(`/api/orders/${order.id}`, {
                                 method: "PATCH",
@@ -418,6 +407,7 @@ async function renderOrders(ordersToRender) {
         updateOrderCount();
     }, 1200);
 }
+
 
 // Toggle card
 function toggleCard(index) {
@@ -467,38 +457,39 @@ function closeRewardPopup() {
 }
 
 // Cancel order
+// ==================== HỦY HOẶC XOÁ ĐƠN ====================
 async function cancelOrder(orderId) {
     if (!orderId) return;
 
     try {
-        // Tìm đơn trong cache server
         const order = serverOrders.find(o => o.id === orderId);
 
         if (!order) {
-            showToast("Không tìm thấy đơn hàng!");
+            showToast("❌ Không tìm thấy đơn hàng!");
             return;
         }
 
-        // Nếu đơn đã hủy rồi → cho phép xóa hẳn
+        // 🔹 Nếu đơn đã hủy → cho phép xóa hẳn
         if (order.status === "Đơn hàng đã hủy") {
-            if (confirm("Sau khi xóa hoàn toàn đơn này bạn sẽ không thể mua lại nữa. Bạn chắc chắn muốn xoá?")) {
+            if (confirm(`Sau khi xóa đơn #${orderId}, bạn sẽ không thể mua lại nữa.\nBạn chắc chắn muốn xoá?`)) {
                 const res = await fetch(`${window.API_BASE}/api/orders/${orderId}`, {
                     method: "DELETE",
                     credentials: "include"
                 });
                 const data = await res.json();
+
                 if (data.success) {
-                    showToast("Đơn hàng đã được xoá hoàn toàn!");
-                    await fetchOrdersFromServer(); // 🔑 refresh lại từ server
+                    showToast(`✅ Đơn hàng #${orderId} đã được xoá hoàn toàn!`);
+                    await fetchOrdersFromServer();
                 } else {
-                    showToast("❌ Không thể xoá đơn: " + (data.error || ""));
+                    showToast(`❌ Không thể xoá đơn: ${data.error || "Lỗi server"}`);
                 }
             }
             return;
         }
 
-        // Nếu đơn chưa hủy → gọi API cập nhật trạng thái
-        if (confirm("Bạn có chắc muốn hủy đơn hàng này?")) {
+        // 🔹 Nếu chưa hủy → cập nhật status = "Đơn hàng đã hủy"
+        if (confirm(`Bạn có chắc muốn hủy đơn hàng #${orderId}?`)) {
             const res = await fetch(`${window.API_BASE}/api/orders/${orderId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
@@ -508,10 +499,10 @@ async function cancelOrder(orderId) {
 
             const data = await res.json();
             if (data.success) {
-                showToast("Đơn hàng đã được hủy!");
-                await fetchOrdersFromServer(); // 🔑 refresh lại từ server
+                showToast(`✅ Đơn hàng #${orderId} đã được hủy!`);
+                await fetchOrdersFromServer();
             } else {
-                showToast("❌ Không thể hủy đơn: " + (data.error || ""));
+                showToast(`❌ Không thể hủy đơn: ${data.error || "Lỗi server"}`);
             }
         }
     } catch (err) {
@@ -521,19 +512,19 @@ async function cancelOrder(orderId) {
 }
 
 
-
-// Rebuy order
+// ==================== MUA LẠI ĐƠN ====================
 async function rebuyOrder(orderId) {
+    if (!orderId) return;
+
     try {
-        // 🔎 Tìm đơn từ cache server
         const order = serverOrders.find(o => o.id === orderId);
 
         if (!order) {
-            showToast("Không tìm thấy đơn hàng!");
+            showToast("❌ Không tìm thấy đơn hàng!");
             return;
         }
 
-        // 1️⃣ Thêm lại sản phẩm vào giỏ (API server)
+        // 🔹 Thêm từng sản phẩm lại vào giỏ
         for (const item of order.items) {
             try {
                 const res = await fetch(`${window.API_BASE}/api/cart`, {
@@ -541,7 +532,7 @@ async function rebuyOrder(orderId) {
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
                     body: JSON.stringify({
-                        productId: item.id,
+                        productId: item.productId || item.id, // fallback
                         name: item.name,
                         originalPrice: item.originalPrice,
                         salePrice: item.salePrice,
@@ -549,48 +540,47 @@ async function rebuyOrder(orderId) {
                             ? item.discountPercent
                             : Math.round(100 - (item.salePrice / item.originalPrice * 100)),
                         image: item.image,
-                        quantity: item.quantity
+                        quantity: item.quantity || 1
                     })
                 });
 
                 const data = await res.json();
                 if (!data.success) {
-                    console.warn("⚠️ Lỗi thêm vào giỏ:", data.error || item.name);
+                    console.warn(`⚠️ Không thể thêm ${item.name} vào giỏ: ${data.error || "Lỗi"}`);
                 }
             } catch (err) {
-                console.error("❌ Lỗi khi thêm vào giỏ:", err);
+                console.error(`❌ Lỗi khi thêm sản phẩm ${item.name} vào giỏ:`, err);
             }
         }
 
-        // 2️⃣ Hỏi có muốn xoá luôn đơn cũ không
+        // 🔹 Hỏi có muốn xoá đơn cũ không
         if (confirm(`Bạn có muốn xóa đơn hàng #${orderId} sau khi mua lại không?`)) {
             const delRes = await fetch(`${window.API_BASE}/api/orders/${orderId}`, {
                 method: "DELETE",
                 credentials: "include"
             });
             const delData = await delRes.json();
+
             if (delData.success) {
-                showToast(`Đã mua lại và xoá đơn hàng #${orderId}!`);
-                await fetchOrdersFromServer(); // reload orders từ server
+                showToast(`✅ Đã mua lại và xoá đơn hàng #${orderId}!`);
+                await fetchOrdersFromServer();
             } else {
-                showToast("❌ Không thể xoá đơn: " + (delData.error || ""));
+                showToast(`❌ Không thể xoá đơn: ${delData.error || "Lỗi server"}`);
             }
         } else {
-            showToast(`Đã thêm sản phẩm từ đơn #${orderId} vào giỏ hàng!`);
+            showToast(`✅ Đã thêm sản phẩm từ đơn #${orderId} vào giỏ hàng!`);
         }
 
-        // 3️⃣ Chuyển sang checkout
+        // 🔹 Chuyển sang checkout
         setTimeout(() => {
             window.location.href = "resetcheckout.html";
-        }, 800);
+        }, 1000);
 
     } catch (err) {
         console.error("❌ Lỗi rebuyOrder:", err);
         showToast("Có lỗi xảy ra khi mua lại đơn hàng!");
     }
 }
-
-
 
 async function toBase64Image(url) {
     try {
@@ -712,10 +702,9 @@ function createApprovalSealBase64() {
 
 // ✅ Hàm chính: Xuất PDF với watermark trung tâm + watermark con
 async function exportToPDF(orderId) {
-    // 🔹 Tìm đơn trong serverOrders (fetch từ server trước đó)
     const order = serverOrders.find(o => o.id === orderId);
     if (!order) {
-        showToast('Không tìm thấy đơn hàng!');
+        showToast('❌ Không tìm thấy đơn hàng!');
         return;
     }
 
@@ -723,15 +712,16 @@ async function exportToPDF(orderId) {
     const formattedDate = new Date(order.createdAt).toLocaleString('vi-VN');
     const { points } = calculatePointsAndTier(order);
 
-    // === Convert image URL thành base64 (proxy hoặc local) ===
+    // === Convert image URL thành base64 ===
     function proxifyImageURL(url) {
         if (!url) return null;
         if (/^https?:\/\//i.test(url)) {
             return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}`;
         }
-        return null; // local thì không proxy
+        return null;
     }
 
+    // === Flatten bundle items ===
     const flatItems = [];
     order.items.forEach(item => {
         if (item.isBundle && Array.isArray(item.parts)) {
@@ -742,9 +732,8 @@ async function exportToPDF(orderId) {
                     _isBundlePart: true,
                     bundleName: item.name,
                     quantity: part.quantity ?? 1,
-                    originalPrice: typeof part.originalPrice === 'number' ? part.originalPrice : (part.price || 0),
-                    salePrice: typeof part.salePrice === 'number' ? part.salePrice : (part.price || 0),
-                    price: part.price || 0,
+                    originalPrice: part.originalPrice ?? part.price ?? 0,
+                    salePrice: part.salePrice ?? part.price ?? 0,
                     image: part.image || item.image || 'Images/Logo.jpg',
                     discountPercent: part.discountPercent ?? 0
                 });
@@ -753,52 +742,47 @@ async function exportToPDF(orderId) {
             flatItems.push({
                 ...item,
                 quantity: item.quantity ?? 1,
-                originalPrice: item.originalPrice ?? (item.price || 0),
-                salePrice: item.salePrice ?? (item.price || 0),
-                price: item.price || 0,
+                originalPrice: item.originalPrice ?? item.price ?? 0,
+                salePrice: item.salePrice ?? item.price ?? 0,
                 image: item.image || 'Images/Logo.jpg',
                 discountPercent: item.discountPercent ?? 0
             });
         }
     });
 
-    const productImages = await Promise.all(
-        flatItems.map(async (item) => {
-            if (item._isBundleHeader) return null;
-            if (item.image && !/^https?:\/\//i.test(item.image)) {
-                return await new Promise(resolve => {
-                    const img = new Image();
-                    img.crossOrigin = 'anonymous';
-                    img.src = item.image;
-                    img.onload = function() {
-                        try {
-                            const canvas = document.createElement('canvas');
-                            canvas.width = img.width;
-                            canvas.height = img.height;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0);
-                            resolve(canvas.toDataURL('image/png'));
-                        } catch (e) { resolve(undefined); }
-                    };
-                    img.onerror = () => resolve(undefined);
-                });
+    // === Convert ảnh từng item sang base64 ===
+    const productImages = [];
+    for (const item of flatItems) {
+        if (item._isBundleHeader) {
+            productImages.push(null);
+            continue;
+        }
+        try {
+            let imgUrl = item.image;
+            if (!/^https?:\/\//i.test(imgUrl)) {
+                imgUrl = item.image;
+            } else {
+                imgUrl = proxifyImageURL(item.image);
             }
-            const imgUrl = item.image ? proxifyImageURL(item.image) : null;
-            if (!imgUrl) return undefined;
-            try {
-                const response = await fetch(imgUrl, { mode: 'cors' });
-                const blob = await response.blob();
-                return await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(blob);
-                });
-            } catch {
-                return undefined;
+
+            if (!imgUrl) {
+                productImages.push(undefined);
+                continue;
             }
-        })
-    );
+
+            const res = await fetch(imgUrl, { mode: 'cors' });
+            const blob = await res.blob();
+            const base64 = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+            productImages.push(base64);
+        } catch {
+            productImages.push(undefined);
+        }
+    }
 
     // === Tạo bảng sản phẩm ===
     const productTable = [
@@ -816,36 +800,37 @@ async function exportToPDF(orderId) {
                 return [
                     { text: '', border: [false,false,false,false] },
                     { text: `🖥️ ${item.name} (PC tự build)`, colSpan: 6, bold: true, fillColor: '#e3f2fd', color: '#1976d2' },
-                    {},{},{},{},{}
+                    {}, {}, {}, {}, {}
                 ];
             } else if (item._isBundlePart) {
                 return [
-                    item.image ? { image: productImages[i], width: 32, height: 32 } : '',
+                    productImages[i] ? { image: productImages[i], width: 32, height: 32 } : '',
                     { text: '↳ ' + item.name, italics: true },
                     { text: item.quantity.toString(), alignment: 'center' },
                     { text: formatCurrency(item.originalPrice), alignment: 'center' },
                     { text: `${item.discountPercent}%`, alignment: 'center' },
-                    { text: formatCurrency(item.salePrice || item.price), alignment: 'center' },
-                    { text: formatCurrency((item.salePrice || item.price) * item.quantity), alignment: 'center' }
+                    { text: formatCurrency(item.salePrice), alignment: 'center' },
+                    { text: formatCurrency(item.salePrice * item.quantity), alignment: 'center' }
                 ];
             } else {
                 return [
-                    item.image ? { image: productImages[i], width: 40, height: 40 } : 'Không ảnh',
+                    productImages[i] ? { image: productImages[i], width: 40, height: 40 } : 'Không ảnh',
                     { text: item.name },
                     { text: item.quantity.toString(), alignment: 'center' },
                     { text: formatCurrency(item.originalPrice), alignment: 'center' },
                     { text: `${item.discountPercent}%`, alignment: 'center' },
-                    { text: formatCurrency(item.salePrice || item.price), alignment: 'center' },
-                    { text: formatCurrency((item.salePrice || item.price) * item.quantity), alignment: 'center' }
+                    { text: formatCurrency(item.salePrice), alignment: 'center' },
+                    { text: formatCurrency(item.salePrice * item.quantity), alignment: 'center' }
                 ];
             }
         })
     ];
 
-    // === Logo + watermark ===
-    const logoBase64 = await toBase64Image("Image_Showroom/Slogan_w.jpg");
-    const fullWatermarkBase64 = createFullWatermarkBase64();
+    // === Logo + Watermark ===
+    const logoBase64 = await toBase64Image("Image_Showroom/Slogan_w.jpg").catch(() => null);
+    const fullWatermarkBase64 = await createFullWatermarkBase64();
 
+    // === Định nghĩa PDF ===
     const docDefinition = {
         content: [
             {
@@ -856,7 +841,7 @@ async function exportToPDF(orderId) {
                 ]
             },
             { text: '\n' },
-            { text: `Mã đơn: ${order.id}` },
+            { text: `Mã đơn: ${order.orderCode || order.id}` },
             { text: `Ngày đặt: ${formattedDate}` },
             { text: `Trạng thái: ${order.status}` },
             { text: `Điểm thưởng tích lũy: ${points} điểm` },
@@ -878,7 +863,7 @@ async function exportToPDF(orderId) {
             delivery.note ? { text: `Ghi chú: ${delivery.note}` } : null,
             { text: '\nCảm ơn quý khách đã mua sắm tại 3TD Shop!', italics: true, alignment: 'center' },
             { image: createApprovalSealBase64(), width: 100, alignment: 'right', margin: [0, 10, 0, 0] }
-        ],
+        ].filter(Boolean),
         styles: {
             header: { fontSize: 18, bold: true, color: '#1e88e5' },
             subheader: { fontSize: 15, bold: true, margin: [0, 10, 0, 5] }
@@ -886,19 +871,18 @@ async function exportToPDF(orderId) {
         defaultStyle: { font: 'Roboto', fontSize: 10 },
         pageSize: 'A4',
         pageMargins: [40, 60, 40, 60],
-        background: function (currentPage, pageSize) {
-            return {
-                image: fullWatermarkBase64,
-                width: pageSize.width,
-                height: pageSize.height,
-                opacity: 1,
-                absolutePosition: { x: 0, y: 0 }
-            };
-        }
+        background: (currentPage, pageSize) => ({
+            image: fullWatermarkBase64,
+            width: pageSize.width,
+            height: pageSize.height,
+            opacity: 0.08, // nhẹ để không che nội dung
+            absolutePosition: { x: 0, y: 0 }
+        })
     };
 
-    pdfMake.createPdf(docDefinition).download(`DonHang_${order.id}.pdf`);
+    pdfMake.createPdf(docDefinition).download(`DonHang_${order.orderCode || order.id}.pdf`);
 }
+
 
 
 
