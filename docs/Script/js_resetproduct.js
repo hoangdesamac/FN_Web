@@ -153,6 +153,44 @@ function setupThumbnails(thumbnails) {
 // ==========================
 // MODULE: Cart & Toast
 // ==========================
+async function addToCartAPI(product, qty = 1) {
+    try {
+        const res = await fetch(`${window.API_BASE}/api/cart`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                id: product.id,
+                name: product.name,
+                originalPrice: product.originalPrice,
+                salePrice: product.salePrice,
+                discountPercent: product.discount || 0,
+                image: product.image,
+                quantity: qty
+            })
+        });
+        if (!res.ok) throw new Error(`API lỗi ${res.status}`);
+        return await res.json();
+    } catch (err) {
+        console.error('Lỗi thêm giỏ hàng:', err);
+        return { success: false };
+    }
+}
+
+async function updateCartCountFromServer() {
+    try {
+        const res = await fetch(`${window.API_BASE}/api/cart`, { credentials: 'include' });
+        if (!res.ok) throw new Error(`API lỗi ${res.status}`);
+        const data = await res.json();
+        if (!data.success) return;
+        const totalCount = data.cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+        $('.cart-count').text(totalCount).css('display', totalCount > 0 ? 'inline-flex' : 'none');
+    } catch (err) {
+        console.error('Lỗi lấy số lượng giỏ:', err);
+    }
+}
+
+
 function addToSelectedCart(product) {
     let selectedCart = JSON.parse(localStorage.getItem('selectedCart')) || [];
     const existing = selectedCart.find(item => item.id === product.id);
@@ -324,7 +362,7 @@ function renderRelatedProducts(related) {
     });
 
     // Sự kiện thêm vào giỏ
-    $container.find('.add-to-cart').on('click', function(e) {
+    $container.find('.add-to-cart').on('click', async function (e) {
         e.stopPropagation(); // ✅ Ngăn nổi bọt → không bị click .product-card
 
         const id = $(this).data('id');
@@ -342,20 +380,23 @@ function renderRelatedProducts(related) {
 
         const cleanProduct = prepareProduct(relatedProduct);
 
-        addToSelectedCart(cleanProduct);
+        try {
+            // --- Thêm vào giỏ qua API ---
+            const res = await addToCartAPI(cleanProduct, 1);
+            if (!res.success) throw new Error(res.error || "Lỗi khi thêm giỏ hàng");
 
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existing = cart.find(item => item.id === cleanProduct.id);
+            // --- Cập nhật số lượng giỏ ---
+            await updateCartCountFromServer();
 
-        if (existing) {
-            existing.quantity += 1;
-        } else {
-            cart.push(cleanProduct);
+            // --- Thông báo ---
+            showToast(`Đã thêm ${cleanProduct.name} vào giỏ hàng!`);
+
+        } catch (err) {
+            console.error("❌ Lỗi thêm sản phẩm:", err);
+            showToast("Không thể thêm sản phẩm vào giỏ hàng!");
         }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        updateCartCount();
-        showToast(`Đã thêm ${cleanProduct.name} vào giỏ hàng!`);
     });
+
 
 }
 
@@ -470,56 +511,33 @@ function bindEventHandlers() {
         window.location.href = `resetproduct.html?id=${productId}`;
     });
 
-    $(document).on('click', '.buy-now', function () {
+    $(document).on('click', '.buy-now', async function () {
         const productId = $(this).data('id');
         const product = window.products.find(p => p.id === productId);
         if (!product) return;
 
         const cleanProduct = prepareProduct(product);
-        addToSelectedCart(cleanProduct);
 
-        // --- Lấy giỏ hàng hiện tại từ localStorage ---
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-        // --- Thêm sản phẩm chính vào cart ---
-        let existingMain = cart.find(item => item.id === cleanProduct.id);
-        if (existingMain) {
-            existingMain.quantity = (existingMain.quantity || 1) + 1;
-        } else {
-            cart.push({ ...cleanProduct, quantity: 1 });
-        }
-
-        // --- Mảng quà tặng mới ---
-        let giftCart = [];
-
-        // --- Lấy tất cả combo ---
+        // --- Lấy tất cả combo đã check ---
         const $allCombos = $('.bundle-products .bundle-checkbox');
         const $checkedCombos = $allCombos.filter(':checked');
 
-        // --- Thêm combo đã chọn ---
+        // Danh sách combo đã chọn
+        const selectedCombos = [];
         $checkedCombos.each(function () {
             const $card = $(this).closest('.product-card');
-            const comboProduct = prepareProduct({
+            selectedCombos.push(prepareProduct({
                 id: $card.data('id'),
                 name: $card.find('.product-name').text().trim(),
                 image: $card.find('img').attr('src'),
-                originalPrice: parsePrice($card.find('.original-price').text()) + '₫',
-                salePrice: parsePrice($card.find('.sale-price').text()) + '₫',
-            });
-
-            addToSelectedCart(comboProduct);
-
-            let existingCombo = cart.find(item => item.id === comboProduct.id);
-            if (existingCombo) {
-                existingCombo.quantity = (existingCombo.quantity || 1) + 1;
-            } else {
-                cart.push({ ...comboProduct, quantity: 1 });
-            }
+                originalPrice: parsePrice($card.find('.original-price').text()),
+                salePrice: parsePrice($card.find('.sale-price').text()),
+            }));
         });
 
-        // --- Kiểm tra đủ combo để thêm quà ---
+        // --- Xử lý quà tặng ---
         const hasAllCombos = ($allCombos.length > 0 && $checkedCombos.length === $allCombos.length);
-
+        let giftCart = [];
         if (hasAllCombos) {
             giftCart.push({
                 id: "north-bayou-dual-monitor-nb-p160",
@@ -530,41 +548,43 @@ function bindEventHandlers() {
                 discount: 100,
                 quantity: 1
             });
-
-            const requiredIds = [productId];
-            $checkedCombos.each(function () {
-                requiredIds.push($(this).closest('.product-card').data('id'));
-            });
-
-            localStorage.setItem('giftRequirements', JSON.stringify(requiredIds));
-            localStorage.setItem('giftCart', JSON.stringify(giftCart));
-        } else {
-            localStorage.removeItem('giftCart');
-            localStorage.removeItem('giftRequirements');
         }
 
-        // --- Lưu giỏ hàng ---
-        localStorage.setItem('cart', JSON.stringify(cart));
+        try {
+            // --- Thêm sản phẩm chính vào giỏ ---
+            await addToCartAPI(cleanProduct, 1);
 
-        // --- Cập nhật số lượng tổng (theo quantity + quà tặng) ---
-        let totalCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0) + giftCart.length;
-        $('.cart-count')
-            .text(totalCount)
-            .css('display', totalCount > 0 ? 'inline-flex' : 'none');
+            // --- Thêm combo vào giỏ ---
+            for (const combo of selectedCombos) {
+                await addToCartAPI(combo, 1);
+            }
 
-        // --- Thông báo ---
-        let toastMsg = '';
-        if ($checkedCombos.length) {
-            toastMsg = `Đã thêm sản phẩm chính và ${$checkedCombos.length} combo`;
-        } else {
-            toastMsg = `Đã thêm ${product.name} vào giỏ hàng`;
+            // --- Thêm quà tặng nếu đủ combo ---
+            for (const gift of giftCart) {
+                await addToCartAPI(gift, 1);
+            }
+
+            // --- Cập nhật badge giỏ hàng ---
+            await updateCartCountFromServer();
+
+            // --- Hiển thị thông báo ---
+            let toastMsg = '';
+            if ($checkedCombos.length) {
+                toastMsg = `Đã thêm sản phẩm chính và ${$checkedCombos.length} combo`;
+            } else {
+                toastMsg = `Đã thêm ${product.name} vào giỏ hàng`;
+            }
+            if (giftCart.length) toastMsg += `, kèm theo quà tặng đính kèm vào giỏ hàng!`;
+            else toastMsg += '!';
+
+            showToast(toastMsg, hasAllCombos);
+
+        } catch (err) {
+            console.error('Lỗi khi thêm vào giỏ hàng:', err);
+            showToast('Không thể thêm vào giỏ hàng, vui lòng thử lại!');
         }
-        if (giftCart.length) toastMsg += `, kèm theo quà tặng đính kèm vào giỏ hàng!`;
-        else toastMsg += '!';
-
-        // ✅ Chỉ chuyển trang nếu đủ toàn bộ combo
-        showToast(toastMsg, hasAllCombos);
     });
+
 
 
 
@@ -583,46 +603,50 @@ function bindEventHandlers() {
         updateSubtotal();
     });
 
-    $(document).on('click', '.add-to-cart-bundle', function () {
+    $(document).on('click', '.add-to-cart-bundle', async function () {
         const $checked = $('.bundle-products .bundle-checkbox:checked');
         if (!$checked.length) {
             showToast('Vui lòng chọn ít nhất một sản phẩm combo!');
             return;
         }
 
-        $checked.each(function () {
-            const $card = $(this).closest('.product-card');
-            const id = $card.data('id');
-            const name = $card.find('.product-name').text().trim();
-            const image = $card.find('img').attr('src');
-            const originalPrice = parsePrice($card.find('.original-price').text());
-            const salePrice = parsePrice($card.find('.sale-price').text());
+        try {
+            // Thêm từng sản phẩm combo vào giỏ qua API
+            for (const el of $checked) {
+                const $card = $(el).closest('.product-card');
+                const id = $card.data('id');
+                const name = $card.find('.product-name').text().trim();
+                const image = $card.find('img').attr('src');
+                const originalPrice = parsePrice($card.find('.original-price').text());
+                const salePrice = parsePrice($card.find('.sale-price').text());
 
-            const product = prepareProduct({
-                id,
-                name,
-                image,
-                originalPrice: originalPrice + '₫',
-                salePrice: salePrice + '₫',
-            });
+                const product = prepareProduct({
+                    id,
+                    name,
+                    image,
+                    originalPrice,
+                    salePrice
+                });
 
-            // ✅ Thêm vào selectedCart (để lưu riêng các sản phẩm đã chọn)
-            addToSelectedCart(product);
+                addToSelectedCart(product); // Giữ để tracking selectedCart
 
-            // ✅ Đồng thời thêm vào cart (giỏ hiển thị)
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const existing = cart.find(item => item.id === product.id);
-            if (existing) {
-                existing.quantity += 1;
-            } else {
-                cart.push(product);
+                // Gọi API thêm vào giỏ
+                const res = await addToCartAPI(product, 1);
+                if (!res.success) throw new Error(res.error || "Lỗi thêm combo");
             }
-            localStorage.setItem('cart', JSON.stringify(cart));
-        });
 
-        updateCartCount();
-        showToast(`Đã thêm ${$checked.length} sản phẩm combo vào giỏ!`);
+            // Cập nhật số lượng giỏ từ server
+            await updateCartCountFromServer();
+
+            // Thông báo thành công
+            showToast(`Đã thêm ${$checked.length} sản phẩm combo vào giỏ!`);
+
+        } catch (err) {
+            console.error('❌ Lỗi thêm combo:', err);
+            showToast('Không thể thêm combo vào giỏ hàng!');
+        }
     });
+
 
 
 
@@ -1017,7 +1041,7 @@ window.products = [
 
 
     },
-{
+    {
         id: "pc-gvn-i5-14400f-rtx-5060",
         category: "PC BÁN CHẠY NHẤT",
         name: "PC GVN Intel i5-14400F/ VGA RTX 5060 (DDR5)",
@@ -1186,10 +1210,10 @@ window.products = [
                 rating: 0.0,
                 reviews: 0,
                 sold: 9,
-                tags: ["flash"]    
+                tags: ["flash"]
 
 
-                
+
             },
         ],
         gift: [
@@ -1225,7 +1249,8 @@ $(document).ready(function () {
         return (str || '')
             .toLowerCase()
             .normalize('NFD').replace(/\p{Diacritic}/gu, '')
-            .replace(/[^a-z0-9]/g, '')
+            .replace(/[^a-z0-9 ]/g, '')
+            .replace(/\s+/g, '-')
             .trim();
     }
     function categoryToString(category) {
@@ -1243,63 +1268,32 @@ $(document).ready(function () {
     loadPagePart("HTML/Layout/resetfooter.html", "footer-container");
 
     window.showTab = function (tabId, event = null) {
-        // 1. Ẩn toàn bộ nội dung tab và bỏ trạng thái active ở các nút
         $('.tab-content').removeClass('active');
         $('.tab-btn').removeClass('active');
-
-        // 2. Hiện nội dung tab được chọn
         $(`#${tabId}`).addClass('active');
-
-        // 3. Nếu sự kiện đến từ click thật (VD click vào button)
-        if (event) {
-            $(event.currentTarget).addClass('active');
-        } else {
-            // 4. Nếu là gọi gián tiếp (VD: từ link "Xem đánh giá")
-            // → tìm đúng nút .tab-btn có onclick gọi tabId
+        if (event) $(event.currentTarget).addClass('active');
+        else {
             const $btn = $(`.tab-btn`).filter(function () {
                 return $(this).attr('onclick')?.includes(tabId);
             });
-
-            // 👉 Gán class active và mô phỏng hiệu ứng như click thật
             $btn.addClass('active');
-
-            // (Tùy chọn) Nếu bạn muốn hiệu ứng ripple/click thì có thể gọi $btn.trigger('click');
-            // Nhưng ở đây ta không gọi lại vì đã xử lý nội dung tab rồi
         }
-
-        // 5. Nếu là tab đánh giá → scroll xuống
         if (tabId === 'tab3') {
             const targetOffset = document.querySelector('.product-tabs').offsetTop - 60;
-            window.scrollTo({
-                top: targetOffset,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: targetOffset, behavior: 'smooth' });
         }
     };
 
-
-
-
-    // Lấy name và type từ URL
+    // Lấy id, name và type từ URL
     const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
     const normName = urlParams.get('name');
     const type = urlParams.get('type');
 
     // Debug: log URL params
-    console.log('[DEBUG] URL params:', { normName, type });
-
-    // Hàm normalize giống bên allproducts
-    function normalizeName(str) {
-        return (str || '')
-            .toLowerCase()
-            .normalize('NFD').replace(/\p{Diacritic}/gu, '')
-            .replace(/[^a-z0-9 ]/g, '')
-            .replace(/\s+/g, '-')
-            .trim();
-    }
+    console.log('[DEBUG] URL params:', { productId, normName, type });
 
     // Lấy đúng danh sách sản phẩm theo type
-    // Luôn fetch theo type nếu có type (không dùng window.products cho các loại này)
     function fetchProductsByType(type, cb) {
         let file = '';
         if (type === 'pc') file = 'pc-part-dataset/processed/pc.json';
@@ -1327,10 +1321,7 @@ $(document).ready(function () {
     }
 
     function renderProduct(product) {
-        // Fix riêng cho laptop: chuẩn hóa category về string nếu type=laptop
-        if (type === 'laptop') {
-            if (Array.isArray(product.category)) product.category = product.category.join(' ');
-        }
+        if (type === 'laptop' && Array.isArray(product.category)) product.category = product.category.join(' ');
         console.log('[DEBUG] Render product:', product);
         if (!product) {
             showNotFound('Không tìm thấy sản phẩm (product null)');
@@ -1343,14 +1334,26 @@ $(document).ready(function () {
            <span class="stars">${ratingStars}</span>
            <a href="#tab3" class="review-link" onclick="document.querySelectorAll('.tab-btn')[2].click()">Xem đánh giá</a>
         `);
+<<<<<<< HEAD
         // Hiển thị giá cho từng loại sản phẩm - Ưu tiên salePrice và originalPrice
         let sale = 0, original = 0;
         if (product.salePrice && product.originalPrice) {
             // Ưu tiên salePrice và originalPrice cho tất cả sản phẩm
             sale = parsePrice(product.salePrice);
             original = parsePrice(product.originalPrice);
+=======
+        let sale = 0, original = 0;
+        if (window.location.search.includes('type=keyboard') || (product.name && product.name.toLowerCase().includes('bàn phím'))) {
+            if (product.new_price && product.old_price) {
+                sale = parsePrice(product.new_price);
+                original = parsePrice(product.old_price);
+            } else if (product.old_price) {
+                sale = parsePrice(product.old_price);
+            } else if (product.price) {
+                sale = parsePrice(product.price);
+            }
+>>>>>>> bae7c6246bf7e97eefa90075dc4105d3ab1aef3e
         } else if (product.price_new && product.price_old) {
-            // Mouse: có price_new, price_old
             sale = parsePrice(product.price_new);
             original = parsePrice(product.price_old);
         } else if (product.new_price && product.old_price) {
@@ -1358,7 +1361,6 @@ $(document).ready(function () {
             sale = parsePrice(product.new_price);
             original = parsePrice(product.old_price);
         } else if (product.price) {
-            // PC/Laptop: chỉ có price
             sale = parsePrice(product.price);
         }
         $('#productPrice').text(formatPrice(sale));
@@ -1372,8 +1374,6 @@ $(document).ready(function () {
         }
         $('#productDescription').html(product.description || '');
         $('.buy-now').attr('data-id', product.id || '');
-        // Hiển thị hình ảnh đẹp hơn, căn giữa, bo góc, đổ bóng
-        // Hiển thị ảnh sắc nét nhất có thể
         const $img = $('#mainImage');
         $img.attr('src', product.image)
             .css({
@@ -1396,7 +1396,6 @@ $(document).ready(function () {
                 'backface-visibility': 'hidden',
                 'will-change': 'transform',
             });
-        // Nếu có ảnh độ phân giải cao hơn, dùng srcset cho màn hình retina
         if (product.image && product.image.includes('_medium')) {
             const highRes = product.image.replace('_medium', '_master');
             $img.attr('srcset', `${product.image} 1x, ${highRes} 2x`);
@@ -1406,34 +1405,27 @@ $(document).ready(function () {
             function() { $(this).css({'box-shadow': '0 8px 32px 0 rgba(0,0,0,0.18)', 'transform': 'scale(1)'}); }
         );
         $('#lightgallery a').attr('href', product.image);
-        // Nếu có nhiều ảnh thì dùng thumbnails, còn không thì chỉ 1 ảnh
         if (product.thumbnails && Array.isArray(product.thumbnails) && product.thumbnails.length > 1) {
             setupThumbnails(product.thumbnails);
         } else {
             setupThumbnails([product.image]);
         }
-        // Ẩn flash sale nếu không có
         $("#flashSaleBox").css("display", "none");
-        // Hiển thị thông số kỹ thuật cho từng loại sản phẩm
         let specsHtml = '<tr><th>Thành phần</th><th>Chi tiết</th></tr>';
         if (
             ((product.category?.toLowerCase()?.includes('chuột') || product.name?.toLowerCase()?.includes('chuột')) || (window.location.search.includes('type=mouse')))
         ) {
-            // Luôn hiển thị 3 dòng cố định bên trái
             const keysOrder = ['Kết nối', 'Pin', 'DPI'];
-            // Ưu tiên lấy từ specs dạng object
             let specsMap = {};
             if (product.specs && Array.isArray(product.specs)) {
                 product.specs.forEach(s => {
                     if (s.key && s.value) specsMap[s.key.trim().toLowerCase()] = s.value;
                 });
             }
-            // Nếu không có specs, lấy từ desc dạng text
             let descArr = Array.isArray(product.desc) ? product.desc : [];
             keysOrder.forEach((key, idx) => {
                 let val = specsMap[key.toLowerCase()];
                 if (!val && descArr[idx]) {
-                    // Nếu desc có dạng 'DPI - 12000' thì tách lấy số
                     if (key === 'DPI' && /dpi/i.test(descArr[idx])) {
                         let match = descArr[idx].match(/\d+[.,]?\d*/);
                         val = match ? match[0] : descArr[idx];
@@ -1446,7 +1438,6 @@ $(document).ready(function () {
         } else if (product.specs && Array.isArray(product.specs) && product.specs.length > 0) {
             specsHtml += product.specs.map(spec => `<tr><td>${spec.key}</td><td>${spec.value}</td></tr>`).join('');
         } else if (window.location.search.includes('type=display') || (product.category?.toLowerCase()?.includes('màn hình') || product.name?.toLowerCase()?.includes('màn hình'))) {
-            // Nếu là màn hình mà không có specs thì tự động lấy các trường panel, refresh_rate, size, resolution
             const displayFields = [
                 { key: 'Tấm nền', value: product.panel },
                 { key: 'Tần số quét', value: product.refresh_rate },
@@ -1457,7 +1448,6 @@ $(document).ready(function () {
         } else if (product.desc && Array.isArray(product.desc) && product.desc.length > 0) {
             specsHtml += product.desc.map((d) => `<tr><td>Đặc điểm</td><td>${d}</td></tr>`).join('');
         } else {
-            // Nếu không có specs/desc, tự tạo bảng từ các trường cơ bản
             const fields = [
                 { key: 'CPU', value: product.cpu },
                 { key: 'GPU', value: product.gpu },
@@ -1492,20 +1482,43 @@ $(document).ready(function () {
         console.warn('[DEBUG] showNotFound:', message);
     }
 
-    if (type && normName) {
+    // Nếu có id (từ index) → tìm trong window.products hoặc fetch all types
+    if (productId) {
+        // Kiểm tra trong window.products trước (dữ liệu từ index)
+        const foundInWindow = window.products.find(p => p.id === productId);
+        if (foundInWindow) {
+            renderProduct(foundInWindow);
+        } else {
+            // Nếu không tìm thấy, fetch tất cả types để tìm theo id
+            const allTypes = ['pc', 'laptop', 'mouse', 'keyboard', 'display'];
+            let allProducts = [];
+            let promises = allTypes.map(t => new Promise(resolve => {
+                fetchProductsByType(t, list => {
+                    allProducts = allProducts.concat(list);
+                    resolve();
+                });
+            }));
+            Promise.all(promises).then(() => {
+                console.log('[DEBUG] Fetched all types lists:', allProducts);
+                const found = allProducts.find(p => p.id === productId);
+                if (found) renderProduct(found);
+                else showNotFound(`Không tìm thấy sản phẩm với ID: ${productId}`);
+            }).catch(err => {
+                console.error('[DEBUG] Lỗi fetch all types:', err);
+                showNotFound('Lỗi tải dữ liệu sản phẩm');
+            });
+        }
+        // Nếu có type và name (từ allproducts) → giữ logic cũ
+    } else if (type && normName) {
         fetchProductsByType(type, list => {
             if (!Array.isArray(list)) return showNotFound('Dữ liệu sản phẩm không hợp lệ');
-            console.log('[DEBUG] Fetched list:', list);
+            console.log('[DEBUG] Fetched list for type ' + type + ':', list);
             const found = list.find(p => normalizeName(p.name) === normName);
             if (found) renderProduct(found);
-            else showNotFound('Không tìm thấy sản phẩm trong file dữ liệu');
+            else showNotFound('Không tìm thấy sản phẩm trong file dữ liệu cho type: ' + type);
         });
-    } else if (window.products && window.products.length) {
-        console.log('[DEBUG] window.products:', window.products);
-        const found = window.products.find(p => normalizeName(p.name) === normName);
-        if (found) renderProduct(found);
-        else showNotFound('Không tìm thấy sản phẩm trong window.products');
+        // Nếu thiếu cả id, name, type → not found
     } else {
-        showNotFound('Thiếu thông tin name hoặc type trên URL');
+        showNotFound('Thiếu thông tin id, name hoặc type trên URL');
     }
 });

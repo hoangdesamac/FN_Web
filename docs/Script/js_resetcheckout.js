@@ -1264,20 +1264,6 @@ function closeModal() {
     }, 500);
 }
 
-function generateOrderId() {
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
-    const today = new Date();
-    const currentDate = today.toISOString().split('T')[0].replace(/-/g, '');
-
-    const todaysOrders = orders.filter(order => {
-        const orderDate = new Date(order.createdAt).toISOString().split('T')[0].replace(/-/g, '');
-        return orderDate === currentDate;
-    });
-
-    const orderNumber = todaysOrders.length + 1;
-    return `DH-${currentDate}-${orderNumber}`;
-}
-
 function showSuccessModal() {
     const modal = new bootstrap.Modal(document.getElementById('success-modal'));
     modal.show();
