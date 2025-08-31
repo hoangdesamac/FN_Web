@@ -727,7 +727,6 @@ async function exportToPDF(orderId) {
     const formattedDate = new Date(order.createdAt).toLocaleString('vi-VN');
     const { points } = calculatePointsAndTier(order);
 
-    // === Convert ảnh URL thành ảnh proxy ===
     function proxifyImageURL(url) {
         if (!url) return null;
         if (/^https?:\/\//i.test(url)) {
@@ -736,7 +735,7 @@ async function exportToPDF(orderId) {
         return null;
     }
 
-    // === Flatten bundle items ===
+    // === Flatten sản phẩm (bundle/normal) ===
     const flatItems = [];
     order.items.forEach(item => {
         if (item.isBundle && Array.isArray(item.parts)) {
@@ -842,10 +841,14 @@ async function exportToPDF(orderId) {
     const fullWatermarkBase64 = await createFullWatermarkBase64();
     const sealBase64 = await createApprovalSealBase64();
 
-    // === Chính sách đổi trả ===
-    const policyText = `Lưu ý: 3TD Shop cam kết hỗ trợ đổi trả trong các trường hợp sản phẩm 
-bị lỗi kỹ thuật, hư hỏng, rơi vỡ hoặc chất lượng không như mong muốn trong quá trình vận chuyển. 
-Quý khách vui lòng quay video khi mở hộp và giữ đầy đủ hóa đơn, tem, phiếu bảo hành để được hỗ trợ đổi trả.`;
+    // === Chính sách đổi trả (bullet) ===
+    const policyContent = [
+        { text: 'Lưu ý:', bold: true, color: '#e53935', margin: [0, 5, 0, 5] },
+        { text: '• Đổi trả trong 14 ngày kể từ ngày nhận hàng nếu phát hiện lỗi kỹ thuật do nhà sản xuất.' },
+        { text: '• Báo ngay trong 1 ngày kể từ lúc nhận hàng nếu có rơi, vỡ, hư hỏng, ẩm ướt, sự cố khi vận chuyển.' },
+        { text: '• Cung cấp video mở hộp, hóa đơn, tem bảo hành, giữ nguyên bao bì để được hỗ trợ.' },
+        { text: '• Yêu cầu đổi trả phải được 3TD Shop xác nhận trước khi gửi lại sản phẩm.' }
+    ];
 
     // === Định nghĩa PDF ===
     const docDefinition = {
@@ -884,7 +887,8 @@ Quý khách vui lòng quay video khi mở hộp và giữ đầy đủ hóa đơ
             { text: `Địa chỉ: ${delivery.address || ''}, ${delivery.ward || ''}, ${delivery.district || ''}, ${delivery.province || ''}` },
             { text: `Phương thức thanh toán: ${getPaymentMethodText(order.paymentMethod)}` },
             delivery.note ? { text: `Ghi chú: ${delivery.note}` } : null,
-            { text: '\n' + policyText, italics: true, color: '#c0392b', alignment: 'justify' },
+            { text: '\n' },
+            ...policyContent,
             { text: '\nCảm ơn quý khách đã mua sắm tại 3TD Shop!', italics: true, alignment: 'center' },
             sealBase64 ? { image: sealBase64, width: 100, alignment: 'right', margin: [0, 10, 0, 0] } : null
         ].filter(Boolean),
@@ -906,6 +910,7 @@ Quý khách vui lòng quay video khi mở hộp và giữ đầy đủ hóa đơ
 
     pdfMake.createPdf(docDefinition).download(`DonHang_${order.orderCode || order.id}.pdf`);
 }
+
 
 
 
