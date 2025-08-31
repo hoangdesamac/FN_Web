@@ -95,8 +95,8 @@ function filterDisplayProducts() {
       if (!match) return false;
     }
     // Price
-    let priceStr = (item.price && item.price.trim()) ? item.price : item.old_price;
-    let price = parseInt((priceStr || '').replace(/\D/g, '')) || 0;
+    let priceStr = item.salePrice ? item.salePrice.toString() : '';
+    let price = item.salePrice || 0;
     if (price < filters.price.min || price > filters.price.max) return false;
     return true;
   });
@@ -126,8 +126,8 @@ function showDisplayProductsFiltered(list) {
   sorted.slice(startIdx, endIdx).forEach(item => {
     if (!item.name) return;
     // Lấy giá cũ, giá mới, discount
-    let oldPrice = item.old_price || 0;
-    let newPrice = item.price || 0;
+    let oldPrice = item.originalPrice || 0;
+    let newPrice = item.salePrice || 0;
     let discount = 0;
     if (oldPrice && newPrice && oldPrice !== newPrice) {
       let oldNum = parseInt((oldPrice + '').replace(/\D/g, ''));
@@ -184,10 +184,10 @@ function showDisplayProductsFiltered(list) {
           ${showSpecs ? `<div class="product-specs-box mb-2 mx-auto" style="font-size:0.82rem; border-radius:7px; padding:7px 10px; min-height:28px;max-width:95%">${specsText}</div>` : ''}
           <div class="mt-auto w-100">
             <div class="product-pricing-box w-100 d-flex align-items-center justify-content-between gap-2" style="min-height:32px;">
-              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${oldPrice && oldPrice !== '0' ? oldPrice : ''}</span>
+              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${oldPrice && oldPrice !== '0' ? (typeof oldPrice === 'number' ? oldPrice.toLocaleString('vi-VN') + '₫' : oldPrice) : ''}</span>
             </div>
             <div class="sale-price mb-1 d-flex align-items-center" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">
-              <span>${(newPrice && newPrice !== '0') ? newPrice : (oldPrice && oldPrice !== '0' ? oldPrice : 'Liên hệ')}</span>
+              <span>${(newPrice && newPrice !== '0') ? (typeof newPrice === 'number' ? newPrice.toLocaleString('vi-VN') + '₫' : newPrice) : (oldPrice && oldPrice !== '0' ? (typeof oldPrice === 'number' ? oldPrice.toLocaleString('vi-VN') + '₫' : oldPrice) : 'Liên hệ')}</span>
               ${discount > 0 ? `<span class="discount-badge ms-2" style="font-size:0.95em;background:var(--bg-gradient,#fff0f0);color:var(--accent,#e53935);border:1px solid var(--accent,#e53935);">-${discount}%</span>` : ''}
             </div>
           </div>
@@ -276,7 +276,7 @@ function filterKeyboardProducts() {
     }
     // Price
     // Lấy giá mới, nếu rỗng thì lấy giá cũ, chuyển về số
-    let priceStr = (item.new_price && item.new_price.trim()) ? item.new_price : item.old_price;
+    let priceStr = (item.salePrice && item.salePrice.toString().trim()) ? item.salePrice.toString() : (item.originalPrice ? item.originalPrice.toString() : '');
     let price = parseInt((priceStr || '').replace(/\D/g, '')) || 0;
     if (price < filters.price.min || price > filters.price.max) return false;
     return true;
@@ -304,8 +304,8 @@ function showKeyboardProductsFiltered(list) {
   list.slice(startIdx, endIdx).forEach(item => {
     if (!item.name) return;
     // Lấy giá cũ, giá mới, discount
-    let oldPrice = item.old_price || item.price_old || 0;
-    let newPrice = item.new_price || item.price || 0;
+    let oldPrice = item.originalPrice || 0;
+    let newPrice = item.salePrice || 0;
     let discount = 0;
     if (oldPrice && newPrice && oldPrice !== newPrice) {
       // Loại bỏ ký tự không phải số
@@ -326,10 +326,10 @@ function showKeyboardProductsFiltered(list) {
           ${showSpecs ? `<div class="product-specs-box mb-2 mx-auto" style="font-size:0.82rem; border-radius:7px; padding:7px 10px; min-height:28px;max-width:95%">${specsText}</div>` : ''}
           <div class="mt-auto w-100">
             <div class="product-pricing-box w-100 d-flex align-items-center justify-content-between gap-2" style="min-height:32px;">
-              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${oldPrice && oldPrice !== '0' ? oldPrice : ''}</span>
+              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${oldPrice && oldPrice !== '0' ? (typeof oldPrice === 'number' ? oldPrice.toLocaleString('vi-VN') + '₫' : oldPrice) : ''}</span>
             </div>
             <div class="sale-price mb-1 d-flex align-items-center" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">
-              <span>${(newPrice && newPrice !== '0') ? newPrice : (oldPrice && oldPrice !== '0' ? oldPrice : 'Liên hệ')}</span>
+              <span>${(newPrice && newPrice !== '0') ? (typeof newPrice === 'number' ? newPrice.toLocaleString('vi-VN') + '₫' : newPrice) : (oldPrice && oldPrice !== '0' ? (typeof oldPrice === 'number' ? oldPrice.toLocaleString('vi-VN') + '₫' : oldPrice) : 'Liên hệ')}</span>
               ${discount > 0 ? `<span class="discount-badge ms-2" style="font-size:0.95em;background:var(--bg-gradient,#fff0f0);color:var(--accent,#e53935);border:1px solid var(--accent,#e53935);">-${discount}%</span>` : ''}
             </div>
           </div>
@@ -468,7 +468,7 @@ function filterMouseProducts() {
       if (!dpiMatch) return false;
     }
     // Price
-    const price = item.price_new || item.price || 0;
+    const price = item.salePrice || 0;
     if (price < filters.price.min || price > filters.price.max) return false;
     return true;
   });
@@ -486,8 +486,8 @@ function showMouseProductsFiltered(list) {
   list.slice(startIdx, endIdx).forEach(item => {
     if (!item.name) return;
     // Tính discount và lấy giá đúng trường dữ liệu
-    let oldPrice = item.price_old || item.old_price || 0;
-    let newPrice = item.price_new || item.price || 0;
+    let oldPrice = item.originalPrice || 0;
+    let newPrice = item.salePrice || 0;
     let discount = oldPrice && newPrice ? Math.round(100 * (oldPrice - newPrice) / oldPrice) : 0;
     // Hiển thị specs từ mảng desc
     // Hàm chọn icon phù hợp cho từng mô tả
@@ -528,7 +528,7 @@ function showMouseProductsFiltered(list) {
           ${showSpecs ? `<div class="product-specs-box mb-2 mx-auto" style="font-size:0.82rem; border-radius:7px; padding:7px 10px; min-height:28px;max-width:95%">${specsText}</div>` : ''}
           <div class="mt-auto w-100">
             <div class="product-pricing-box w-100 d-flex align-items-center justify-content-between gap-2" style="min-height:32px;">
-              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${oldPrice ? oldPrice.toLocaleString('vi-VN') + '₫' : ''}</span>
+              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${oldPrice && oldPrice !== '0' ? (typeof oldPrice === 'number' ? oldPrice.toLocaleString('vi-VN') + '₫' : oldPrice) : ''}</span>
             </div>
             <div class="sale-price mb-1 d-flex align-items-center" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">
               <span>${(newPrice && newPrice !== '0') ? (typeof newPrice === 'number' ? newPrice.toLocaleString('vi-VN') + '₫' : newPrice) : (oldPrice && oldPrice !== '0' ? (typeof oldPrice === 'number' ? oldPrice.toLocaleString('vi-VN') + '₫' : oldPrice) : 'Liên hệ')}</span>
@@ -623,50 +623,14 @@ function setupAllProductsPage() {
     }
     if (filters && filters.price) {
       list = list.filter(item => {
-        let price = typeof item.price === 'number' ? item.price : parseInt((item.price + '').replace(/\D/g, '')) || 0;
+        let price = typeof item.salePrice === 'number' ? item.salePrice : parseInt((item.salePrice + '').replace(/\D/g, '')) || 0;
         return price >= filters.price.min && price <= filters.price.max;
       });
     }
       return list.slice().sort((a, b) => {
         function extractPrice(item) {
-          if (productType === 'laptop' || productType === 'pc') {
-            return typeof item.price === 'number' ? item.price : parseInt((item.price + '').replace(/\D/g, '')) || 0;
-          } else if (productType === 'display') {
-            // display: price có thể là string ("3.890.000₫") hoặc number
-            if (typeof item.price === 'number') return item.price;
-            if (typeof item.price === 'string') {
-              let num = parseInt(item.price.replace(/\D/g, ''));
-              if (num) return num;
-            }
-            // fallback: thử old_price
-            if (typeof item.old_price === 'number') return item.old_price;
-            if (typeof item.old_price === 'string') {
-              let num = parseInt(item.old_price.replace(/\D/g, ''));
-              if (num) return num;
-            }
-            return 0;
-          } else if (productType === 'keyboard') {
-            let priceCandidates = [item.new_price, item.price, item.old_price, item.price_old];
-            for (let val of priceCandidates) {
-              if (typeof val === 'string') {
-                let num = parseInt(val.replace(/\D/g, ''));
-                if (num) return num;
-              } else if (typeof val === 'number' && val > 0) {
-                return val;
-              }
-            }
-            return 0;
-          } else if (productType === 'mouse') {
-            let priceCandidates = [item.price_new, item.new_price, item.price, item.old_price, item.price_old];
-            for (let val of priceCandidates) {
-              if (typeof val === 'string') {
-                let num = parseInt(val.replace(/\D/g, ''));
-                if (num) return num;
-              } else if (typeof val === 'number' && val > 0) {
-                return val;
-              }
-            }
-            return 0;
+          if (productType === 'laptop' || productType === 'pc' || productType === 'display' || productType === 'keyboard' || productType === 'mouse') {
+            return item.salePrice || 0;
           } else {
             return 0;
           }
@@ -1056,8 +1020,8 @@ function setupAllProductsPage() {
         if (!match) return false;
       }
       if (filters.os.length && (!item.os || !filters.os.includes(item.os))) return false;
-      // Giá: chỉ dùng item.price (kiểu số)
-      let price = typeof item.price === 'number' ? item.price : parseInt((item.price + '').replace(/\D/g, '')) || 0;
+      // Giá: chỉ dùng item.salePrice
+      let price = item.salePrice || 0;
       if (price < filters.price.min || price > filters.price.max) return false;
       return true;
     });
@@ -1082,7 +1046,7 @@ function setupAllProductsPage() {
     }
     sorted.slice(startIdx, endIdx).forEach(item => {
       if (!item.name) return;
-      let discount = item.old_price && item.price ? Math.round(100 * (item.old_price - item.price) / item.old_price) : 0;
+      let discount = item.originalPrice && item.salePrice ? Math.round(100 * (item.originalPrice - item.salePrice) / item.originalPrice) : 0;
       function getShortSpec(str) {
         if (!str) return '';
         return str
@@ -1132,10 +1096,10 @@ function setupAllProductsPage() {
             <div class="product-name fw-bold mb-1 clamp-2" style="font-size:1.02rem;min-height:38px;color:var(--primary);text-shadow:0 1px 4px var(--bg-gradient);text-align:left;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${item.name}</div>
             <div class="product-specs-box mb-2 mx-auto" style="font-size:0.82rem; border-radius:7px; padding:7px 10px; min-height:28px;max-width:95%">${specsText}</div>
             <div class="d-flex align-items-center justify-content-between mb-1 w-100 gap-2">
-              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${item.old_price ? item.old_price.toLocaleString('vi-VN') + '₫' : ''}</span>
+              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${item.originalPrice && item.originalPrice !== '0' ? (typeof item.originalPrice === 'number' ? item.originalPrice.toLocaleString('vi-VN') + '₫' : item.originalPrice) : ''}</span>
               ${discount > 0 ? `<span class="discount-badge ms-auto" style="font-size:0.85em;background:var(--bg-gradient,#fff0f0);color:var(--accent,#e53935);border:1px solid var(--accent,#e53935);">-${discount}%</span>` : ''}
             </div>
-            <div class="sale-price mb-1" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">${item.price ? item.price.toLocaleString('vi-VN') + '₫' : 'Liên hệ'}</div>
+            <div class="sale-price mb-1" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">${item.salePrice ? item.salePrice.toLocaleString('vi-VN') + '₫' : 'Liên hệ'}</div>
             <div class="product-rating mb-0 w-100" style="font-size:0.98rem;color:var(--accent,#ff9900);text-align:left;">
               <span><i class="fa fa-star"></i> 0.0</span> <span style="color:var(--secondary,#b0b0b0);font-size:0.95em;">(0 đánh giá)</span>
             </div>
@@ -1282,8 +1246,8 @@ function setupAllProductsPage() {
       }))) return false;
       // OS
       if (filters.os.length && (!item.os || !filters.os.includes(item.os))) return false;
-      // Giá: chỉ dùng item.price (kiểu số)
-      let price = typeof item.price === 'number' ? item.price : parseInt((item.price + '').replace(/\D/g, '')) || 0;
+      // Giá: chỉ dùng item.salePrice (kiểu số)
+      let price = typeof item.salePrice === 'number' ? item.salePrice : parseInt((item.salePrice + '').replace(/\D/g, '')) || 0;
       if (price < filters.price.min || price > filters.price.max) return false;
       return true;
     });
@@ -1307,7 +1271,7 @@ function setupAllProductsPage() {
     }
     sorted.slice(startIdx, endIdx).forEach(item => {
       if (!item.name) return;
-      let discount = item.old_price && item.price ? Math.round(100 * (item.old_price - item.price) / item.old_price) : 0;
+      let discount = item.originalPrice && item.salePrice ? Math.round(100 * (item.originalPrice - item.salePrice) / item.originalPrice) : 0;
       function getShortSpec(str) {
         if (!str) return '';
         return str
@@ -1365,10 +1329,10 @@ function setupAllProductsPage() {
             <div class="product-name fw-bold mb-1 clamp-2" style="font-size:1.02rem;min-height:38px;color:var(--primary);text-shadow:0 1px 4px var(--bg-gradient);text-align:left;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${item.name}</div>
             <div class="product-specs-box mb-2 mx-auto" style="font-size:0.82rem; border-radius:7px; padding:7px 10px; min-height:28px;max-width:95%">${specsText}</div>
             <div class="d-flex align-items-center justify-content-between mb-1 w-100 gap-2">
-              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${item.old_price ? item.old_price.toLocaleString('vi-VN') + '₫' : ''}</span>
+              <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${item.originalPrice && item.originalPrice !== '0' ? (typeof item.originalPrice === 'number' ? item.originalPrice.toLocaleString('vi-VN') + '₫' : item.originalPrice) : ''}</span>
               ${discount > 0 ? `<span class="discount-badge ms-auto" style="font-size:0.85em;background:var(--bg-gradient,#fff0f0);color:var(--accent,#e53935);border:1px solid var(--accent,#e53935);">-${discount}%</span>` : ''}
             </div>
-            <div class="sale-price mb-1" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">${item.price ? item.price.toLocaleString('vi-VN') + '₫' : 'Liên hệ'}</div>
+            <div class="sale-price mb-1" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">${item.salePrice ? item.salePrice.toLocaleString('vi-VN') + '₫' : 'Liên hệ'}</div>
             <div class="product-rating mb-0 w-100" style="font-size:0.98rem;color:var(--accent,#ff9900);text-align:left;">
               <span><i class="fa fa-star"></i> 0.0</span> <span style="color:var(--secondary,#b0b0b0);font-size:0.95em;">(0 đánh giá)</span>
             </div>
@@ -1671,8 +1635,8 @@ function filterPCProducts() {
       }))) return false;
       // OS
       if (filters.os.length && (!item.os || !filters.os.includes(item.os))) return false;
-      // Giá: chỉ dùng item.price (kiểu số)
-      let price = typeof item.price === 'number' ? item.price : parseInt((item.price + '').replace(/\D/g, '')) || 0;
+      // Giá: chỉ dùng item.salePrice (kiểu số)
+      let price = typeof item.salePrice === 'number' ? item.salePrice : parseInt((item.salePrice + '').replace(/\D/g, '')) || 0;
       if (price < filters.price.min || price > filters.price.max) return false;
       return true;
     });
@@ -1694,7 +1658,7 @@ function showPCProductsFiltered(list) {
   }
   list.slice(startIdx, endIdx).forEach(item => {
     if (!item.name) return;
-    let discount = item.old_price && item.price ? Math.round(100 * (item.old_price - item.price) / item.old_price) : 0;
+    let discount = item.originalPrice && item.salePrice ? Math.round(100 * (item.originalPrice - item.salePrice) / item.originalPrice) : 0;
     function getShortSpec(str) {
       if (!str) return '';
       return str
@@ -1752,10 +1716,10 @@ function showPCProductsFiltered(list) {
           <div class="product-name fw-bold mb-1 clamp-2" style="font-size:1.02rem;min-height:38px;color:var(--primary);text-shadow:0 1px 4px var(--bg-gradient);text-align:left;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${item.name}</div>
           <div class="product-specs-box mb-2 mx-auto" style="font-size:0.82rem; border-radius:7px; padding:7px 10px; min-height:28px;max-width:95%">${specsText}</div>
           <div class="d-flex align-items-center justify-content-between mb-1 w-100 gap-2">
-            <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${item.old_price ? item.old_price.toLocaleString('vi-VN') + '₫' : ''}</span>
+            <span class="original-price" style="font-size:0.93em;color:var(--secondary,#aaa);text-decoration:line-through;">${item.originalPrice && item.originalPrice !== '0' ? (typeof item.originalPrice === 'number' ? item.originalPrice.toLocaleString('vi-VN') + '₫' : item.originalPrice) : ''}</span>
             ${discount > 0 ? `<span class="discount-badge ms-auto" style="font-size:0.85em;background:var(--bg-gradient,#fff0f0);color:var(--accent,#e53935);border:1px solid var(--accent,#e53935);">-${discount}%</span>` : ''}
           </div>
-          <div class="sale-price mb-1" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">${item.price ? item.price.toLocaleString('vi-VN') + '₫' : 'Liên hệ'}</div>
+          <div class="sale-price mb-1" style="font-size:1.18rem;font-weight:700;color:var(--accent,#e53935);text-align:left;">${item.salePrice ? item.salePrice.toLocaleString('vi-VN') + '₫' : 'Liên hệ'}</div>
           <div class="product-rating mb-0 w-100" style="font-size:0.98rem;color:var(--accent,#ff9900);text-align:left;">
             <span><i class="fa fa-star"></i> 0.0</span> <span style="color:var(--secondary,#b0b0b0);font-size:0.95em;">(0 đánh giá)</span>
           </div>

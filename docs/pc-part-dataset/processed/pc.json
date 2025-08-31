@@ -1,7 +1,7 @@
 [
   {
-  "name": "PC Intel i7-14700F/ VGA RTX 3060",
-  "data-id": "pc-intel-i7-14700f-vga-rtx-3060",
+    "id": "pc-intel-i7-14700f-vga-rtx-3060",
+    "name": "PC Intel i7-14700F/ VGA RTX 3060",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 3060",
@@ -11,12 +11,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 3060, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 21500000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 3060, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 28506093,
+    "salePrice": 21500000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RTX 3060 Ti",
-  "data-id": "pc-intel-i7-14700f-vga-rtx-3060-ti",
+    "id": "pc-intel-i7-14700f-vga-rtx-3060-ti",
+    "name": "PC Intel i7-14700F/ VGA RTX 3060 Ti",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 3060 Ti",
@@ -26,12 +27,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 3060 Ti, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 22900000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 3060 Ti, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 31471548,
+    "salePrice": 22900000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RTX 3070",
-  "data-id": "pc-intel-i7-14700f-vga-rtx-3070",
+    "id": "pc-intel-i7-14700f-vga-rtx-3070",
+    "name": "PC Intel i7-14700F/ VGA RTX 3070",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 3070",
@@ -41,12 +43,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 3070, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 25900000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 3070, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 28639979,
+    "salePrice": 25900000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RTX 4060",
-  "data-id": "pc-intel-i7-14700f-vga-rtx-4060",
+    "id": "pc-intel-i7-14700f-vga-rtx-4060",
+    "name": "PC Intel i7-14700F/ VGA RTX 4060",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 4060",
@@ -56,12 +59,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 4060, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 20900000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 4060, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 21967658,
+    "salePrice": 20900000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RTX 4060 Ti",
-  "data-id": "pc-intel-i7-14700f-vga-rtx-4060-ti",
+    "id": "pc-intel-i7-14700f-vga-rtx-4060-ti",
+    "name": "PC Intel i7-14700F/ VGA RTX 4060 Ti",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 4060 Ti",
@@ -71,12 +75,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 4060 Ti, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 22500000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 4060 Ti, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 37332449,
+    "salePrice": 22500000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RTX 4070",
-  "data-id": "pc-intel-i7-14700f-vga-rtx-4070",
+    "id": "pc-intel-i7-14700f-vga-rtx-4070",
+    "name": "PC Intel i7-14700F/ VGA RTX 4070",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 4070",
@@ -86,12 +91,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 4070, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 26900000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RTX 4070, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 31773195,
+    "salePrice": 26900000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RX 6600",
-  "data-id": "pc-intel-i7-14700f-vga-rx-6600",
+    "id": "pc-intel-i7-14700f-vga-rx-6600",
+    "name": "PC Intel i7-14700F/ VGA RX 6600",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 6600",
@@ -101,12 +107,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 6600, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 18500000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 6600, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 24461645,
+    "salePrice": 18500000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RX 6700 XT",
-  "data-id": "pc-intel-i7-14700f-vga-rx-6700-xt",
+    "id": "pc-intel-i7-14700f-vga-rx-6700-xt",
+    "name": "PC Intel i7-14700F/ VGA RX 6700 XT",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 6700 XT",
@@ -116,12 +123,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 6700 XT, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 20500000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 6700 XT, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 23205819,
+    "salePrice": 20500000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RX 6750 XT",
-  "data-id": "pc-intel-i7-14700f-vga-rx-6750-xt",
+    "id": "pc-intel-i7-14700f-vga-rx-6750-xt",
+    "name": "PC Intel i7-14700F/ VGA RX 6750 XT",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 6750 XT",
@@ -131,12 +139,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 6750 XT, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 21500000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 6750 XT, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 40841598,
+    "salePrice": 21500000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RX 7600",
-  "data-id": "pc-intel-i7-14700f-vga-rx-7600",
+    "id": "pc-intel-i7-14700f-vga-rx-7600",
+    "name": "PC Intel i7-14700F/ VGA RX 7600",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 7600",
@@ -146,12 +155,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 7600, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 19500000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 7600, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 33045251,
+    "salePrice": 19500000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RX 7700 XT",
-  "data-id": "pc-intel-i7-14700f-vga-rx-7700-xt",
+    "id": "pc-intel-i7-14700f-vga-rx-7700-xt",
+    "name": "PC Intel i7-14700F/ VGA RX 7700 XT",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 7700 XT",
@@ -161,12 +171,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 7700 XT, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 22500000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 7700 XT, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 26550751,
+    "salePrice": 22500000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RX 7800 XT",
-  "data-id": "pc-intel-i7-14700f-vga-rx-7800-xt",
+    "id": "pc-intel-i7-14700f-vga-rx-7800-xt",
+    "name": "PC Intel i7-14700F/ VGA RX 7800 XT",
     "image": "https://product.hstatic.net/200000722513/product/smart_dc95765076354a358ca8a0598d19a871_medium.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "AMD Radeon RX 7800 XT",
@@ -176,12 +187,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 7800 XT, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 24900000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i7-14700F và VGA RX 7800 XT, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 25606761,
+    "salePrice": 24900000
   },
   {
-  "name": "PC Intel i5-13400F/ VGA RTX 4060",
-  "data-id": "pc-intel-i5-13400f-vga-rtx-4060",
+    "id": "pc-intel-i5-13400f-vga-rtx-4060",
+    "name": "PC Intel i5-13400F/ VGA RTX 4060",
     "image": "https://product.hstatic.net/200000722513/product/luxs_2304c8fb845340a68d18cac9c3f298db_grande.png",
     "cpu": "Intel Core i5-13400F",
     "gpu": "NVIDIA GeForce RTX 4060",
@@ -191,12 +203,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Intel i5-13400F và VGA RTX 4060, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 17500000
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i5-13400F và VGA RTX 4060, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 25737834,
+    "salePrice": 17500000
   },
   {
-  "name": "PC Intel Ryzen 5 5600X/ VGA RTX 4060",
-  "data-id": "pc-intel-ryzen-5-5600x-vga-rtx-4060",
+    "id": "pc-intel-ryzen-5-5600x-vga-rtx-4060",
+    "name": "PC Intel Ryzen 5 5600X/ VGA RTX 4060",
     "image": "https://product.hstatic.net/200000722513/product/luxs_2304c8fb845340a68d18cac9c3f298db_grande.png",
     "cpu": "AMD Ryzen R5 5600X",
     "gpu": "NVIDIA GeForce RTX 4060",
@@ -206,12 +219,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Ryzen 5 5600X và VGA RTX 4060, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 16500000
+    "description": "PC cấu hình mạnh mẽ với CPU Ryzen 5 5600X và VGA RTX 4060, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 23483240,
+    "salePrice": 16500000
   },
   {
-  "name": "PC Intel Ryzen 5 5600X/ VGA RX 7600",
-  "data-id": "pc-intel-ryzen-5-5600x-vga-rx-7600",
+    "id": "pc-intel-ryzen-5-5600x-vga-rx-7600",
+    "name": "PC Intel Ryzen 5 5600X/ VGA RX 7600",
     "image": "https://product.hstatic.net/200000722513/product/luxs_2304c8fb845340a68d18cac9c3f298db_grande.png",
     "cpu": "AMD Ryzen R5 5600X",
     "gpu": "AMD Radeon RX 7600",
@@ -221,12 +235,13 @@
     "psu": "650W 80 Plus Bronze",
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
-    "description": "PC cấu hình mạnh mẽ với CPU Ryzen 5 5600X và VGA RX 7600, phù hợp cho gaming và làm việc đồ họa."
-    ,"price": 15500000
+    "description": "PC cấu hình mạnh mẽ với CPU Ryzen 5 5600X và VGA RX 7600, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 17554660,
+    "salePrice": 15500000
   },
   {
-  "name": "PC INT x MSI Dragon GODLIKE (Intel Core Ultra 9 285K/RTX 5090)",
-  "data-id": "pc-int-x-msi-dragon-godlike-intel-core-ultra-9-285k-rtx-5090",
+    "id": "pc-int-x-msi-dragon-godlike-intel-core-ultra-9-285k-rtx-5090",
+    "name": "PC INT x MSI Dragon GODLIKE (Intel Core Ultra 9 285K/RTX 5090)",
     "image": "https://product.hstatic.net/200000722513/product/pc_msi_rtx_5090_-_5_68d07b59f2ad428b8f054c885a8d966b_master.png",
     "cpu": "Intel Core Ultra 9 285K",
     "gpu": "NVIDIA GeForce RTX 5090",
@@ -237,11 +252,12 @@
     "case": "Full Tower",
     "os": "Windows 11 Pro",
     "description": "PC INT x MSI Dragon GODLIKE với Ultra 9 285K, RTX 5090, RAM 96GB, SSD 1TB, main Z890, hiệu năng cực đỉnh cho mọi nhu cầu.",
-    "price": 182990000
+    "originalPrice": 208708676,
+    "salePrice": 182990000
   },
   {
-  "name": "PC AMD x ASUS - Extreme (AMD Ryzen 9 9950X3D/VGA RTX 5090)",
-  "data-id": "pc-amd-x-asus-extreme-amd-ryzen-9-9950x3d-vga-rtx-5090",
+    "id": "pc-amd-x-asus-extreme-amd-ryzen-9-9950x3d-vga-rtx-5090",
+    "name": "PC AMD x ASUS - Extreme (AMD Ryzen 9 9950X3D/VGA RTX 5090)",
     "image": "https://cdn.hstatic.net/products/200000722513/nen_trang_web_7_854706637506408c9382cfce61f80b2b_master.png",
     "cpu": "AMD Ryzen R9 9950X3D",
     "gpu": "NVIDIA GeForce RTX 5090",
@@ -252,11 +268,12 @@
     "case": "Full Tower",
     "os": "Windows 11 Pro",
     "description": "PC AMD x ASUS - Extreme với Ryzen 9 9950X3D, RTX 5090, RAM 96GB, SSD 1TB, main X870E, hiệu năng cực đỉnh cho mọi nhu cầu.",
-    "price": 199990000
+    "originalPrice": 311007658,
+    "salePrice": 199990000
   },
   {
-  "name": "PC Intel i3-12100F/ VGA RX 6500XT (Powered by ASUS)",
-  "data-id": "pc-intel-i3-12100f-vga-rx-6500xt-powered-by-asus",
+    "id": "pc-intel-i3-12100f-vga-rx-6500xt-powered-by-asus",
+    "name": "PC Intel i3-12100F/ VGA RX 6500XT (Powered by ASUS)",
     "image": "https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_master.png",
     "cpu": "Intel Core i3-12100F",
     "gpu": "AMD Radeon RX 6500XT",
@@ -267,11 +284,12 @@
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
     "description": "PC i3-12100F, RX 6500XT, 8GB RAM, 250GB SSD, main H610, cấu hình phổ thông cho học tập, văn phòng, giải trí nhẹ.",
-    "price": 10490000
+    "originalPrice": 10835638,
+    "salePrice": 10490000
   },
   {
-  "name": "PC Intel i3-12100F/ VGA RTX 3050",
-  "data-id": "pc-intel-i3-12100f-vga-rtx-3050",
+    "id": "pc-intel-i3-12100f-vga-rtx-3050",
+    "name": "PC Intel i3-12100F/ VGA RTX 3050",
     "image": "https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_master.png",
     "cpu": "Intel Core i3-12100F",
     "gpu": "NVIDIA GeForce RTX 3050",
@@ -282,11 +300,12 @@
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
     "description": "PC i3-12100F, RTX 3050, 8GB RAM, 250GB SSD, main H610, phù hợp gaming phổ thông, học tập, văn phòng.",
-    "price": 12490000
+    "originalPrice": 15563971,
+    "salePrice": 12490000
   },
   {
-  "name": "PC Intel i5-12400F/ VGA RTX 3050",
-  "data-id": "pc-intel-i5-12400f-vga-rtx-3050",
+    "id": "pc-intel-i5-12400f-vga-rtx-3050",
+    "name": "PC Intel i5-12400F/ VGA RTX 3050",
     "image": "https://product.hstatic.net/200000722513/product/pc_gvn_rx6600_-_3_762ba90a94904a50809a93355cd819a7_master.png",
     "cpu": "Intel Core i5-12400F",
     "gpu": "NVIDIA GeForce RTX 3050",
@@ -297,11 +316,12 @@
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
     "description": "PC i5-12400F, RTX 3050, 16GB RAM, 500GB SSD, main B760, gaming và làm việc hiệu quả.",
-    "price": 14290000
+    "originalPrice": 23118349,
+    "salePrice": 14290000
   },
   {
-  "name": "PC Intel Core Ultra 7 265KF/ VGA RTX 5080 (Powered by MSI)",
-  "data-id": "pc-intel-core-ultra-7-265kf-vga-rtx-5080-powered-by-msi",
+    "id": "pc-intel-core-ultra-7-265kf-vga-rtx-5080-powered-by-msi",
+    "name": "PC Intel Core Ultra 7 265KF/ VGA RTX 5080 (Powered by MSI)",
     "image": "https://product.hstatic.net/200000722513/product/msi_4080_super_white_-_3_a5d5635b419c4365903479a05227ed1d_master.png",
     "cpu": "Intel Core Ultra 7 265KF",
     "gpu": "NVIDIA GeForce RTX 5080",
@@ -312,11 +332,12 @@
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
     "description": "PC Ultra 7 265KF, RTX 5080, 32GB RAM, 1TB SSD, main Z890, gaming và làm việc cao cấp.",
-    "price": 70990000
+    "originalPrice": 132435430,
+    "salePrice": 70990000
   },
   {
-  "name": "PC Intel Core Ultra 7 265KF/ VGA RTX 5080",
-  "data-id": "pc-intel-core-ultra-7-265kf-vga-rtx-5080",
+    "id": "pc-intel-core-ultra-7-265kf-vga-rtx-5080",
+    "name": "PC Intel Core Ultra 7 265KF/ VGA RTX 5080",
     "image": "https://product.hstatic.net/200000722513/product/pc_gvn_coolermaster_nen_trang_website_8_6683a09f958341f1b3bd8990e297a366_master.png",
     "cpu": "Intel Core Ultra 7 265KF",
     "gpu": "NVIDIA GeForce RTX 5080",
@@ -327,11 +348,12 @@
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
     "description": "PC Ultra 7 265KF, RTX 5080, 16GB RAM, 1TB SSD, main Z890, gaming và làm việc cao cấp.",
-    "price": 71190000
+    "originalPrice": 92342996,
+    "salePrice": 71190000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RTX 5070",
-  "data-id": "pc-intel-i7-14700f-vga-rtx-5070",
+    "id": "pc-intel-i7-14700f-vga-rtx-5070",
+    "name": "PC Intel i7-14700F/ VGA RTX 5070",
     "image": "https://product.hstatic.net/200000722513/product/smart_47167eeee1924076ab176aeb1d424827_master.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 5070",
@@ -342,11 +364,12 @@
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
     "description": "PC i7-14700F, RTX 5070, 32GB RAM, 1TB SSD, main Z790, gaming và làm việc cao cấp.",
-    "price": 46990000
+    "originalPrice": 73582578,
+    "salePrice": 46990000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RTX 5060",
-  "data-id": "pc-intel-i7-14700f-vga-rtx-5060",
+    "id": "pc-intel-i7-14700f-vga-rtx-5060",
+    "name": "PC Intel i7-14700F/ VGA RTX 5060",
     "image": "https://product.hstatic.net/200000722513/product/smart_47167eeee1924076ab176aeb1d424827_master.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 5060",
@@ -357,11 +380,12 @@
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
     "description": "PC i7-14700F, RTX 5060, 32GB RAM, 1TB SSD, main Z790, gaming và làm việc cao cấp.",
-    "price": 33790000
+    "originalPrice": 65455649,
+    "salePrice": 33790000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RTX 4070 Super",
-  "data-id": "pc-intel-i7-14700f-vga-rtx-4070-super",
+    "id": "pc-intel-i7-14700f-vga-rtx-4070-super",
+    "name": "PC Intel i7-14700F/ VGA RTX 4070 Super",
     "image": "https://product.hstatic.net/200000722513/product/smart_47167eeee1924076ab176aeb1d424827_master.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 4070Sup",
@@ -372,11 +396,12 @@
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
     "description": "PC i7-14700F, RTX 4070 Super, 32GB RAM, 1TB SSD, main Z790, gaming và làm việc cao cấp.",
-    "price": 41990000
+    "originalPrice": 65789237,
+    "salePrice": 41990000
   },
   {
-  "name": "PC Intel i7-14700F/ VGA RTX 5060Ti",
-  "data-id": "pc-intel-i7-14700f-vga-rtx-5060ti",
+    "id": "pc-intel-i7-14700f-vga-rtx-5060ti",
+    "name": "PC Intel i7-14700F/ VGA RTX 5060Ti",
     "image": "https://product.hstatic.net/200000722513/product/smart_47167eeee1924076ab176aeb1d424827_master.png",
     "cpu": "Intel Core i7-14700F",
     "gpu": "NVIDIA GeForce RTX 5060Ti",
@@ -387,7 +412,7 @@
     "case": "Mid Tower",
     "os": "Windows 11 (trial)",
     "description": "PC i7-14700F, RTX 5060Ti, 16GB RAM, 1TB SSD, main Z790, gaming và làm việc cao cấp.",
-    "price": 37390000
+    "originalPrice": 50021821,
+    "salePrice": 37390000
   }
-
 ]

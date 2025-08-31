@@ -1343,28 +1343,23 @@ $(document).ready(function () {
            <span class="stars">${ratingStars}</span>
            <a href="#tab3" class="review-link" onclick="document.querySelectorAll('.tab-btn')[2].click()">Xem đánh giá</a>
         `);
-        // Hiển thị giá cho từng loại sản phẩm
+        // Hiển thị giá cho từng loại sản phẩm - Ưu tiên salePrice và originalPrice
         let sale = 0, original = 0;
-        // Ưu tiên lấy giá cho bàn phím
-        if (window.location.search.includes('type=keyboard') || (product.name && product.name.toLowerCase().includes('bàn phím'))) {
-            if (product.new_price && product.old_price) {
-                sale = parsePrice(product.new_price);
-                original = parsePrice(product.old_price);
-            } else if (product.old_price) {
-                sale = parsePrice(product.old_price);
-            } else if (product.price) {
-                sale = parsePrice(product.price);
-            }
+        if (product.salePrice && product.originalPrice) {
+            // Ưu tiên salePrice và originalPrice cho tất cả sản phẩm
+            sale = parsePrice(product.salePrice);
+            original = parsePrice(product.originalPrice);
         } else if (product.price_new && product.price_old) {
             // Mouse: có price_new, price_old
             sale = parsePrice(product.price_new);
             original = parsePrice(product.price_old);
+        } else if (product.new_price && product.old_price) {
+            // Keyboard: có new_price, old_price
+            sale = parsePrice(product.new_price);
+            original = parsePrice(product.old_price);
         } else if (product.price) {
             // PC/Laptop: chỉ có price
             sale = parsePrice(product.price);
-        } else if (product.salePrice && product.originalPrice) {
-            sale = parsePrice(product.salePrice);
-            original = parsePrice(product.originalPrice);
         }
         $('#productPrice').text(formatPrice(sale));
         if (original && original > sale) {

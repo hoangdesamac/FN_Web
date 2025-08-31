@@ -1,795 +1,1128 @@
 [
   {
+    "id": "mouse-asus-tuf-m4-wireless",
+    "name": "Chuột Gaming Asus TUF M4 Wireless",
+    "image": "https://product.hstatic.net/200000722513/product/tuf-gaming-m4-wireless-02_56fe3b15890748738508eb07f20c43c5_large_thumb_d7bfc6df9d2d4aeb9fc22906a8fee7ae_master.jpg",
+    "originalPrice": 1167115,
+    "salePrice": 710000,
+    "desc": [
+      "Không dây",
+      "Pin rời",
+      "DPI - 12.000"
+    ],
+    "description": "Chuột Asus TUF M4 Wireless không dây, cảm biến DPI cao, pin rời, thiết kế bền bỉ, phù hợp cho game thủ và làm việc văn phòng.",
+    "data-id": "chuot-asus-tuf-m4-wireless"
+  },
+  {
+    "id": "mouse-asus-rog-strix-impact-iii-wireless",
+    "name": "Chuột ASUS ROG Strix Impact III Wireless",
     "image": "https://product.hstatic.net/200000722513/product/impact-iii-wireless-1_b43da959481841769eb1899d9ce1e32e_1024x1024_thumb_56af8e8918cb40a48d3b2c92ec9e0139_grande.jpg",
-  "name": "Chuột ASUS ROG Strix Impact III Wireless",
-  "data-id": "chuot-asus-rog-strix-impact-iii-wireless",
-    "desc": ["Không dây", "Led RGB", "Pin rời"],
-    "price_old": 1990000,
-    "price_new": 1090000,
+    "originalPrice": 1800127,
+    "salePrice": 1090000,
+    "data-id": "chuot-asus-rog-strix-impact-iii-wireless",
+    "desc": [
+      "Không dây",
+      "Led RGB",
+      "Pin rời"
+    ],
     "description": "Chuột gaming không dây ROG Strix Impact III, thiết kế nhẹ, led RGB nổi bật, pin rời tiện lợi, phù hợp cho game thủ cần sự linh hoạt và cá tính."
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/tuf-gaming-m4-wireless-02_56fe3b15890748738508eb07f20c43c5_large_thumb_d7bfc6df9d2d4aeb9fc22906a8fee7ae_grande.jpg",
-  "name": "Chuột Gaming Asus TUF M4 Wireless",
-  "data-id": "chuot-gaming-asus-tuf-m4-wireless",
-    "desc": ["Không dây", "Pin rời", "DPI - 12.000"],
-    "price_old": 1190000,
-    "price_new": 990000,
-    "description": "Chuột Asus TUF M4 Wireless không dây, cảm biến DPI cao, pin rời, thiết kế bền bỉ, phù hợp cho game thủ và làm việc văn phòng." 
+    "id": "mouse-asus-tuf-m4-wireless",
+    "name": "Chuột Gaming Asus TUF M4 Wireless",
+    "image": "https://product.hstatic.net/200000722513/product/tuf-gaming-m4-wireless-02_56fe3b15890748738508eb07f20c43c5_large_thumb_d7bfc6df9d2d4aeb9fc22906a8fee7ae_master.jpg",
+    "originalPrice": 1155123,
+    "salePrice": 710000,
+    "desc": [
+      "Không dây",
+      "Pin rời",
+      "DPI - 12.000"
+    ],
+    "description": "Chuột Asus TUF M4 Wireless không dây, cảm biến DPI cao, pin rời, thiết kế bền bỉ, phù hợp cho game thủ và làm việc văn phòng.",
+    "data-id": "chuot-asus-tuf-m4-wireless"
   },
   {
+    "id": "mouse-pulsar-x2h-medium-white",
+    "name": "Chuột Pulsar có dây X2H Medium White",
     "image": "https://product.hstatic.net/200000722513/product/pulsarx2hwiredgamingmouse_white_c5aec83f27b9408d871c6159d4f1634b_grande.png",
-  "name": "Chuột Pulsar có dây X2H Medium White",
-  "data-id": "chuot-pulsar-co-day-x2h-medium-white",
-    "desc": ["Có dây", "DPI 26000"],
-    "price_old": 1390000,
-    "price_new": 1249000,
-    "description": "Chuột Pulsar X2H Medium White có dây, cảm biến DPI cực cao, phù hợp cho game thủ FPS cần độ chính xác tối đa." 
+    "originalPrice": 1507913,
+    "salePrice": 1249000,
+    "data-id": "chuot-pulsar-co-day-x2h-medium-white",
+    "desc": [
+      "Có dây",
+      "DPI 26000"
+    ],
+    "description": "Chuột Pulsar X2H Medium White có dây, cảm biến DPI cực cao, phù hợp cho game thủ FPS cần độ chính xác tối đa."
   },
-  
   {
+    "id": "mouse-rapoo-m500-black",
+    "name": "Chuột Rappo M500 Black",
     "image": "https://product.hstatic.net/200000722513/product/rapoo_m500_5045a0fd08074d0ca80e2450a884ff39_grande.jpg",
-  "name": "Chuột Rappo M500 Black",
-  "data-id": "chuot-rappo-m500-black",
+    "originalPrice": 336600,
+    "salePrice": 260000,
+    "data-id": "chuot-rappo-m500-black",
     "desc": [],
-    "price_old": 559000,
-    "price_new": 260000,
     "description": "Chuột Rappo M500 Black thiết kế đơn giản, màu đen mạnh mẽ, phù hợp với nhiều không gian làm việc."
   },
   {
+    "id": "mouse-rapoo-m650-lucky-cat",
+    "name": "Chuột Bluetooth Silent Rapoo M650 Lucky Cat",
     "image": "https://product.hstatic.net/200000722513/product/gearvn-chuot-bluetooth-silent-rapoo-m650-lucky-cat_f49d7f66053f42988c3107473d5b0b28_grande.jpg",
-  "name": "Chuột Bluetooth Silent Rapoo M650 Lucky Cat",
-  "data-id": "chuot-bluetooth-silent-rapoo-m650-lucky-cat",
-    "desc": ["Pin rời", "Không dây", "DPI - 1.300"],
-    "price_old": 490000,
-    "price_new": 150000,
+    "originalPrice": 219805,
+    "salePrice": 150000,
+    "data-id": "chuot-bluetooth-silent-rapoo-m650-lucky-cat",
+    "desc": [
+      "Pin rời",
+      "Không dây",
+      "DPI - 1.300"
+    ],
     "description": "Chuột Bluetooth Silent Rapoo M650 Lucky Cat thiết kế dễ thương, không dây tiện lợi, độ phân giải cao, phù hợp cho cả làm việc và giải trí."
   },
   {
+    "id": "mouse-logitech-g102-lightsync-black",
+    "name": "Chuột Logitech G102 LightSync Black",
     "image": "https://product.hstatic.net/200000722513/product/logitech-g102-lightsync-rgb-black-1_bf4f5774229c4a0f81b8e8a2feebe4d8_aeb4ae49ee844c3e9d315883d4e482d4_grande.jpg",
-  "name": "Chuột Logitech G102 LightSync Black",
-  "data-id": "chuot-logitech-g102-lightsync-black",
-    "desc": ["Không", "Có dây", "Led RGB"],
-    "price_old": 599000,
-    "price_new": 405000,
+    "originalPrice": 756135,
+    "salePrice": 405000,
+    "data-id": "chuot-logitech-g102-lightsync-black",
+    "desc": [
+      "Không",
+      "Có dây",
+      "Led RGB"
+    ],
     "description": "Chuột Logitech G102 LightSync Black với đèn LED RGB tùy chỉnh, thiết kế công thái học, mang lại trải nghiệm chơi game tuyệt vời."
   },
   {
+    "id": "mouse-razer-deathadder-essential",
+    "name": "Chuột Razer DeathAdder Essential (RZ01-03850100-R3M1)",
     "image": "https://product.hstatic.net/200000722513/product/thumbchuot_7445abea69bf461e881eeba2b6cbbd8d_grande.jpg",
-  "name": "Chuột Razer DeathAdder Essential (RZ01-03850100-R3M1)",
-  "data-id": "chuot-razer-deathadder-essential-rz01-03850100-r3m1",
-    "desc": ["Có dây", "Không", "Led RGB"],
-    "price_old": 790000,
-    "price_new": 400000,
+    "originalPrice": 421760,
+    "salePrice": 400000,
+    "data-id": "chuot-razer-deathadder-essential-rz01-03850100-r3m1",
+    "desc": [
+      "Có dây",
+      "Không",
+      "Led RGB"
+    ],
     "description": "Chuột Razer DeathAdder Essential thiết kế công thái học, đèn LED RGB, cảm biến quang học chính xác, phù hợp cho game thủ chuyên nghiệp."
   },
   {
+    "id": "mouse-logitech-g304-wireless",
+    "name": "Chuột Logitech G304 Wireless",
     "image": "https://product.hstatic.net/200000722513/product/gvn_log_g304_3df28cd60a48412b8fb1d2ff762dc6a9_1f12340f2e6b4b8892163de0a06676f2_grande.png",
-  "name": "Chuột Logitech G304 Wireless",
-  "data-id": "chuot-logitech-g304-wireless",
-    "desc": ["Pin rời", "Không dây", "DPI - 12.000"],
-    "price_old": 1090000,
-    "price_new": 750000,
+    "originalPrice": 1256112,
+    "salePrice": 750000,
+    "data-id": "chuot-logitech-g304-wireless",
+    "desc": [
+      "Pin rời",
+      "Không dây",
+      "DPI - 12.000"
+    ],
     "description": "Chuột Logitech G304 Wireless với thiết kế không dây tiện lợi, cảm biến HERO 12K DPI, mang lại độ chính xác và tốc độ phản hồi cao."
   },
   {
+    "id": "mouse-logitech-g304-wireless-white",
+    "name": "Chuột Logitech G304 Wireless White",
     "image": "https://product.hstatic.net/200000722513/product/h-g304-lightspeed-wireless-white-1000_e28318985b5049099c4e8381695e810f_782b9a4494994a2ea98cf9e699e35200_grande.jpg",
-  "name": "Chuột Logitech G304 Wireless White",
-  "data-id": "chuot-logitech-g304-wireless-white",
-    "desc": ["Pin rời", "Không dây", "DPI - 12.000"],
-    "price_old": 1090000,
-    "price_new": 750000,
+    "originalPrice": 1107976,
+    "salePrice": 750000,
+    "data-id": "chuot-logitech-g304-wireless-white",
+    "desc": [
+      "Pin rời",
+      "Không dây",
+      "DPI - 12.000"
+    ],
     "description": "Chuột Logitech G304 Wireless White thiết kế tinh tế, không dây tiện lợi, cảm biến HERO 12K DPI, phù hợp cho game thủ và công việc văn phòng."
   },
   {
+    "id": "mouse-logitech-g502-hero-gaming",
+    "name": "Chuột Logitech G502 Hero Gaming",
     "image": "https://product.hstatic.net/200000722513/product/10001_01736316d2b443d0838e5a0741434420_grande.png",
-  "name": "Chuột Logitech G502 Hero Gaming",
-  "data-id": "chuot-logitech-g502-hero-gaming",
-    "desc": ["Có dây", "Không", "Led RGB"],
-    "price_old": 1090000,
-    "price_new": 950000,
+    "originalPrice": 1145858,
+    "salePrice": 950000,
+    "data-id": "chuot-logitech-g502-hero-gaming",
+    "desc": [
+      "Có dây",
+      "Không",
+      "Led RGB"
+    ],
     "description": "Chuột Logitech G502 Hero Gaming với cảm biến HERO 25K DPI, thiết kế công thái học, đèn LED RGB tùy chỉnh, mang lại trải nghiệm chơi game tuyệt vời."
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/huot-khong-day-gaming-dareu-em901x-02_2d72d3eef5be4e93ac94b2e6d1ff2810_ff776a7b3d3849938010ce9b8ca1a13d_grande.png",
-  "name": "Chuột DareU EM901X RGB Superlight Wireless Black",
-  "data-id": "chuot-dareu-em901x-rgb-superlight-wireless-black",
-    "desc": ["Không dây", "Pin sạc", "Led RGB"],
-    "price_old": 799000,
-    "price_new": 680000,
-    "description": "Chuột DareU EM901X RGB Superlight Wireless Black thiết kế siêu nhẹ, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ chuyên nghiệp."
-  },
-  {
-    "image": "https://product.hstatic.net/200000722513/product/khong-day-gaming-dareu-em901x-pink-01_542ff31224024dd3813ed701f4926555_02f0e97ca40347fabb5ca635370597a5_grande.jpg",
-  "name": "Chuột DareU EM901X RGB Superlight Wireless Pink",
-  "data-id": "chuot-dareu-em901x-rgb-superlight-wireless-pink",
-    "desc": ["Pin sạc", "Không dây", "Led RGB"],
-    "price_old": 1090000,
-    "price_new": 680000,
-    "description": "Chuột DareU EM901X RGB Superlight Wireless Pink thiết kế nữ tính, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
-  },
-  {
-    "image": "https://product.hstatic.net/200000722513/product/logitech-g102-lightsync-rgb-white-1_eb113ff7e83b4289812fb9bff7034b4d_581b766edc6e402e995fd81477456742_grande.jpg",
-  "name": "Chuột Logitech G102 LightSync White",
-  "data-id": "chuot-logitech-g102-lightsync-white",
-    "desc": ["Không", "Có dây", "Led RGB"],
-    "price_old": 599000,
-    "price_new": 415000,
-    "description": "Chuột Logitech G102 LightSync White với đèn LED RGB tùy chỉnh, thiết kế công thái học, mang lại trải nghiệm chơi game tuyệt vời."
-  },
-  {
-    "image": "https://product.hstatic.net/200000722513/product/tuf-gaming-m3-gen-ii-01__1__905473efccda4d1b89bc64a03cf8f206_large_cb7ff5d9ebbc46688ce53d7b25e6df92_grande.jpg",
-  "name": "Chuột Asus TUF Gaming M3 Gen II",
-  "data-id": "chuot-asus-tuf-gaming-m3-gen-ii",
-    "desc": ["Không", "Có dây", "Led RGB"],
-    "price_old": 590000,
-    "price_new": 400000,
-    "description": "Chuột Asus TUF Gaming M3 Gen II thiết kế bền bỉ, đèn LED RGB, mang lại trải nghiệm chơi game tuyệt vời và phong cách chuyên nghiệp."
-  },
-  {
+    "id": "mouse-dareu-em911x-rgb-trang",
+    "name": "Chuột DareU Không dây EM911X RGB Trắng",
     "image": "https://product.hstatic.net/200000722513/product/chuot_gaming_khong_day_dareu_dareu_em911x_wireless_white_1_b569c1f34b0540fdb4e6d30c0b644e05_grande.jpg",
-  "name": "Chuột DareU Không dây EM911X RGB Trắng",
-  "data-id": "chuot-dareu-khong-day-em911x-rgb-trang",
-    "desc": ["Pin sạc", "Không dây", "Led RGB"],
-    "price_old": 699000,
-    "price_new": 380000,
+    "originalPrice": 655486,
+    "salePrice": 380000,
+    "data-id": "chuot-dareu-khong-day-em911x-rgb-trang",
+    "desc": [
+      "Pin sạc",
+      "Không dây",
+      "Led RGB"
+    ],
     "description": "Chuột DareU Không dây EM911X RGB Trắng thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/g-pro-x-superlight-wireless-white-666_1b449789ba424d6bb38370ca7bdecf2a_01499c0fa7d14e60902fea481990bdd1_grande.jpg",
-  "name": "Chuột Logitech G Pro X Superlight Wireless White",
-  "data-id": "chuot-logitech-g-pro-x-superlight-wireless-white",
-    "desc": ["Không dây", "Pin sạc", "Led RGB"],
-    "price_old": 3590000,
-    "price_new": 2500000,
-    "description": "Chuột Logitech G Pro X Superlight Wireless White thiết kế siêu nhẹ, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech G Pro X Superlight Wireless White",
+    "data-id": "chuot-logitech-g-pro-x-superlight-wireless-white",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "Led RGB"
+    ],
+    "description": "Chuột Logitech G Pro X Superlight Wireless White thiết kế siêu nhẹ, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-g-pro-x-superlight-wireless-white",
+    "originalPrice": 4141244,
+    "salePrice": 2500000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/565656_22914bb589c146e599cb381f2c75b557_e6b08a36816248339bcf29ca71560fcb_grande.png",
-  "name": "Chuột Razer Deathadder Essential White",
-  "data-id": "chuot-razer-deathadder-essential-white",
-    "desc": ["Có dây", "Không", "Led RGB"],
-    "price_old": 790000,
-    "price_new": 410000,
-    "description": "Chuột Razer Deathadder Essential White thiết kế công thái học, đèn LED RGB, cảm biến quang học chính xác, phù hợp cho game thủ chuyên nghiệp."
-  },
-  {
-    "image": "https://product.hstatic.net/200000722513/product/m331n_graphite_top_91cef3d27a5240fbb196cd44c2c18914_grande.png",
-  "name": "Chuột không dây Logitech M331 Silent Black",
-  "data-id": "chuot-khong-day-logitech-m331-silent-black",
-    "desc": ["Không dây", "Pin rời", "DPI - 1.000"],
-    "price_old": 349000,
-    "price_new": 330000,
-    "description": "Chuột không dây Logitech M331 Silent Black thiết kế nhỏ gọn, pin rời tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí."
+    "name": "Chuột Razer Deathadder Essential White",
+    "data-id": "chuot-razer-deathadder-essential-white",
+    "desc": [
+      "Có dây",
+      "Không",
+      "Led RGB"
+    ],
+    "description": "Chuột Razer Deathadder Essential White thiết kế công thái học, đèn LED RGB, cảm biến quang học chính xác, phù hợp cho game thủ chuyên nghiệp.",
+    "id": "mouse-razer-deathadder-essential-white",
+    "originalPrice": 535489,
+    "salePrice": 410000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/g-pro-x-superlight-wireless-black-666_83650815ce2e486f9108dbbb17c29159_1450bb4a9bd34dcb92fc77f627eb600d_grande.jpg",
-  "name": "Chuột Logitech G Pro X Superlight Wireless Black",
-  "data-id": "chuot-logitech-g-pro-x-superlight-wireless-black",
-    "desc": ["Pin sạc", "Không dây", "Led RGB"],
-    "price_old": 3490000,
-    "price_new": 2690000,
-    "description": "Chuột Logitech G Pro X Superlight Wireless Black thiết kế siêu nhẹ, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech G Pro X Superlight Wireless Black",
+    "data-id": "chuot-logitech-g-pro-x-superlight-wireless-black",
+    "desc": [
+      "Pin sạc",
+      "Không dây",
+      "Led RGB"
+    ],
+    "description": "Chuột Logitech G Pro X Superlight Wireless Black thiết kế siêu nhẹ, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-g-pro-x-superlight-wireless-black",
+    "originalPrice": 3434327,
+    "salePrice": 2690000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/mic-mouse-business-gallery-graphite-1_df5213a079d04df2911171194aa09a36_5374743df1064d6384adcaa0c92208cf_grande.png",
-  "name": "Chuột công thái học Logitech Lift Vertical",
-  "data-id": "chuot-cong-thai-hoc-logitech-lift-vertical",
-    "desc": ["Pin rời", "Không dây", "DPI - 4.000"],
-    "price_old": 1599000,
-    "price_new": 1250000,
-    "description": "Chuột công thái học Logitech Lift Vertical thiết kế độc đáo, hỗ trợ cổ tay, pin rời tiện lợi, phù hợp cho người dùng văn phòng cần sự thoải mái và sức khỏe."
+    "name": "Chuột công thái học Logitech Lift Vertical",
+    "data-id": "chuot-cong-thai-hoc-logitech-lift-vertical",
+    "desc": [
+      "Pin rời",
+      "Không dây",
+      "DPI - 4.000"
+    ],
+    "description": "Chuột công thái học Logitech Lift Vertical thiết kế độc đáo, hỗ trợ cổ tay, pin rời tiện lợi, phù hợp cho người dùng văn phòng cần sự thoải mái và sức khỏe.",
+    "id": "mouse-cong-thai-hoc-logitech-lift-vertical",
+    "originalPrice": 1356877,
+    "salePrice": 1250000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/gearvn-chuot-logitech-pebble-mouse-2-m350s-graphite-1_4b4473ddaba149268abe5a5582eb3b3b_grande.jpg",
-  "name": "Chuột Logitech Pebble Mouse 2 M350S Graphite",
-  "data-id": "chuot-logitech-pebble-mouse-2-m350s-graphite",
-    "desc": ["Không dây", "Pin rời", "DPI - 1.000"],
-    "price_old": 699000,
-    "price_new": 450000,
-    "description": "Chuột Logitech Pebble Mouse 2 M350S Graphite thiết kế mỏng nhẹ, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí."
+    "name": "Chuột Logitech Pebble Mouse 2 M350S Graphite",
+    "data-id": "chuot-logitech-pebble-mouse-2-m350s-graphite",
+    "desc": [
+      "Không dây",
+      "Pin rời",
+      "DPI - 1.000"
+    ],
+    "description": "Chuột Logitech Pebble Mouse 2 M350S Graphite thiết kế mỏng nhẹ, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí.",
+    "id": "mouse-logitech-pebble-mouse-2-m350s-graphite",
+    "originalPrice": 492056,
+    "salePrice": 450000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/thumbchuot_615d44df818a4380b09d876790c5246a_fb6dd322d3f84957b62e4cccc36fd97d_grande.png",
-  "name": "Chuột không dây DareU LM115G Black",
-  "data-id": "chuot-khong-day-dareu-lm115g-black",
-    "desc": ["Không dây", "Pin rời", "DPI - 1.600"],
-    "price_old": 200000,
-    "price_new": 150000,
-    "description": "Chuột không dây DareU LM115G Black thiết kế đơn giản, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí."
+    "name": "Chuột không dây DareU LM115G Black",
+    "data-id": "chuot-khong-day-dareu-lm115g-black",
+    "desc": [
+      "Không dây",
+      "Pin rời",
+      "DPI - 1.600"
+    ],
+    "description": "Chuột không dây DareU LM115G Black thiết kế đơn giản, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí.",
+    "id": "mouse-khong-day-dareu-lm115g-black",
+    "originalPrice": 228368,
+    "salePrice": 150000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/mx-anywhere-3s-mouse-top-view-graphite_c766ef28d410408c9a24442cf7ab7940_grande.png",
-  "name": "Chuột Logitech MX Anywhere 3S Graphite",
-  "data-id": "chuot-logitech-mx-anywhere-3s-graphite",
-    "desc": ["Không dây", "Pin sạc", "DPI - 8.000"],
-    "price_old": 1750000,
-    "price_new": 1590000,
-    "description": "Chuột Logitech MX Anywhere 3S Graphite thiết kế nhỏ gọn, không dây tiện lợi, cảm biến cao cấp, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech MX Anywhere 3S Graphite",
+    "data-id": "chuot-logitech-mx-anywhere-3s-graphite",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "DPI - 8.000"
+    ],
+    "description": "Chuột Logitech MX Anywhere 3S Graphite thiết kế nhỏ gọn, không dây tiện lợi, cảm biến cao cấp, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-mx-anywhere-3s-graphite",
+    "originalPrice": 2539195,
+    "salePrice": 1590000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/1_4944caaca4a941a7b730a314ff40516a_grande.jpg",
-  "name": "Chuột Razer Cobra",
-  "data-id": "chuot-razer-cobra",
-    "desc": ["Có dây", "Không", "Led RGB"],
-    "price_old": 1049000,
-    "price_new": 990000,
-    "description": "Chuột Razer Cobra thiết kế thể thao, đèn LED RGB, cảm biến quang học chính xác, phù hợp cho game thủ chuyên nghiệp."
+    "name": "Chuột Razer Cobra",
+    "data-id": "chuot-razer-cobra",
+    "desc": [
+      "Có dây",
+      "Không",
+      "Led RGB"
+    ],
+    "description": "Chuột Razer Cobra thiết kế thể thao, đèn LED RGB, cảm biến quang học chính xác, phù hợp cho game thủ chuyên nghiệp.",
+    "id": "mouse-razer-cobra",
+    "originalPrice": 1501199,
+    "salePrice": 990000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/h732_d29ee675b2e14c79a3d16f4ebd70d359_77db2ebffe484dbaa6fad709392b6705_master.png",
-  "name": "Chuột Asus Rog Gladius III Wireless Aimpoint Black",
-  "data-id": "chuot-asus-rog-gladius-iii-wireless-aimpoint-black",
-    "desc": ["Pin sạc", "Không dây", "Led RGB"],
-    "price_old": 2990000,
-    "price_new": 2390000,
-    "description": "Chuột Asus Rog Gladius III Wireless Aimpoint Black thiết kế công thái học, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Asus Rog Gladius III Wireless Aimpoint Black",
+    "data-id": "chuot-asus-rog-gladius-iii-wireless-aimpoint-black",
+    "desc": [
+      "Pin sạc",
+      "Không dây",
+      "Led RGB"
+    ],
+    "description": "Chuột Asus Rog Gladius III Wireless Aimpoint Black thiết kế công thái học, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-asus-rog-gladius-iii-wireless-aimpoint-black",
+    "originalPrice": 2964612,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/chuot_gaming_khong_day_dareu_dareu_em911x_wireless_black_2_4bc4f62885b642e38ee692391b9861cb_grande.jpg",
-  "name": "Chuột DareU Không dây EM911X RGB Đen",
-  "data-id": "chuot-dareu-khong-day-em911x-rgb-den",
-    "desc": ["Không dây", "Pin sạc", "Led RGB"],
-    "price_old": 699000,
-    "price_new": 380000,
-    "description": "Chuột DareU Không dây EM911X RGB Đen thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột DareU Không dây EM911X RGB Đen",
+    "data-id": "chuot-dareu-khong-day-em911x-rgb-den",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "Led RGB"
+    ],
+    "description": "Chuột DareU Không dây EM911X RGB Đen thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-dareu-khong-day-em911x-rgb-den",
+    "originalPrice": 395656,
+    "salePrice": 380000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/mx-master-3s-mouse-top-view-pale-gray_41dba78b9e384508aa5bc3109f249523_ec963b4f86984fdea690801a3ae8ad35_grande.png",
-  "name": "Chuột Logitech MX Master 3S Pale Grey",
-  "data-id": "chuot-logitech-mx-master-3s-pale-grey",
-    "desc": ["Không dây", "Pin sạc", "DPI - 8.000"],
-    "price_old": 2990000,
-    "price_new": 2390000,
-    "description": "Chuột Logitech MX Master 3S Pale Grey thiết kế sang trọng, không dây tiện lợi, cảm biến cao cấp, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech MX Master 3S Pale Grey",
+    "data-id": "chuot-logitech-mx-master-3s-pale-grey",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "DPI - 8.000"
+    ],
+    "description": "Chuột Logitech MX Master 3S Pale Grey thiết kế sang trọng, không dây tiện lợi, cảm biến cao cấp, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-mx-master-3s-pale-grey",
+    "originalPrice": 2524315,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/1_551182a6ea8c4cd7b86dc407e9fc0ff4_grande.jpg",
-  "name": "Chuột Logitech Pebble Mouse 2 M350S Rose",
-  "data-id": "chuot-logitech-pebble-mouse-2-m350s-rose",
-    "desc": ["Không dây", "Pin rời", "DPI - 1.000"],
-    "price_old": 699000,
-    "price_new": 450000,
-    "description": "Chuột Logitech Pebble Mouse 2 M350S Rose thiết kế nữ tính, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí."
+    "name": "Chuột Logitech Pebble Mouse 2 M350S Rose",
+    "data-id": "chuot-logitech-pebble-mouse-2-m350s-rose",
+    "desc": [
+      "Không dây",
+      "Pin rời",
+      "DPI - 1.000"
+    ],
+    "description": "Chuột Logitech Pebble Mouse 2 M350S Rose thiết kế nữ tính, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí.",
+    "id": "mouse-logitech-pebble-mouse-2-m350s-rose",
+    "originalPrice": 643190,
+    "salePrice": 450000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/3_7c1bf2ff4e504450a42de78e6cc48087_grande.jpg",
-  "name": "Chuột Logitech G Pro X Superlight 2 Black",
-  "data-id": "chuot-logitech-g-pro-x-superlight-2-black",
-    "desc": ["Không dây", "Pin sạc", "Led RGB"],
-    "price_old": 3890000,
-    "price_new": 3250000,
-    "description": "Chuột Logitech G Pro X Superlight 2 Black thiết kế siêu nhẹ, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech G Pro X Superlight 2 Black",
+    "data-id": "chuot-logitech-g-pro-x-superlight-2-black",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "Led RGB"
+    ],
+    "description": "Chuột Logitech G Pro X Superlight 2 Black thiết kế siêu nhẹ, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-g-pro-x-superlight-2-black",
+    "originalPrice": 3282999,
+    "salePrice": 3250000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/white_e563efbdda644fe59e2227176c1607fd_grande.png",
-  "name": "Chuột Logitech G309 Lightspeed Wireless Bluetooth Trắng",
-  "data-id": "chuot-logitech-g309-lightspeed-wireless-bluetooth-trang",
-    "desc": ["Không dây", "Pin sạc"],
-    "price_old": 2090000,
-    "price_new": 1630000,
-    "description": "Chuột Logitech G309 Lightspeed Wireless Bluetooth Trắng thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột Logitech G309 Lightspeed Wireless Bluetooth Trắng",
+    "data-id": "chuot-logitech-g309-lightspeed-wireless-bluetooth-trang",
+    "desc": [
+      "Không dây",
+      "Pin sạc"
+    ],
+    "description": "Chuột Logitech G309 Lightspeed Wireless Bluetooth Trắng thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-logitech-g309-lightspeed-wireless-bluetooth-trang",
+    "originalPrice": 2149614,
+    "salePrice": 1630000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/5360-viper-v3-pro-black-1_25c278a13aff48f28dd6bdfe2cf85b26_grande.jpg",
-  "name": "Chuột Razer Không dây Viper V3 Pro Đen",
-  "data-id": "chuot-razer-khong-day-viper-v3-pro-den",
-    "desc": ["Pin sạc", "Không dây"],
-    "price_old": 4990000,
-    "price_new": 3690000,
-    "description": "Chuột Razer Không dây Viper V3 Pro Đen thiết kế công thái học, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ chuyên nghiệp."
+    "name": "Chuột Razer Không dây Viper V3 Pro Đen",
+    "data-id": "chuot-razer-khong-day-viper-v3-pro-den",
+    "desc": [
+      "Pin sạc",
+      "Không dây"
+    ],
+    "description": "Chuột Razer Không dây Viper V3 Pro Đen thiết kế công thái học, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ chuyên nghiệp.",
+    "id": "mouse-razer-khong-day-viper-v3-pro-den",
+    "originalPrice": 4330547,
+    "salePrice": 3690000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/6_cc9e6a9210494554aed0ed8cbb6f8a5a_grande.jpg",
-  "name": "Chuột Logitech G Pro X Superlight 2 Magneta",
-  "data-id": "chuot-logitech-g-pro-x-superlight-2-magneta",
-    "desc": ["Không dây", "Pin sạc", "Led RGB"],
-    "price_old": 3170000,
-    "price_new": null,
-    "description": "Chuột Logitech G Pro X Superlight 2 Magneta thiết kế siêu nhẹ, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech G Pro X Superlight 2 Magneta",
+    "data-id": "chuot-logitech-g-pro-x-superlight-2-magneta",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "Led RGB"
+    ],
+    "description": "Chuột Logitech G Pro X Superlight 2 Magneta thiết kế siêu nhẹ, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-g-pro-x-superlight-2-magneta",
+    "originalPrice": 0,
+    "salePrice": null
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/m650-medium-offwhite-top_0b3a54fc20934569a0496b9782446448_8858edf82fde4dbe84a7b3e6949623af_grande.png",
-  "name": "Chuột Logitech M650 Off White",
-  "data-id": "chuot-logitech-m650-off-white",
-    "desc": ["Pin rời", "Không dây", "DPI - 4.000"],
-    "price_old": 849000,
-    "price_new": 620000,
-    "description": "Chuột Logitech M650 Off White thiết kế thanh lịch, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí."
+    "name": "Chuột Logitech M650 Off White",
+    "data-id": "chuot-logitech-m650-off-white",
+    "desc": [
+      "Pin rời",
+      "Không dây",
+      "DPI - 4.000"
+    ],
+    "description": "Chuột Logitech M650 Off White thiết kế thanh lịch, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí.",
+    "id": "mouse-logitech-m650-off-white",
+    "originalPrice": 882245,
+    "salePrice": 620000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pro-x-superlight-2-dex-pink-gall_459f88a7d289430daf8f50a17176359f_grande.png",
-  "name": "Chuột Logitech G Pro X Superlight 2 Dex Wireless Pink",
-  "data-id": "chuot-logitech-g-pro-x-superlight-2-dex-wireless-pink",
-    "desc": ["Không", "Không dây"],
-    "price_old": 3899000,
-    "price_new": 3250000,
-    "description": "Chuột Logitech G Pro X Superlight 2 Dex Wireless Pink thiết kế nữ tính, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech G Pro X Superlight 2 Dex Wireless Pink",
+    "data-id": "chuot-logitech-g-pro-x-superlight-2-dex-wireless-pink",
+    "desc": [
+      "Không",
+      "Không dây"
+    ],
+    "description": "Chuột Logitech G Pro X Superlight 2 Dex Wireless Pink thiết kế nữ tính, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-g-pro-x-superlight-2-dex-wireless-pink",
+    "originalPrice": 5449935,
+    "salePrice": 3250000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/-chuot-corsair-katar-pro-wireless-666_23333dfd6ea64129b9627324097a4955_5792e89cb7374c2ea30752e1ee4961c8_grande.png",
-  "name": "Chuột Corsair Katar Pro Wireless",
-  "data-id": "chuot-corsair-katar-pro-wireless",
-    "desc": ["Không dây", "Pin rời", "DPI - 10.000"],
-    "price_old": 1090000,
-    "price_new": 790000,
-    "description": "Chuột Corsair Katar Pro Wireless thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột Corsair Katar Pro Wireless",
+    "data-id": "chuot-corsair-katar-pro-wireless",
+    "desc": [
+      "Không dây",
+      "Pin rời",
+      "DPI - 10.000"
+    ],
+    "description": "Chuột Corsair Katar Pro Wireless thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-corsair-katar-pro-wireless",
+    "originalPrice": 1376498,
+    "salePrice": 790000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pro2-lightspeed-white-gallery1_a41f9f8af44c4758922011fa73633c7a_grande.png",
-  "name": "Chuột Logitech G Pro 2 Lightspeed Wireless White",
-  "data-id": "chuot-logitech-g-pro-2-lightspeed-wireless-white",
-    "desc": ["Không dây", "Không"],
-    "price_old": 3299000,
-    "price_new": 2550000,
-    "description": "Chuột Logitech G Pro 2 Lightspeed Wireless White thiết kế công thái học, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech G Pro 2 Lightspeed Wireless White",
+    "data-id": "chuot-logitech-g-pro-2-lightspeed-wireless-white",
+    "desc": [
+      "Không dây",
+      "Không"
+    ],
+    "description": "Chuột Logitech G Pro 2 Lightspeed Wireless White thiết kế công thái học, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-g-pro-2-lightspeed-wireless-white",
+    "originalPrice": 5095813,
+    "salePrice": 2550000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pro-x-superlight-2-dex-white-gal_b157ad4d7ecd4643818768cb2e366cd9_grande.png",
-  "name": "Chuột Logitech G Pro X Superlight 2 Dex Wireless White",
-  "data-id": "chuot-logitech-g-pro-x-superlight-2-dex-wireless-white",
-    "desc": ["Không", "Không dây"],
-    "price_old": 3899000,
-    "price_new": 3190000,
-    "description": "Chuột Logitech G Pro X Superlight 2 Dex Wireless White thiết kế tinh tế, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech G Pro X Superlight 2 Dex Wireless White",
+    "data-id": "chuot-logitech-g-pro-x-superlight-2-dex-wireless-white",
+    "desc": [
+      "Không",
+      "Không dây"
+    ],
+    "description": "Chuột Logitech G Pro X Superlight 2 Dex Wireless White thiết kế tinh tế, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-g-pro-x-superlight-2-dex-wireless-white",
+    "originalPrice": 3478270,
+    "salePrice": 3190000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/black_b406079deeae46858542c5af8f18771b_grande.png",
-  "name": "Chuột Logitech G309 Lightspeed Wireless Bluetooth Đen",
-  "data-id": "chuot-logitech-g309-lightspeed-wireless-bluetooth-den",
-    "desc": ["Không dây", "Pin sạc"],
-    "price_old": 2090000,
-    "price_new": 1630000,
-    "description": "Chuột Logitech G309 Lightspeed Wireless Bluetooth Đen thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột Logitech G309 Lightspeed Wireless Bluetooth Đen",
+    "data-id": "chuot-logitech-g309-lightspeed-wireless-bluetooth-den",
+    "desc": [
+      "Không dây",
+      "Pin sạc"
+    ],
+    "description": "Chuột Logitech G309 Lightspeed Wireless Bluetooth Đen thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-logitech-g309-lightspeed-wireless-bluetooth-den",
+    "originalPrice": 2719658,
+    "salePrice": 1630000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/m331_blue_top_2d481bac60fb49e2aae275b48bdda022_grande.png",
-  "name": "Chuột không dây Logitech M331 Silent Blue",
-  "data-id": "chuot-khong-day-logitech-m331-silent-blue",
-    "desc": ["Pin rời", "Không dây", "DPI - 1.000"],
-    "price_old": 490000,
-    "price_new": 330000,
-    "description": "Chuột không dây Logitech M331 Silent Blue thiết kế nhỏ gọn, pin rời tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí."
+    "name": "Chuột không dây Logitech M331 Silent Blue",
+    "data-id": "chuot-khong-day-logitech-m331-silent-blue",
+    "desc": [
+      "Pin rời",
+      "Không dây",
+      "DPI - 1.000"
+    ],
+    "description": "Chuột không dây Logitech M331 Silent Blue thiết kế nhỏ gọn, pin rời tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí.",
+    "id": "mouse-khong-day-logitech-m331-silent-blue",
+    "originalPrice": 559304,
+    "salePrice": 330000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/m650-medium-rose-top_07af91cb60e94457baac7af9368caa79_0e86abe2ac4a4ce2b6e28bca74413b7a_grande.png",
-  "name": "Chuột Logitech M650 Rose",
-  "data-id": "chuot-logitech-m650-rose",
-    "desc": ["Không dây", "Pin rời", "DPI - 4.000"],
-    "price_old": 849000,
-    "price_new": 620000,
-    "description": "Chuột Logitech M650 Rose thiết kế nữ tính, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí."
+    "name": "Chuột Logitech M650 Rose",
+    "data-id": "chuot-logitech-m650-rose",
+    "desc": [
+      "Không dây",
+      "Pin rời",
+      "DPI - 4.000"
+    ],
+    "description": "Chuột Logitech M650 Rose thiết kế nữ tính, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí.",
+    "id": "mouse-logitech-m650-rose",
+    "originalPrice": 814024,
+    "salePrice": 620000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/1_88b95fdc885c418f8bb63d7395219b75_grande.jpg",
-  "name": "Chuột Logitech Pebble Mouse 2 M350S White",
-  "data-id": "chuot-logitech-pebble-mouse-2-m350s-white",
-    "desc": ["Không dây", "Pin rời", "DPI - 1.000"],
-    "price_old": 699000,
-    "price_new": 450000,
-    "description": "Chuột Logitech Pebble Mouse 2 M350S White thiết kế thanh lịch, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí."
+    "name": "Chuột Logitech Pebble Mouse 2 M350S White",
+    "data-id": "chuot-logitech-pebble-mouse-2-m350s-white",
+    "desc": [
+      "Không dây",
+      "Pin rời",
+      "DPI - 1.000"
+    ],
+    "description": "Chuột Logitech Pebble Mouse 2 M350S White thiết kế thanh lịch, không dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí.",
+    "id": "mouse-logitech-pebble-mouse-2-m350s-white",
+    "originalPrice": 646617,
+    "salePrice": 450000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/mx-master-3s-mouse-top-view-graphite_880f7c80882541c2b4e349b7ed0fa439_de0fb8d222ec49bfb11d909a1f116f7e_grande.png",
-  "name": "Chuột Logitech MX Master 3S Graphite",
-  "data-id": "chuot-logitech-mx-master-3s-graphite",
-    "desc": ["Không dây", "Pin sạc", "DPI - 8.000"],
-    "price_old": 3299000,
-    "price_new": 2390000,
-    "description": "Chuột Logitech MX Master 3S Graphite thiết kế sang trọng, không dây tiện lợi, cảm biến cao cấp, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech MX Master 3S Graphite",
+    "data-id": "chuot-logitech-mx-master-3s-graphite",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "DPI - 8.000"
+    ],
+    "description": "Chuột Logitech MX Master 3S Graphite thiết kế sang trọng, không dây tiện lợi, cảm biến cao cấp, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-mx-master-3s-graphite",
+    "originalPrice": 4347175,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/gearvn-chuot-pulsar-x2-mini-white-1_b95c25b626cb410cafaa6ce098281bfc_70b7cabff13f47eda198ed0ea53945c1_grande.png",
-  "name": "Chuột Pulsar X2 Mini White",
-  "data-id": "chuot-pulsar-x2-mini-white",
-    "desc": ["Không dây", "Pin sạc", "DPI - 26.000"],
-    "price_old": 2490000,
-    "price_new": 2390000,
-    "description": "Chuột Pulsar X2 Mini White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến DPI cao, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột Pulsar X2 Mini White",
+    "data-id": "chuot-pulsar-x2-mini-white",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "DPI - 26.000"
+    ],
+    "description": "Chuột Pulsar X2 Mini White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến DPI cao, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-pulsar-x2-mini-white",
+    "originalPrice": 3361263,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/gearvn-chuot-pulsar-x2-mini-black-1_3d078dccf870423dad34a5eecf21b3e5_fca1395e4dbb495eaa33945ddb15c178_grande.png",
-  "name": "Chuột Pulsar X2 Mini Black",
-  "data-id": "chuot-pulsar-x2-mini-black",
-    "desc": ["Không dây", "Pin sạc", "DPI - 26.000"],
-    "price_old": 2490000,
-    "price_new": 2390000,
-    "description": "Chuột Pulsar X2 Mini Black thiết kế nhỏ gọn, không dây tiện lợi, cảm biến DPI cao, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột Pulsar X2 Mini Black",
+    "data-id": "chuot-pulsar-x2-mini-black",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "DPI - 26.000"
+    ],
+    "description": "Chuột Pulsar X2 Mini Black thiết kế nhỏ gọn, không dây tiện lợi, cảm biến DPI cao, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-pulsar-x2-mini-black",
+    "originalPrice": 3512493,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/thumbchuot-recovered_323d32607640442b94e5a292cde91053_7d46e00173b745cda7d27e325ce5a0bd_grande.gif",
-  "name": "Chuột Pulsar X2 Black",
-  "data-id": "chuot-pulsar-x2-black",
-    "desc": ["Không dây", "Pin sạc", "DPI - 26.000"],
-    "price_old": 2490000,
-    "price_new": 2390000,
-    "description": "Chuột Pulsar X2 Black thiết kế mạnh mẽ, không dây tiện lợi, cảm biến DPI cao, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột Pulsar X2 Black",
+    "data-id": "chuot-pulsar-x2-black",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "DPI - 26.000"
+    ],
+    "description": "Chuột Pulsar X2 Black thiết kế mạnh mẽ, không dây tiện lợi, cảm biến DPI cao, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-pulsar-x2-black",
+    "originalPrice": 2515481,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/2_11b39f50b7fc443485a8ee56b4db6905_grande.jpg",
-  "name": "Chuột Asus Rog Keris Wireless Aimpoint White",
-  "data-id": "chuot-asus-rog-keris-wireless-aimpoint-white",
-    "desc": ["Không dây", "Pin sạc", "Led RGB"],
-    "price_old": 2790000,
-    "price_new": 1990000,
-    "description": "Chuột Asus Rog Keris Wireless Aimpoint White thiết kế công thái học, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Asus Rog Keris Wireless Aimpoint White",
+    "data-id": "chuot-asus-rog-keris-wireless-aimpoint-white",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "Led RGB"
+    ],
+    "description": "Chuột Asus Rog Keris Wireless Aimpoint White thiết kế công thái học, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-asus-rog-keris-wireless-aimpoint-white",
+    "originalPrice": 2972285,
+    "salePrice": 1990000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/rog-gladius-iii-aimpoint-white-01_95c5b080e2754ec9a4fdffa4647a97f2_grande.jpg",
-  "name": "Chuột Asus Rog Gladius III Wireless Aimpoint White",
-  "data-id": "chuot-asus-rog-gladius-iii-wireless-aimpoint-white",
-    "desc": ["Không dây", "Pin sạc", "Led RGB"],
-    "price_old": 3190000,
-    "price_new": 2390000,
-    "description": "Chuột Asus Rog Gladius III Wireless Aimpoint White thiết kế công thái học, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Asus Rog Gladius III Wireless Aimpoint White",
+    "data-id": "chuot-asus-rog-gladius-iii-wireless-aimpoint-white",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "Led RGB"
+    ],
+    "description": "Chuột Asus Rog Gladius III Wireless Aimpoint White thiết kế công thái học, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-asus-rog-gladius-iii-wireless-aimpoint-white",
+    "originalPrice": 3084968,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/thumbchuot-recovered_5f7d823dd220468c9fc32fc33e7a6179_c0ddc3340279441692df55108b39e724_grande.gif",
-  "name": "Chuột Razer Orochi V2 Quartz Edition",
-  "data-id": "chuot-razer-orochi-v2-quartz-edition",
-    "desc": ["Không dây", "Pin rời", "DPI - 18.000"],
-    "price_old": 1190000,
-    "price_new": 990000,
-    "description": "Chuột Razer Orochi V2 Quartz Edition thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Razer Orochi V2 Quartz Edition",
+    "data-id": "chuot-razer-orochi-v2-quartz-edition",
+    "desc": [
+      "Không dây",
+      "Pin rời",
+      "DPI - 18.000"
+    ],
+    "description": "Chuột Razer Orochi V2 Quartz Edition thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-razer-orochi-v2-quartz-edition",
+    "originalPrice": 1561519,
+    "salePrice": 990000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsarxlitev3wiredgamingmouse_bl__4__fe1a838e9bdf4c3b8cebd68e337565c0_grande.png",
-  "name": "Chuột Pulsar có dây Xlite Medium Black",
-  "data-id": "chuot-pulsar-co-day-xlite-medium-black",
-    "desc": ["Có dây", "DPI 26000"],
-    "price_old": 1390000,
-    "price_new": 1249000,
-    "description": "Chuột Pulsar Xlite Medium Black có dây, cảm biến DPI cực cao, phù hợp cho game thủ FPS cần độ chính xác tối đa." 
+    "name": "Chuột Pulsar có dây Xlite Medium Black",
+    "data-id": "chuot-pulsar-co-day-xlite-medium-black",
+    "desc": [
+      "Có dây",
+      "DPI 26000"
+    ],
+    "description": "Chuột Pulsar Xlite Medium Black có dây, cảm biến DPI cực cao, phù hợp cho game thủ FPS cần độ chính xác tối đa.",
+    "id": "mouse-pulsar-co-day-xlite-medium-black",
+    "originalPrice": 1439758,
+    "salePrice": 1249000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsar-x2-wired-mouse_size2_blac_1df26fd9fef245859a0701659cd64a38_grande.png",
-  "name": "Chuột Pulsar có dây X2 Medium Black",
-  "data-id": "chuot-pulsar-co-day-x2-medium-black",
-    "desc": ["Có dây", "DPI 26000"],
-    "price_old": 1390000,
-    "price_new": 1249000,
-    "description": "Chuột Pulsar X2 Medium Black có dây, cảm biến DPI cực cao, phù hợp cho game thủ FPS cần độ chính xác tối đa." 
+    "name": "Chuột Pulsar có dây X2 Medium Black",
+    "data-id": "chuot-pulsar-co-day-x2-medium-black",
+    "desc": [
+      "Có dây",
+      "DPI 26000"
+    ],
+    "description": "Chuột Pulsar X2 Medium Black có dây, cảm biến DPI cực cao, phù hợp cho game thủ FPS cần độ chính xác tối đa.",
+    "id": "mouse-pulsar-co-day-x2-medium-black",
+    "originalPrice": 1320612,
+    "salePrice": 1249000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/50655_chuot_gaming_e_dra_em623w_5_eeecd2420cc949f7bbd299ecfd50132c_grande.jpg",
-  "name": "Chuột E-DRA EM623W Không dây RGB Đen",
-  "data-id": "chuot-e-dra-em623w-khong-day-rgb-den",
-    "desc": ["Pin sạc", "RGB", "Không dây"],
-    "price_old": 399000,
-    "price_new": 279000,
-    "description": "Chuột E-DRA EM623W Không dây RGB Đen thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột E-DRA EM623W Không dây RGB Đen",
+    "data-id": "chuot-e-dra-em623w-khong-day-rgb-den",
+    "desc": [
+      "Pin sạc",
+      "RGB",
+      "Không dây"
+    ],
+    "description": "Chuột E-DRA EM623W Không dây RGB Đen thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-e-dra-em623w-khong-day-rgb-den",
+    "originalPrice": 430609,
+    "salePrice": 279000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/482_623w___web___1_80f2db2cb87542d9a3bdfeb270bd0f02_grande.jpg",
-  "name": "Chuột E-DRA EM623W Không dây RGB Trắng",
-  "data-id": "chuot-e-dra-em623w-khong-day-rgb-trang",
-    "desc": ["Không dây", "RGB", "Pin sạc"],
-    "price_old": 399000,
-    "price_new": 200000,
-    "description": "Chuột E-DRA EM623W Không dây RGB Trắng thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột E-DRA EM623W Không dây RGB Trắng",
+    "data-id": "chuot-e-dra-em623w-khong-day-rgb-trang",
+    "desc": [
+      "Không dây",
+      "RGB",
+      "Pin sạc"
+    ],
+    "description": "Chuột E-DRA EM623W Không dây RGB Trắng thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-e-dra-em623w-khong-day-rgb-trang",
+    "originalPrice": 218809,
+    "salePrice": 200000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pro2-lightspeed-black-new-galler_84b2343575d14402814bbcf5389c1f24_grande.png",
-  "name": "Chuột Logitech G Pro 2 Lightspeed Wireless Black",
-  "data-id": "chuot-logitech-g-pro-2-lightspeed-wireless-black",
-    "desc": ["Không dây", "Không"],
-    "price_old": 3299000,
-    "price_new": 2550000,
-    "description": "Chuột Logitech G Pro 2 Lightspeed Wireless Black thiết kế công thái học, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech G Pro 2 Lightspeed Wireless Black",
+    "data-id": "chuot-logitech-g-pro-2-lightspeed-wireless-black",
+    "desc": [
+      "Không dây",
+      "Không"
+    ],
+    "description": "Chuột Logitech G Pro 2 Lightspeed Wireless Black thiết kế công thái học, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-g-pro-2-lightspeed-wireless-black",
+    "originalPrice": 3300854,
+    "salePrice": 2550000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/11_4da101515945434e8296a6530a4aa643_grande.jpg",
-  "name": "Chuột Logitech G Pro X Superlight 2 White",
-  "data-id": "chuot-logitech-g-pro-x-superlight-2-white",
-    "desc": ["Không dây", "Pin sạc", "Led RGB"],
-    "price_old": 3890000,
-    "price_new": 3240000,
-    "description": "Chuột Logitech G Pro X Superlight 2 White thiết kế siêu nhẹ, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao."
+    "name": "Chuột Logitech G Pro X Superlight 2 White",
+    "data-id": "chuot-logitech-g-pro-x-superlight-2-white",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "Led RGB"
+    ],
+    "description": "Chuột Logitech G Pro X Superlight 2 White thiết kế siêu nhẹ, không dây tiện lợi, cảm biến HERO 25K DPI, mang lại độ chính xác và tốc độ phản hồi cao.",
+    "id": "mouse-logitech-g-pro-x-superlight-2-white",
+    "originalPrice": 4294530,
+    "salePrice": 3240000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/70489_chuot_khong_day_rapoo_m500_0dd18e10c3f2425295b6b3a6eda24334_grande.png",
-  "name": "Chuột Rappo M500 Blue",
-  "data-id": "chuot-rappo-m500-blue",
+    "name": "Chuột Rappo M500 Blue",
+    "data-id": "chuot-rappo-m500-blue",
     "desc": [],
-    "price_old": 559000,
-    "price_new": 260000,
-    "description": "Chuột Rappo M500 Blue thiết kế đơn giản, màu xanh mạnh mẽ, phù hợp với nhiều không gian làm việc."
+    "description": "Chuột Rappo M500 Blue thiết kế đơn giản, màu xanh mạnh mẽ, phù hợp với nhiều không gian làm việc.",
+    "id": "mouse-rappo-m500-blue",
+    "originalPrice": 461211,
+    "salePrice": 260000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/1-b5f62cc1-b80d-46e7-bf25-12f58f_03b1ece51c1347daaa9daa1126fd497c_grande.png",
-  "name": "Chuột AKKO Smart 1 Sailor Moon",
-  "data-id": "chuot-akko-smart-1-sailor-moon",
-    "desc": ["Có dây", "Có"],
-    "price_old": 369000,
-    "price_new": 290000,
-    "description": "Chuột AKKO Smart 1 Sailor Moon thiết kế dễ thương, có dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí."
+    "name": "Chuột AKKO Smart 1 Sailor Moon",
+    "data-id": "chuot-akko-smart-1-sailor-moon",
+    "desc": [
+      "Có dây",
+      "Có"
+    ],
+    "description": "Chuột AKKO Smart 1 Sailor Moon thiết kế dễ thương, có dây tiện lợi, độ phân giải cao, phù hợp cho công việc văn phòng và giải trí.",
+    "id": "mouse-akko-smart-1-sailor-moon",
+    "originalPrice": 405154,
+    "salePrice": 290000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsarx2hv3gamingmouse_white_001_b9f30f992f5846b0aa420e596854875d_grande.png",
-  "name": "Chuột Pulsar không dây Pulsar X2H V3 Size2 White",
-  "data-id": "chuot-pulsar-khong-day-pulsar-x2h-v3-size2-white",
-    "desc": ["Không dây", "DPI - 32000"],
-    "price_old": 2490000,
-    "price_new": 2390000,
-    "description": "Chuột Pulsar không dây Pulsar X2H V3 Size2 White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar không dây Pulsar X2H V3 Size2 White",
+    "data-id": "chuot-pulsar-khong-day-pulsar-x2h-v3-size2-white",
+    "desc": [
+      "Không dây",
+      "DPI - 32000"
+    ],
+    "description": "Chuột Pulsar không dây Pulsar X2H V3 Size2 White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-khong-day-pulsar-x2h-v3-size2-white",
+    "originalPrice": 3893267,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsar_xlite_v4_gaming_mouse_whi_856edb83071b424995b78cd9b50c0299_grande.png",
-  "name": "Chuột Pulsar không dây Pulsar Xlite V4 Size2 White",
-  "data-id": "chuot-pulsar-khong-day-pulsar-xlite-v4-size2-white",
-    "desc": ["DPI - 32000", "Không dây"],
-    "price_old": 2490000,
-    "price_new": 2390000,
-    "description": "Chuột Pulsar không dây Pulsar Xlite V4 Size2 White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar không dây Pulsar Xlite V4 Size2 White",
+    "data-id": "chuot-pulsar-khong-day-pulsar-xlite-v4-size2-white",
+    "desc": [
+      "DPI - 32000",
+      "Không dây"
+    ],
+    "description": "Chuột Pulsar không dây Pulsar Xlite V4 Size2 White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-khong-day-pulsar-xlite-v4-size2-white",
+    "originalPrice": 4262762,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsarx2hesgamingmouse_black_005_d7ed3cd06b05498a9c1d535cb2cf7c23_grande.png",
-  "name": "Chuột Pulsar không dây X2 H eS Wireless Size2 Black",
-  "data-id": "chuot-pulsar-khong-day-x2-h-es-wireless-size2-black",
-    "desc": ["DPI - 26000", "Không dây"],
-    "price_old": 3690000,
-    "price_new": 2590000,
-    "description": "Chuột Pulsar không dây X2 H eS Wireless Size2 Black thiết kế mạnh mẽ, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar không dây X2 H eS Wireless Size2 Black",
+    "data-id": "chuot-pulsar-khong-day-x2-h-es-wireless-size2-black",
+    "desc": [
+      "DPI - 26000",
+      "Không dây"
+    ],
+    "description": "Chuột Pulsar không dây X2 H eS Wireless Size2 Black thiết kế mạnh mẽ, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-khong-day-x2-h-es-wireless-size2-black",
+    "originalPrice": 3665121,
+    "salePrice": 2590000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsarxlitev3esgamingmouse_black_2e93a32c176042e2ba0159854c1084a0_grande.png",
-  "name": "Chuột Pulsar không dây Xlite V3 eS Wireless Size2 Black",
-  "data-id": "chuot-pulsar-khong-day-xlite-v3-es-wireless-size2-black",
-    "desc": ["DPI - 26000", "Không dây"],
-    "price_old": 3690000,
-    "price_new": 2790000,
-    "description": "Chuột Pulsar không dây Xlite V3 eS Wireless Size2 Black thiết kế mạnh mẽ, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar không dây Xlite V3 eS Wireless Size2 Black",
+    "data-id": "chuot-pulsar-khong-day-xlite-v3-es-wireless-size2-black",
+    "desc": [
+      "DPI - 26000",
+      "Không dây"
+    ],
+    "description": "Chuột Pulsar không dây Xlite V3 eS Wireless Size2 Black thiết kế mạnh mẽ, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-khong-day-xlite-v3-es-wireless-size2-black",
+    "originalPrice": 4879442,
+    "salePrice": 2790000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsarx2hv3gamingmouse_black_001_b23ecc5c0fe249119489e1a61396a974_grande.png",
-  "name": "Chuột Pulsar không dây Pulsar X2H V3 Size2 Black",
-  "data-id": "chuot-pulsar-khong-day-pulsar-x2h-v3-size2-black",
-    "desc": ["Không dây", "DPI - 32000"],
-    "price_old": 2490000,
-    "price_new": 2390000,
-    "description": "Chuột Pulsar không dây Pulsar X2H V3 Size2 Black thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar không dây Pulsar X2H V3 Size2 Black",
+    "data-id": "chuot-pulsar-khong-day-pulsar-x2h-v3-size2-black",
+    "desc": [
+      "Không dây",
+      "DPI - 32000"
+    ],
+    "description": "Chuột Pulsar không dây Pulsar X2H V3 Size2 Black thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-khong-day-pulsar-x2h-v3-size2-black",
+    "originalPrice": 2417104,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsarxlitev4gamingmouse_black_0_d974b23822a442aa97dd0902a100fa19_grande.png",
-  "name": "Chuột Pulsar không dây Pulsar Xlite V4 Size2 Black",
-  "data-id": "chuot-pulsar-khong-day-pulsar-xlite-v4-size2-black",
-    "desc": ["DPI - 32000", "Không dây"],
-    "price_old": 2490000,
-    "price_new": 2390000,
-    "description": "Chuột Pulsar không dây Pulsar Xlite V4 Size2 Black thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar không dây Pulsar Xlite V4 Size2 Black",
+    "data-id": "chuot-pulsar-khong-day-pulsar-xlite-v4-size2-black",
+    "desc": [
+      "DPI - 32000",
+      "Không dây"
+    ],
+    "description": "Chuột Pulsar không dây Pulsar Xlite V4 Size2 Black thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-khong-day-pulsar-xlite-v4-size2-black",
+    "originalPrice": 2701463,
+    "salePrice": 2390000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsarx2hwiredgamingmouse_black_b8cbf094d73d470db3d9fb78e377733c_grande.png",
-  "name": "Chuột Pulsar có dây X2H Medium Black",
-  "data-id": "chuot-pulsar-co-day-x2h-medium-black",
-    "desc": ["Có dây", "DPI 26000"],
-    "price_old": 1390000,
-    "price_new": 1249000,
-    "description": "Chuột Pulsar X2H Medium Black có dây, cảm biến DPI cực cao, phù hợp cho game thủ FPS cần độ chính xác tối đa." 
+    "name": "Chuột Pulsar có dây X2H Medium Black",
+    "data-id": "chuot-pulsar-co-day-x2h-medium-black",
+    "desc": [
+      "Có dây",
+      "DPI 26000"
+    ],
+    "description": "Chuột Pulsar X2H Medium Black có dây, cảm biến DPI cực cao, phù hợp cho game thủ FPS cần độ chính xác tối đa.",
+    "id": "mouse-pulsar-co-day-x2h-medium-black",
+    "originalPrice": 1788746,
+    "salePrice": 1249000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/chuot-gaming-khong-day-razer-bas__1__5dbd0f539aa24d1480cf4c3501840088_grande.png",
-  "name": "Chuột Razer Basilisk V3 Pro 35K White",
-  "data-id": "chuot-razer-basilisk-v3-pro-35k-white",
-    "desc": ["Có dây", "Không", "RGB"],
-    "price_old": 4490000,
-    "price_new": 4190000,
-    "description": "Chuột Razer Basilisk V3 Pro 35K White thiết kế công thái học, đèn RGB tùy chỉnh, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Razer Basilisk V3 Pro 35K White",
+    "data-id": "chuot-razer-basilisk-v3-pro-35k-white",
+    "desc": [
+      "Có dây",
+      "Không",
+      "RGB"
+    ],
+    "description": "Chuột Razer Basilisk V3 Pro 35K White thiết kế công thái học, đèn RGB tùy chỉnh, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-razer-basilisk-v3-pro-35k-white",
+    "originalPrice": 6804589,
+    "salePrice": 4190000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/x2agamingmouse_top-234273_large_1eeb4abea2af4785ad403d1bf75836cc_grande.png",
-  "name": "Chuột Pulsar không dây X2A Size2 Black/White",
-  "data-id": "chuot-pulsar-khong-day-x2a-size2-black-white",
-    "desc": ["DPI - 26000", "Không dây"],
-    "price_old": 1949000,
-    "price_new": 1790000,
-    "description": "Chuột Pulsar không dây X2A Size2 Black/White thiết kế mạnh mẽ, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar không dây X2A Size2 Black/White",
+    "data-id": "chuot-pulsar-khong-day-x2a-size2-black-white",
+    "desc": [
+      "DPI - 26000",
+      "Không dây"
+    ],
+    "description": "Chuột Pulsar không dây X2A Size2 Black/White thiết kế mạnh mẽ, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-khong-day-x2a-size2-black-white",
+    "originalPrice": 1894082,
+    "salePrice": 1790000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsarxlitev3mediumgamingmouse_w_f49b4d4e7fba46549f984e1bc2e14967_grande.png",
-  "name": "Chuột Pulsar không dây Xlite V3 Size2 White",
-  "data-id": "chuot-pulsar-khong-day-xlite-v3-size2-white",
-    "desc": ["DPI - 26000", "Không dây"],
-    "price_old": 1949000,
-    "price_new": 1790000,
-    "description": "Chuột Pulsar không dây Xlite V3 Size2 White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar không dây Xlite V3 Size2 White",
+    "data-id": "chuot-pulsar-khong-day-xlite-v3-size2-white",
+    "desc": [
+      "DPI - 26000",
+      "Không dây"
+    ],
+    "description": "Chuột Pulsar không dây Xlite V3 Size2 White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-khong-day-xlite-v3-size2-white",
+    "originalPrice": 1885522,
+    "salePrice": 1790000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/x2hgamingmouse_medium_white_8811_9cb6394e677f4af6b2485e5e26411e1d_grande.png",
-  "name": "Chuột Pulsar không dây X2H Size2 White",
-  "data-id": "chuot-pulsar-khong-day-x2h-size2-white",
-    "desc": ["Không dây", "DPI - 26000"],
-    "price_old": 1949000,
-    "price_new": 1790000,
-    "description": "Chuột Pulsar không dây X2H Size2 White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar không dây X2H Size2 White",
+    "data-id": "chuot-pulsar-khong-day-x2h-size2-white",
+    "desc": [
+      "Không dây",
+      "DPI - 26000"
+    ],
+    "description": "Chuột Pulsar không dây X2H Size2 White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-khong-day-x2h-size2-white",
+    "originalPrice": 3268027,
+    "salePrice": 1790000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/x2hgamingmouse_medium_black_e306_1955fedb115946519e3b57ad20ba601a_grande.png",
-  "name": "Chuột Pulsar không dây X2H Size2 Black",
-  "data-id": "chuot-pulsar-khong-day-x2h-size2-black",
-    "desc": ["DPI - 26000", "Không dây"],
-    "price_old": 1949000,
-    "price_new": 1790000,
-    "description": "Chuột Pulsar không dây X2H Size2 Black thiết kế mạnh mẽ, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar không dây X2H Size2 Black",
+    "data-id": "chuot-pulsar-khong-day-x2h-size2-black",
+    "desc": [
+      "DPI - 26000",
+      "Không dây"
+    ],
+    "description": "Chuột Pulsar không dây X2H Size2 Black thiết kế mạnh mẽ, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-khong-day-x2h-size2-black",
+    "originalPrice": 2041179,
+    "salePrice": 1790000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/87139_chuot_co_day_pulsar_x2a_wi_c3cf98ce24664d8e86b878dcdf433a36_grande.png",
-  "name": "Chuột Pulsar có dây X2A Medium Black",
-  "data-id": "chuot-pulsar-co-day-x2a-medium-black",
-    "desc": ["Không dây", "DPI - 26000"],
-    "price_old": 1390000,
-    "price_new": 1249000,
-    "description": "Chuột Pulsar X2A Medium Black có dây, cảm biến DPI cực cao, phù hợp cho game thủ FPS cần độ chính xác tối đa." 
+    "name": "Chuột Pulsar có dây X2A Medium Black",
+    "data-id": "chuot-pulsar-co-day-x2a-medium-black",
+    "desc": [
+      "Không dây",
+      "DPI - 26000"
+    ],
+    "description": "Chuột Pulsar X2A Medium Black có dây, cảm biến DPI cực cao, phù hợp cho game thủ FPS cần độ chính xác tối đa.",
+    "id": "mouse-pulsar-co-day-x2a-medium-black",
+    "originalPrice": 2160768,
+    "salePrice": 1249000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/gaming-dareu-a960-yellow-ultrali_6055811424474f54a7aecd0bba72370d_grande.png",
-  "name": "Chuột DareU A960s Yellow",
-  "data-id": "chuot-dareu-a960s-yellow",
+    "name": "Chuột DareU A960s Yellow",
+    "data-id": "chuot-dareu-a960s-yellow",
     "desc": [],
-    "price_old": 490000,
-    "price_new": 220000,
-    "description": "Chuột DareU A960s Yellow thiết kế nổi bật, cảm biến quang học chính xác, phù hợp cho game thủ và người dùng văn phòng."
+    "description": "Chuột DareU A960s Yellow thiết kế nổi bật, cảm biến quang học chính xác, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-dareu-a960s-yellow",
+    "originalPrice": 254583,
+    "salePrice": 220000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/25938-mm712-white-gallery-2-imag_e99742e2e214462fa60cc248005eae9a_grande.png",
-  "name": "Chuột Cooler Master MM712 Hybird Wireless White",
-  "data-id": "chuot-cooler-master-mm712-hybird-wireless-white",
-    "desc": ["RGB", "Không dây"],
-    "price_old": 1390000,
-    "price_new": 850000,
-    "description": "Chuột Cooler Master MM712 Hybird Wireless White thiết kế hiện đại, không dây tiện lợi, đèn RGB tùy chỉnh, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Cooler Master MM712 Hybird Wireless White",
+    "data-id": "chuot-cooler-master-mm712-hybird-wireless-white",
+    "desc": [
+      "RGB",
+      "Không dây"
+    ],
+    "description": "Chuột Cooler Master MM712 Hybird Wireless White thiết kế hiện đại, không dây tiện lợi, đèn RGB tùy chỉnh, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-cooler-master-mm712-hybird-wireless-white",
+    "originalPrice": 1024557,
+    "salePrice": 850000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/25937-mm712-black-gallery-2-imag_e619a91ab25a466c8ad0f339503f34b9_grande.png",
-  "name": "Chuột Cooler Master MM712 Hybird Wireless Black",
-  "data-id": "chuot-cooler-master-mm712-hybird-wireless-black",
-    "desc": ["Không dây", "RGB"],
-    "price_old": 1390000,
-    "price_new": 850000,
-    "description": "Chuột Cooler Master MM712 Hybird Wireless Black thiết kế hiện đại, không dây tiện lợi, đèn RGB tùy chỉnh, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Cooler Master MM712 Hybird Wireless Black",
+    "data-id": "chuot-cooler-master-mm712-hybird-wireless-black",
+    "desc": [
+      "Không dây",
+      "RGB"
+    ],
+    "description": "Chuột Cooler Master MM712 Hybird Wireless Black thiết kế hiện đại, không dây tiện lợi, đèn RGB tùy chỉnh, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-cooler-master-mm712-hybird-wireless-black",
+    "originalPrice": 1470541,
+    "salePrice": 850000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/chuot-khong-day-monsgeek-d1-pink_44c88328efca435ca2cc4b9ef49a97cd_grande.png",
-  "name": "Chuột không dây MonsGeek D1 Pink",
-  "data-id": "chuot-khong-day-monsgeek-d1-pink",
-    "desc": ["Pin sạc", "Có dây"],
-    "price_old": 299000,
-    "price_new": 120000,
-    "description": "Chuột không dây MonsGeek D1 Pink thiết kế dễ thương, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột không dây MonsGeek D1 Pink",
+    "data-id": "chuot-khong-day-monsgeek-d1-pink",
+    "desc": [
+      "Pin sạc",
+      "Có dây"
+    ],
+    "description": "Chuột không dây MonsGeek D1 Pink thiết kế dễ thương, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-khong-day-monsgeek-d1-pink",
+    "originalPrice": 161835,
+    "salePrice": 120000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/chuot-khong-day-monsgeek-d1-blac_099847ad9748479fbe2e919816a150f5_grande.png",
-  "name": "Chuột không dây MonsGeek D1 Black",
-  "data-id": "chuot-khong-day-monsgeek-d1-black",
-    "desc": ["Có dây", "Pin sạc"],
-    "price_old": 299000,
-    "price_new": 150000,
-    "description": "Chuột không dây MonsGeek D1 Black thiết kế mạnh mẽ, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột không dây MonsGeek D1 Black",
+    "data-id": "chuot-khong-day-monsgeek-d1-black",
+    "desc": [
+      "Có dây",
+      "Pin sạc"
+    ],
+    "description": "Chuột không dây MonsGeek D1 Black thiết kế mạnh mẽ, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-khong-day-monsgeek-d1-black",
+    "originalPrice": 288939,
+    "salePrice": 150000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/250-6438-chuot-rapoo-m500-silent_46bf78fb5d0d4289a53eab6601776735_grande.png",
-  "name": "Chuột Rappo M500 Grey",
-  "data-id": "chuot-rappo-m500-grey",
+    "name": "Chuột Rappo M500 Grey",
+    "data-id": "chuot-rappo-m500-grey",
     "desc": [],
-    "price_old": 559000,
-    "price_new": 260000,
-    "description": "Chuột Rappo M500 Grey thiết kế đơn giản, màu xám mạnh mẽ, phù hợp với nhiều không gian làm việc."
+    "description": "Chuột Rappo M500 Grey thiết kế đơn giản, màu xám mạnh mẽ, phù hợp với nhiều không gian làm việc.",
+    "id": "mouse-rappo-m500-grey",
+    "originalPrice": 402985,
+    "salePrice": 260000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/6437-chuot-rapoo-m500-silent-wir_e3dc68e3197a4801be51ea52361c3a1b_grande.png",
-  "name": "Chuột Rappo M500 Red",
-  "data-id": "chuot-rappo-m500-red",
+    "name": "Chuột Rappo M500 Red",
+    "data-id": "chuot-rappo-m500-red",
     "desc": [],
-    "price_old": 559000,
-    "price_new": 260000,
-    "description": "Chuột Rappo M500 Red thiết kế đơn giản, màu đỏ nổi bật, phù hợp với nhiều không gian làm việc."
+    "description": "Chuột Rappo M500 Red thiết kế đơn giản, màu đỏ nổi bật, phù hợp với nhiều không gian làm việc.",
+    "id": "mouse-rappo-m500-red",
+    "originalPrice": 344250,
+    "salePrice": 260000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/5277-vt760-mini-pink-1_6cbfa95e694e446b926f6a05859e19d9_grande.jpg",
-  "name": "Chuột Rapoo MT760 Mini Không Dây Hồng",
-  "data-id": "chuot-rapoo-mt760-mini-khong-day-hong",
-    "desc": ["Pin sạc", "Không dây"],
-    "price_old": 990000,
-    "price_new": 790000,
-    "description": "Chuột Rapoo MT760 Mini Không Dây Hồng thiết kế nhỏ gọn, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột Rapoo MT760 Mini Không Dây Hồng",
+    "data-id": "chuot-rapoo-mt760-mini-khong-day-hong",
+    "desc": [
+      "Pin sạc",
+      "Không dây"
+    ],
+    "description": "Chuột Rapoo MT760 Mini Không Dây Hồng thiết kế nhỏ gọn, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-rapoo-mt760-mini-khong-day-hong",
+    "originalPrice": 824679,
+    "salePrice": 790000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/42rc3efe_13d1959281ec44749394fad1ceebece4_grande.png",
-  "name": "Chuột Razer Cobra Pro Trắng",
-  "data-id": "chuot-razer-cobra-pro-trang",
-    "desc": ["Led RGB", "Không dây", "Pin sạc"],
-    "price_old": 3990000,
-    "price_new": 2850000,
-    "description": "Chuột Razer Cobra Pro Trắng thiết kế thể thao, đèn LED RGB, cảm biến quang học chính xác, phù hợp cho game thủ chuyên nghiệp."
+    "name": "Chuột Razer Cobra Pro Trắng",
+    "data-id": "chuot-razer-cobra-pro-trang",
+    "desc": [
+      "Led RGB",
+      "Không dây",
+      "Pin sạc"
+    ],
+    "description": "Chuột Razer Cobra Pro Trắng thiết kế thể thao, đèn LED RGB, cảm biến quang học chính xác, phù hợp cho game thủ chuyên nghiệp.",
+    "id": "mouse-razer-cobra-pro-trang",
+    "originalPrice": 4908025,
+    "salePrice": 2850000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/fly-r1-se-plus-_se-__---black-white--hang-chinh-hang---bh-12-thang-_9__e981781ce15040e9a27e46912084474a_grande.jpg",
-  "name": "Chuột Không dây VGN VXE R1 SE Plus Đen",
-  "data-id": "chuot-khong-day-vgn-vxe-r1-se-plus-den",
-    "desc": ["Không dây", "Pin sạc"],
-    "price_old": 1090000,
-    "price_new": 750000,
-    "description": "Chuột Không dây VGN VXE R1 SE Plus Đen thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột Không dây VGN VXE R1 SE Plus Đen",
+    "data-id": "chuot-khong-day-vgn-vxe-r1-se-plus-den",
+    "desc": [
+      "Không dây",
+      "Pin sạc"
+    ],
+    "description": "Chuột Không dây VGN VXE R1 SE Plus Đen thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-khong-day-vgn-vxe-r1-se-plus-den",
+    "originalPrice": 921949,
+    "salePrice": 750000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/xgc3vw6v_8d90312b76e54aefbb26b88e7046715f_grande.png",
-  "name": "Chuột không dây Corsair Nightsabre RGB (CH-931B011-AP)",
-  "data-id": "chuot-khong-day-corsair-nightsabre-rgb-ch-931b011-ap",
-    "desc": ["Không dây", "Pin sạc", "Led RGB"],
-    "price_old": 3990000,
-    "price_new": 3590000,
-    "description": "Chuột không dây Corsair Nightsabre RGB (CH-931B011-AP) thiết kế công thái học, không dây tiện lợi, đèn RGB tùy chỉnh, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột không dây Corsair Nightsabre RGB (CH-931B011-AP)",
+    "data-id": "chuot-khong-day-corsair-nightsabre-rgb-ch-931b011-ap",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "Led RGB"
+    ],
+    "description": "Chuột không dây Corsair Nightsabre RGB (CH-931B011-AP) thiết kế công thái học, không dây tiện lợi, đèn RGB tùy chỉnh, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-khong-day-corsair-nightsabre-rgb-ch-931b011-ap",
+    "originalPrice": 3616169,
+    "salePrice": 3590000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/zkcjs5el_4e9208da4d9648fba24bf590fed636cd_grande.png",
-  "name": "Chuột không dây Corsair Darkstar RGB (CH-931A011-AP)",
-  "data-id": "chuot-khong-day-corsair-darkstar-rgb-ch-931a011-ap",
-    "desc": ["Không dây", "Led RGB", "Pin sạc"],
-    "price_old": 3990000,
-    "price_new": 3590000,
-    "description": "Chuột không dây Corsair Darkstar RGB (CH-931A011-AP) thiết kế công thái học, không dây tiện lợi, đèn RGB tùy chỉnh, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột không dây Corsair Darkstar RGB (CH-931A011-AP)",
+    "data-id": "chuot-khong-day-corsair-darkstar-rgb-ch-931a011-ap",
+    "desc": [
+      "Không dây",
+      "Led RGB",
+      "Pin sạc"
+    ],
+    "description": "Chuột không dây Corsair Darkstar RGB (CH-931A011-AP) thiết kế công thái học, không dây tiện lợi, đèn RGB tùy chỉnh, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-khong-day-corsair-darkstar-rgb-ch-931a011-ap",
+    "originalPrice": 6805394,
+    "salePrice": 3590000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/ex6v0hxc_9149582cca3e48a5858a355b61f2cd17_grande.png",
-  "name": "Chuột Rapoo Không dây V300SE Black",
-  "data-id": "chuot-rapoo-khong-day-v300se-black",
-    "desc": ["không dây", "pin sạc"],
-    "price_old": 1290000,
-    "price_new": 590000,
-    "description": "Chuột Rapoo Không dây V300SE Black thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng."
+    "name": "Chuột Rapoo Không dây V300SE Black",
+    "data-id": "chuot-rapoo-khong-day-v300se-black",
+    "desc": [
+      "không dây",
+      "pin sạc"
+    ],
+    "description": "Chuột Rapoo Không dây V300SE Black thiết kế hiện đại, không dây tiện lợi, pin sạc lâu dài, phù hợp cho game thủ và người dùng văn phòng.",
+    "id": "mouse-rapoo-khong-day-v300se-black",
+    "originalPrice": 607123,
+    "salePrice": 590000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/wireless-v2-competition-blue-01_320fe5e44110483b8bc1405926b8019c_large_9e85184ec07f489fbaff79825a2230b5_grande.jpg",
-  "name": "Chuột Pulsar Xlite Wireless V2 Blue",
-  "data-id": "chuot-pulsar-xlite-wireless-v2-blue",
-    "desc": ["Pin sạc", "Không dây", "DPI - 26.000"],
-    "price_old": 1790000,
-    "price_new": null,
-    "description": "Chuột Pulsar Xlite Wireless V2 Blue thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar Xlite Wireless V2 Blue",
+    "data-id": "chuot-pulsar-xlite-wireless-v2-blue",
+    "desc": [
+      "Pin sạc",
+      "Không dây",
+      "DPI - 26.000"
+    ],
+    "description": "Chuột Pulsar Xlite Wireless V2 Blue thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-xlite-wireless-v2-blue",
+    "originalPrice": 0,
+    "salePrice": null
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/ezgif-1-50b65a0ec7_50e93b9ed6ae4a5bb444389471be493b_master_5308595cba9c4e6c89d8e532cf1aea22_grande.png",
-  "name": "Chuột Pulsar X2 Red",
-  "data-id": "chuot-pulsar-x2-red",
-    "desc": ["Không dây", "Pin sạc", "DPI - 26.000"],
-    "price_old": 2490000,
-    "price_new": null,
-    "description": "Chuột Pulsar X2 Red thiết kế mạnh mẽ, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar X2 Red",
+    "data-id": "chuot-pulsar-x2-red",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "DPI - 26.000"
+    ],
+    "description": "Chuột Pulsar X2 Red thiết kế mạnh mẽ, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-x2-red",
+    "originalPrice": 0,
+    "salePrice": null
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/h3__2__6a734a2e2d024d5abd564e1ac9295c0a_master_1860060d31cc48edb589a8ee9318e58a_grande.png",
-  "name": "Chuột Pulsar Xlite Wireless V2 Mini Pink",
-  "data-id": "chuot-pulsar-xlite-wireless-v2-mini-pink",
-    "desc": ["Không dây", "Pin sạc", "DPI - 26.000"],
-    "price_old": 1899000,
-    "price_new": 1790000,
-    "description": "Chuột Pulsar Xlite Wireless V2 Mini Pink thiết kế dễ thương, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar Xlite Wireless V2 Mini Pink",
+    "data-id": "chuot-pulsar-xlite-wireless-v2-mini-pink",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "DPI - 26.000"
+    ],
+    "description": "Chuột Pulsar Xlite Wireless V2 Mini Pink thiết kế dễ thương, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-xlite-wireless-v2-mini-pink",
+    "originalPrice": 2430564,
+    "salePrice": 1790000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/-pulsar-x2-aim-trainer-pack-05_ad22c8a0f61b411ca9e690bce4ad9316_master_b81fcafb93af45d3bad5078f37b7f352_grande.jpg",
-  "name": "Chuột Pulsar X2 Aim Trainer Pack",
-  "data-id": "chuot-pulsar-x2-aim-trainer-pack",
-    "desc": ["Không dây", "Pin sạc", "DPI - 26.000"],
-    "price_old": 2490000,
-    "price_new": null,
-    "description": "Chuột Pulsar X2 Aim Trainer Pack thiết kế chuyên dụng cho tập luyện, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar X2 Aim Trainer Pack",
+    "data-id": "chuot-pulsar-x2-aim-trainer-pack",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "DPI - 26.000"
+    ],
+    "description": "Chuột Pulsar X2 Aim Trainer Pack thiết kế chuyên dụng cho tập luyện, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-x2-aim-trainer-pack",
+    "originalPrice": 0,
+    "salePrice": null
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/gearvn_rapoo_v280_3cca5faabe444125ac860167f54f300d_grande.png",
-  "name": "Chuột Rapoo Gaming V280 RGB",
-  "data-id": "chuot-rapoo-gaming-v280-rgb",
-    "desc": ["Có dây", "Không", "Led RGB"],
-    "price_old": 690000,
-    "price_new": 290000,
-    "description": "Chuột Rapoo Gaming V280 RGB thiết kế công thái học, đèn RGB tùy chỉnh, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Rapoo Gaming V280 RGB",
+    "data-id": "chuot-rapoo-gaming-v280-rgb",
+    "desc": [
+      "Có dây",
+      "Không",
+      "Led RGB"
+    ],
+    "description": "Chuột Rapoo Gaming V280 RGB thiết kế công thái học, đèn RGB tùy chỉnh, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-rapoo-gaming-v280-rgb",
+    "originalPrice": 447964,
+    "salePrice": 290000
   },
   {
     "image": "https://product.hstatic.net/200000722513/product/pulsar-xlite-wireless-v2-mini-white-1_2d06ace96ac2472191a3e69d8893629e_c6cd31f65ad24728b748b83a910dd1f8_grande.png",
-  "name": "Chuột Pulsar Xlite Wireless V2 Mini White",
-  "data-id": "chuot-pulsar-xlite-wireless-v2-mini-white",
-    "desc": ["Không dây", "Pin sạc", "DPI - 26.000"],
-    "price_old": 1899000,
-    "price_new": null,
-    "description": "Chuột Pulsar Xlite Wireless V2 Mini White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời."
+    "name": "Chuột Pulsar Xlite Wireless V2 Mini White",
+    "data-id": "chuot-pulsar-xlite-wireless-v2-mini-white",
+    "desc": [
+      "Không dây",
+      "Pin sạc",
+      "DPI - 26.000"
+    ],
+    "description": "Chuột Pulsar Xlite Wireless V2 Mini White thiết kế nhỏ gọn, không dây tiện lợi, cảm biến quang học chính xác, mang lại trải nghiệm chơi game tuyệt vời.",
+    "id": "mouse-pulsar-xlite-wireless-v2-mini-white",
+    "originalPrice": 0,
+    "salePrice": null
   }
 ]

@@ -1,692 +1,778 @@
 [
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-akko-5108b-plus-hatsune-miku-akko-piano-pro-switch-1_703c51eb596d4457a68b87f7261d1c97_grande.jpg",
-    "name": "Bàn phím AKKO 5108B Plus Hatsune Miku Akko Piano Pro Switch",
-    "data-id": "ban-phim-akko-5108b-plus-hatsune-miku-akko-piano-pro-switch",
-    "old_price": "2.490.000₫",
-    "new_price": "",
-    "description": "Bàn phím AKKO 5108B Plus Hatsune Miku với thiết kế độc đáo, switch Piano Pro cho cảm giác gõ mượt mà, phù hợp cho fan Hatsune Miku và người yêu thích sự cá tính."
-  },
-  {
-    "image": "https://cdn.hstatic.net/products/200000722513/rvn-ban-phim-akko-tac87-3-mode-prunus-lannesiana-stellar-rose-switch-1_c9981ed509654686a9ed00f417895df2_grande.jpg",
+    "id": "ban-phim-akko-tac87-3-mode-prunus-lannesiana-stellar-rose-switch",
     "name": "Bàn phím AKKO TAC87 3 MODE Prunus Lannesiana Stellar Rose switch",
-    "data-id": "ban-phim-akko-tac87-3-mode-prunus-lannesiana-stellar-rose-switch",
-    "old_price": "1.390.000₫",
-    "new_price": "1.100.000₫",
-    "description": "Bàn phím AKKO TAC87 3 MODE với switch Stellar Rose, hỗ trợ 3 chế độ kết nối, thiết kế hoa anh đào tinh tế, phù hợp cho cả làm việc và chơi game."
+    "image": "https://cdn.hstatic.net/products/200000722513/rvn-ban-phim-akko-tac87-3-mode-prunus-lannesiana-stellar-rose-switch-1_c9981ed509654686a9ed00f417895df2_grande.jpg",
+    "description": "Bàn phím AKKO TAC87 3 MODE với switch Stellar Rose, hỗ trợ 3 chế độ kết nối, thiết kế hoa anh đào tinh tế, phù hợp cho cả làm việc và chơi game.",
+    "originalPrice": 1390000,
+    "salePrice": 1100000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-akko-tac87-3-mode-horizon-mirror-switch-1_33bd04c642934159a9f8456fdf66138b_grande.jpg",
+    "id": "ban-phim-akko-tac87-3-mode-horizon-mirror-switch",
     "name": "Bàn phím AKKO TAC87 3 MODE Horizon Mirror switch",
-    "data-id": "ban-phim-akko-tac87-3-mode-horizon-mirror-switch",
-    "old_price": "1.390.000₫",
-    "new_price": "1.100.000₫",
-    "description": "Bàn phím AKKO TAC87 Horizon Mirror, thiết kế hiện đại, switch Mirror cho phản hồi nhanh, phù hợp cho game thủ và dân văn phòng."
+    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-akko-tac87-3-mode-horizon-mirror-switch-1_33bd04c642934159a9f8456fdf66138b_grande.jpg",
+    "description": "Bàn phím AKKO TAC87 Horizon Mirror, thiết kế hiện đại, switch Mirror cho phản hồi nhanh, phù hợp cho game thủ và dân văn phòng.",
+    "originalPrice": 1390000,
+    "salePrice": 1100000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-akko-tac87-3-mode-black-gold-mirror-switch-1_c3cb066d719c45638903ea64f441c290_grande.jpg",
+    "id": "ban-phim-akko-tac87-3-mode-black-gold-mirror-switch",
     "name": "Bàn phím AKKO TAC87 3 MODE Black&Gold Mirror switch",
-    "data-id": "ban-phim-akko-tac87-3-mode-black-gold-mirror-switch",
-    "old_price": "1.390.000₫",
-    "new_price": "1.100.000₫",
-    "description": "Bàn phím AKKO TAC87 Black&Gold, phối màu sang trọng, switch Mirror cho trải nghiệm gõ mượt mà, hỗ trợ nhiều chế độ kết nối."
+    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-akko-tac87-3-mode-black-gold-mirror-switch-1_c3cb066d719c45638903ea64f441c290_grande.jpg",
+    "description": "Bàn phím AKKO TAC87 Black&Gold, phối màu sang trọng, switch Mirror cho trải nghiệm gõ mượt mà, hỗ trợ nhiều chế độ kết nối.",
+    "originalPrice": 1390000,
+    "salePrice": 1100000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/1_4f8b705abb374cce8c88f299352773f9_grande.png",
+    "id": "ban-phim-leobog-hi75c-pro-tm-be-trang-nau-turquoise-switch-hi7510",
     "name": "Bàn phím Leobog Hi75C PRO TM (Be + trắng + nâu/ Turquoise switch) HI7510",
-    "data-id": "ban-phim-leobog-hi75c-pro-tm-be-trang-nau-turquoise-switch-hi7510",
-    "old_price": "2.261.000₫",
-    "new_price": "1.650.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/1_4f8b705abb374cce8c88f299352773f9_grande.png",
+    "description": "",
+    "originalPrice": 2261000,
+    "salePrice": 1650000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/1_8566fa83c0e14ffdbc92745cbe943c9c_grande.png",
+    "id": "ban-phim-leobog-hi75c-pro-tm-den-contour-turquoise-switch-hi7509",
     "name": "Bàn phím Leobog Hi75C PRO TM (Đen contour/ Turquoise switch) HI7509",
-    "data-id": "ban-phim-leobog-hi75c-pro-tm-den-contour-turquoise-switch-hi7509",
-    "old_price": "2.261.000₫",
-    "new_price": "1.650.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/1_8566fa83c0e14ffdbc92745cbe943c9c_grande.png",
+    "description": "",
+    "originalPrice": 2261000,
+    "salePrice": 1650000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/1_0d98fb0473dc4c749bffa3abccbad160_grande.png",
+    "id": "ban-phim-aula-hero68he-co-day-hong-gradient-black-king-magnetic-switch-hero6801",
     "name": "Bàn phím AULA HERO68HE có dây (Hồng gradient/ Black King magnetic switch) HERO6801",
-    "data-id": "ban-phim-aula-hero68he-co-day-hong-gradient-black-king-magnetic-switch-hero6801",
-    "old_price": "1.239.000₫",
-    "new_price": "990.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/1_0d98fb0473dc4c749bffa3abccbad160_grande.png",
+    "description": "",
+    "originalPrice": 1239000,
+    "salePrice": 990000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/download-photoroom_b9c35b23b08747679121af27f991f639_grande.png",
+    "id": "ban-phim-aula-m75-tm-xanh-trang-cam-crescent-switch-m7501",
     "name": "Bàn phím AULA M75 TM (Xanh + trắng + cam/ Crescent switch) M7501",
-    "data-id": "ban-phim-aula-m75-tm-xanh-trang-cam-crescent-switch-m7501",
-    "old_price": "3.010.000₫",
-    "new_price": "1.990.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/download-photoroom_b9c35b23b08747679121af27f991f639_grande.png",
+    "description": "",
+    "originalPrice": 3010000,
+    "salePrice": 1990000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/m-co-gaming-3-mode-phien-ban-ice-soul-switch_202410231426502-photoroom_07fb2023c9254d20beae92820b2172c6_grande.png",
+    "id": "ban-phim-aula-f81-tm-tim-crystal-switch-f8104",
     "name": "Bàn phím AULA F81 TM (Tím/ Crystal switch) F8104",
-    "data-id": "ban-phim-aula-f81-tm-tim-crystal-switch-f8104",
-    "old_price": "2.310.000₫",
-    "new_price": "1.590.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/m-co-gaming-3-mode-phien-ban-ice-soul-switch_202410231426502-photoroom_07fb2023c9254d20beae92820b2172c6_grande.png",
+    "description": "",
+    "originalPrice": 2310000,
+    "salePrice": 1590000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/m-co-gaming-3-mode-phien-ban-ice-soul-switch_202410231426503-photoroom_201ea9729dd640dea519caaf9384a5e3_grande.png",
+    "id": "ban-phim-aula-f81-tm-hong-crystal-switch-f8103",
     "name": "Bàn phím AULA F81 TM (Hồng/ Crystal switch) F8103",
-    "data-id": "ban-phim-aula-f81-tm-hong-crystal-switch-f8103",
-    "old_price": "2.310.000₫",
-    "new_price": "1.590.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/m-co-gaming-3-mode-phien-ban-ice-soul-switch_202410231426503-photoroom_201ea9729dd640dea519caaf9384a5e3_grande.png",
+    "description": "",
+    "originalPrice": 2310000,
+    "salePrice": 1590000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/m-co-gaming-3-mode-phien-ban-ice-soul-switch_202410231426501-photoroom_ef57add760b14a9e9a966275eea9225d_grande.png",
+    "id": "ban-phim-aula-f81-tm-trang-crystal-switch-f8101",
     "name": "Bàn phím AULA F81 TM (Trắng/ Crystal switch) F8101",
-    "data-id": "ban-phim-aula-f81-tm-trang-crystal-switch-f8101",
-    "old_price": "2.310.000₫",
-    "new_price": "1.590.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/m-co-gaming-3-mode-phien-ban-ice-soul-switch_202410231426501-photoroom_ef57add760b14a9e9a966275eea9225d_grande.png",
+    "description": "",
+    "originalPrice": 2310000,
+    "salePrice": 1590000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/m-co-gaming-3-mode-phien-ban-ice-soul-switch_202410231426504-photoroom_000004f27c60418b98c10185854f7c36_grande.png",
+    "id": "ban-phim-aula-f81-tm-den-crystal-switch-f8102",
     "name": "Bàn phím AULA F81 TM (Đen/ Crystal switch) F8102",
-    "data-id": "ban-phim-aula-f81-tm-den-crystal-switch-f8102",
-    "old_price": "2.310.000₫",
-    "new_price": "1.590.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/m-co-gaming-3-mode-phien-ban-ice-soul-switch_202410231426504-photoroom_000004f27c60418b98c10185854f7c36_grande.png",
+    "description": "",
+    "originalPrice": 2310000,
+    "salePrice": 1590000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-asus-m704-rog-azoth-x-nx-storm-v2-switch-1_ce8bf43489ff4d93a2e39fa1f86eeba9_grande.png",
+    "id": "ban-phim-asus-m704-rog-azoth-x-nx-storm-v2-switch",
     "name": "Bàn phím ASUS M704 ROG AZOTH X NX Storm V2 Switch",
-    "data-id": "ban-phim-asus-m704-rog-azoth-x-nx-storm-v2-switch",
-    "old_price": "7.900.000₫",
-    "new_price": "7.200.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-asus-m704-rog-azoth-x-nx-storm-v2-switch-1_ce8bf43489ff4d93a2e39fa1f86eeba9_grande.png",
+    "description": "",
+    "originalPrice": 7900000,
+    "salePrice": 7200000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-veekos-shine60-sp-tm-white-flash-magnetic-switch-1_13f8efcec27342cf8ccf132a918a7622_grande.jpg",
+    "id": "ban-phim-veekos-shine60-sp-tm-white-flash-magnetic-switch",
     "name": "Bàn phím Veekos Shine60 SP TM White Flash Magnetic Switch",
-    "data-id": "ban-phim-veekos-shine60-sp-tm-white-flash-magnetic-switch",
-    "old_price": "1.390.000₫",
-    "new_price": "1.290.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-veekos-shine60-sp-tm-white-flash-magnetic-switch-1_13f8efcec27342cf8ccf132a918a7622_grande.jpg",
+    "description": "",
+    "originalPrice": 1390000,
+    "salePrice": 1290000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-akko-5075b-plus-black-gold-creamy-yellow-pro-switch-1_8cc02443cd9e4c1a868efa9c5441d425_grande.jpg",
+    "id": "ban-phim-akko-5075b-plus-black-gold-creamy-yellow-pro-switch",
     "name": "Bàn phím AKKO 5075B Plus Black & Gold Creamy Yellow Pro switch",
-    "data-id": "ban-phim-akko-5075b-plus-black-gold-creamy-yellow-pro-switch",
-    "old_price": "1.390.000₫",
-    "new_price": "1.290.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/gearvn-ban-phim-akko-5075b-plus-black-gold-creamy-yellow-pro-switch-1_8cc02443cd9e4c1a868efa9c5441d425_grande.jpg",
+    "description": "",
+    "originalPrice": 1390000,
+    "salePrice": 1290000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/imgi_47_3098_cherry__________rgb_1_a39b1dc9443b481c975ee2d73e88ab3b_grande.png",
+    "id": "ban-phim-akko-3098b-plus-black-gold-fairy-silent-switch",
     "name": "Bàn phím AKKO 3098B Plus Black & Gold Fairy (Silent) switch",
-    "data-id": "ban-phim-akko-3098b-plus-black-gold-fairy-silent-switch",
-    "old_price": "1.790.000₫",
-    "new_price": "1.390.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/imgi_47_3098_cherry__________rgb_1_a39b1dc9443b481c975ee2d73e88ab3b_grande.png",
+    "description": "",
+    "originalPrice": 1790000,
+    "salePrice": 1390000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/imgi_45_46_6969e9527b2e4f1ba885de6c508e35a5_grande.png",
+    "id": "ban-phim-akko-co-day-tac75-white-he-astrolink-magnetic-switch",
     "name": "Bàn phím AKKO có dây TAC75 White HE Astrolink Magnetic Switch",
-    "data-id": "ban-phim-akko-co-day-tac75-white-he-astrolink-magnetic-switch",
-    "old_price": "1.390.000₫",
-    "new_price": "1.190.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/imgi_45_46_6969e9527b2e4f1ba885de6c508e35a5_grande.png",
+    "description": "",
+    "originalPrice": 1390000,
+    "salePrice": 1190000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/imgi_52_tac75-he________rgb__1_5d706400a6cd4878b9a5db14c3bf6263_grande.png",
+    "id": "ban-phim-akko-co-day-tac75-black-he-astroaim-magnetic-switch",
     "name": "Bàn phím AKKO có dây TAC75 Black HE AstroAim Magnetic Switch",
-    "data-id": "ban-phim-akko-co-day-tac75-black-he-astroaim-magnetic-switch",
-    "old_price": "1.290.000₫",
-    "new_price": "1.050.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/imgi_52_tac75-he________rgb__1_5d706400a6cd4878b9a5db14c3bf6263_grande.png",
+    "description": "",
+    "originalPrice": 1290000,
+    "salePrice": 1050000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/download_c7027d681654412489160d4389ce925b_grande.png",
+    "id": "ban-phim-madlions-co-day-mad-68-he-basic-magnetic-black-no-led",
     "name": "Bàn phím MadLions có dây MAD 68 HE Basic Magnetic Black (NO LED)",
-    "data-id": "ban-phim-madlions-co-day-mad-68-he-basic-magnetic-black-no-led",
-    "old_price": "765.000₫",
-    "new_price": ""
+    "image": "https://cdn.hstatic.net/products/200000722513/download_c7027d681654412489160d4389ce925b_grande.png",
+    "description": "",
+    "originalPrice": 765000,
+    "salePrice": 765000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/imgi_230_ban-phim-co-asus-m605-rog-falchion-ace-rog-hfx-sw-12_a4b9c7c4162d45c5a8af32a2ae3098dc_grande.jpg",
+    "id": "ban-phim-asus-m605-rog-falchion-ace-hfx",
     "name": "Bàn phím ASUS M605 ROG FALCHION ACE HFX",
-    "data-id": "ban-phim-asus-m605-rog-falchion-ace-hfx",
-    "old_price": "4.690.000₫",
-    "new_price": ""
+    "image": "https://cdn.hstatic.net/products/200000722513/imgi_230_ban-phim-co-asus-m605-rog-falchion-ace-rog-hfx-sw-12_a4b9c7c4162d45c5a8af32a2ae3098dc_grande.jpg",
+    "description": "",
+    "originalPrice": 4690000,
+    "salePrice": 4690000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/download__12__b1e43d8acc014e13b3ce4e20fafa49b9_grande.png",
+    "id": "ban-phim-leobog-amg65-tm-trang-light-feather-switch-amg6503",
     "name": "Bàn phím Leobog AMG65 TM (Trắng/Light feather switch) AMG6503",
-    "data-id": "ban-phim-leobog-amg65-tm-trang-light-feather-switch-amg6503",
-    "old_price": "2.689.000₫",
-    "new_price": "2.090.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/download__12__b1e43d8acc014e13b3ce4e20fafa49b9_grande.png",
+    "description": "",
+    "originalPrice": 2689000,
+    "salePrice": 2090000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/download__11__6667f99c4bc74162bf50f24bdea0a925_grande.png",
+    "id": "ban-phim-leobog-amg65-tm-tim-den-light-feather-switch-amg6504",
     "name": "Bàn phím Leobog AMG65 TM (Tím đen/Light feather switch) AMG6504",
-    "data-id": "ban-phim-leobog-amg65-tm-tim-den-light-feather-switch-amg6504",
-    "old_price": "2.689.000₫",
-    "new_price": "2.090.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/download__11__6667f99c4bc74162bf50f24bdea0a925_grande.png",
+    "description": "",
+    "originalPrice": 2689000,
+    "salePrice": 2090000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/1_c8947c9a7e3f4042bb2bb1d554f31b73_grande.png",
+    "id": "ban-phim-leobog-hi75c-pro-tm-xam-den-gradient-reaper-switch-hi7506",
     "name": "Bàn phím Leobog Hi75C PRO TM (Xám+ đen gradient/ Reaper switch) HI7506",
-    "data-id": "ban-phim-leobog-hi75c-pro-tm-xam-den-gradient-reaper-switch-hi7506",
-    "old_price": "2.261.000₫",
-    "new_price": "1.650.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/1_c8947c9a7e3f4042bb2bb1d554f31b73_grande.png",
+    "description": "",
+    "originalPrice": 2261000,
+    "salePrice": 1650000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/1_a8c2fd3a3ce94139ac3e38a1a9da8a97_grande.png",
+    "id": "ban-phim-leobog-amg65-tm-mau-hong-trang-xanh-duong-jadeite-switch-amg6505",
     "name": "Bàn phím Leobog AMG65 TM (Màu hồng + trắng + xanh dương/ Jadeite switch) AMG6505",
-    "data-id": "ban-phim-leobog-amg65-tm-mau-hong-trang-xanh-duong-jadeite-switch-amg6505",
-    "old_price": "2.689.000₫",
-    "new_price": "2.090.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/1_a8c2fd3a3ce94139ac3e38a1a9da8a97_grande.png",
+    "description": "",
+    "originalPrice": 2689000,
+    "salePrice": 2090000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/imgi_6_1_edb0eaf8b2994509bbee55e64ea275c0_master_6ae3de2997534ccdbcc58c017c118bf4_grande.png",
+    "id": "ban-phim-leobog-hi86-tm-den-hong-nimbus-v3-switch-hi8604",
     "name": "Bàn phím Leobog Hi86 TM (Đen Hồng/ Nimbus V3 switch) HI8604",
-    "data-id": "ban-phim-leobog-hi86-tm-den-hong-nimbus-v3-switch-hi8604",
-    "old_price": "2.393.000₫",
-    "new_price": "2.242.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/imgi_6_1_edb0eaf8b2994509bbee55e64ea275c0_master_6ae3de2997534ccdbcc58c017c118bf4_grande.png",
+    "description": "",
+    "originalPrice": 2393000,
+    "salePrice": 2242000
   },
   {
-    "image": "https://cdn.hstatic.net/products/200000722513/download__9_-photoroom_bd77bbe4435846ce8accd6311d5867bb_grande.png",
+    "id": "ban-phim-aula-f75-tm-comic-reaper-switch-f7521",
     "name": "Bàn phím AULA F75 TM (Comic/ Reaper switch) F7521",
-    "data-id": "ban-phim-aula-f75-tm-comic-reaper-switch-f7521",
-    "old_price": "1.519.000₫",
-    "new_price": "1.290.000₫"
+    "image": "https://cdn.hstatic.net/products/200000722513/download__9_-photoroom_bd77bbe4435846ce8accd6311d5867bb_grande.png",
+    "description": "",
+    "originalPrice": 1519000,
+    "salePrice": 1290000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/imgi_251_img_7385_f665133a8e584535b457e7632f88a0f0_grande.png",
+    "id": "ban-phim-aula-win60he-max-co-day-den-xam-vang-wing-chun-magnetic-switch-rapid-trigger-win60he05",
     "name": "Bàn phím AULA WIN60HE MAX có dây (Đen + xám + vàng/ Wing Chun Magnetic switch - Rapid trigger) WIN60HE05",
-    "data-id": "ban-phim-aula-win60he-max-co-day-den-xam-vang-wing-chun-magnetic-switch-rapid-trigger-win60he05",
-    "old_price": "910.000₫",
-    "new_price": ""
+    "image": "https://product.hstatic.net/200000722513/product/imgi_251_img_7385_f665133a8e584535b457e7632f88a0f0_grande.png",
+    "description": "",
+    "originalPrice": 910000,
+    "salePrice": 910000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/f68__2__8577b3856fea4966903097ca9bd38f70_grande.png",
+    "id": "ban-phim-aula-f68-tm-trang-ice-crystal-switch-f68w",
     "name": "Bàn phím AULA F68 TM (Trắng/ Ice Crystal switch ) F68W",
-    "data-id": "ban-phim-aula-f68-tm-trang-ice-crystal-switch-f68w",
-    "old_price": "2.270.000₫",
-    "new_price": ""
+    "image": "https://product.hstatic.net/200000722513/product/f68__2__8577b3856fea4966903097ca9bd38f70_grande.png",
+    "description": "",
+    "originalPrice": 2270000,
+    "salePrice": 2270000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/f68__15__6a2c4e3f753d4ccd9b9fb84906d15c87_grande.png",
+    "id": "ban-phim-aula-f68-tm-tim-ice-crystal-switch-f68v",
     "name": "Bàn phím AULA F68 TM (Tím/ Ice Crystal switch ) F68V",
-    "data-id": "ban-phim-aula-f68-tm-tim-ice-crystal-switch-f68v",
-    "old_price": "2.270.000₫",
-    "new_price": ""
+    "image": "https://product.hstatic.net/200000722513/product/f68__15__6a2c4e3f753d4ccd9b9fb84906d15c87_grande.png",
+    "description": "",
+    "originalPrice": 2270000,
+    "salePrice": 2270000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/download-photoroom_ddd7612e601d49e18fdecee1938f1dae_grande.png",
+    "id": "ban-phim-aula-f68-tm-hong-ice-crystal-switch-f68p",
     "name": "Bàn phím AULA F68 TM (Hồng/ Ice Crystal switch ) F68P",
-    "data-id": "ban-phim-aula-f68-tm-hong-ice-crystal-switch-f68p",
-    "old_price": "2.270.000₫",
-    "new_price": ""
+    "image": "https://product.hstatic.net/200000722513/product/download-photoroom_ddd7612e601d49e18fdecee1938f1dae_grande.png",
+    "description": "",
+    "originalPrice": 2270000,
+    "salePrice": 2270000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/f68__13__53e54b19793d49af951b0c5416afeb7a_grande.png",
+    "id": "ban-phim-aula-f68-tm-den-ice-crystal-switch-f68b",
     "name": "Bàn phím AULA F68 TM (Đen/ Ice Crystal switch ) F68B",
-    "data-id": "ban-phim-aula-f68-tm-den-ice-crystal-switch-f68b",
-    "old_price": "2.270.000₫",
-    "new_price": ""
+    "image": "https://product.hstatic.net/200000722513/product/f68__13__53e54b19793d49af951b0c5416afeb7a_grande.png",
+    "description": "",
+    "originalPrice": 2270000,
+    "salePrice": 2270000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/amg65_35afdddaaabb46ed8523e52013d5fffd_grande.png",
+    "id": "ban-phim-leobog-amg65-tm-tim-den-jadeite-switch-amg6501",
     "name": "Bàn phím Leobog AMG65 TM (Tím đen/ Jadeite switch) AMG6501",
-    "data-id": "ban-phim-leobog-amg65-tm-tim-den-jadeite-switch-amg6501",
-    "old_price": "2.689.000₫",
-    "new_price": "2.090.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/amg65_35afdddaaabb46ed8523e52013d5fffd_grande.png",
+    "description": "",
+    "originalPrice": 2689000,
+    "salePrice": 2090000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/download__2__8212092b7bf74608ba37d25630cae5e0_grande.png",
+    "id": "ban-phim-co-dareu-ek75-pro-triple-mode-black-golden-cloud-switch",
     "name": "Bàn phím cơ DareU EK75 Pro Triple Mode Black Golden Cloud switch",
-    "data-id": "ban-phim-co-dareu-ek75-pro-triple-mode-black-golden-cloud-switch",
-    "old_price": "1.290.000₫",
-    "new_price": "990.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/download__2__8212092b7bf74608ba37d25630cae5e0_grande.png",
+    "description": "",
+    "originalPrice": 1290000,
+    "salePrice": 990000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/amg65_a6a5e42ac0e84a1db2ce578bfce839e5_grande.png",
+    "id": "ban-phim-leobog-amg65-tm-trang-jadeite-switch-amg6502",
     "name": "Bàn phím Leobog AMG65 TM (Trắng/ Jadeite switch) AMG6502",
-    "data-id": "ban-phim-leobog-amg65-tm-trang-jadeite-switch-amg6502",
-    "old_price": "2.689.000₫",
-    "new_price": "2.090.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/amg65_a6a5e42ac0e84a1db2ce578bfce839e5_grande.png",
+    "description": "",
+    "originalPrice": 2689000,
+    "salePrice": 2090000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/download_ef5ab7dfd6554e418e5982ec9f4dd5fb_grande.png",
+    "id": "ban-phim-leobog-hi86-tm-den-xanh-duong-trang-nimbus-v3-switch-hi8603",
     "name": "Bàn phím Leobog Hi86 TM (Đen+Xanh dương+Trắng/ Nimbus V3 switch) HI8603",
-    "data-id": "ban-phim-leobog-hi86-tm-den-xanh-duong-trang-nimbus-v3-switch-hi8603",
-    "old_price": "2.393.000₫",
-    "new_price": "2.242.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/download_ef5ab7dfd6554e418e5982ec9f4dd5fb_grande.png",
+    "description": "",
+    "originalPrice": 2393000,
+    "salePrice": 2242000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/1_a7d3d7cf71f84a21becb1331e6053aab_grande.png",
+    "id": "ban-phim-leobog-hi86-tm-trang-den-nimbus-v3-switch-hi8602",
     "name": "Bàn phím Leobog Hi86 TM (Trắng đen/ Nimbus V3 switch) HI8602",
-    "data-id": "ban-phim-leobog-hi86-tm-trang-den-nimbus-v3-switch-hi8602",
-    "old_price": "2.393.000₫",
-    "new_price": "2.242.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/1_a7d3d7cf71f84a21becb1331e6053aab_grande.png",
+    "description": "",
+    "originalPrice": 2393000,
+    "salePrice": 2242000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/a75__2__dc0221772d8b4238a7c17c17207f1273_grande.png",
+    "id": "ban-phim-leobog-a75-tm-moon-cat-trang-rambo-switch-a7504",
     "name": "Bàn phím Leobog A75 TM (Moon Cat trắng/ Rambo switch) A7504",
-    "data-id": "ban-phim-leobog-a75-tm-moon-cat-trang-rambo-switch-a7504",
-    "old_price": "2.526.000₫",
-    "new_price": "2.190.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/a75__2__dc0221772d8b4238a7c17c17207f1273_grande.png",
+    "description": "",
+    "originalPrice": 2526000,
+    "salePrice": 2190000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/a75__2__dad7ea9ef5ad416e8d347bd66dc56a82_grande.png",
+    "id": "ban-phim-leobog-a75-tm-moon-cat-hong-rambo-switch-a7503",
     "name": "Bàn phím Leobog A75 TM (Moon Cat hồng/ Rambo switch) A7503",
-    "data-id": "ban-phim-leobog-a75-tm-moon-cat-hong-rambo-switch-a7503",
-    "old_price": "2.526.000₫",
-    "new_price": "2.190.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/a75__2__dad7ea9ef5ad416e8d347bd66dc56a82_grande.png",
+    "description": "",
+    "originalPrice": 2526000,
+    "salePrice": 2190000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/a75__2__350025bd4d6249fabcdc7961ba0f7991_grande.png",
+    "id": "ban-phim-leobog-a75-tm-tim-den-rambo-switch-a7505",
     "name": "Bàn phím Leobog A75 TM (Tím+đen/Rambo Switch) A7505",
-    "data-id": "ban-phim-leobog-a75-tm-tim-den-rambo-switch-a7505",
-    "old_price": "2.090.000₫",
-    "new_price": "1.890.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/a75__2__350025bd4d6249fabcdc7961ba0f7991_grande.png",
+    "description": "",
+    "originalPrice": 2090000,
+    "salePrice": 1890000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/-phim-co-razer-blackwidow-v4-x-minecraft-edition-rz03-04704100-r3m1-04_c0a0aa88e4114e21800587554af7249d_grande.jpg",
+    "id": "ban-phim-razer-blackwidow-v4-x-green-switch-minecraft-edition",
     "name": "Bàn phím Razer BlackWidow V4 X Green Switch - Minecraft Edition",
-    "data-id": "ban-phim-razer-blackwidow-v4-x-green-switch-minecraft-edition",
-    "old_price": "4.790.000₫",
-    "new_price": ""
+    "image": "https://product.hstatic.net/200000722513/product/-phim-co-razer-blackwidow-v4-x-minecraft-edition-rz03-04704100-r3m1-04_c0a0aa88e4114e21800587554af7249d_grande.jpg",
+    "description": "",
+    "originalPrice": 4790000,
+    "salePrice": 4790000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/f2058__1__e87e0fb268b8421cb0dfb31102f4e714_grande.png",
+    "id": "ban-phim-aula-f2058-co-day-den-red-switch-f205802",
     "name": "Bàn phím AULA F2058 có dây (Đen Red switch) F205802",
-    "data-id": "ban-phim-aula-f2058-co-day-den-red-switch-f205802",
-    "old_price": "860.000₫",
-    "new_price": "690.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/f2058__1__e87e0fb268b8421cb0dfb31102f4e714_grande.png",
+    "description": "",
+    "originalPrice": 860000,
+    "salePrice": 690000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/haze_blue__7__e960d40429ad439d84_ec61afe82f0a4add830e2823b8f914b1_grande.png",
+    "id": "ban-phim-co-gaming-dareu-ek106-pro-haze-blue-cloud-switch",
     "name": "Bàn phím cơ gaming DareU EK106 Pro Haze Blue Cloud switch",
-    "data-id": "ban-phim-co-gaming-dareu-ek106-pro-haze-blue-cloud-switch",
-    "old_price": "1.690.000₫",
-    "new_price": "1.250.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/haze_blue__7__e960d40429ad439d84_ec61afe82f0a4add830e2823b8f914b1_grande.png",
+    "description": "",
+    "originalPrice": 1690000,
+    "salePrice": 1250000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/black_golden__1__b1c67dc2c54c482_75ee9df3ec714b5ca50e189944dff104_grande.png",
+    "id": "ban-phim-co-gaming-dareu-ek106-pro-black-golden-cloud-switch",
     "name": "Bàn phím cơ gaming DareU EK106 Pro Black Golden Cloud switch",
-    "data-id": "ban-phim-co-gaming-dareu-ek106-pro-black-golden-cloud-switch",
-    "old_price": "1.690.000₫",
-    "new_price": "1.250.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/black_golden__1__b1c67dc2c54c482_75ee9df3ec714b5ca50e189944dff104_grande.png",
+    "description": "",
+    "originalPrice": 1690000,
+    "salePrice": 1250000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/ek98l0000_3__c1ae980e2e614aa1918_343b18b370f54375814404852928ae10_grande.png",
+    "id": "ban-phim-co-dareu-ek98l-grey-black-dream-switch",
     "name": "Bàn phím cơ DareU EK98L Grey Black Dream switch",
-    "data-id": "ban-phim-co-dareu-ek98l-grey-black-dream-switch",
-    "old_price": "699.000₫",
-    "new_price": "590.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/ek98l0000_3__c1ae980e2e614aa1918_343b18b370f54375814404852928ae10_grande.png",
+    "description": "",
+    "originalPrice": 699000,
+    "salePrice": 590000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/561_beta_3f6a836d604b496c868d3fe33dbfa0f2_grande.png",
+    "id": "ban-phim-co-gaming-e-dra-ek375v2-beta-linear-switch",
     "name": "Bàn phím cơ gaming E-Dra EK375v2 Beta Linear switch",
-    "data-id": "ban-phim-co-gaming-e-dra-ek375v2-beta-linear-switch",
-    "old_price": "699.000₫",
-    "new_price": "550.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/561_beta_3f6a836d604b496c868d3fe33dbfa0f2_grande.png",
+    "description": "",
+    "originalPrice": 699000,
+    "salePrice": 550000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/560_alpha_63bf85285968446788d2ab75ac60fcd3_grande.png",
+    "id": "ban-phim-co-gaming-e-dra-ek375v2-alpha-linear-switch",
     "name": "Bàn phím cơ gaming E-Dra EK375v2 Alpha Linear switch",
-    "data-id": "ban-phim-co-gaming-e-dra-ek375v2-alpha-linear-switch",
-    "old_price": "699.000₫",
-    "new_price": "550.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/560_alpha_63bf85285968446788d2ab75ac60fcd3_grande.png",
+    "description": "",
+    "originalPrice": 699000,
+    "salePrice": 550000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/_____1_4fc057d49b704407a880d3a1818b6429_grande.png",
+    "id": "ban-phim-co-dareu-ek75-grey-black-dream-switch",
     "name": "Bàn phím cơ DareU EK75 Grey Black Dream switch",
-    "data-id": "ban-phim-co-dareu-ek75-grey-black-dream-switch",
-    "old_price": "699.000₫",
-    "new_price": "570.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/_____1_4fc057d49b704407a880d3a1818b6429_grande.png",
+    "description": "",
+    "originalPrice": 699000,
+    "salePrice": 570000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/aula-f75-ban-phim-co-gaming-co-d__1_-photoroom_23af324e0d6f4aaba7201af5e1ecf954_grande.png",
+    "id": "ban-phim-aula-f75-co-day-den-red-switch-f7513",
     "name": "Bàn phím AULA F75 có dây (Đen Red switch) F7513",
-    "data-id": "ban-phim-aula-f75-co-day-den-red-switch-f7513",
-    "old_price": "785.000₫",
-    "new_price": "650.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/aula-f75-ban-phim-co-gaming-co-d__1_-photoroom_23af324e0d6f4aaba7201af5e1ecf954_grande.png",
+    "description": "",
+    "originalPrice": 785000,
+    "salePrice": 650000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/aula-f75-ban-phim-co-gaming-co-d-photoroom_6421c2df70924b8ea205533521d5e0d5_grande.png",
+    "id": "ban-phim-aula-f75-co-day-trang-red-switch-f7512",
     "name": "Bàn phím AULA F75 có dây (Trắng Red switch) F7512",
-    "data-id": "ban-phim-aula-f75-co-day-trang-red-switch-f7512",
-    "old_price": "785.000₫",
-    "new_price": "650.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/aula-f75-ban-phim-co-gaming-co-d-photoroom_6421c2df70924b8ea205533521d5e0d5_grande.png",
+    "description": "",
+    "originalPrice": 785000,
+    "salePrice": 650000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/1_63d1f288ba0b4b70bf3a24101b14f0a3_grande.png",
+    "id": "ban-phim-dareu-ek104-rgb-grey-black-dream-switch",
     "name": "Bàn phím DareU EK104 RGB Grey Black Dream Switch",
-    "data-id": "ban-phim-dareu-ek104-rgb-grey-black-dream-switch",
-    "old_price": "899.000₫",
-    "new_price": "700.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/1_63d1f288ba0b4b70bf3a24101b14f0a3_grande.png",
+    "description": "",
+    "originalPrice": 899000,
+    "salePrice": 700000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/1_40c5a47a0b554afc8c9f3288bfb7a233_grande.png",
+    "id": "ban-phim-aula-s98-pro-tm-xanh-duong-trang-tim-paleo-dust-switch-s9808",
     "name": "Bàn phím AULA S98 PRO TM (Xanh Dương + Trắng + Tím/ Paleo Dust switch) S9808",
-    "data-id": "ban-phim-aula-s98-pro-tm-xanh-duong-trang-tim-paleo-dust-switch-s9808",
-    "old_price": "1.903.000₫",
-    "new_price": "1.590.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/1_40c5a47a0b554afc8c9f3288bfb7a233_grande.png",
+    "description": "",
+    "originalPrice": 1903000,
+    "salePrice": 1590000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/1_cfa1e1af81544e51b85ba30c316716be_grande.png",
+    "id": "ban-phim-aula-s98-pro-tm-xanh-duong-trang-tim-caramel-latte-switch-s9809",
     "name": "Bàn phím AULA S98 PRO TM (Xanh Dương + Trắng + Tím/ Caramel Latte switch) S9809",
-    "data-id": "ban-phim-aula-s98-pro-tm-xanh-duong-trang-tim-caramel-latte-switch-s9809",
-    "old_price": "1.845.000₫",
-    "new_price": "1.590.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/1_cfa1e1af81544e51b85ba30c316716be_grande.png",
+    "description": "",
+    "originalPrice": 1845000,
+    "salePrice": 1590000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/multi-modes-4-1_71918eb58998485a8f37b214ada1caf0_grande.png",
+    "id": "ban-phim-co-akko-5075b-plus-tm-chicago-piano-v3-pro-switch",
     "name": "Bàn phím cơ AKKO 5075B Plus TM Chicago Piano V3 Pro Switch",
-    "data-id": "ban-phim-co-akko-5075b-plus-tm-chicago-piano-v3-pro-switch",
-    "old_price": "1.990.000₫",
-    "new_price": "1.490.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/multi-modes-4-1_71918eb58998485a8f37b214ada1caf0_grande.png",
+    "description": "",
+    "originalPrice": 1990000,
+    "salePrice": 1490000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/1_d48444dba07a41dd81ed2b2632a68a04_grande.png",
+    "id": "ban-phim-aula-s98-pro-tm-xanh-duong-trang-tim-dam-paleo-dust-switch-s9805",
     "name": "Bàn phím AULA S98 PRO TM (Xanh Dương + Trắng + Tím đậm/ Paleo Dust switch) S9805",
-    "data-id": "ban-phim-aula-s98-pro-tm-xanh-duong-trang-tim-dam-paleo-dust-switch-s9805",
-    "old_price": "1.903.000₫",
-    "new_price": "1.590.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/1_d48444dba07a41dd81ed2b2632a68a04_grande.png",
+    "description": "",
+    "originalPrice": 1903000,
+    "salePrice": 1590000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/20241023141224-photoroom_a0acf8921d7044dfaf9146258e6cc650_grande.png",
+    "id": "ban-phim-aula-m75-tm-xanh-trang-tim-purple-fire-v2-switch-m7503",
     "name": "Bàn phím AULA M75 TM (Xanh + Trắng + Tím/ Purple Fire V2 Switch) M7503",
-    "data-id": "ban-phim-aula-m75-tm-xanh-trang-tim-purple-fire-v2-switch-m7503",
-    "old_price": "3.010.000₫",
-    "new_price": "1.990.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/20241023141224-photoroom_a0acf8921d7044dfaf9146258e6cc650_grande.png",
+    "description": "",
+    "originalPrice": 3010000,
+    "salePrice": 1990000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/20241023141013-photoroom_868c618ec074460ab1bfb79e199251fe_grande.png",
+    "id": "ban-phim-aula-m75-tm-xanh-trang-cam-purple-fire-v2-switch-m7502",
     "name": "Bàn phím AULA M75 TM (Xanh + Trắng + Cam/ Purple Fire V2 Switch) M7502",
-    "data-id": "ban-phim-aula-m75-tm-xanh-trang-cam-purple-fire-v2-switch-m7502",
-    "old_price": "3.010.000₫",
-    "new_price": "1.990.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/20241023141013-photoroom_868c618ec074460ab1bfb79e199251fe_grande.png",
+    "description": "",
+    "originalPrice": 3010000,
+    "salePrice": 1990000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/aula-f99-pro-ban-phim-co-gaming__8_-photoroom_83a2864b087e4407ad719c2bd451ae8a_grande.png",
+    "id": "ban-phim-aula-f99-pro-xam-den-gradient-star-vector-switch-f9911",
     "name": "Bàn phím AULA F99 PRO (Xám + Đen Gradient/ Star Vector switch) F9911",
-    "data-id": "ban-phim-aula-f99-pro-xam-den-gradient-star-vector-switch-f9911",
-    "old_price": "1.808.000₫",
-    "new_price": "1.490.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/aula-f99-pro-ban-phim-co-gaming__8_-photoroom_83a2864b087e4407ad719c2bd451ae8a_grande.png",
+    "description": "",
+    "originalPrice": 1808000,
+    "salePrice": 1490000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/aula-f99-pro-ban-phim-co-gaming__8_-photoroom_0be7f92694484a0dbe0853651c9cb61a_grande.png",
+    "id": "ban-phim-aula-f99-pro-xam-den-gradient-nimbus-v3-switch-f9906",
     "name": "Bàn phím AULA F99 PRO (Xám + Đen Gradient/ Nimbus V3 switch) F9906",
-    "data-id": "ban-phim-aula-f99-pro-xam-den-gradient-nimbus-v3-switch-f9906",
-    "old_price": "2.174.000₫",
-    "new_price": "1.590.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/aula-f99-pro-ban-phim-co-gaming__8_-photoroom_0be7f92694484a0dbe0853651c9cb61a_grande.png",
+    "description": "",
+    "originalPrice": 2174000,
+    "salePrice": 1590000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/aula-f99-ban-phim-co-gaming-3-mo__7_-photoroom_28b84fa749134684bd301294f1f68bd2_grande.png",
+    "id": "ban-phim-aula-f99-den-trang-xanh-duong-star-vector-switch-f9907",
     "name": "Bàn phím AULA F99 (Đen + Trắng + Xanh dương/ Star Vector switch) F9907",
-    "data-id": "ban-phim-aula-f99-den-trang-xanh-duong-star-vector-switch-f9907",
-    "old_price": "1.929.000₫",
-    "new_price": "1.490.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/aula-f99-ban-phim-co-gaming-3-mo__7_-photoroom_28b84fa749134684bd301294f1f68bd2_grande.png",
+    "description": "",
+    "originalPrice": 1929000,
+    "salePrice": 1490000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/aula-f75-pro-ban-phim-co-gaming-photoroom_2e4dae0a4a324f5ab4b8f81e586fcb0b_grande.png",
+    "id": "ban-phim-aula-f75-pro-trang-tim-gradient-seiya-star-vector-switch-f7502",
     "name": "Bàn phím AULA F75 PRO (Trắng + Tím Gradient - Seiya/ Star Vector switch) F7502",
-    "data-id": "ban-phim-aula-f75-pro-trang-tim-gradient-seiya-star-vector-switch-f7502",
-    "old_price": "1.860.000₫",
-    "new_price": "1.299.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/aula-f75-pro-ban-phim-co-gaming-photoroom_2e4dae0a4a324f5ab4b8f81e586fcb0b_grande.png",
+    "description": "",
+    "originalPrice": 1860000,
+    "salePrice": 1299000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/aula-f75-ban-phim-co-gaming-3-mo__6_-photoroom_795c0d3e670a44a2aad0c3b66c9d4d17_grande.png",
+    "id": "ban-phim-aula-f75-den-xanh-dam-cam-grey-wood-v3-switch-f75bbg",
     "name": "Bàn phím AULA F75 (Đen + Xanh đậm + Cam/ Grey Wood V3 Switch) F75BBG",
-    "data-id": "ban-phim-aula-f75-den-xanh-dam-cam-grey-wood-v3-switch-f75bbg",
-    "old_price": "1.790.000₫",
-    "new_price": "1.189.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/aula-f75-ban-phim-co-gaming-3-mo__6_-photoroom_795c0d3e670a44a2aad0c3b66c9d4d17_grande.png",
+    "description": "",
+    "originalPrice": 1790000,
+    "salePrice": 1189000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/aula-f75-ban-phim-co-gaming-3-mo-photoroom_7494ea07e0244db7841ccf6e003ee374_grande.png",
+    "id": "ban-phim-aula-f75-xanh-nhat-trang-xanh-dam-grey-wood-v3-switch-f75bwg",
     "name": "Bàn phím AULA F75 (Xanh nhạt + Trắng + Xanh đậm/ Grey Wood V3 Switch) F75BWG",
-    "data-id": "ban-phim-aula-f75-xanh-nhat-trang-xanh-dam-grey-wood-v3-switch-f75bwg",
-    "old_price": "1.790.000₫",
-    "new_price": "1.189.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/aula-f75-ban-phim-co-gaming-3-mo-photoroom_7494ea07e0244db7841ccf6e003ee374_grande.png",
+    "description": "",
+    "originalPrice": 1790000,
+    "salePrice": 1189000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/aula-f75-ban-phim-co-gaming-phie__12_-photoroom_f9e953e9599d4c8098334e9a2c0079bc_grande.png",
+    "id": "ban-phim-aula-f75-tim-nhat-be-xanh-la-grey-wood-v3-switch-f75pbg",
     "name": "Bàn phím AULA F75 (Tím nhạt + Be + Xanh lá/ Grey Wood V3 Switch) F75PBG",
-    "data-id": "ban-phim-aula-f75-tim-nhat-be-xanh-la-grey-wood-v3-switch-f75pbg",
-    "old_price": "1.790.000₫",
-    "new_price": "1.189.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/aula-f75-ban-phim-co-gaming-phie__12_-photoroom_f9e953e9599d4c8098334e9a2c0079bc_grande.png",
+    "description": "",
+    "originalPrice": 1790000,
+    "salePrice": 1189000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/black-gold_5a5951f10b0c4ebfaf066e45f625f25d_grande.png",
+    "id": "ban-phim-akko-5098b-black-gold-v3-piano-pro-switch",
     "name": "Bàn phím AKKO 5098B Black & Gold V3 Piano Pro switch",
-    "data-id": "ban-phim-akko-5098b-black-gold-v3-piano-pro-switch",
-    "old_price": "2.799.000₫",
-    "new_price": "2.490.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/black-gold_5a5951f10b0c4ebfaf066e45f625f25d_grande.png",
+    "description": "",
+    "originalPrice": 2799000,
+    "salePrice": 2490000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/sto-1_32651b25ecaf4578ab1a93f82639d12c_grande.png",
+    "id": "ban-phim-akko-5098b-santorini-v3-piano-pro-switch",
     "name": "Bàn phím AKKO 5098B Santorini V3 Piano Pro switch",
-    "data-id": "ban-phim-akko-5098b-santorini-v3-piano-pro-switch",
-    "old_price": "2.890.000₫",
-    "new_price": "2.590.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/sto-1_32651b25ecaf4578ab1a93f82639d12c_grande.png",
+    "description": "",
+    "originalPrice": 2890000,
+    "salePrice": 2590000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/g915-x-tkl-wireless-keyboard-whi_b7566db494d34107a2608ad0a69f76c8_grande.png",
+    "id": "ban-phim-logitech-g915-x-lightspeed-tkl-low-profile-wireless-white",
     "name": "Bàn phím Logitech G915 X Lightspeed TKL Low-Profile Wireless White",
-    "data-id": "ban-phim-logitech-g915-x-lightspeed-tkl-low-profile-wireless-white",
-    "old_price": "5.290.000₫",
-    "new_price": "4.390.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/g915-x-tkl-wireless-keyboard-whi_b7566db494d34107a2608ad0a69f76c8_grande.png",
+    "description": "",
+    "originalPrice": 5290000,
+    "salePrice": 4390000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/g915-x-tkl-wireless-keyboard-gal_01f16ae8b1b14c8ebcbebb741e85950f_grande.png",
+    "id": "ban-phim-logitech-g915-x-lightspeed-tkl-low-profile-wireless-black",
     "name": "Bàn phím Logitech G915 X Lightspeed TKL Low-Profile Wireless Black",
-    "data-id": "ban-phim-logitech-g915-x-lightspeed-tkl-low-profile-wireless-black",
-    "old_price": "5.290.000₫",
-    "new_price": "4.390.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/g915-x-tkl-wireless-keyboard-gal_01f16ae8b1b14c8ebcbebb741e85950f_grande.png",
+    "description": "",
+    "originalPrice": 5290000,
+    "salePrice": 4390000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/_0004___0031_73d3246af3af44ec947_c465c6306c38481ba994ddf5022c9247_grande.png",
+    "id": "ban-phim-co-gaming-dareu-ek87-v2-gray-black-dream-switch",
     "name": "Bàn phím cơ Gaming DAREU EK87 v2 Gray Black Dream Switch",
-    "data-id": "ban-phim-co-gaming-dareu-ek87-v2-gray-black-dream-switch",
-    "old_price": "699.000₫",
-    "new_price": "550.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/_0004___0031_73d3246af3af44ec947_c465c6306c38481ba994ddf5022c9247_grande.png",
+    "description": "",
+    "originalPrice": 699000,
+    "salePrice": 550000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/_0000_w0000_0be709bc9cd543f08e49_2afa9b7b8868446c9aa8bd34d1476cd8_grande.png",
+    "id": "ban-phim-co-gaming-dareu-ek87-v2-white-black-dream-switch",
     "name": "Bàn phím cơ Gaming DAREU EK87 v2 White Black Dream Switch",
-    "data-id": "ban-phim-co-gaming-dareu-ek87-v2-white-black-dream-switch",
-    "old_price": "699.000₫",
-    "new_price": "550.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/_0000_w0000_0be709bc9cd543f08e49_2afa9b7b8868446c9aa8bd34d1476cd8_grande.png",
+    "description": "",
+    "originalPrice": 699000,
+    "salePrice": 550000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/_____20240816153223_c42865bb150b497193dbfa2fa870796e_grande.png",
+    "id": "ban-phim-co-akko-5075b-plus-transparent-asa-black-piano-pro",
     "name": "Bàn phím cơ AKKO 5075B Plus Transparent ASA Black Piano Pro",
-    "data-id": "ban-phim-co-akko-5075b-plus-transparent-asa-black-piano-pro",
-    "old_price": "1.990.000₫",
-    "new_price": "1.590.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/_____20240816153223_c42865bb150b497193dbfa2fa870796e_grande.png",
+    "description": "",
+    "originalPrice": 1990000,
+    "salePrice": 1590000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/co_khong_day_akko_mod_007b_he_pc_joy_of_life_rgb_hotswap__akko_sw__-_5_6b40f805dd2d4c8fb765bf365b50d838_grande.png",
+    "id": "ban-phim-co-akko-mod-007b-he-pc-joy-of-life",
     "name": "Bàn phím cơ AKKO MOD 007B HE PC Joy of Life",
-    "data-id": "ban-phim-co-akko-mod-007b-he-pc-joy-of-life",
-    "old_price": "3.690.000₫",
-    "new_price": "2.950.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/co_khong_day_akko_mod_007b_he_pc_joy_of_life_rgb_hotswap__akko_sw__-_5_6b40f805dd2d4c8fb765bf365b50d838_grande.png",
+    "description": "",
+    "originalPrice": 3690000,
+    "salePrice": 2950000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/black__5__37a0f1f91dcb4e5f8ac4bf6ee482f62a_grande.png",
+    "id": "ban-phim-co-dareu-ek75-rapid-trigger-black",
     "name": "Bàn phím cơ DareU EK75 Rapid Trigger Black",
-    "data-id": "ban-phim-co-dareu-ek75-rapid-trigger-black",
-    "old_price": "2.290.000₫",
-    "new_price": "1.750.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/black__5__37a0f1f91dcb4e5f8ac4bf6ee482f62a_grande.png",
+    "description": "",
+    "originalPrice": 2290000,
+    "salePrice": 1750000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/white_b2cbf940c49e4fa285d742503e3cc645_grande.jpg",
+    "id": "ban-phim-logitech-g515-tkl-lightspeed-wireless-rgb-trang",
     "name": "Bàn phím Logitech G515 TKL Lightspeed Wireless RGB Trắng",
-    "data-id": "ban-phim-logitech-g515-tkl-lightspeed-wireless-rgb-trang",
-    "old_price": "3.499.000₫",
-    "new_price": "2.890.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/white_b2cbf940c49e4fa285d742503e3cc645_grande.jpg",
+    "description": "",
+    "originalPrice": 3499000,
+    "salePrice": 2890000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/black_c92e1354415342f3928438f41edbfaea_grande.jpg",
+    "id": "ban-phim-logitech-g515-tkl-lightspeed-wireless-rgb-den",
     "name": "Bàn phím Logitech G515 TKL Lightspeed Wireless RGB Đen",
-    "data-id": "ban-phim-logitech-g515-tkl-lightspeed-wireless-rgb-den",
-    "old_price": "3.499.000₫",
-    "new_price": "2.890.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/black_c92e1354415342f3928438f41edbfaea_grande.jpg",
+    "description": "",
+    "originalPrice": 3499000,
+    "salePrice": 2890000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/1nohih66_d01c566df941499ba74e41d07a77e3bb_grande.png",
+    "id": "ban-phim-co-akko-3108-rf-dragon-ball-z-goku-akko-v3-cream-yellow-switch",
     "name": "Bàn phím cơ AKKO 3108 RF Dragon Ball Z Goku Akko V3 Cream Yellow switch",
-    "data-id": "ban-phim-co-akko-3108-rf-dragon-ball-z-goku-akko-v3-cream-yellow-switch",
-    "old_price": "1.990.000₫",
-    "new_price": "1.450.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/1nohih66_d01c566df941499ba74e41d07a77e3bb_grande.png",
+    "description": "",
+    "originalPrice": 1990000,
+    "salePrice": 1450000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/5mcsgas4_32ac8fe0d75c469292dab3e5a70e9ca6_grande.png",
+    "id": "ban-phim-logitech-g-pro-x-60-light-speed-black",
     "name": "Bàn phím Logitech G Pro X 60 Light Speed Black",
-    "data-id": "ban-phim-logitech-g-pro-x-60-light-speed-black",
-    "old_price": "4.990.000₫",
-    "new_price": "3.890.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/5mcsgas4_32ac8fe0d75c469292dab3e5a70e9ca6_grande.png",
+    "description": "",
+    "originalPrice": 4990000,
+    "salePrice": 3890000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/3ecxppkh_e1fb53b585e24c689bb8a92ebef0efbf_grande.png",
+    "id": "ban-phim-logitech-g-pro-x-60-light-speed-white",
     "name": "Bàn phím Logitech G Pro X 60 Light Speed White",
-    "data-id": "ban-phim-logitech-g-pro-x-60-light-speed-white",
-    "old_price": "4.990.000₫",
-    "new_price": "3.890.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/3ecxppkh_e1fb53b585e24c689bb8a92ebef0efbf_grande.png",
+    "description": "",
+    "originalPrice": 4990000,
+    "salePrice": 3890000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/dufbqwqs_7ec5e71e61e6445ea7f366c2bb2f0bc7_grande.png",
+    "id": "ban-phim-logitech-g-pro-x-60-light-speed-pink",
     "name": "Bàn phím Logitech G Pro X 60 Light Speed Pink",
-    "data-id": "ban-phim-logitech-g-pro-x-60-light-speed-pink",
-    "old_price": "4.990.000₫",
-    "new_price": "3.890.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/dufbqwqs_7ec5e71e61e6445ea7f366c2bb2f0bc7_grande.png",
+    "description": "",
+    "originalPrice": 4990000,
+    "salePrice": 3890000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/tv5e718m_6525a8330e574db193a84f18eb0f8670_grande.png",
+    "id": "ban-phim-razer-huntsman-v3-pro-mini",
     "name": "Bàn phím Razer Huntsman V3 Pro Mini",
-    "data-id": "ban-phim-razer-huntsman-v3-pro-mini",
-    "old_price": "5.990.000₫",
-    "new_price": "4.070.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/tv5e718m_6525a8330e574db193a84f18eb0f8670_grande.png",
+    "description": "",
+    "originalPrice": 5990000,
+    "salePrice": 4070000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/250-9303-ban-phim-razer-v3-pro-tenkeyless-1_b7d6ef40b1224ede9552186f348113da_grande.jpg",
+    "id": "ban-phim-razer-huntsman-v3-pro-tkl",
     "name": "Bàn phím Razer Huntsman V3 Pro TKL",
-    "data-id": "ban-phim-razer-huntsman-v3-pro-tkl",
-    "old_price": "6.490.000₫",
-    "new_price": "4.990.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/250-9303-ban-phim-razer-v3-pro-tenkeyless-1_b7d6ef40b1224ede9552186f348113da_grande.jpg",
+    "description": "",
+    "originalPrice": 6490000,
+    "salePrice": 4990000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/xebsj4bn_d88bc33ca881437188bd97a205dcb563_grande.png",
+    "id": "ban-phim-razer-huntsman-v3-pro",
     "name": "Bàn phím Razer Huntsman V3 Pro",
-    "data-id": "ban-phim-razer-huntsman-v3-pro",
-    "old_price": "7.290.000₫",
-    "new_price": "6.010.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/xebsj4bn_d88bc33ca881437188bd97a205dcb563_grande.png",
+    "description": "",
+    "originalPrice": 7290000,
+    "salePrice": 6010000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/1706524679085_ed9810fbd70645059f02a7cd7ca817ac_grande.jpg",
+    "id": "ban-phim-rapoo-v750pro-98-rgb-bpg",
     "name": "Bàn phím Rapoo V750Pro-98 RGB BPG",
-    "data-id": "ban-phim-rapoo-v750pro-98-rgb-bpg",
-    "old_price": "1.390.000₫",
-    "new_price": "990.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/1706524679085_ed9810fbd70645059f02a7cd7ca817ac_grande.jpg",
+    "description": "",
+    "originalPrice": 1390000,
+    "salePrice": 990000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/d04982eedf20a162b81b29dba33d9896__1__-_copy_7658acd6a8cc4dedbe916a2dfa4fa913_grande.png",
+    "id": "ban-phim-co-vgn-khong-day-n75-pro-orange-azure-switch",
     "name": "Bàn phím cơ VGN Không dây N75 Pro Orange Azure Switch",
-    "data-id": "ban-phim-co-vgn-khong-day-n75-pro-orange-azure-switch",
-    "old_price": "1.590.000₫",
-    "new_price": "1.190.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/d04982eedf20a162b81b29dba33d9896__1__-_copy_7658acd6a8cc4dedbe916a2dfa4fa913_grande.png",
+    "description": "",
+    "originalPrice": 1590000,
+    "salePrice": 1190000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/3d68c8b265f08671ab50b0fe6c853f75__1__7edd2bc3a6f446388e1c2083c048c67a_grande.png",
+    "id": "ban-phim-co-vgn-khong-day-n75-pro-blue-grey-azure-switch",
     "name": "Bàn phím cơ VGN Không dây N75 Pro Blue Grey Azure Switch",
-    "data-id": "ban-phim-co-vgn-khong-day-n75-pro-blue-grey-azure-switch",
-    "old_price": "1.590.000₫",
-    "new_price": "1.190.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/3d68c8b265f08671ab50b0fe6c853f75__1__7edd2bc3a6f446388e1c2083c048c67a_grande.png",
+    "description": "",
+    "originalPrice": 1590000,
+    "salePrice": 1190000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/gearvn-ban-phim-co-asus-rog-falchion-rx-low-profile-blue-switch-1_2a842d519f8d48db8906869849595b2d_grande.png",
+    "id": "ban-phim-co-asus-rog-falchion-rx-low-profile-blue-switch",
     "name": "Bàn phím cơ Asus ROG Falchion RX Low Profile Blue Switch",
-    "data-id": "ban-phim-co-asus-rog-falchion-rx-low-profile-blue-switch",
-    "old_price": "4.990.000₫",
-    "new_price": "4.399.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/gearvn-ban-phim-co-asus-rog-falchion-rx-low-profile-blue-switch-1_2a842d519f8d48db8906869849595b2d_grande.png",
+    "description": "",
+    "originalPrice": 4990000,
+    "salePrice": 4399000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/gearvn-ban-phim-co-asus-rog-falchion-rx-low-profile-red-switch-1_7cf153660e4245e0a6f6ed104ce7bec6_grande.png",
+    "id": "ban-phim-co-asus-rog-falchion-rx-low-profile-red-switch",
     "name": "Bàn phím cơ Asus ROG Falchion RX Low Profile Red Switch",
-    "data-id": "ban-phim-co-asus-rog-falchion-rx-low-profile-red-switch",
-    "old_price": "4.990.000₫",
-    "new_price": "4.390.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/gearvn-ban-phim-co-asus-rog-falchion-rx-low-profile-red-switch-1_7cf153660e4245e0a6f6ed104ce7bec6_grande.png",
+    "description": "",
+    "originalPrice": 4990000,
+    "salePrice": 4390000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/52ede6b455dbf423826e12fdc6a_67619b9b33ec45a88933269b77d2b389_1024x1024_bab5e3df52d3489e899195d9add55b0e_grande.png",
+    "id": "ban-phim-co-asus-rog-falchion-ace-black-rog-nx-blue-switch",
     "name": "Bàn phím cơ Asus ROG Falchion Ace Black ROG Nx Blue Switch",
-    "data-id": "ban-phim-co-asus-rog-falchion-ace-black-rog-nx-blue-switch",
-    "old_price": "2.990.000₫",
-    "new_price": "1.990.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/52ede6b455dbf423826e12fdc6a_67619b9b33ec45a88933269b77d2b389_1024x1024_bab5e3df52d3489e899195d9add55b0e_grande.png",
+    "description": "",
+    "originalPrice": 2990000,
+    "salePrice": 1990000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/78350_ba_n_phi_m_co_day_rapoo_nk1900_mau_den_ket_noi_usb_1_9b9d65066096424b8ba33fbb5a32b850_grande.jpg",
+    "id": "ban-phim-rapoo-nk1900-mau-den",
     "name": "Bàn phím Rapoo NK1900 màu đen",
-    "data-id": "ban-phim-rapoo-nk1900-mau-den",
-    "old_price": "170.000₫",
-    "new_price": ""
+    "image": "https://product.hstatic.net/200000722513/product/78350_ba_n_phi_m_co_day_rapoo_nk1900_mau_den_ket_noi_usb_1_9b9d65066096424b8ba33fbb5a32b850_grande.jpg",
+    "description": "",
+    "originalPrice": 170000,
+    "salePrice": 170000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/akko-3098b-plus-white-09_fec1778-photoroom_65874353c90840bf9098fa7479013e51_grande.png",
+    "id": "ban-phim-co-akko-3098b-plus-white-akko-switch-v3-cream-yellow-pro",
     "name": "Bàn phím cơ AKKO 3098B Plus White Akko Switch v3 Cream Yellow Pro",
-    "data-id": "ban-phim-co-akko-3098b-plus-white-akko-switch-v3-cream-yellow-pro",
-    "old_price": "2.590.000₫",
-    "new_price": "1.350.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/akko-3098b-plus-white-09_fec1778-photoroom_65874353c90840bf9098fa7479013e51_grande.png",
+    "description": "",
+    "originalPrice": 2590000,
+    "salePrice": 1350000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/akko-5075b-plus-s-black-01-510x6_bbb38f47cb2c46b2a081b9e83fe6953d_grande.png",
+    "id": "ban-phim-co-akko-5075b-plus-black-akko-switch-v3-cream-blue-pro",
     "name": "Bàn phím cơ AKKO 5075B Plus Black Akko Switch v3 Cream Blue Pro",
-    "data-id": "ban-phim-co-akko-5075b-plus-black-akko-switch-v3-cream-blue-pro",
-    "old_price": "2.390.000₫",
-    "new_price": "1.650.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/akko-5075b-plus-s-black-01-510x6_bbb38f47cb2c46b2a081b9e83fe6953d_grande.png",
+    "description": "",
+    "originalPrice": 2390000,
+    "salePrice": 1650000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/arvn-ban-phim-co-akko-3098b-plus-white-akko-switch-v3-cream-blue-pro-1_ec31671d70ed4d1b983a47c55bed05cf_grande.png",
+    "id": "ban-phim-co-akko-3098b-plus-white-akko-switch-v3-cream-blue-pro",
     "name": "Bàn phím cơ AKKO 3098B Plus White Akko Switch v3 Cream Blue Pro",
-    "data-id": "ban-phim-co-akko-3098b-plus-white-akko-switch-v3-cream-blue-pro",
-    "old_price": "2.590.000₫",
-    "new_price": "1.350.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/arvn-ban-phim-co-akko-3098b-plus-white-akko-switch-v3-cream-blue-pro-1_ec31671d70ed4d1b983a47c55bed05cf_grande.png",
+    "description": "",
+    "originalPrice": 2590000,
+    "salePrice": 1350000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/akko-5075b-plus-s-black-silver-02_0fe222f663ef42d6a8fb78b1f8ca874d_grande.jpg",
+    "id": "ban-phim-co-akko-5075b-plus-s-black-silver-akko-switch-v3-cream-yellow-pro",
     "name": "Bàn phím cơ AKKO 5075B Plus-S Black & Silver Akko Switch v3 Cream Yellow Pro",
-    "data-id": "ban-phim-co-akko-5075b-plus-s-black-silver-akko-switch-v3-cream-yellow-pro",
-    "old_price": "2.990.000₫",
-    "new_price": "1.790.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/akko-5075b-plus-s-black-silver-02_0fe222f663ef42d6a8fb78b1f8ca874d_grande.jpg",
+    "description": "",
+    "originalPrice": 2990000,
+    "salePrice": 1790000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/ek375-pro-alpha-_5__1c8fbe87a72a4ab5b8f6c1d994809ce2_grande.jpg",
+    "id": "ban-phim-co-e-dra-khong-day-ek375-pro-alpha-red-switch",
     "name": "Bàn phím cơ E-Dra không dây EK375 Pro Alpha Red Switch",
-    "data-id": "ban-phim-co-e-dra-khong-day-ek375-pro-alpha-red-switch",
-    "old_price": "1.290.000₫",
-    "new_price": ""
+    "image": "https://product.hstatic.net/200000722513/product/ek375-pro-alpha-_5__1c8fbe87a72a4ab5b8f6c1d994809ce2_grande.jpg",
+    "description": "",
+    "originalPrice": 1290000,
+    "salePrice": 1290000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/m-razer-blackwidow-v3-mini-hyper_8bea06639087416a8096c9c3ab0a1b69_grande.png",
+    "id": "ban-phim-razer-blackwidow-v3-mini-hyperspeed-yellow-switch",
     "name": "Bàn phím Razer Blackwidow V3 Mini HyperSpeed Yellow Switch",
-    "data-id": "ban-phim-razer-blackwidow-v3-mini-hyperspeed-yellow-switch",
-    "old_price": "2.990.000₫",
-    "new_price": "2.190.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/m-razer-blackwidow-v3-mini-hyper_8bea06639087416a8096c9c3ab0a1b69_grande.png",
+    "description": "",
+    "originalPrice": 2990000,
+    "salePrice": 2190000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/-666_7f9561b5b2a742adb408144b3a76608a_f1879bc182c44746b8a18df6d5553e8d_afd15d78ed4647228ae1d469309064e0_grande.jpg",
+    "id": "ban-phim-co-dareu-ek810-queen-blue-switch",
     "name": "Bàn phím cơ DareU EK810 Queen Blue Switch",
-    "data-id": "ban-phim-co-dareu-ek810-queen-blue-switch",
-    "old_price": "550.000₫",
-    "new_price": ""
+    "image": "https://product.hstatic.net/200000722513/product/-666_7f9561b5b2a742adb408144b3a76608a_f1879bc182c44746b8a18df6d5553e8d_afd15d78ed4647228ae1d469309064e0_grande.jpg",
+    "description": "",
+    "originalPrice": 550000,
+    "salePrice": 550000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/bbcf545f09ec03fd1b778da8e_large_308bc9ef1db140308edd74b38214934f_large_927a7ffcb72c49749d190f9f37e70419_grande.gif",
+    "id": "ban-phim-co-logitech-g713-rgb-tkl-linear",
     "name": "Bàn phím cơ Logitech G713 RGB TKL Linear",
-    "data-id": "ban-phim-co-logitech-g713-rgb-tkl-linear",
-    "old_price": "3.590.000₫",
-    "new_price": "3.190.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/bbcf545f09ec03fd1b778da8e_large_308bc9ef1db140308edd74b38214934f_large_927a7ffcb72c49749d190f9f37e70419_grande.gif",
+    "description": "",
+    "originalPrice": 3590000,
+    "salePrice": 3190000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/84_1_250cebe3aba64a98b401748cb239a44e_aa7c2b40965d49baaddc3f266e1196dc_e32848b8728a4191842b6c661868fdc9_grande.png",
+    "id": "ban-phim-co-dareu-ek884-rgb-blue-switch",
     "name": "Bàn phím cơ DareU EK884 RGB Blue Switch",
-    "data-id": "ban-phim-co-dareu-ek884-rgb-blue-switch",
-    "old_price": "690.000₫",
-    "new_price": ""
+    "image": "https://product.hstatic.net/200000722513/product/84_1_250cebe3aba64a98b401748cb239a44e_aa7c2b40965d49baaddc3f266e1196dc_e32848b8728a4191842b6c661868fdc9_grande.png",
+    "description": "",
+    "originalPrice": 690000,
+    "salePrice": 690000
   },
   {
-    "image": "https://product.hstatic.net/200000722513/product/b76425307ac48fdb6d82c4bc13fc421_6b0982fbbcf545f09ec03fd1b778da8e_large_308bc9ef1db140308edd74b38214934f_grande.gif",
+    "id": "ban-phim-co-logitech-g713-rgb-tkl-tactile",
     "name": "Bàn phím cơ Logitech G713 RGB TKL Tactile",
-    "data-id": "ban-phim-co-logitech-g713-rgb-tkl-tactile",
-    "old_price": "3.590.000₫",
-    "new_price": "3.190.000₫"
+    "image": "https://product.hstatic.net/200000722513/product/b76425307ac48fdb6d82c4bc13fc421_6b0982fbbcf545f09ec03fd1b778da8e_large_308bc9ef1db140308edd74b38214934f_grande.gif",
+    "description": "",
+    "originalPrice": 3590000,
+    "salePrice": 3190000
   }
 ]
