@@ -61,6 +61,9 @@ async function updateOrderCount() {
     const orderCountElement = document.querySelector('.order-count');
     if (!orderCountElement) return;
 
+    // Ẩn ngay từ đầu
+    orderCountElement.style.display = "none";
+
     const isLoggedIn = !!localStorage.getItem('userName');
     if (isLoggedIn) {
         try {
@@ -81,6 +84,7 @@ async function updateOrderCount() {
         orderCountElement.style.display = "none";
     }
 }
+
 
 // ================= Nền hexagon động =================
 function initHexagonBackground() {
