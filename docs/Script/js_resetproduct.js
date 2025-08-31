@@ -1508,7 +1508,7 @@ $(document).ready(function () {
             if (found) renderProduct(found);
             else showNotFound('Không tìm thấy sản phẩm trong file dữ liệu cho type: ' + type);
         });
-        // Nếu thiếu cả id, name, type → not found
+        // Nếu thiếu cả id, name, type → not founds
     } else {
         showNotFound('Thiếu thông tin id, name hoặc type trên URL');
     }
