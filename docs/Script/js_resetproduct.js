@@ -1334,7 +1334,14 @@ $(document).ready(function () {
            <span class="stars">${ratingStars}</span>
            <a href="#tab3" class="review-link" onclick="document.querySelectorAll('.tab-btn')[2].click()">Xem đánh giá</a>
         `);
-
+<<<<<<< HEAD
+        // Hiển thị giá cho từng loại sản phẩm - Ưu tiên salePrice và originalPrice
+        let sale = 0, original = 0;
+        if (product.salePrice && product.originalPrice) {
+            // Ưu tiên salePrice và originalPrice cho tất cả sản phẩm
+            sale = parsePrice(product.salePrice);
+            original = parsePrice(product.originalPrice);
+=======
         let sale = 0, original = 0;
         if (window.location.search.includes('type=keyboard') || (product.name && product.name.toLowerCase().includes('bàn phím'))) {
             if (product.new_price && product.old_price) {
@@ -1345,7 +1352,7 @@ $(document).ready(function () {
             } else if (product.price) {
                 sale = parsePrice(product.price);
             }
-
+>>>>>>> bae7c6246bf7e97eefa90075dc4105d3ab1aef3e
         } else if (product.price_new && product.price_old) {
             sale = parsePrice(product.price_new);
             original = parsePrice(product.price_old);
