@@ -513,18 +513,18 @@ async function cancelOrder(orderId) {
 
 
 // ==================== MUA LẠI ĐƠN ====================
+// ==================== MUA LẠI ĐƠN ====================
 async function rebuyOrder(orderId) {
     if (!orderId) return;
 
     try {
         const order = serverOrders.find(o => o.id === orderId);
-
         if (!order) {
             showToast("❌ Không tìm thấy đơn hàng!");
             return;
         }
 
-        // 🔹 Thêm từng sản phẩm lại vào giỏ
+        // 🔹 Thêm từng sản phẩm vào giỏ
         for (const item of order.items) {
             try {
                 const res = await fetch(`${window.API_BASE}/api/cart`, {
@@ -532,13 +532,14 @@ async function rebuyOrder(orderId) {
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
                     body: JSON.stringify({
-                        productId: item.productId || item.id, // fallback
+                        productId: item.productId || item.id,
                         name: item.name,
                         originalPrice: item.originalPrice,
                         salePrice: item.salePrice,
-                        discountPercent: item.discountPercent !== undefined
-                            ? item.discountPercent
-                            : Math.round(100 - (item.salePrice / item.originalPrice * 100)),
+                        discountPercent:
+                            item.discountPercent !== undefined
+                                ? item.discountPercent
+                                : Math.round(100 - (item.salePrice / item.originalPrice * 100)),
                         image: item.image,
                         quantity: item.quantity || 1
                     })
@@ -554,33 +555,47 @@ async function rebuyOrder(orderId) {
         }
 
         // 🔹 Hỏi có muốn xoá đơn cũ không
+        let message = `✅ Đã thêm sản phẩm từ đơn #${orderId} vào giỏ hàng!`;
         if (confirm(`Bạn có muốn xóa đơn hàng #${orderId} sau khi mua lại không?`)) {
-            const delRes = await fetch(`${window.API_BASE}/api/orders/${orderId}`, {
-                method: "DELETE",
+            try {
+                const delRes = await fetch(`${window.API_BASE}/api/orders/${orderId}`, {
+                    method: "DELETE",
+                    credentials: "include"
+                });
+                const delData = await delRes.json();
+                if (delData.success) {
+                    message = `✅ Đã mua lại và xoá đơn hàng #${orderId}!`;
+                    await fetchOrdersFromServer();
+                } else {
+                    message = `❌ Không thể xoá đơn: ${delData.error || "Lỗi server"}`;
+                }
+            } catch (err) {
+                console.error("❌ Lỗi khi xoá đơn:", err);
+                message = "⚠️ Đã mua lại đơn nhưng không thể xoá đơn!";
+            }
+        }
+        showToast(message);
+
+        // 🔹 Đảm bảo đồng bộ giỏ hàng trước khi vào checkout
+        await new Promise(resolve => setTimeout(resolve, 500)); // đợi server xử lý
+        try {
+            await fetch(`${window.API_BASE}/api/cart`, {
+                method: "GET",
                 credentials: "include"
             });
-            const delData = await delRes.json();
-
-            if (delData.success) {
-                showToast(`✅ Đã mua lại và xoá đơn hàng #${orderId}!`);
-                await fetchOrdersFromServer();
-            } else {
-                showToast(`❌ Không thể xoá đơn: ${delData.error || "Lỗi server"}`);
-            }
-        } else {
-            showToast(`✅ Đã thêm sản phẩm từ đơn #${orderId} vào giỏ hàng!`);
+        } catch (err) {
+            console.warn("⚠️ Không thể đồng bộ giỏ trước khi chuyển trang:", err);
         }
 
-        // 🔹 Chuyển sang checkout
-        setTimeout(() => {
-            window.location.href = "resetcheckout.html";
-        }, 1000);
+        // 🔹 Chuyển sang trang giỏ hàng
+        window.location.href = "resetcheckout.html";
 
     } catch (err) {
         console.error("❌ Lỗi rebuyOrder:", err);
         showToast("Có lỗi xảy ra khi mua lại đơn hàng!");
     }
 }
+
 
 async function toBase64Image(url) {
     try {
@@ -712,7 +727,7 @@ async function exportToPDF(orderId) {
     const formattedDate = new Date(order.createdAt).toLocaleString('vi-VN');
     const { points } = calculatePointsAndTier(order);
 
-    // === Convert image URL thành base64 ===
+    // === Convert ảnh URL thành ảnh proxy ===
     function proxifyImageURL(url) {
         if (!url) return null;
         if (/^https?:\/\//i.test(url)) {
@@ -750,7 +765,7 @@ async function exportToPDF(orderId) {
         }
     });
 
-    // === Convert ảnh từng item sang base64 ===
+    // === Convert ảnh sản phẩm sang base64 ===
     const productImages = [];
     for (const item of flatItems) {
         if (item._isBundleHeader) {
@@ -759,11 +774,7 @@ async function exportToPDF(orderId) {
         }
         try {
             let imgUrl = item.image;
-            if (!/^https?:\/\//i.test(imgUrl)) {
-                imgUrl = item.image;
-            } else {
-                imgUrl = proxifyImageURL(item.image);
-            }
+            imgUrl = /^https?:\/\//i.test(imgUrl) ? proxifyImageURL(item.image) : item.image;
 
             if (!imgUrl) {
                 productImages.push(undefined);
@@ -784,7 +795,7 @@ async function exportToPDF(orderId) {
         }
     }
 
-    // === Tạo bảng sản phẩm ===
+    // === Bảng sản phẩm ===
     const productTable = [
         [
             { text: 'Ảnh', bold: true, alignment: 'center' },
@@ -798,7 +809,7 @@ async function exportToPDF(orderId) {
         ...flatItems.map((item, i) => {
             if (item._isBundleHeader) {
                 return [
-                    { text: '', border: [false,false,false,false] },
+                    { text: '', border: [false, false, false, false] },
                     { text: `🖥️ ${item.name} (PC tự build)`, colSpan: 6, bold: true, fillColor: '#e3f2fd', color: '#1976d2' },
                     {}, {}, {}, {}, {}
                 ];
@@ -826,9 +837,15 @@ async function exportToPDF(orderId) {
         })
     ];
 
-    // === Logo + Watermark ===
+    // === Logo, watermark, con dấu ===
     const logoBase64 = await toBase64Image("Image_Showroom/Slogan_w.jpg").catch(() => null);
     const fullWatermarkBase64 = await createFullWatermarkBase64();
+    const sealBase64 = await createApprovalSealBase64();
+
+    // === Chính sách đổi trả ===
+    const policyText = `Lưu ý: 3TD Shop cam kết hỗ trợ đổi trả trong các trường hợp sản phẩm 
+bị lỗi kỹ thuật, hư hỏng, rơi vỡ hoặc chất lượng không như mong muốn trong quá trình vận chuyển. 
+Quý khách vui lòng quay video khi mở hộp và giữ đầy đủ hóa đơn, tem, phiếu bảo hành để được hỗ trợ đổi trả.`;
 
     // === Định nghĩa PDF ===
     const docDefinition = {
@@ -854,15 +871,22 @@ async function exportToPDF(orderId) {
                     body: productTable
                 }
             },
-            { text: `\nTổng cộng: ${formatCurrency(order.total)}`, alignment: 'right', bold: true },
+            {
+                text: `\nTổng cộng: ${formatCurrency(order.total)}`,
+                alignment: 'right',
+                bold: true,
+                color: 'red',
+                fontSize: 12
+            },
             { text: '\nThông tin khách hàng:', style: 'subheader' },
             { text: `Người nhận: ${delivery.name || 'Không có'}` },
             { text: `Điện thoại: ${delivery.phone || 'Không có'}` },
             { text: `Địa chỉ: ${delivery.address || ''}, ${delivery.ward || ''}, ${delivery.district || ''}, ${delivery.province || ''}` },
             { text: `Phương thức thanh toán: ${getPaymentMethodText(order.paymentMethod)}` },
             delivery.note ? { text: `Ghi chú: ${delivery.note}` } : null,
+            { text: '\n' + policyText, italics: true, color: '#c0392b', alignment: 'justify' },
             { text: '\nCảm ơn quý khách đã mua sắm tại 3TD Shop!', italics: true, alignment: 'center' },
-            { image: createApprovalSealBase64(), width: 100, alignment: 'right', margin: [0, 10, 0, 0] }
+            sealBase64 ? { image: sealBase64, width: 100, alignment: 'right', margin: [0, 10, 0, 0] } : null
         ].filter(Boolean),
         styles: {
             header: { fontSize: 18, bold: true, color: '#1e88e5' },
@@ -875,13 +899,14 @@ async function exportToPDF(orderId) {
             image: fullWatermarkBase64,
             width: pageSize.width,
             height: pageSize.height,
-            opacity: 0.08, // nhẹ để không che nội dung
+            opacity: 0.08,
             absolutePosition: { x: 0, y: 0 }
         })
     };
 
     pdfMake.createPdf(docDefinition).download(`DonHang_${order.orderCode || order.id}.pdf`);
 }
+
 
 
 
