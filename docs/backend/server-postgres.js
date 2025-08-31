@@ -1010,6 +1010,40 @@ app.delete("/api/cart", authenticateToken, async (req, res) => {
     }
 });
 
+// BULK DELETE: Xoá nhiều sản phẩm theo danh sách ID
+app.post("/api/cart/bulk-delete", authenticateToken, async (req, res) => {
+    try {
+        const { ids } = req.body;
+
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({ success: false, error: "Danh sách sản phẩm không hợp lệ" });
+        }
+
+        await pool.query(
+            `DELETE FROM cart_items
+             WHERE user_id = $1 AND product_id = ANY($2::text[])`,
+            [req.user.id, ids]
+        );
+
+        const cartRes = await pool.query(
+            `SELECT product_id AS id, name, original_price AS "originalPrice",
+                    sale_price AS "salePrice", discount_percent AS "discountPercent",
+                    image, quantity
+             FROM cart_items
+             WHERE user_id=$1
+             ORDER BY created_at DESC`,
+            [req.user.id]
+        );
+
+        res.json({ success: true, cart: cartRes.rows });
+    } catch (err) {
+        console.error("❌ Lỗi POST /api/cart/bulk-delete:", err);
+        res.status(500).json({ success: false, error: "Server error" });
+    }
+});
+
+
+
 
 // ================== Middleware xác thực JWT ==================
 function authenticateToken(req, res, next) {
@@ -1120,33 +1154,46 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
     }
 });
 
-// Tạo đơn hàng mới (checkout)
+// Tạo đơn hàng mới (checkout) - Chỉ xoá sản phẩm đã chọn khỏi giỏ
 app.post("/api/orders", authenticateToken, async (req, res) => {
+    const client = await pool.connect();
     try {
         const { items, total, deliveryInfo, paymentMethod } = req.body;
 
-        if (!items || !Array.isArray(items) || !total) {
+        if (!items || !Array.isArray(items) || !items.length || !total) {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu đơn hàng" });
         }
 
-        // ✅ Kiểm tra giỏ hàng
-        const cartCheck = await pool.query(
-            "SELECT COUNT(*) FROM cart_items WHERE user_id=$1",
-            [req.user.id]
-        );
-        if (parseInt(cartCheck.rows[0].count) === 0) {
-            return res.status(400).json({ success: false, error: "Giỏ hàng trống" });
+        // Lấy danh sách product_id thực sự cần xoá (bỏ quà tặng nếu có isGift)
+        const productIdsToDelete = items
+            .filter(it => !it.isGift)
+            .map(it => String(it.id));
+
+        await client.query("BEGIN");
+
+        // Kiểm tra giỏ hàng của user
+        if (productIdsToDelete.length) {
+            const chk = await client.query(
+                `SELECT product_id FROM cart_items
+                 WHERE user_id=$1 AND product_id = ANY($2)`,
+                [req.user.id, productIdsToDelete]
+            );
+            if (chk.rows.length === 0) {
+                await client.query("ROLLBACK");
+                return res.status(400).json({ success: false, error: "Không tìm thấy sản phẩm đã chọn trong giỏ" });
+            }
         }
 
-        // ✅ Sinh mã đơn hàng unique
+        // Sinh mã đơn hàng unique
         let orderCode, exists = true;
         while (exists) {
             orderCode = generateOrderCode();
-            const check = await pool.query("SELECT 1 FROM orders WHERE order_code=$1", [orderCode]);
+            const check = await client.query("SELECT 1 FROM orders WHERE order_code=$1", [orderCode]);
             exists = check.rows.length > 0;
         }
 
-        const insert = await pool.query(
+        // Tạo đơn hàng
+        const insert = await client.query(
             `INSERT INTO orders (user_id, order_code, items, total, delivery_info, payment_method, unseen)
              VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6, true)
                  RETURNING id, order_code AS "orderCode", items, total, status,
@@ -1163,23 +1210,33 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             ]
         );
 
-        // ✅ Xoá giỏ hàng
-        await pool.query(`DELETE FROM cart_items WHERE user_id=$1`, [req.user.id]);
+        // ❗️Xoá CÓ CHỌN LỌC sản phẩm đã thanh toán
+        if (productIdsToDelete.length) {
+            await client.query(
+                `DELETE FROM cart_items
+                 WHERE user_id=$1 AND product_id = ANY($2)`,
+                [req.user.id, productIdsToDelete]
+            );
+        }
 
+        await client.query("COMMIT");
+
+        const orderRow = insert.rows[0];
         const order = {
-            ...insert.rows[0],
-            items: typeof insert.rows[0].items === "string"
-                ? JSON.parse(insert.rows[0].items)
-                : insert.rows[0].items,
-            deliveryInfo: insert.rows[0].deliveryInfo && typeof insert.rows[0].deliveryInfo === "string"
-                ? JSON.parse(insert.rows[0].deliveryInfo)
-                : insert.rows[0].deliveryInfo
+            ...orderRow,
+            items: typeof orderRow.items === "string" ? JSON.parse(orderRow.items) : orderRow.items,
+            deliveryInfo: orderRow.deliveryInfo && typeof orderRow.deliveryInfo === "string"
+                ? JSON.parse(orderRow.deliveryInfo)
+                : orderRow.deliveryInfo
         };
 
         res.json({ success: true, order });
     } catch (err) {
+        await client.query("ROLLBACK");
         console.error("❌ Lỗi POST /api/orders:", err);
         res.status(500).json({ success: false, error: "Server error" });
+    } finally {
+        client.release();
     }
 });
 
@@ -1250,6 +1307,7 @@ app.delete("/api/orders/:id", authenticateToken, async (req, res) => {
         res.status(500).json({ success: false, error: "Server error" });
     }
 });
+
 
 
 

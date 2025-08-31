@@ -1336,22 +1336,22 @@ async function processPayment() {
     // Giả lập delay xử lý thanh toán
     setTimeout(async () => {
         try {
-            let cart = JSON.parse(localStorage.getItem("selectedCart")) || [];
+            let selectedCart = JSON.parse(localStorage.getItem("selectedCart")) || [];
 
-            if (cart.length === 0) {
+            if (selectedCart.length === 0) {
                 loadingModal.hide();
-                showNotification("❌ Giỏ hàng trống, không thể thanh toán!", "error");
+                showNotification("❌ Bạn chưa chọn sản phẩm nào để thanh toán!", "error");
                 return;
             }
 
-            // 🔎 Chuẩn hoá dữ liệu giỏ hàng
-            cart = cart.map(it => (typeof it === "string" ? JSON.parse(it) : it));
-            cart = sanitizeCart(cart);
+            // 🔎 Chuẩn hoá dữ liệu giỏ hàng đã chọn
+            selectedCart = selectedCart.map(it => (typeof it === "string" ? JSON.parse(it) : it));
+            selectedCart = sanitizeCart(selectedCart);
 
             const selectedMethod =
                 document.querySelector('input[name="payment-method"]:checked')?.value || "COD";
-            const deliveryInfo = getDeliveryInfo(); // lấy info chuẩn từ form
-            const total = cart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
+            const deliveryInfo = getDeliveryInfo(); // Lấy info chuẩn từ form
+            const total = selectedCart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
 
             // 1️⃣ Gửi yêu cầu tạo đơn hàng lên server
             const res = await fetch(`${window.API_BASE}/api/orders`, {
@@ -1359,7 +1359,7 @@ async function processPayment() {
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
                 body: JSON.stringify({
-                    items: cart,
+                    items: selectedCart,
                     total,
                     paymentMethod: selectedMethod,
                     deliveryInfo
@@ -1377,23 +1377,35 @@ async function processPayment() {
 
             console.log("✅ Đơn hàng mới từ server:", data.order);
 
-            // 2️⃣ Xoá giỏ hàng trên server (phòng backend chưa xoá)
+            // 2️⃣ Xoá các sản phẩm đã thanh toán trên server
             try {
-                await fetch(`${window.API_BASE}/api/cart`, {
-                    method: "DELETE",
-                    credentials: "include"
+                const idsToRemove = selectedCart.map(item => item.id);
+                await fetch(`${window.API_BASE}/api/cart/bulk-delete`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({ ids: idsToRemove })
                 });
-                console.log("🗑️ Đã xoá giỏ hàng server sau khi tạo đơn.");
+                console.log("🗑️ Đã xoá sản phẩm đã thanh toán khỏi giỏ server.");
             } catch (err) {
-                console.warn("⚠️ Không xoá được giỏ hàng server:", err);
+                console.warn("⚠️ Không xoá được sản phẩm đã thanh toán:", err);
             }
 
-            // 3️⃣ Dọn localStorage
-            localStorage.removeItem("cart");
+            // 3️⃣ Đồng bộ lại giỏ hàng còn lại từ server
+            try {
+                const cartRes = await fetch(`${window.API_BASE}/api/cart`, { credentials: "include" });
+                const updated = await cartRes.json();
+                if (updated.success) {
+                    saveCart(updated.cart || []);
+                    cartCache = updated.cart || [];
+                }
+            } catch (err) {
+                console.error("⚠️ Không thể đồng bộ giỏ hàng sau thanh toán:", err);
+            }
+
+            // 4️⃣ Dọn localStorage (chỉ xoá selectedCart và giftCart)
             localStorage.removeItem("selectedCart");
             localStorage.removeItem("giftCart");
-            cartCache = [];
-            selectedItems = [];
 
             // Giữ lại note & invoiceRequired cho lần sau
             const savedInfo = {
@@ -1402,12 +1414,12 @@ async function processPayment() {
             };
             localStorage.setItem("deliveryInfo", JSON.stringify(savedInfo));
 
-            // 4️⃣ Cập nhật lại UI
+            // 5️⃣ Cập nhật lại UI
             updateCartCount();
             renderCart();
             updateOrderCount();
 
-            // 5️⃣ Đóng loading và mở modal thành công
+            // 6️⃣ Đóng loading và mở modal thành công
             loadingModal.hide();
             showSuccessModal();
         } catch (err) {
@@ -1417,6 +1429,7 @@ async function processPayment() {
         }
     }, 2000);
 }
+
 
 function formatCurrency(amount) {
     if (typeof amount === 'string') {
