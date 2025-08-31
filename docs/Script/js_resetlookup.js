@@ -511,9 +511,6 @@ async function cancelOrder(orderId) {
     }
 }
 
-
-// ==================== MUA LẠI ĐƠN ====================
-// ==================== MUA LẠI ĐƠN ====================
 async function rebuyOrder(orderId) {
     if (!orderId) return;
 
@@ -524,37 +521,37 @@ async function rebuyOrder(orderId) {
             return;
         }
 
-        // 🔹 Thêm từng sản phẩm vào giỏ
         for (const item of order.items) {
             try {
+                const payload = {
+                    id: item.productId || item.id, // 🔹 Sửa thành id
+                    name: item.name,
+                    originalPrice: item.originalPrice,
+                    salePrice: item.salePrice,
+                    discountPercent:
+                        item.discountPercent !== undefined
+                            ? item.discountPercent
+                            : Math.round(100 - (item.salePrice / item.originalPrice * 100)),
+                    image: item.image,
+                    quantity: item.quantity || 1
+                };
+
                 const res = await fetch(`${window.API_BASE}/api/cart`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
-                    body: JSON.stringify({
-                        productId: item.productId || item.id,
-                        name: item.name,
-                        originalPrice: item.originalPrice,
-                        salePrice: item.salePrice,
-                        discountPercent:
-                            item.discountPercent !== undefined
-                                ? item.discountPercent
-                                : Math.round(100 - (item.salePrice / item.originalPrice * 100)),
-                        image: item.image,
-                        quantity: item.quantity || 1
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 const data = await res.json();
                 if (!data.success) {
-                    console.warn(`⚠️ Không thể thêm ${item.name} vào giỏ: ${data.error || "Lỗi"}`);
+                    console.warn(`⚠️ Không thể thêm ${item.name}: ${data.error || "Lỗi"}`);
                 }
             } catch (err) {
-                console.error(`❌ Lỗi khi thêm sản phẩm ${item.name} vào giỏ:`, err);
+                console.error(`❌ Lỗi khi thêm sản phẩm ${item.name}:`, err);
             }
         }
 
-        // 🔹 Hỏi có muốn xoá đơn cũ không
         let message = `✅ Đã thêm sản phẩm từ đơn #${orderId} vào giỏ hàng!`;
         if (confirm(`Bạn có muốn xóa đơn hàng #${orderId} sau khi mua lại không?`)) {
             try {
@@ -576,8 +573,7 @@ async function rebuyOrder(orderId) {
         }
         showToast(message);
 
-        // 🔹 Đảm bảo đồng bộ giỏ hàng trước khi vào checkout
-        await new Promise(resolve => setTimeout(resolve, 500)); // đợi server xử lý
+        await new Promise(resolve => setTimeout(resolve, 500));
         try {
             await fetch(`${window.API_BASE}/api/cart`, {
                 method: "GET",
@@ -587,7 +583,6 @@ async function rebuyOrder(orderId) {
             console.warn("⚠️ Không thể đồng bộ giỏ trước khi chuyển trang:", err);
         }
 
-        // 🔹 Chuyển sang trang giỏ hàng
         window.location.href = "resetcheckout.html";
 
     } catch (err) {
@@ -595,6 +590,7 @@ async function rebuyOrder(orderId) {
         showToast("Có lỗi xảy ra khi mua lại đơn hàng!");
     }
 }
+
 
 
 async function toBase64Image(url) {
