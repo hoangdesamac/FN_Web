@@ -1456,14 +1456,193 @@ $(document).ready(function () {
         }
     };
 
-    // Lấy id, name và type từ URL
+    // ---------------------------
+    // Robust URL param handling & recovery (for OAuth / login redirects)
+    // ---------------------------
     const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
-    const normName = urlParams.get('name');
-    const type = urlParams.get('type');
+    let productId = urlParams.get('id');
+    let normName = urlParams.get('name');
+    let type = urlParams.get('type');
 
-    // Debug: log URL params
-    console.log('[DEBUG] URL params:', { productId, normName, type });
+    // small helper to parse query from an arbitrary URL string
+    function parseQueryFromUrl(url) {
+        try {
+            const u = new URL(url, window.location.origin);
+            return new URLSearchParams(u.search);
+        } catch (err) {
+            const idx = url.indexOf('?');
+            if (idx === -1) return new URLSearchParams('');
+            return new URLSearchParams(url.slice(idx + 1));
+        }
+    }
+
+    // Try to recover product identifying params from known places:
+    //  - localStorage.postLoginRedirect (saved before starting OAuth)
+    //  - localStorage.pendingAction (pendingAction payload may contain product)
+    //  - localStorage.pendingCartItem
+    //  - document.referrer (if it was a product link)
+    //  - sessionStorage.lastProductURL (optional)
+    function tryRecoverParams() {
+        // 1) postLoginRedirect
+        try {
+            const post = localStorage.getItem('postLoginRedirect');
+            if (post) {
+                const p = parseQueryFromUrl(post);
+                const rid = p.get('id'), rname = p.get('name'), rtype = p.get('type');
+                if (rid || rname || rtype) {
+                    console.log('[RECOVER] from postLoginRedirect:', post);
+                    return { id: rid, name: rname, type: rtype };
+                }
+            }
+        } catch (e) { /* ignore */ }
+
+        // 2) pendingAction
+        try {
+            const raw = localStorage.getItem('pendingAction');
+            if (raw) {
+                const act = JSON.parse(raw);
+                const p = act.payload;
+                if (p) {
+                    const pr = p.product || p;
+                    if (pr && pr.id) {
+                        console.log('[RECOVER] from pendingAction.payload.product');
+                        return { id: pr.id, name: pr.name || null, type: null };
+                    }
+                    if (Array.isArray(p.products) && p.products.length && p.products[0].product && p.products[0].product.id) {
+                        const pr0 = p.products[0].product;
+                        console.log('[RECOVER] from pendingAction.payload.products[0]');
+                        return { id: pr0.id, name: pr0.name || null, type: null };
+                    }
+                }
+            }
+        } catch (e) { /* ignore */ }
+
+        // 3) pendingCartItem
+        try {
+            const pending = localStorage.getItem('pendingCartItem');
+            if (pending) {
+                const it = JSON.parse(pending);
+                if (it && it.id) {
+                    console.log('[RECOVER] from pendingCartItem');
+                    return { id: it.id, name: it.name || null, type: null };
+                }
+            }
+        } catch (e) { /* ignore */ }
+
+        // 4) referrer
+        try {
+            const ref = document.referrer;
+            if (ref && ref.includes('resetproduct.html')) {
+                const p = parseQueryFromUrl(ref);
+                const rid = p.get('id'), rname = p.get('name'), rtype = p.get('type');
+                if (rid || rname || rtype) {
+                    console.log('[RECOVER] from document.referrer:', ref);
+                    return { id: rid, name: rname, type: rtype };
+                }
+            }
+        } catch (e) { /* ignore */ }
+
+        // 5) sessionStorage.lastProductURL
+        try {
+            const last = sessionStorage.getItem('lastProductURL');
+            if (last) {
+                const p = parseQueryFromUrl(last);
+                const rid = p.get('id'), rname = p.get('name'), rtype = p.get('type');
+                if (rid || rname || rtype) {
+                    console.log('[RECOVER] from sessionStorage.lastProductURL');
+                    return { id: rid, name: rname, type: rtype };
+                }
+            }
+        } catch (e) { /* ignore */ }
+
+        return null;
+    }
+
+    // Detect if URL looks like a login callback (contains credentials or login marker) but missing product params
+    const hasLoginLike = urlParams.get('email') || urlParams.get('login') || urlParams.get('password');
+
+    if (!productId && hasLoginLike) {
+        console.log('[INFO] URL contains login-like params but no productId — attempting post-login recovery.');
+
+        // If processAfterLoginNoReload exists, run it to refresh header/cart and process pendingAction,
+        // then try to recover product params and redirect back to product page if found.
+        if (typeof processAfterLoginNoReload === 'function') {
+            processAfterLoginNoReload().then(() => {
+                const rec = tryRecoverParams();
+                if (rec && (rec.id || rec.name || rec.type)) {
+                    const base = window.location.pathname.replace(/\/?resetproduct\.html$/i, '/resetproduct.html');
+                    const params = new URLSearchParams(window.location.search);
+                    // remove sensitive/login params
+                    params.delete('email'); params.delete('password'); params.delete('login');
+                    if (rec.id) params.set('id', rec.id);
+                    if (rec.name) params.set('name', rec.name);
+                    if (rec.type) params.set('type', rec.type);
+                    const newUrl = base + '?' + params.toString();
+                    try { localStorage.removeItem('postLoginRedirect'); } catch (e) {}
+                    console.log('[RECOVER] Redirecting to recovered product URL:', newUrl);
+                    window.location.href = newUrl;
+                    return;
+                } else {
+                    // no recoverable product; clean login params from URL to avoid repeated confusion
+                    const clean = window.location.pathname;
+                    window.history.replaceState({}, document.title, clean);
+                    // continue initialization (will show not found below)
+                }
+            }).catch(err => {
+                console.warn('processAfterLoginNoReload failed:', err);
+                // fallback immediate recover attempt
+                const rec = tryRecoverParams();
+                if (rec && (rec.id || rec.name || rec.type)) {
+                    const base = window.location.pathname.replace(/\/?resetproduct\.html$/i, '/resetproduct.html');
+                    const params = new URLSearchParams(window.location.search);
+                    params.delete('email'); params.delete('password'); params.delete('login');
+                    if (rec.id) params.set('id', rec.id);
+                    if (rec.name) params.set('name', rec.name);
+                    if (rec.type) params.set('type', rec.type);
+                    const newUrl = base + '?' + params.toString();
+                    try { localStorage.removeItem('postLoginRedirect'); } catch (e) {}
+                    window.location.href = newUrl;
+                    return;
+                }
+            });
+
+            // stop further synchronous initialization here — the async path will redirect if recovered
+            return;
+        } else {
+            // processAfterLoginNoReload not available → try immediate recovery
+            const rec = tryRecoverParams();
+            if (rec && (rec.id || rec.name || rec.type)) {
+                const base = window.location.pathname.replace(/\/?resetproduct\.html$/i, '/resetproduct.html');
+                const params = new URLSearchParams(window.location.search);
+                params.delete('email'); params.delete('password'); params.delete('login');
+                if (rec.id) params.set('id', rec.id);
+                if (rec.name) params.set('name', rec.name);
+                if (rec.type) params.set('type', rec.type);
+                const newUrl = base + '?' + params.toString();
+                try { localStorage.removeItem('postLoginRedirect'); } catch (e) {}
+                window.location.href = newUrl;
+                return;
+            } else {
+                const clean = window.location.pathname;
+                window.history.replaceState({}, document.title, clean);
+                // continue init; will show not found
+            }
+        }
+    }
+
+    // If still missing product identifiers, attempt a silent recover before proceeding
+    if (!productId && !normName && !type) {
+        const rec = tryRecoverParams();
+        if (rec) {
+            productId = rec.id;
+            normName = rec.name;
+            type = rec.type;
+            console.log('[RECOVER] Applied recovered params:', { productId, normName, type });
+        }
+    }
+
+    // Debug: log URL params after recovery attempts
+    console.log('[DEBUG] URL params (after recover attempt):', { productId, normName, type });
 
     // Lấy đúng danh sách sản phẩm theo type
     function fetchProductsByType(type, cb) {
@@ -1526,6 +1705,11 @@ $(document).ready(function () {
             product.id = normalizeName(product.name);
             console.warn('[DEBUG] product had no id - generated id from name:', product.id);
         }
+
+        // Store last product URL to help recovery if redirect occurs later
+        try {
+            sessionStorage.setItem('lastProductURL', window.location.href);
+        } catch (e) { /* ignore */ }
 
         // Expose current rendered product so buy handlers can use it even if it's not in window.products
         window.currentProduct = product;
