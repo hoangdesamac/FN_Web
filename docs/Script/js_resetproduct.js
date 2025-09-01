@@ -24,6 +24,124 @@ async function loadPagePart(url, containerId, callback = null) {
 }
 
 // ==========================
+// AUTH GUARD & PENDING ACTIONS
+// ==========================
+
+/**
+ * pendingAction stored in localStorage as JSON:
+ * { type: 'addToCart' | 'addMultipleToCart' | 'buyNow', payload: {...} }
+ */
+function isLoggedIn() {
+    return !!localStorage.getItem('userName');
+}
+
+function savePendingAction(actionObj) {
+    try {
+        localStorage.setItem('pendingAction', JSON.stringify(actionObj));
+    } catch (err) {
+        console.error('Không thể lưu pendingAction:', err);
+    }
+}
+
+function clearPendingAction() {
+    localStorage.removeItem('pendingAction');
+}
+
+function openLoginModalAndNotify() {
+    if (typeof CyberModal !== 'undefined' && CyberModal.open) {
+        CyberModal.open();
+    }
+    if (typeof showNotification === 'function') {
+        showNotification('Vui lòng đăng nhập để tiếp tục', 'info');
+    }
+}
+
+/**
+ * Execute pending action from localStorage (if exists and user is logged in)
+ */
+async function processPendingAction() {
+    if (!isLoggedIn()) return;
+    const raw = localStorage.getItem('pendingAction');
+    if (!raw) return;
+
+    let action;
+    try {
+        action = JSON.parse(raw);
+    } catch (err) {
+        console.error('Invalid pendingAction JSON:', err);
+        clearPendingAction();
+        return;
+    }
+
+    try {
+        if (action.type === 'addToCart') {
+            // payload: { product, qty }
+            await addToCartAPI(action.payload.product, action.payload.qty || 1);
+            await updateCartCountFromServer();
+            showToast(`Đã thêm ${action.payload.product.name} vào giỏ hàng!`);
+        } else if (action.type === 'addMultipleToCart') {
+            // payload: { products: [{product, qty}] }
+            for (const it of (action.payload.products || [])) {
+                await addToCartAPI(it.product, it.qty || 1);
+            }
+            await updateCartCountFromServer();
+            showToast(`Đã thêm ${action.payload.products.length} sản phẩm vào giỏ hàng!`);
+        } else if (action.type === 'buyNow') {
+            // payload: { product, combos: [product], gifts: [product] }
+            // 1) add main product
+            await addToCartAPI(action.payload.product, 1);
+            // 2) add combos
+            for (const c of (action.payload.combos || [])) {
+                await addToCartAPI(c, 1);
+            }
+            // 3) add gifts (if any)
+            for (const g of (action.payload.gifts || [])) {
+                await addToCartAPI(g, 1);
+            }
+            await updateCartCountFromServer();
+            // redirect to checkout
+            window.location.href = 'resetcheckout.html';
+        } else {
+            console.warn('Unknown pending action type:', action.type);
+        }
+    } catch (err) {
+        console.error('Lỗi khi xử lý pendingAction:', err);
+    } finally {
+        clearPendingAction();
+    }
+}
+
+// Process pending action when localStorage 'userName' changes (login event from modal or other tab)
+window.addEventListener('storage', function (e) {
+    if (e.key === 'userName' && e.newValue) {
+        // small delay to let other login handlers finish
+        setTimeout(() => {
+            processPendingAction();
+        }, 200);
+    }
+});
+
+// Also try to process pending action on page load
+document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(() => {
+        processPendingAction();
+    }, 200);
+});
+
+// Helper to require login before running action
+function requireLoginThenDo(actionType, payload, immediateFn) {
+    if (isLoggedIn()) {
+        // If already logged in, run immediately
+        if (typeof immediateFn === 'function') immediateFn();
+        return;
+    }
+
+    // Save pending action and open modal
+    savePendingAction({ type: actionType, payload });
+    openLoginModalAndNotify();
+}
+
+// ==========================
 // MODULE: Render thumbnails & click
 // ==========================
 let currentIndex = 0;                // Chỉ số ảnh đang hiển thị
@@ -376,25 +494,40 @@ function renderRelatedProducts(related) {
             }
         }
 
-        if (!relatedProduct) return;
+        // If not found in window.products, we can't rely on full object; attempt a minimal payload
+        if (!relatedProduct) {
+            // Try to construct minimal product from DOM
+            const $card = $(this).closest('.product-card');
+            const name = $card.find('.product-name').text().trim();
+            const image = $card.find('img').attr('src');
+            const originalPrice = parsePrice($card.find('.original-price').text());
+            const salePrice = parsePrice($card.find('.sale-price').text());
+            relatedProduct = {
+                id,
+                name,
+                image,
+                originalPrice,
+                salePrice,
+                discount: (originalPrice && salePrice) ? Math.round((1 - salePrice / originalPrice) * 100) : 0
+            };
+        }
 
         const cleanProduct = prepareProduct(relatedProduct);
 
-        try {
-            // --- Thêm vào giỏ qua API ---
-            const res = await addToCartAPI(cleanProduct, 1);
-            if (!res.success) throw new Error(res.error || "Lỗi khi thêm giỏ hàng");
+        const immediate = async () => {
+            try {
+                const res = await addToCartAPI(cleanProduct, 1);
+                if (!res.success) throw new Error(res.error || "Lỗi khi thêm giỏ hàng");
+                await updateCartCountFromServer();
+                showToast(`Đã thêm ${cleanProduct.name} vào giỏ hàng!`);
+            } catch (err) {
+                console.error("❌ Lỗi thêm sản phẩm:", err);
+                showToast("Không thể thêm sản phẩm vào giỏ hàng!");
+            }
+        };
 
-            // --- Cập nhật số lượng giỏ ---
-            await updateCartCountFromServer();
-
-            // --- Thông báo ---
-            showToast(`Đã thêm ${cleanProduct.name} vào giỏ hàng!`);
-
-        } catch (err) {
-            console.error("❌ Lỗi thêm sản phẩm:", err);
-            showToast("Không thể thêm sản phẩm vào giỏ hàng!");
-        }
+        // Require login (if not logged, pending action will be stored)
+        requireLoginThenDo('addToCart', { product: cleanProduct, qty: 1 }, immediate);
     });
 
 
@@ -570,40 +703,45 @@ function bindEventHandlers() {
             });
         }
 
-        try {
-            // --- Thêm sản phẩm chính vào giỏ ---
-            await addToCartAPI(cleanProduct, 1);
+        const immediate = async () => {
+            try {
+                // --- Thêm sản phẩm chính vào giỏ ---
+                await addToCartAPI(cleanProduct, 1);
 
-            // --- Thêm combo vào giỏ ---
-            for (const combo of selectedCombos) {
-                await addToCartAPI(combo, 1);
+                // --- Thêm combo vào giỏ ---
+                for (const combo of selectedCombos) {
+                    await addToCartAPI(combo, 1);
+                }
+
+                // --- Thêm quà tặng nếu đủ combo ---
+                for (const gift of giftCart) {
+                    await addToCartAPI(gift, 1);
+                }
+
+                // --- Cập nhật badge giỏ hàng ---
+                await updateCartCountFromServer();
+
+                // --- Hiển thị thông báo ---
+                let toastMsg = '';
+                if ($checkedCombos.length) {
+                    toastMsg = `Đã thêm sản phẩm chính và ${$checkedCombos.length} combo`;
+                } else {
+                    toastMsg = `Đã thêm ${product.name} vào giỏ hàng`;
+                }
+                if (giftCart.length) toastMsg += `, kèm theo quà tặng đính kèm vào giỏ hàng!`;
+                else toastMsg += '!';
+
+                showToast(toastMsg, hasAllCombos);
+            } catch (err) {
+                console.error('Lỗi khi thêm vào giỏ hàng:', err);
+                showToast('Không thể thêm vào giỏ hàng, vui lòng thử lại!');
             }
+        };
 
-            // --- Thêm quà tặng nếu đủ combo ---
-            for (const gift of giftCart) {
-                await addToCartAPI(gift, 1);
-            }
-
-            // --- Cập nhật badge giỏ hàng ---
-            await updateCartCountFromServer();
-
-            // --- Hiển thị thông báo ---
-            let toastMsg = '';
-            if ($checkedCombos.length) {
-                toastMsg = `Đã thêm sản phẩm chính và ${$checkedCombos.length} combo`;
-            } else {
-                toastMsg = `Đã thêm ${product.name} vào giỏ hàng`;
-            }
-            if (giftCart.length) toastMsg += `, kèm theo quà tặng đính kèm vào giỏ hàng!`;
-            else toastMsg += '!';
-
-            showToast(toastMsg, hasAllCombos);
-
-        } catch (err) {
-            console.error('Lỗi khi thêm vào giỏ hàng:', err);
-            showToast('Không thể thêm vào giỏ hàng, vui lòng thử lại!');
-        }
+        // If not logged - store pending buyNow + open modal
+        requireLoginThenDo('buyNow', { product: cleanProduct, combos: selectedCombos, gifts: giftCart }, immediate);
     });
+
 
 
 
@@ -626,41 +764,49 @@ function bindEventHandlers() {
             return;
         }
 
-        try {
-            // Thêm từng sản phẩm combo vào giỏ qua API
-            for (const el of $checked) {
-                const $card = $(el).closest('.product-card');
-                const id = $card.data('id');
-                const name = $card.find('.product-name').text().trim();
-                const image = $card.find('img').attr('src');
-                const originalPrice = parsePrice($card.find('.original-price').text());
-                const salePrice = parsePrice($card.find('.sale-price').text());
+        // Build product payloads
+        const productsToAdd = [];
+        $checked.each(function () {
+            const $card = $(this).closest('.product-card');
+            const id = $card.data('id');
+            const name = $card.find('.product-name').text().trim();
+            const image = $card.find('img').attr('src');
+            const originalPrice = parsePrice($card.find('.original-price').text());
+            const salePrice = parsePrice($card.find('.sale-price').text());
 
-                const product = prepareProduct({
-                    id,
-                    name,
-                    image,
-                    originalPrice,
-                    salePrice
-                });
+            const product = prepareProduct({
+                id,
+                name,
+                image,
+                originalPrice,
+                salePrice
+            });
 
-                addToSelectedCart(product); // Giữ để tracking selectedCart
+            productsToAdd.push({ product, qty: 1 });
+        });
 
-                // Gọi API thêm vào giỏ
-                const res = await addToCartAPI(product, 1);
-                if (!res.success) throw new Error(res.error || "Lỗi thêm combo");
+        const immediate = async () => {
+            try {
+                // Thêm từng sản phẩm combo vào giỏ qua API
+                for (const it of productsToAdd) {
+                    const res = await addToCartAPI(it.product, it.qty);
+                    if (!res.success) throw new Error(res.error || "Lỗi thêm combo");
+                }
+
+                // Cập nhật số lượng giỏ từ server
+                await updateCartCountFromServer();
+
+                // Thông báo thành công
+                showToast(`Đã thêm ${productsToAdd.length} sản phẩm combo vào giỏ!`);
+            } catch (err) {
+                console.error('❌ Lỗi thêm combo:', err);
+                showToast('Không thể thêm combo vào giỏ hàng!');
             }
+        };
 
-            // Cập nhật số lượng giỏ từ server
-            await updateCartCountFromServer();
-
-            // Thông báo thành công
-            showToast(`Đã thêm ${$checked.length} sản phẩm combo vào giỏ!`);
-
-        } catch (err) {
-            console.error('❌ Lỗi thêm combo:', err);
-            showToast('Không thể thêm combo vào giỏ hàng!');
-        }
+        // If not logged in, save pending action to add multiples
+        const payload = { products: productsToAdd };
+        requireLoginThenDo('addMultipleToCart', payload, immediate);
     });
 
 }
@@ -1283,7 +1429,7 @@ $(document).ready(function () {
         $(`#${tabId}`).addClass('active');
         if (event) $(event.currentTarget).addClass('active');
         else {
-            const $btn = $(`.tab-btn`).filter(function () {
+            const $btn = $(`.tab-btn`). filter(function () {
                 return $(this).attr('onclick')?.includes(tabId);
             });
             $btn.addClass('active');
