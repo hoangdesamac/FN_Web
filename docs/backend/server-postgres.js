@@ -8,15 +8,12 @@ const jwt = require('jsonwebtoken');
 const sgMail = require('@sendgrid/mail');
 const crypto = require('crypto');
 const { OAuth2Client } = require('google-auth-library');
-const fetch = global.fetch || require('node-fetch');
+
 
 const app = express();
 
 // ===== Trust Proxy =====
 app.set('trust proxy', 1);
-
-// Disable ETag globally to avoid accidental 304 for auth-sensitive endpoints
-app.disable('etag');
 
 app.use(express.json());
 app.use(cookieParser());
@@ -25,12 +22,13 @@ app.use(cookieParser());
 const FRONTEND_ORIGIN = process.env.FRONTEND_URL || 'https://3tdshop.id.vn';
 const corsOptions = {
     origin: FRONTEND_ORIGIN,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // 👈 thêm PATCH
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
+
 
 // ===== PostgreSQL (Render) =====
 const pool = new Pool({
@@ -73,6 +71,7 @@ async function sendMail(to, subject, htmlContent) {
 
 // ===== Google OAuth =====
 const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'https://fn-web.onrender.com';
+
 const googleClient = new OAuth2Client({
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -91,16 +90,7 @@ function setAuthCookie(res, userRow) {
         { expiresIn: '7d' }
     );
     res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
-    return token;
 }
-
-// ===== Middleware: prevent caching on /api (auth-sensitive) =====
-app.use('/api', (req, res, next) => {
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-    res.set('Pragma', 'no-cache');
-    res.set('Vary', 'Origin, Cookie');
-    next();
-});
 
 // ===== Debug / Health =====
 app.get('/api/test-db', async (_req, res) => {
@@ -178,15 +168,12 @@ app.post('/api/login', async (req, res) => {
             { expiresIn: '7d' }
         );
 
-        // set httpOnly cookie
         res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
 
-        // Return token in response body as fallback for SPAs
         res.json({
             success: true,
             message: 'Đăng nhập thành công',
-            user: { id: user.id, email: user.email, lastName: user.last_name, avatar_url: user.avatar_url || null },
-            token
+            user: { id: user.id, email: user.email, lastName: user.last_name, avatar_url: user.avatar_url || null }
         });
     } catch (err) {
         console.error('Lỗi đăng nhập:', err);
@@ -196,22 +183,13 @@ app.post('/api/login', async (req, res) => {
 
 // Lấy thông tin user theo cookie
 app.get('/api/me', async (req, res) => {
-    // Ensure no caching for this sensitive endpoint
-    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
-    res.set('Pragma', 'no-cache');
-    res.set('Vary', 'Origin, Cookie');
-
-    try {
-        // Remove ETag if present
-        try { res.removeHeader && res.removeHeader('ETag'); } catch (e) { /* ignore */ }
-    } catch (e) { /* ignore */ }
-
     const token = req.cookies?.[COOKIE_NAME];
     if (!token) return res.json({ loggedIn: false });
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
 
+        // Lấy profile đầy đủ từ DB để đảm bảo dữ liệu mới nhất
         const { rows } = await pool.query(
             `SELECT id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified
              FROM users WHERE id = $1`,
@@ -219,6 +197,7 @@ app.get('/api/me', async (req, res) => {
         );
         const row = rows[0] || {};
 
+        // birthday có thể là Date hoặc string (PG tùy cấu hình)
         const birthday = row.birthday
             ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday)
             : null;
@@ -239,12 +218,13 @@ app.get('/api/me', async (req, res) => {
         });
     } catch (err) {
         console.error('GET /api/me error:', err);
+        // token invalid → clear cookie
         try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
         return res.json({ loggedIn: false });
     }
 });
 
-// PATCH /api/me (update profile)
+// ---- ADD this PATCH /api/me endpoint ----
 app.patch('/api/me', async (req, res) => {
     const token = req.cookies?.[COOKIE_NAME];
     if (!token) return res.status(401).json({ success: false, error: 'Chưa xác thực' });
@@ -253,6 +233,7 @@ app.patch('/api/me', async (req, res) => {
         const decoded = jwt.verify(token, JWT_SECRET);
         const { firstName, lastName, phone, gender, birthday } = req.body;
 
+        // Lấy thông tin hiện tại
         const checkRes = await pool.query(
             `SELECT phone, phone_verified FROM users WHERE id=$1`,
             [decoded.id]
@@ -263,6 +244,7 @@ app.patch('/api/me', async (req, res) => {
 
         const { phone: oldPhone, phone_verified } = checkRes.rows[0];
 
+        // ✅ CASE 1: Nếu xoá số (phone null/empty) → update ngay
         if (!phone || phone.trim() === "") {
             const q = `
                 UPDATE users
@@ -295,6 +277,7 @@ app.patch('/api/me', async (req, res) => {
             });
         }
 
+        // 🚫 CASE 2: Nếu nhập số mới khác số cũ → yêu cầu xác minh OTP
         if (oldPhone && oldPhone !== phone) {
             return res.status(403).json({
                 success: false,
@@ -302,6 +285,7 @@ app.patch('/api/me', async (req, res) => {
             });
         }
 
+        // 🚫 CASE 3: Nếu có số nhưng chưa verify → chặn update
         if (oldPhone && phone_verified === false) {
             return res.status(403).json({
                 success: false,
@@ -309,6 +293,7 @@ app.patch('/api/me', async (req, res) => {
             });
         }
 
+        // ✅ CASE 4: Update bình thường (không đổi số hoặc đã verify)
         const q = `
             UPDATE users
             SET first_name = $1,
@@ -440,6 +425,7 @@ app.get('/api/auth/google/callback', async (req, res) => {
         }
 
         setAuthCookie(res, userRow);
+
         return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=google`);
     } catch (err) {
         console.error('Google callback error:', err);
@@ -463,6 +449,7 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
             return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
         }
 
+        // Đổi code -> access_token
         const tokenRes = await fetch(
             `https://graph.facebook.com/v12.0/oauth/access_token?client_id=${process.env.FACEBOOK_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.FACEBOOK_CALLBACK_URL)}&client_secret=${process.env.FACEBOOK_CLIENT_SECRET}&code=${code}`
         );
@@ -473,6 +460,7 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
             return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
         }
 
+        // Lấy thông tin user từ Facebook (yêu cầu first_name, last_name, picture)
         const userRes = await fetch(`https://graph.facebook.com/me?fields=id,first_name,last_name,name,email,picture.width(300).height(300)&access_token=${tokenData.access_token}`);
         const fbUser = await userRes.json();
 
@@ -482,15 +470,19 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
         }
 
         let userRow;
+        // 1) Nếu có facebook_id thì dùng user đó
         const byFb = await pool.query('SELECT * FROM users WHERE facebook_id = $1', [fbUser.id]);
         if (byFb.rows.length) {
             userRow = byFb.rows[0];
         } else {
+            // 2) Nếu không có facebook_id, thử tìm theo email
             const byEmail = await pool.query('SELECT * FROM users WHERE email = $1', [fbUser.email]);
             if (byEmail.rows.length) {
                 userRow = byEmail.rows[0];
+                // chỉ cập nhật facebook_id (không cập nhật avatar để giữ nguyên theo ý bạn)
                 await pool.query('UPDATE users SET facebook_id = $1 WHERE id = $2', [fbUser.id, userRow.id]);
             } else {
+                // 3) Nếu chưa có user → tạo mới, lưu avatar vào avatar_url
                 const insert = await pool.query(
                     `INSERT INTO users (email, first_name, last_name, password_hash, facebook_id, avatar_url)
                      VALUES ($1, $2, $3, $4, $5, $6)
@@ -501,13 +493,14 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
                         fbUser.last_name || fbUser.name.split(' ').slice(1).join(' ') || '',
                         null,
                         fbUser.id,
-                        fbUser.picture?.data?.url || null
+                        fbUser.picture?.data?.url || null   // <-- lưu avatar vào avatar_url
                     ]
                 );
                 userRow = insert.rows[0];
             }
         }
 
+        // Set cookie và redirect
         setAuthCookie(res, userRow);
         return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=facebook`);
     } catch (err) {
@@ -517,6 +510,7 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
 });
 
 // ===== OTP Xác minh số điện thoại =====
+// Hàm gửi SMS qua Infobip
 async function sendSMS(phone, text) {
     try {
         const response = await fetch(`${process.env.INFOBIP_BASE_URL}/sms/2/text/advanced`, {
@@ -550,13 +544,16 @@ async function sendSMS(phone, text) {
     }
 }
 
+// Gửi OTP
 app.post('/api/send-otp', async (req, res) => {
     try {
         const { phone } = req.body;
         if (!phone) return res.status(400).json({ success: false, error: "Thiếu số điện thoại" });
 
+        // Sinh OTP 6 số
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
+        // Lưu OTP vào DB (upsert)
         await pool.query(
             `INSERT INTO otp_codes (phone, otp, expires_at)
              VALUES ($1, $2, NOW() + interval '5 minutes')
@@ -564,6 +561,7 @@ app.post('/api/send-otp', async (req, res) => {
             [phone, otp]
         );
 
+        // Gửi SMS
         const ok = await sendSMS(phone, `Mã xác minh 3TDShop của bạn là: ${otp}. Có hiệu lực 5 phút.`);
         if (!ok) return res.status(500).json({ success: false, error: "Không gửi được SMS" });
 
@@ -574,6 +572,7 @@ app.post('/api/send-otp', async (req, res) => {
     }
 });
 
+// Xác minh OTP
 app.post('/api/verify-otp', async (req, res) => {
     try {
         const { phone, otp } = req.body;
@@ -590,7 +589,10 @@ app.post('/api/verify-otp', async (req, res) => {
             return res.json({ success: false, error: "OTP không hợp lệ hoặc hết hạn" });
         }
 
+        // ✅ Cập nhật trạng thái user → phone_verified = true
         await pool.query(`UPDATE users SET phone_verified = true WHERE phone=$1`, [phone]);
+
+        // ❌ Xoá OTP đã dùng
         await pool.query(`DELETE FROM otp_codes WHERE phone=$1`, [phone]);
 
         res.json({ success: true, verified: true });
@@ -600,6 +602,7 @@ app.post('/api/verify-otp', async (req, res) => {
     }
 });
 
+// Xác minh OTP cho số mới và cập nhật user
 app.post('/api/verify-otp-phone-change', async (req, res) => {
     const token = req.cookies?.[COOKIE_NAME];
     if (!token) return res.status(401).json({ success: false, error: "Chưa xác thực" });
@@ -612,6 +615,7 @@ app.post('/api/verify-otp-phone-change', async (req, res) => {
             return res.status(400).json({ success: false, error: "Thiếu phone hoặc otp" });
         }
 
+        // Kiểm tra OTP hợp lệ
         const { rows } = await pool.query(
             `SELECT * FROM otp_codes WHERE phone=$1 AND otp=$2 AND expires_at > NOW()`,
             [phone, otp]
@@ -621,6 +625,7 @@ app.post('/api/verify-otp-phone-change', async (req, res) => {
             return res.json({ success: false, error: "OTP không hợp lệ hoặc hết hạn" });
         }
 
+        // ✅ Nếu OTP đúng → update số mới cho user
         const updateRes = await pool.query(
             `UPDATE users
              SET phone = $1,
@@ -630,6 +635,7 @@ app.post('/api/verify-otp-phone-change', async (req, res) => {
             [phone, decoded.id]
         );
 
+        // Xoá OTP đã dùng
         await pool.query(`DELETE FROM otp_codes WHERE phone=$1`, [phone]);
 
         if (!updateRes.rows.length) {
@@ -704,6 +710,7 @@ app.post('/api/forgot-password', async (req, res) => {
     }
 });
 
+// ===== Đặt lại mật khẩu =====
 app.post('/api/reset-password', async (req, res) => {
     try {
         const { token, newPassword } = req.body;
@@ -751,24 +758,116 @@ app.get('/api/test-email', async (req, res) => {
     }
 });
 
-// ========== AUTH MIDDLEWARE (supports cookie OR Authorization header) ==========
-function authenticateToken(req, res, next) {
-    const token =
-        req.cookies?.[COOKIE_NAME] ||
-        (req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : undefined);
+// ====== Address APIs ======
 
-    if (!token) {
-        return res.status(401).json({ success: false, error: 'Token không tồn tại' });
+// Lấy danh sách địa chỉ của user
+app.get('/api/addresses', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { rows } = await pool.query(
+            `SELECT * FROM addresses WHERE user_id = $1 ORDER BY is_default DESC, id DESC`,
+            [decoded.id]
+        );
+        res.json({ success: true, addresses: rows });
+    } catch (err) {
+        console.error("GET /api/addresses error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
     }
+});
 
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) {
-            return res.status(403).json({ success: false, error: 'Token không hợp lệ' });
+// Thêm địa chỉ mới
+app.post('/api/addresses', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { recipient_name, recipient_phone, street_address, ward, city, is_default } = req.body;
+
+        if (!recipient_name || !recipient_phone || !street_address) {
+            return res.status(400).json({ success: false, error: "Thiếu dữ liệu bắt buộc" });
         }
-        req.user = user;
-        next();
-    });
-}
+
+        // Nếu is_default = true → reset các địa chỉ khác về false
+        if (is_default) {
+            await pool.query(`UPDATE addresses SET is_default = false WHERE user_id = $1`, [decoded.id]);
+        }
+
+        const insert = await pool.query(
+            `INSERT INTO addresses (user_id, recipient_name, recipient_phone, street_address, ward, city, is_default)
+             VALUES ($1,$2,$3,$4,$5,$6,$7)
+             RETURNING *`,
+            [decoded.id, recipient_name, recipient_phone, street_address, ward || null, city || null, is_default || false]
+        );
+
+        res.json({ success: true, address: insert.rows[0] });
+    } catch (err) {
+        console.error("POST /api/addresses error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
+// Cập nhật địa chỉ
+app.put('/api/addresses/:id', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { id } = req.params;
+        const { recipient_name, recipient_phone, street_address, ward, city, is_default } = req.body;
+
+        // Nếu set mặc định thì reset các địa chỉ khác
+        if (is_default) {
+            await pool.query(`UPDATE addresses SET is_default = false WHERE user_id = $1`, [decoded.id]);
+        }
+
+        const update = await pool.query(
+            `UPDATE addresses
+             SET recipient_name=$1, recipient_phone=$2, street_address=$3, ward=$4, city=$5, is_default=$6
+             WHERE id=$7 AND user_id=$8
+             RETURNING *`,
+            [recipient_name, recipient_phone, street_address, ward || null, city || null, is_default || false, id, decoded.id]
+        );
+
+        if (!update.rows.length) {
+            return res.status(404).json({ success: false, error: "Không tìm thấy địa chỉ" });
+        }
+
+        res.json({ success: true, address: update.rows[0] });
+    } catch (err) {
+        console.error("PUT /api/addresses error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
+
+// Xóa địa chỉ
+app.delete('/api/addresses/:id', async (req, res) => {
+    const token = req.cookies?.[COOKIE_NAME];
+    if (!token) return res.status(401).json({ success: false, error: "Chưa đăng nhập" });
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const { id } = req.params;
+
+        const del = await pool.query(
+            `DELETE FROM addresses WHERE id=$1 AND user_id=$2 RETURNING *`,
+            [id, decoded.id]
+        );
+
+        if (!del.rows.length) {
+            return res.status(404).json({ success: false, error: "Không tìm thấy địa chỉ" });
+        }
+
+        res.json({ success: true, message: "Đã xóa địa chỉ" });
+    } catch (err) {
+        console.error("DELETE /api/addresses error:", err);
+        res.status(500).json({ success: false, error: "Lỗi server" });
+    }
+});
 
 // ==================== CART APIS ====================
 
@@ -799,6 +898,7 @@ app.post("/api/cart", authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu sản phẩm" });
         }
 
+        // ✅ UPSERT: nếu đã có → cộng thêm số lượng, nếu chưa → thêm mới
         await pool.query(
             `INSERT INTO cart_items (user_id, product_id, name, original_price, sale_price, discount_percent, image, quantity)
              VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
@@ -814,6 +914,7 @@ app.post("/api/cart", authenticateToken, async (req, res) => {
             [req.user.id, id, name, originalPrice, salePrice, discountPercent, image, quantity || 1]
         );
 
+        // ✅ Luôn trả về giỏ hàng mới
         const cartRes = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
                     sale_price AS "salePrice", discount_percent AS "discountPercent",
@@ -831,7 +932,7 @@ app.post("/api/cart", authenticateToken, async (req, res) => {
     }
 });
 
-// UPDATE số lượng
+// UPDATE số lượng tuyệt đối cho 1 sản phẩm
 app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
     try {
         const { quantity } = req.body;
@@ -854,6 +955,7 @@ app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
             return res.status(404).json({ success: false, error: "Không tìm thấy sản phẩm trong giỏ" });
         }
 
+        // ✅ Trả lại giỏ hàng mới
         const cartRes = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
                     sale_price AS "salePrice", discount_percent AS "discountPercent",
@@ -879,6 +981,7 @@ app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
             [req.user.id, req.params.productId]
         );
 
+        // ✅ Trả lại giỏ hàng mới
         const cartRes = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
                     sale_price AS "salePrice", discount_percent AS "discountPercent",
@@ -907,7 +1010,7 @@ app.delete("/api/cart", authenticateToken, async (req, res) => {
     }
 });
 
-// BULK DELETE
+// BULK DELETE: Xoá nhiều sản phẩm theo danh sách ID
 app.post("/api/cart/bulk-delete", authenticateToken, async (req, res) => {
     try {
         const { ids } = req.body;
@@ -939,10 +1042,31 @@ app.post("/api/cart/bulk-delete", authenticateToken, async (req, res) => {
     }
 });
 
+
+
+
+// ================== Middleware xác thực JWT ==================
+function authenticateToken(req, res, next) {
+    const token =
+        req.cookies?.[COOKIE_NAME] ||   // 👈 đọc đúng tên cookie "authToken"
+        req.headers['authorization']?.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ success: false, error: 'Token không tồn tại' });
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ success: false, error: 'Token không hợp lệ' });
+        }
+        req.user = user;
+        next();
+    });
+}
+
 // ==================== ORDERS APIS ====================
 
-// (orders routes are same as above; kept intact)
-
+// Sinh mã đơn hàng với định dạng DH-YYYYMMDD-XXXXX
 function generateOrderCode() {
     const now = new Date();
     const yyyy = now.getFullYear();
@@ -958,6 +1082,7 @@ function generateOrderCode() {
     return `DH-${yyyy}${mm}${dd}-${randomPart}`;
 }
 
+// Lấy danh sách đơn hàng của user
 app.get("/api/orders", authenticateToken, async (req, res) => {
     try {
         const result = await pool.query(
@@ -986,6 +1111,7 @@ app.get("/api/orders", authenticateToken, async (req, res) => {
     }
 });
 
+// Lấy chi tiết 1 đơn hàng
 app.get("/api/orders/:id", authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -1004,6 +1130,7 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
             return res.status(404).json({ success: false, error: "Không tìm thấy đơn hàng" });
         }
 
+        // ✅ Đánh dấu đã xem
         await pool.query(
             `UPDATE orders SET unseen=false WHERE id=$1 AND user_id=$2`,
             [id, req.user.id]
@@ -1027,6 +1154,7 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
     }
 });
 
+// Tạo đơn hàng mới (checkout) - Chỉ xoá sản phẩm đã chọn khỏi giỏ
 app.post("/api/orders", authenticateToken, async (req, res) => {
     const client = await pool.connect();
     try {
@@ -1036,12 +1164,14 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu đơn hàng" });
         }
 
+        // Lấy danh sách product_id thực sự cần xoá (bỏ quà tặng nếu có isGift)
         const productIdsToDelete = items
             .filter(it => !it.isGift)
             .map(it => String(it.id));
 
         await client.query("BEGIN");
 
+        // Kiểm tra giỏ hàng của user
         if (productIdsToDelete.length) {
             const chk = await client.query(
                 `SELECT product_id FROM cart_items
@@ -1054,6 +1184,7 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             }
         }
 
+        // Sinh mã đơn hàng unique
         let orderCode, exists = true;
         while (exists) {
             orderCode = generateOrderCode();
@@ -1061,6 +1192,7 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             exists = check.rows.length > 0;
         }
 
+        // Tạo đơn hàng
         const insert = await client.query(
             `INSERT INTO orders (user_id, order_code, items, total, delivery_info, payment_method, unseen)
              VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6, true)
@@ -1078,6 +1210,7 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             ]
         );
 
+        // ❗️Xoá CÓ CHỌN LỌC sản phẩm đã thanh toán
         if (productIdsToDelete.length) {
             await client.query(
                 `DELETE FROM cart_items
@@ -1107,6 +1240,7 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
     }
 });
 
+// Cập nhật trạng thái đơn
 app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
     try {
         const { status, unseen } = req.body;
@@ -1154,6 +1288,7 @@ app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
     }
 });
 
+// Xóa đơn hàng
 app.delete("/api/orders/:id", authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -1172,6 +1307,9 @@ app.delete("/api/orders/:id", authenticateToken, async (req, res) => {
         res.status(500).json({ success: false, error: "Server error" });
     }
 });
+
+
+
 
 // ===== Start =====
 const PORT = process.env.PORT || 3000;
