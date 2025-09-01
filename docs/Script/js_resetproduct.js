@@ -128,6 +128,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 200);
 });
 
+// Listen for custom same-tab login event (dispatched from js_resetauth.js)
+window.addEventListener('user:login', function () {
+    // when login happens in same tab, fetch user info & process pending action
+    setTimeout(async () => {
+        try {
+            if (typeof fetchUserInfo === 'function') await fetchUserInfo();
+            if (typeof updateUserDisplay === 'function') updateUserDisplay();
+        } catch (err) {
+            console.warn('user:login -> fetchUserInfo error', err);
+        }
+        if (typeof processPendingAction === 'function') {
+            processPendingAction();
+        }
+    }, 150);
+});
+
 // Helper to require login before running action
 function requireLoginThenDo(actionType, payload, immediateFn) {
     if (isLoggedIn()) {
