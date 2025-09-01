@@ -445,9 +445,10 @@ function parsePrice(price) {
 }
 
 function formatPrice(price) {
-    if (price === undefined || price === null || price <= 0) return "Liên hệ";
-    return price.toLocaleString("vi-VN") + "₫";
+    if (price === undefined || price === null) return "Liên hệ";
+    return price === 0 ? "0 đ" : price.toLocaleString('vi-VN') + " đ";
 }
+
 
 
 function updateBuyNowSubText() {
