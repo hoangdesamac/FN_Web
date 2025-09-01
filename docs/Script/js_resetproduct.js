@@ -1394,7 +1394,7 @@ $(document).ready(function () {
                 'box-shadow': '0 8px 32px 0 rgba(0,0,0,0.18)',
                 'margin': '0',
                 'padding': '0',
-                'background': 'none',
+                'background': 'white',
                 'border': 'none',
                 'display': 'block',
                 'transition': 'box-shadow 0.3s, transform 0.3s',
