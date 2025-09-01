@@ -1422,7 +1422,13 @@ $(document).ready(function () {
             setupThumbnails([product.image]);
         }
 
-        $("#flashSaleBox").css("display", "none");
+        // Sau khi render xong product
+        if (product.category?.toLowerCase() === "flash sale" || product.tags?.includes("flash")) {
+            $("#flashSaleBox").css("display", "block");
+            startFlashSaleCountdown(product); // gọi hàm countdown
+        } else {
+            $("#flashSaleBox").css("display", "none");
+        }
 
         // 🔹 Bảng thông số kỹ thuật
         let specsHtml = '<tr><th>Thành phần</th><th>Chi tiết</th></tr>';
