@@ -517,10 +517,24 @@ function bindEventHandlers() {
         window.location.href = `resetproduct.html?id=${productId}`;
     });
 
+    // --- FIXED: use window.currentProduct fallback when window.products doesn't contain the rendered product ---
     $(document).on('click', '.buy-now', async function () {
         const productId = $(this).data('id');
-        const product = window.products.find(p => p.id === productId);
-        if (!product) return;
+        // Try to find product in global list
+        let product = window.products && window.products.find ? window.products.find(p => p.id === productId) : null;
+        // Fallback to current rendered product if not present in window.products
+        if (!product && window.currentProduct && window.currentProduct.id === productId) {
+            product = window.currentProduct;
+        }
+        if (!product) {
+            // As a last resort try to look by normalized name (some sources may have created slug id)
+            if (window.currentProduct && (!window.currentProduct.id || window.currentProduct.id === '' ) ) {
+                // nothing
+            }
+            console.warn('buy-now: product not found for id', productId, 'window.currentProduct=', window.currentProduct);
+            showToast('Không thể thêm sản phẩm vào giỏ (thiếu dữ liệu)', false);
+            return;
+        }
 
         const cleanProduct = prepareProduct(product);
 
@@ -593,10 +607,6 @@ function bindEventHandlers() {
 
 
 
-
-
-
-
     $(document).on('click', '.toast-close', function() {
         $('#toastNotification').removeClass('show').addClass('hide');
         setTimeout(() => $('#toastNotification').remove(), 300);
@@ -652,9 +662,6 @@ function bindEventHandlers() {
             showToast('Không thể thêm combo vào giỏ hàng!');
         }
     });
-
-
-
 
 }
 
@@ -787,9 +794,6 @@ function validateGiftOnProductPage() {
         localStorage.removeItem('giftRequirements');
     }
 }
-
-
-
 
 
 
@@ -1355,6 +1359,15 @@ $(document).ready(function () {
             product.category = product.category.join(' ');
         }
 
+        // Ensure we have an id (some data sources might not provide id)
+        if (!product.id && product.name) {
+            product.id = normalizeName(product.name);
+            console.warn('[DEBUG] product had no id - generated id from name:', product.id);
+        }
+
+        // Expose current rendered product so buy handlers can use it even if it's not in window.products
+        window.currentProduct = product;
+
         // 🔹 Set thông tin cơ bản
         $('#productCategory').text(product.category || '');
         $('#productName, #productTitle').text(product.name || '');
@@ -1386,16 +1399,11 @@ $(document).ready(function () {
         const $img = $('#mainImage');
         $img.attr('src', product.image)
             .css({
-                'object-fit': 'cover',
+                'object-fit': 'contain',
                 'width': '100%',
                 'height': '100%',
-                'max-width': '100%',
-                'max-height': '100%',
-                'box-shadow': '0 8px 32px 0 rgba(0,0,0,0.18)',
                 'margin': '0',
-                'padding': '0',
-                'background': 'white',
-                'border': 'none',
+                'padding': '50px',
                 'display': 'block',
                 'transition': 'box-shadow 0.3s, transform 0.3s',
                 'image-rendering': 'auto',
@@ -1554,7 +1562,10 @@ $(document).ready(function () {
             if (!Array.isArray(list)) return showNotFound('Dữ liệu sản phẩm không hợp lệ');
             console.log('[DEBUG] Fetched list for type ' + type + ':', list);
             const found = list.find(p => normalizeName(p.name) === normName);
-            if (found) renderProduct(found);
+            if (found) {
+                // ensure currentProduct set so buy-now works even if window.products doesn't include it
+                renderProduct(found);
+            }
             else showNotFound('Không tìm thấy sản phẩm trong file dữ liệu cho type: ' + type);
         });
         // Nếu thiếu cả id, name, type → not founds
