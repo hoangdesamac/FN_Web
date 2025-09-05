@@ -25,43 +25,56 @@ function initCartCountEffect() {
 }
 
 // 🛒 Giỏ hàng
-function updateCartCount() {
+// ================= Cập nhật số lượng giỏ hàng =================
+async function updateCartCount() {
     const cartCountElement = document.querySelector('.cart-count');
     if (!cartCountElement) return;
 
-    const isLoggedIn = !!localStorage.getItem('userName');
-    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
+    try {
+        const isLoggedIn = !!localStorage.getItem('userName');
+        const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
 
-    if (isLoggedIn) {
-        fetch(`${window.API_BASE}/api/cart`, {
+        if (!isLoggedIn) {
+            // Nếu chưa đăng nhập → ẩn badge giỏ hàng
+            cartCountElement.style.display = "none";
+            return;
+        }
+
+        // Nếu đã đăng nhập → gọi API để lấy giỏ hàng
+        const res = await fetch(`${window.API_BASE}/api/cart`, {
             method: 'GET',
             credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    const serverCart = data.cart || [];
-                    const count = serverCart.reduce((t, i) => t + (i.quantity || 1), 0) +
-                        giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
+        });
 
-                    cartCountElement.textContent = count;
-                    cartCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
-                }
-            })
-            .catch(err => console.error('Lỗi lấy giỏ hàng từ server:', err));
-    } else {
-        // ❌ Chưa login → luôn ẩn icon số lượng
+        if (!res.ok) throw new Error(`Lỗi API: ${res.status}`);
+        const data = await res.json();
+
+        if (!data.success) {
+            console.warn('⚠️ API trả về lỗi khi lấy giỏ hàng:', data.error || data);
+            cartCountElement.style.display = "none";
+            return;
+        }
+
+        // Tính tổng số lượng từ serverCart và giftCart
+        const serverCart = Array.isArray(data.cart) ? data.cart : [];
+        const count =
+            serverCart.reduce((t, i) => t + (i.quantity || 0), 0) +
+            giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
+
+        // Cập nhật UI
+        cartCountElement.textContent = count;
+        cartCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
+    } catch (err) {
+        console.error('❌ Lỗi khi cập nhật số lượng giỏ hàng:', err);
+        // Fallback: Ẩn badge nếu có lỗi
         cartCountElement.style.display = "none";
     }
 }
-
 
 // 📦 Đơn hàng
 async function updateOrderCount() {
     const orderCountElement = document.querySelector('.order-count');
     if (!orderCountElement) return;
-
-    // Ẩn ngay từ đầu
     orderCountElement.style.display = "none";
 
     const isLoggedIn = !!localStorage.getItem('userName');
@@ -84,7 +97,6 @@ async function updateOrderCount() {
         orderCountElement.style.display = "none";
     }
 }
-
 
 // ================= Nền hexagon động =================
 function initHexagonBackground() {
@@ -266,12 +278,12 @@ function updateUserDisplay() {
                     credentials: "include"
                 });
                 localStorage.clear();
-                updateCartCount();
-                window.location.reload();
+                await processAfterLoginNoReload?.();
             } catch (err) {
                 console.error("Lỗi đăng xuất:", err);
             }
         });
+
 
     } else {
         userAction.innerHTML = `

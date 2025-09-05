@@ -1,5 +1,5 @@
-
 // ==================== HÀM HỖ TRỢ ====================
+
 // Hiển thị lỗi hoặc thông báo
 function showMessage(elementId, message, type = "error") {
     const box = document.getElementById(elementId);
@@ -9,70 +9,75 @@ function showMessage(elementId, message, type = "error") {
     }
 }
 
+// Lưu thông tin user vào localStorage
+function saveUserInfo(user) {
+    localStorage.setItem("userId", user.id || "");
+    localStorage.setItem("firstName", (user.firstName || "").trim());
+    localStorage.setItem("lastName", (user.lastName || "").trim());
+    localStorage.setItem("email", user.email || "");
+    localStorage.setItem("userName", (user.lastName || "").trim());
+    user.avatar_url
+        ? localStorage.setItem("avatarUrl", user.avatar_url)
+        : localStorage.removeItem("avatarUrl");
+    localStorage.removeItem("cartLocked");
+}
+
+// Xóa thông tin user khi chưa đăng nhập
+function clearUserInfo() {
+    ["userId", "firstName", "lastName", "email", "userName", "avatarUrl"]
+        .forEach(k => localStorage.removeItem(k));
+}
+
+// Cập nhật URL mà không reload
+function replaceCleanUrl(url) {
+    try { window.history.replaceState({}, document.title, url); } catch {}
+}
+
 // Đồng bộ giỏ hàng từ localStorage lên server
 async function syncCartToServer() {
     try {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
         for (const item of cart) {
             await fetch(`${window.API_BASE}/api/cart`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    id: item.id,
-                    name: item.name,
-                    originalPrice: item.originalPrice,
-                    salePrice: item.salePrice,
-                    discountPercent: item.discountPercent,
-                    image: item.image,
-                    quantity: item.quantity || 1
-                })
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(item),
             });
         }
-        // Sau khi đồng bộ, lấy giỏ hàng từ server để cập nhật localStorage
         const res = await fetch(`${window.API_BASE}/api/cart`, {
-            method: 'GET',
-            credentials: 'include'
+            method: "GET",
+            credentials: "include",
         });
         const data = await res.json();
         if (data.success) {
-            localStorage.setItem('cart', JSON.stringify(data.cart));
-            if (typeof updateCartCount === 'function') {
-                updateCartCount();
-            }
+            localStorage.setItem("cart", JSON.stringify(data.cart));
+            updateCartCount?.();
         }
     } catch (err) {
-        console.error('Lỗi đồng bộ giỏ hàng:', err);
+        console.error("Lỗi đồng bộ giỏ hàng:", err);
     }
 }
 
-// Helper: xử lý hành động cần làm *sau* khi đã login (cùng-tab hoặc OAuth redirect)
+// Xử lý mọi thứ sau khi login mà KHÔNG reload
 async function processAfterLoginNoReload() {
     try {
-        // 1) Update local user info from server
-        if (typeof checkLoginStatus === 'function') {
-            await checkLoginStatus();
-        } else if (typeof fetchUserInfo === 'function') {
-            await fetchUserInfo();
-        }
+        if (typeof checkLoginStatus === "function") await checkLoginStatus();
+        else if (typeof fetchUserInfo === "function") await fetchUserInfo();
 
-        // 2) Đồng bộ giỏ hàng từ local -> server (nếu cần)
-        try { await syncCartToServer(); } catch (e) { /* ignore */ }
+        try { await syncCartToServer(); } catch {}
 
-        // 3) Cập nhật hiển thị header
-        if (typeof updateUserDisplay === 'function') updateUserDisplay();
-        if (typeof updateCartCount === 'function') updateCartCount();
-        if (typeof updateOrderCount === 'function') updateOrderCount();
+        updateUserDisplay?.();
+        updateCartCount?.();
+        updateOrderCount?.();
 
-        // 4) Thông báo cho các script trong cùng tab (ví dụ resetproduct.js sẽ process pendingAction)
-        try { window.dispatchEvent(new Event('user:login')); } catch (err) { console.warn('dispatch user:login failed', err); }
+        try { window.dispatchEvent(new Event("user:login")); } catch {}
 
-        // 5) Nếu có pendingAction lưu trong localStorage thì gọi hàm xử lý (nếu định nghĩa)
-        if (typeof processPendingAction === 'function') {
-            try { await processPendingAction(); } catch (err) { console.warn('processPendingAction error', err); }
+        if (typeof processPendingAction === "function") {
+            try { await processPendingAction(); } catch {}
         }
     } catch (err) {
-        console.error('processAfterLoginNoReload error:', err);
+        console.error("processAfterLoginNoReload error:", err);
     }
 }
 
@@ -81,41 +86,15 @@ async function checkLoginStatus() {
     try {
         const res = await fetch(`${window.API_BASE}/api/me`, {
             method: "GET",
-            credentials: "include"
+            credentials: "include",
         });
         const data = await res.json();
-
         if (data.loggedIn && data.user) {
-            // Lưu thông tin cần thiết vào localStorage
-            localStorage.setItem("userId", data.user.id || "");
-            localStorage.setItem("firstName", (data.user.firstName || "").trim());
-            localStorage.setItem("lastName", (data.user.lastName || "").trim());
-            localStorage.setItem("email", data.user.email || "");
-            localStorage.setItem("userName", (data.user.lastName || "").trim());
-            if (data.user.avatar_url) {
-                localStorage.setItem("avatarUrl", data.user.avatar_url);
-            } else {
-                localStorage.removeItem("avatarUrl");
-            }
-
-            // 🔓 Mở khoá giỏ hàng khi đã đăng nhập
-            localStorage.removeItem("cartLocked");
-
-            // Đồng bộ giỏ hàng khi đăng nhập (chú ý: function có thể được gọi ở nơi khác)
-            // syncCartToServer sẽ được gọi bởi processAfterLoginNoReload khi cần
+            saveUserInfo(data.user);
         } else {
-            // Xóa thông tin user nếu chưa đăng nhập
-            localStorage.removeItem("userId");
-            localStorage.removeItem("firstName");
-            localStorage.removeItem("lastName");
-            localStorage.removeItem("email");
-            localStorage.removeItem("userName");
-            localStorage.removeItem("avatarUrl");
+            clearUserInfo();
         }
-
-        if (typeof updateUserDisplay === "function") {
-            updateUserDisplay();
-        }
+        updateUserDisplay?.();
     } catch (err) {
         console.error("Lỗi kiểm tra đăng nhập:", err);
     }
@@ -128,8 +107,8 @@ if (registerForm) {
         e.preventDefault();
         const email = document.getElementById("register-email").value.trim();
         const firstName = document.getElementById("register-firstname").value.trim();
-        const lastName  = document.getElementById("register-lastname").value.trim();
-        const password  = document.getElementById("register-password").value.trim();
+        const lastName = document.getElementById("register-lastname").value.trim();
+        const password = document.getElementById("register-password").value.trim();
 
         showMessage("register-error", "");
 
@@ -138,31 +117,24 @@ if (registerForm) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify({ email, firstName, lastName, password })
+                body: JSON.stringify({ email, firstName, lastName, password }),
             });
             const data = await res.json();
             if (data.success) {
                 showMessage("register-error", "✅ Đăng ký thành công! Vui lòng đăng nhập.", "success");
-                // Kiểm tra và thêm sản phẩm tạm sau đăng ký
-                const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
+                const pendingItem = JSON.parse(localStorage.getItem("pendingCartItem"));
                 if (pendingItem) {
-                    addToCart(pendingItem.id, pendingItem.name, pendingItem.originalPrice, pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image);
-                    localStorage.removeItem('pendingCartItem');
-                    showMessage("register-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng ký!`, "success");
+                    addToCart(
+                        pendingItem.id, pendingItem.name, pendingItem.originalPrice,
+                        pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image
+                    );
+                    localStorage.removeItem("pendingCartItem");
                 }
-                // Cập nhật UI header
-                if (typeof updateUserDisplay === "function") {
-                    updateUserDisplay();
-                }
-                setTimeout(() => {
-                    if (typeof CyberModal !== "undefined" && CyberModal.showLogin) CyberModal.showLogin();
-                    showMessage("register-error", "");
-                }, 1500);
+                setTimeout(() => CyberModal?.showLogin?.(), 1500);
             } else {
                 showMessage("register-error", data.error || "❌ Đăng ký thất bại!");
             }
-        } catch (err) {
-            console.error(err);
+        } catch {
             showMessage("register-error", "❌ Lỗi kết nối server!");
         }
     });
@@ -175,7 +147,6 @@ if (loginForm) {
         e.preventDefault();
         const email = document.getElementById("login-email").value.trim();
         const password = document.getElementById("login-password").value.trim();
-
         showMessage("login-error", "");
 
         try {
@@ -183,275 +154,79 @@ if (loginForm) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password }),
             });
             const data = await res.json();
-
             if (data.success && data.user) {
-                // Lưu vào localStorage ngay khi login
-                localStorage.setItem("userId", data.user.id || "");
-                localStorage.setItem("firstName", (data.user.firstName || "").trim());
-                localStorage.setItem("lastName", (data.user.lastName || "").trim());
-                localStorage.setItem("email", data.user.email || "");
-                localStorage.setItem("userName", (data.user.lastName || "").trim());
-                if (data.user.avatar_url) {
-                    localStorage.setItem("avatarUrl", data.user.avatar_url);
-                } else {
-                    localStorage.removeItem("avatarUrl");
-                }
+                saveUserInfo(data.user);
 
-                // 🔓 Mở khoá giỏ hàng khi login thành công
-                localStorage.removeItem("cartLocked");
-
-                // Kiểm tra và thêm sản phẩm tạm sau đăng nhập
-                const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
+                const pendingItem = JSON.parse(localStorage.getItem("pendingCartItem"));
                 if (pendingItem) {
-                    addToCart(pendingItem.id, pendingItem.name, pendingItem.originalPrice, pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image);
-                    localStorage.removeItem('pendingCartItem');
-                    showMessage("login-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng nhập!`, "success");
+                    addToCart(
+                        pendingItem.id, pendingItem.name, pendingItem.originalPrice,
+                        pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image
+                    );
+                    localStorage.removeItem("pendingCartItem");
                 }
 
-                // Đồng bộ giỏ hàng sau đăng nhập
                 await syncCartToServer();
+                CyberModal?.close?.();
+                updateUserDisplay?.();
+                window.dispatchEvent(new Event("user:login"));
 
-                // Đóng modal nếu có
-                if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-                if (typeof updateUserDisplay === "function") {
-                    updateUserDisplay();
-                }
-
-                // Notify other scripts in same tab to process pendingAction and refresh UI
-                try {
-                    window.dispatchEvent(new Event('user:login'));
-                } catch (err) {
-                    console.warn('Không thể dispatch user:login event', err);
-                }
-
-                // --- Thay đổi so với trước: KHÔNG reload trang tự động.
-                // Thay vào đó: xử lý không reload để cập nhật header, giỏ hàng, xử lý pendingAction.
-                // Nếu có postLoginRedirect, chỉ redirect nếu là host khác (external). Nếu cùng origin, chỉ cập nhật history (nếu muốn) nhưng KHÔNG reload.
-                const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                if (postLoginRedirect) {
-                    localStorage.removeItem('postLoginRedirect');
+                const redirect = localStorage.getItem("postLoginRedirect");
+                if (redirect) {
+                    localStorage.removeItem("postLoginRedirect");
                     try {
-                        const redirectUrl = new URL(postLoginRedirect, window.location.origin);
-                        const params = new URLSearchParams(redirectUrl.search);
-                        const id = params.get('id');
-                        const type = params.get('type');
-
-                        // Chỉ giữ lại id và type
-                        let cleanUrl = `${redirectUrl.pathname}?id=${id}`;
-                        if (type) cleanUrl += `&type=${type}`;
-
-                        // Cập nhật URL mà không reload
-                        window.history.replaceState({}, document.title, cleanUrl);
-
-                        // Cập nhật ngay header, giỏ hàng
-                        await processAfterLoginNoReload();
-                        return;
-                    } catch (err) {
-                        console.warn('postLoginRedirect parsing error:', err);
-                        await processAfterLoginNoReload();
-                        return;
-                    }
+                        const url = new URL(redirect, window.location.origin);
+                        let cleanUrl = `${url.pathname}?id=${url.searchParams.get("id")}`;
+                        if (url.searchParams.get("type")) cleanUrl += `&type=${url.searchParams.get("type")}`;
+                        replaceCleanUrl(cleanUrl);
+                    } catch {}
                 }
-
-
-                // Nếu không có redirect, chỉ chạy xử lý after-login để cập nhật UI
                 await processAfterLoginNoReload();
-
             } else {
                 showMessage("login-error", data.error || "❌ Sai email hoặc mật khẩu!");
             }
-        } catch (err) {
-            console.error(err);
+        } catch {
             showMessage("login-error", "❌ Lỗi kết nối server!");
         }
     });
 }
 
-// ==================== QUÊN MẬT KHẨU ====================
-const forgotForm = document.getElementById("forgotForm");
-if (forgotForm) {
-    forgotForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("forgot-email").value.trim();
+// ==================== OAUTH POPUP ====================
+function startOAuth(provider) {
+    try {
+        localStorage.setItem("postLoginRedirect", window.location.href);
+        const popup = window.open(
+            `${window.API_BASE}/api/auth/${provider}`,
+            `${provider}Login`,
+            "width=600,height=700"
+        );
 
-        showMessage("forgot-error", "");
+        const timer = setInterval(async () => {
+            if (!popup || popup.closed) {
+                clearInterval(timer);
+                await processAfterLoginNoReload();
+                CyberModal?.close?.();
 
-        try {
-            const res = await fetch(`${window.API_BASE}/api/forgot-password`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email })
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                showMessage("forgot-error", "✅ Vui lòng kiểm tra email để đặt lại mật khẩu!", "success");
-            } else {
-                showMessage("forgot-error", data.error || "❌ Không thể gửi yêu cầu!");
+                const redirect = localStorage.getItem("postLoginRedirect");
+                if (redirect) {
+                    localStorage.removeItem("postLoginRedirect");
+                    const url = new URL(redirect);
+                    replaceCleanUrl(url.pathname + url.search);
+                }
             }
-        } catch (err) {
-            console.error(err);
-            showMessage("forgot-error", "❌ Lỗi kết nối server!");
-        }
-    });
+        }, 500);
+    } catch {
+        showMessage("login-error", `❌ Không thể mở ${provider} Login, vui lòng thử lại!`);
+    }
 }
 
-/* =======================================================================
-   GOOGLE LOGIN
-   ======================================================================= */
 document.addEventListener("click", (e) => {
-    const btn = e.target.closest("#googleLoginBtn-login, #googleLoginBtn-register, #googleLoginBtn-forgot, .google-btn");
-    if (!btn) return;
-    if (btn.disabled) return;
-
-    try {
-        // Lưu trang hiện tại để redirect về sau OAuth (nếu có)
-        try { localStorage.setItem('postLoginRedirect', window.location.href); } catch (err) { /* ignore */ }
-
-        window.location.href = `${window.API_BASE}/api/auth/google`;
-    } catch (err) {
-        console.error("Không thể chuyển sang Google OAuth:", err);
-        showMessage("login-error", "❌ Không thể mở Google Login, vui lòng thử lại!");
-    }
+    if (e.target.closest("#googleLoginBtn-login, #googleLoginBtn-register, #googleLoginBtn-forgot, .google-btn")) startOAuth("google");
+    if (e.target.closest("#facebookLoginBtn-login, #facebookLoginBtn-register, #facebookLoginBtn-forgot, .facebook-btn")) startOAuth("facebook");
 });
 
-(function handleGoogleCallbackAndAutoOpen() {
-    try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const loginStatus = urlParams.get("login");
-
-        if (loginStatus === "google") {
-            // 🔓 Mở khoá giỏ hàng
-            localStorage.removeItem("cartLocked");
-
-            // Lấy thông tin và đồng bộ
-            // Thực hiện xử lý không reload: checkLoginStatus + sync + update header + process pending
-            processAfterLoginNoReload().then(() => {
-                // Đóng modal và redirect nếu cần
-                if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-
-                const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                if (postLoginRedirect) {
-                    localStorage.removeItem('postLoginRedirect');
-                    try {
-                        const redirectUrl = new URL(postLoginRedirect, window.location.origin);
-                        if (redirectUrl.origin !== window.location.origin) {
-                            // external -> full redirect
-                            window.location.href = postLoginRedirect;
-                            return;
-                        } else {
-                            // same-origin -> update URL without reload
-                            const newPath = redirectUrl.pathname + redirectUrl.search + redirectUrl.hash;
-                            const currentPath = window.location.pathname + window.location.search + window.location.hash;
-                            if (newPath !== currentPath) {
-                                try { window.history.replaceState({}, document.title, newPath); } catch (e) {}
-                            }
-                            return;
-                        }
-                    } catch (e) {
-                        // parsing error -> do nothing
-                    }
-                }
-                // Nếu không có redirect thì đã cập nhật UI trong processAfterLoginNoReload
-            }).catch(err => {
-                console.warn('Sync cart failed after Google OAuth:', err);
-                if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-                try { window.dispatchEvent(new Event('user:login')); } catch (e) {}
-            });
-
-            // Xóa query param login khỏi URL để tránh xử lý lại khi reload/nhấn F5
-            window.history.replaceState({}, document.title, window.location.pathname);
-        } else if (loginStatus === "failed") {
-            showMessage("login-error", "❌ Google login thất bại, vui lòng thử lại!");
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-
-        // Always update check login on load
-        checkLoginStatus();
-
-        if (localStorage.getItem("showLoginAfterReset") === "true") {
-            localStorage.removeItem("showLoginAfterReset");
-            const openLoginModal = () => {
-                if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                    CyberModal.open();
-                } else {
-                    setTimeout(openLoginModal, 200);
-                }
-            };
-            openLoginModal();
-        }
-    } catch (err) {
-        console.error("Lỗi xử lý callback Google/auto open:", err);
-    }
-})();
-
-/* ========================================================================
-   FACEBOOK LOGIN
-   ======================================================================= */
-document.addEventListener("click", (e) => {
-    const btn = e.target.closest("#facebookLoginBtn-login, #facebookLoginBtn-register, #facebookLoginBtn-forgot, .facebook-btn");
-    if (!btn) return;
-    if (btn.disabled) return;
-
-    try {
-        // Lưu trang hiện tại để redirect về sau OAuth (nếu có)
-        try { localStorage.setItem('postLoginRedirect', window.location.href); } catch (err) { /* ignore */ }
-
-        window.location.href = `${window.API_BASE}/api/auth/facebook`;
-    } catch (err) {
-        console.error("Không thể chuyển sang Facebook OAuth:", err);
-        showMessage("login-error", "❌ Không thể mở Facebook Login, vui lòng thử lại!");
-    }
-});
-
-(function handleFacebookCallback() {
-    try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const loginStatus = urlParams.get("login");
-
-        if (loginStatus === "facebook") {
-            // 🔓 Mở khoá giỏ hàng
-            localStorage.removeItem("cartLocked");
-
-            // Thực hiện xử lý không reload
-            processAfterLoginNoReload().then(() => {
-                if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-
-                const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                if (postLoginRedirect) {
-                    localStorage.removeItem('postLoginRedirect');
-                    try {
-                        const redirectUrl = new URL(postLoginRedirect, window.location.origin);
-                        if (redirectUrl.origin !== window.location.origin) {
-                            window.location.href = postLoginRedirect;
-                            return;
-                        } else {
-                            const newPath = redirectUrl.pathname + redirectUrl.search + redirectUrl.hash;
-                            const currentPath = window.location.pathname + window.location.search + window.location.hash;
-                            if (newPath !== currentPath) {
-                                try { window.history.replaceState({}, document.title, newPath); } catch (e) {}
-                            }
-                            return;
-                        }
-                    } catch (e) {
-                        // parsing error -> do nothing
-                    }
-                }
-            }).catch(err => {
-                console.warn('Sync cart failed after Facebook OAuth:', err);
-                if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-                try { window.dispatchEvent(new Event('user:login')); } catch (e) {}
-            });
-
-            window.history.replaceState({}, document.title, window.location.pathname);
-        } else if (loginStatus === "failed") {
-            showMessage("login-error", "❌ Facebook login thất bại, vui lòng thử lại!");
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    } catch (err) {
-        console.error("Lỗi xử lý callback Facebook:", err);
-    }
-})();
+// ==================== AUTO LOGIN CHECK ====================
+document.addEventListener("DOMContentLoaded", checkLoginStatus);

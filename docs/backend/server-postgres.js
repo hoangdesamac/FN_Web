@@ -360,7 +360,7 @@ app.get('/api/auth/google', async (req, res) => {
 app.get('/api/auth/google/callback', async (req, res) => {
     try {
         const code = req.query.code;
-        if (!code) return res.status(400).send('Missing code');
+        if (!code) return res.status(400).json({ success: false, error: 'Missing code' });
 
         const { tokens } = await googleClient.getToken(code);
 
@@ -391,7 +391,7 @@ app.get('/api/auth/google/callback', async (req, res) => {
         };
 
         if (!profile || !profile.email) {
-            return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+            return res.status(400).json({ success: false, error: 'Google login failed: no email' });
         }
 
         let userRow;
@@ -424,14 +424,26 @@ app.get('/api/auth/google/callback', async (req, res) => {
             }
         }
 
+        // Set cookie đăng nhập
         setAuthCookie(res, userRow);
 
-        return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=google`);
+        return res.json({
+            success: true,
+            method: 'google',
+            user: {
+                id: userRow.id,
+                email: userRow.email,
+                firstName: userRow.first_name,
+                lastName: userRow.last_name,
+                avatar_url: userRow.avatar_url
+            }
+        });
     } catch (err) {
         console.error('Google callback error:', err);
-        return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+        return res.status(500).json({ success: false, error: 'Google login error' });
     }
 });
+
 
 // ===== Facebook OAuth routes =====
 app.get('/api/auth/facebook', (req, res) => {
@@ -446,43 +458,37 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
     try {
         const code = req.query.code;
         if (!code) {
-            return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+            return res.status(400).json({ success: false, error: 'Missing code' });
         }
 
-        // Đổi code -> access_token
         const tokenRes = await fetch(
             `https://graph.facebook.com/v12.0/oauth/access_token?client_id=${process.env.FACEBOOK_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.FACEBOOK_CALLBACK_URL)}&client_secret=${process.env.FACEBOOK_CLIENT_SECRET}&code=${code}`
         );
         const tokenData = await tokenRes.json();
-
         if (!tokenData.access_token) {
             console.error("FB token error:", tokenData);
-            return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+            return res.status(400).json({ success: false, error: 'Facebook login failed: no access_token' });
         }
 
-        // Lấy thông tin user từ Facebook (yêu cầu first_name, last_name, picture)
-        const userRes = await fetch(`https://graph.facebook.com/me?fields=id,first_name,last_name,name,email,picture.width(300).height(300)&access_token=${tokenData.access_token}`);
+        const userRes = await fetch(
+            `https://graph.facebook.com/me?fields=id,first_name,last_name,name,email,picture.width(300).height(300)&access_token=${tokenData.access_token}`
+        );
         const fbUser = await userRes.json();
-
         if (!fbUser || !fbUser.email) {
             console.error("FB user fetch error:", fbUser);
-            return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+            return res.status(400).json({ success: false, error: 'Facebook login failed: no email' });
         }
 
         let userRow;
-        // 1) Nếu có facebook_id thì dùng user đó
         const byFb = await pool.query('SELECT * FROM users WHERE facebook_id = $1', [fbUser.id]);
         if (byFb.rows.length) {
             userRow = byFb.rows[0];
         } else {
-            // 2) Nếu không có facebook_id, thử tìm theo email
             const byEmail = await pool.query('SELECT * FROM users WHERE email = $1', [fbUser.email]);
             if (byEmail.rows.length) {
                 userRow = byEmail.rows[0];
-                // chỉ cập nhật facebook_id (không cập nhật avatar để giữ nguyên theo ý bạn)
                 await pool.query('UPDATE users SET facebook_id = $1 WHERE id = $2', [fbUser.id, userRow.id]);
             } else {
-                // 3) Nếu chưa có user → tạo mới, lưu avatar vào avatar_url
                 const insert = await pool.query(
                     `INSERT INTO users (email, first_name, last_name, password_hash, facebook_id, avatar_url)
                      VALUES ($1, $2, $3, $4, $5, $6)
@@ -493,21 +499,32 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
                         fbUser.last_name || fbUser.name.split(' ').slice(1).join(' ') || '',
                         null,
                         fbUser.id,
-                        fbUser.picture?.data?.url || null   // <-- lưu avatar vào avatar_url
+                        fbUser.picture?.data?.url || null
                     ]
                 );
                 userRow = insert.rows[0];
             }
         }
 
-        // Set cookie và redirect
         setAuthCookie(res, userRow);
-        return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=facebook`);
+
+        return res.json({
+            success: true,
+            method: 'facebook',
+            user: {
+                id: userRow.id,
+                email: userRow.email,
+                firstName: userRow.first_name,
+                lastName: userRow.last_name,
+                avatar_url: userRow.avatar_url
+            }
+        });
     } catch (err) {
         console.error("Facebook callback error:", err);
-        return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
+        return res.status(500).json({ success: false, error: 'Facebook login error' });
     }
 });
+
 
 // ===== OTP Xác minh số điện thoại =====
 // Hàm gửi SMS qua Infobip
@@ -1307,9 +1324,6 @@ app.delete("/api/orders/:id", authenticateToken, async (req, res) => {
         res.status(500).json({ success: false, error: "Server error" });
     }
 });
-
-
-
 
 // ===== Start =====
 const PORT = process.env.PORT || 3000;
