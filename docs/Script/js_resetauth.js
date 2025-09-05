@@ -1,3 +1,4 @@
+
 // ==================== HÀM HỖ TRỢ ====================
 // Hiển thị lỗi hoặc thông báo
 function showMessage(elementId, message, type = "error") {
@@ -226,18 +227,45 @@ if (loginForm) {
                     console.warn('Không thể dispatch user:login event', err);
                 }
 
-                // --- Thay vì reload toàn trang, xử lý cập nhật header & pending action, và redirect nếu có redirect lưu trước đó ---
+                // --- Thay đổi so với trước: KHÔNG reload trang tự động.
+                // Thay vào đó: xử lý không reload để cập nhật header, giỏ hàng, xử lý pendingAction.
+                // Nếu có postLoginRedirect, chỉ redirect nếu là host khác (external). Nếu cùng origin, chỉ cập nhật history (nếu muốn) nhưng KHÔNG reload.
                 const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                // Xoá key để tránh redirect vòng
-                if (postLoginRedirect) localStorage.removeItem('postLoginRedirect');
-
-                // Thực hiện xử lý không reload
-                await processAfterLoginNoReload();
-
-                // Nếu có redirect về trang ban đầu thì chuyển hướng, còn không giữ nguyên trang hiện tại
-                if (postLoginRedirect && postLoginRedirect !== window.location.href) {
-                    window.location.href = postLoginRedirect;
+                if (postLoginRedirect) {
+                    localStorage.removeItem('postLoginRedirect');
+                    try {
+                        const redirectUrl = new URL(postLoginRedirect, window.location.origin);
+                        const currentOrigin = window.location.origin;
+                        if (redirectUrl.origin !== currentOrigin) {
+                            // Nếu redirect ra domain khác, chuyển hướng thực sự
+                            window.location.href = postLoginRedirect;
+                            return;
+                        } else {
+                            // Nội bộ cùng origin => cập nhật UI/URL không reload
+                            // Thay đổi URL nhẹ nhàng nếu cần (không reload)
+                            // Ví dụ: nếu redirectUrl trỏ tới 1 product page chứa params, ta cập nhật history để "khớp" URL.
+                            // Nhưng để an toàn cho SPA, chỉ replaceState khi path/search khác hiện tại.
+                            const newPath = redirectUrl.pathname + redirectUrl.search + redirectUrl.hash;
+                            const currentPath = window.location.pathname + window.location.search + window.location.hash;
+                            if (newPath !== currentPath) {
+                                try {
+                                    window.history.replaceState({}, document.title, newPath);
+                                } catch (e) { /* ignore */ }
+                            }
+                            // Đảm bảo đã cập nhật header & xử lý pending action
+                            await processAfterLoginNoReload();
+                            return;
+                        }
+                    } catch (err) {
+                        // Nếu parsing URL lỗi, không redirect, chỉ xử lý sau login
+                        console.warn('postLoginRedirect parsing error:', err);
+                        await processAfterLoginNoReload();
+                        return;
+                    }
                 }
+
+                // Nếu không có redirect, chỉ chạy xử lý after-login để cập nhật UI
+                await processAfterLoginNoReload();
 
             } else {
                 showMessage("login-error", data.error || "❌ Sai email hoặc mật khẩu!");
@@ -315,13 +343,26 @@ document.addEventListener("click", (e) => {
                 const postLoginRedirect = localStorage.getItem('postLoginRedirect');
                 if (postLoginRedirect) {
                     localStorage.removeItem('postLoginRedirect');
-                    // Nếu redirect trỏ về 1 trang cụ thể (ví dụ product), chuyển hướng
-                    if (postLoginRedirect !== window.location.href) {
-                        window.location.href = postLoginRedirect;
-                        return;
+                    try {
+                        const redirectUrl = new URL(postLoginRedirect, window.location.origin);
+                        if (redirectUrl.origin !== window.location.origin) {
+                            // external -> full redirect
+                            window.location.href = postLoginRedirect;
+                            return;
+                        } else {
+                            // same-origin -> update URL without reload
+                            const newPath = redirectUrl.pathname + redirectUrl.search + redirectUrl.hash;
+                            const currentPath = window.location.pathname + window.location.search + window.location.hash;
+                            if (newPath !== currentPath) {
+                                try { window.history.replaceState({}, document.title, newPath); } catch (e) {}
+                            }
+                            return;
+                        }
+                    } catch (e) {
+                        // parsing error -> do nothing
                     }
                 }
-                // Nếu không có redirect, chỉ cập nhật UI (đã thực hiện ở processAfterLoginNoReload)
+                // Nếu không có redirect thì đã cập nhật UI trong processAfterLoginNoReload
             }).catch(err => {
                 console.warn('Sync cart failed after Google OAuth:', err);
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
@@ -389,9 +430,21 @@ document.addEventListener("click", (e) => {
                 const postLoginRedirect = localStorage.getItem('postLoginRedirect');
                 if (postLoginRedirect) {
                     localStorage.removeItem('postLoginRedirect');
-                    if (postLoginRedirect !== window.location.href) {
-                        window.location.href = postLoginRedirect;
-                        return;
+                    try {
+                        const redirectUrl = new URL(postLoginRedirect, window.location.origin);
+                        if (redirectUrl.origin !== window.location.origin) {
+                            window.location.href = postLoginRedirect;
+                            return;
+                        } else {
+                            const newPath = redirectUrl.pathname + redirectUrl.search + redirectUrl.hash;
+                            const currentPath = window.location.pathname + window.location.search + window.location.hash;
+                            if (newPath !== currentPath) {
+                                try { window.history.replaceState({}, document.title, newPath); } catch (e) {}
+                            }
+                            return;
+                        }
+                    } catch (e) {
+                        // parsing error -> do nothing
                     }
                 }
             }).catch(err => {
