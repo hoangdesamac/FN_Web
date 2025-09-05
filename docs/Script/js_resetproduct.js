@@ -1210,7 +1210,7 @@ $(document).ready(function () {
         }
     }
 
-    // If still missing product identifiers, attempt a silent recover before proceeding
+    // If still missing product identifiers, attempt a silent recover before proceedingS
     if (!productId && !normName && !type) {
         const rec = tryRecoverParams();
         if (rec) {
