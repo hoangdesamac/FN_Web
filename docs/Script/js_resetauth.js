@@ -235,34 +235,27 @@ if (loginForm) {
                     localStorage.removeItem('postLoginRedirect');
                     try {
                         const redirectUrl = new URL(postLoginRedirect, window.location.origin);
-                        const currentOrigin = window.location.origin;
-                        if (redirectUrl.origin !== currentOrigin) {
-                            // Nếu redirect ra domain khác, chuyển hướng thực sự
-                            window.location.href = postLoginRedirect;
-                            return;
-                        } else {
-                            // Nội bộ cùng origin => cập nhật UI/URL không reload
-                            // Thay đổi URL nhẹ nhàng nếu cần (không reload)
-                            // Ví dụ: nếu redirectUrl trỏ tới 1 product page chứa params, ta cập nhật history để "khớp" URL.
-                            // Nhưng để an toàn cho SPA, chỉ replaceState khi path/search khác hiện tại.
-                            const newPath = redirectUrl.pathname + redirectUrl.search + redirectUrl.hash;
-                            const currentPath = window.location.pathname + window.location.search + window.location.hash;
-                            if (newPath !== currentPath) {
-                                try {
-                                    window.history.replaceState({}, document.title, newPath);
-                                } catch (e) { /* ignore */ }
-                            }
-                            // Đảm bảo đã cập nhật header & xử lý pending action
-                            await processAfterLoginNoReload();
-                            return;
-                        }
+                        const params = new URLSearchParams(redirectUrl.search);
+                        const id = params.get('id');
+                        const type = params.get('type');
+
+                        // Chỉ giữ lại id và type
+                        let cleanUrl = `${redirectUrl.pathname}?id=${id}`;
+                        if (type) cleanUrl += `&type=${type}`;
+
+                        // Cập nhật URL mà không reload
+                        window.history.replaceState({}, document.title, cleanUrl);
+
+                        // Cập nhật ngay header, giỏ hàng
+                        await processAfterLoginNoReload();
+                        return;
                     } catch (err) {
-                        // Nếu parsing URL lỗi, không redirect, chỉ xử lý sau login
                         console.warn('postLoginRedirect parsing error:', err);
                         await processAfterLoginNoReload();
                         return;
                     }
                 }
+
 
                 // Nếu không có redirect, chỉ chạy xử lý after-login để cập nhật UI
                 await processAfterLoginNoReload();
