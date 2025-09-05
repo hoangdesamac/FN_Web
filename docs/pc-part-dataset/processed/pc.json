@@ -208,6 +208,22 @@
     "salePrice": 17500000
   },
   {
+    "id": "pc-intel-i9 14900K-vga-rtx-4060",
+    "name": "PC Intel i9 14900K/ VGA RTX 4060",
+    "image": "https://product.hstatic.net/200000722513/product/luxs_2304c8fb845340a68d18cac9c3f298db_grande.png",
+    "cpu": "Intel Core i9 14900K",
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "ram": "16GB DDR4",
+    "storage": "512GB SSD",
+    "mainboard": "B760 chipset",
+    "psu": "650W 80 Plus Bronze",
+    "case": "Mid Tower",
+    "os": "Windows 11 (trial)",
+    "description": "PC cấu hình mạnh mẽ với CPU Intel i9 14900K và VGA RTX 5080, phù hợp cho gaming và làm việc đồ họa.",
+    "originalPrice": 119720000,
+    "salePrice": 109990000
+  },
+  {
     "id": "pc-intel-ryzen-5-5600x-vga-rtx-4060",
     "name": "PC Intel Ryzen 5 5600X/ VGA RTX 4060",
     "image": "https://product.hstatic.net/200000722513/product/luxs_2304c8fb845340a68d18cac9c3f298db_grande.png",
