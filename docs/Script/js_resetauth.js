@@ -64,14 +64,8 @@ async function syncCartToServer() {
 // Xử lý sau khi login mà KHÔNG reload
 async function processAfterLoginNoReload() {
     try {
-        if (typeof checkLoginStatus === "function") await checkLoginStatus();
-        else if (typeof fetchUserInfo === "function") await fetchUserInfo();
-
-        try { await syncCartToServer(); } catch {}
-
-        updateUserDisplay?.();
-        updateCartCount?.();
-        updateOrderCount?.();
+        await syncCartToServer();
+        await refreshHeaderUI(); // Đồng bộ UI ngay lập tức
 
         try { window.dispatchEvent(new Event("user:login")); } catch {}
 
@@ -82,9 +76,6 @@ async function processAfterLoginNoReload() {
         console.error("processAfterLoginNoReload error:", err);
     }
 }
-
-
-
 
 // ==================== KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP ====================
 async function checkLoginStatus() {
@@ -99,7 +90,7 @@ async function checkLoginStatus() {
         } else {
             clearUserInfo();
         }
-        updateUserDisplay?.();
+        await refreshHeaderUI();
     } catch (err) {
         console.error("Lỗi kiểm tra đăng nhập:", err);
     }
@@ -176,8 +167,6 @@ if (loginForm) {
 
                 await syncCartToServer();
                 CyberModal?.close?.();
-                updateUserDisplay?.();
-                window.dispatchEvent(new Event("user:login"));
 
                 const redirect = localStorage.getItem("postLoginRedirect");
                 if (redirect) {
@@ -189,6 +178,7 @@ if (loginForm) {
                         replaceCleanUrl(cleanUrl);
                     } catch {}
                 }
+
                 await processAfterLoginNoReload();
             } else {
                 showMessage("login-error", data.error || "❌ Sai email hoặc mật khẩu!");

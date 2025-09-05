@@ -288,6 +288,20 @@ function updateUserDisplay() {
         userAction.addEventListener("click", () => CyberModal.open());
     }
 }
+// ================= Refresh lại toàn bộ header sau login/logout =================
+async function refreshHeaderUI() {
+    try {
+        await fetchUserInfo();        // Lấy user info mới nhất
+        updateUserDisplay();          // Cập nhật avatar, Xin chào, dropdown
+        updateCartCount();            // Cập nhật giỏ hàng
+        updateOrderCount();           // Cập nhật đơn hàng
+        initCartIconClick();          // Gắn lại event icon giỏ
+        initOrderIconClick();         // Gắn lại event icon đơn
+        console.log("[HEADER] Header UI refreshed successfully.");
+    } catch (err) {
+        console.error("[HEADER] Refresh UI error:", err);
+    }
+}
 
 // ================= Xử lý click icon giỏ hàng =================
 function initCartIconClick() {
@@ -334,18 +348,13 @@ function initOrderIconClick() {
 
 // ================= Xử lý sau Login/Logout =================
 async function processAfterLoginNoReload() {
-    await fetchUserInfo();
-    updateUserDisplay();
-    updateCartCount();
-    updateOrderCount();
+    await refreshHeaderUI();
     CyberModal.close();
 }
 
 async function processAfterLogoutNoReload() {
     clearUserLocalStorage();
-    updateUserDisplay();
-    updateCartCount();
-    updateOrderCount();
+    await refreshHeaderUI();
 }
 
 // ================= Init toàn bộ header =================
