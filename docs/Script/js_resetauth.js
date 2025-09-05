@@ -59,7 +59,9 @@ async function syncCartToServer() {
     }
 }
 
-// Xử lý mọi thứ sau khi login mà KHÔNG reload
+// ==================== LOGIN/LOGOUT HANDLERS ====================
+
+// Xử lý sau khi login mà KHÔNG reload
 async function processAfterLoginNoReload() {
     try {
         if (typeof checkLoginStatus === "function") await checkLoginStatus();
@@ -78,6 +80,18 @@ async function processAfterLoginNoReload() {
         }
     } catch (err) {
         console.error("processAfterLoginNoReload error:", err);
+    }
+}
+
+// Xử lý sau khi logout mà KHÔNG reload
+async function processAfterLogoutNoReload() {
+    try {
+        clearUserInfo();
+        updateUserDisplay?.();
+        updateCartCount?.();
+        updateOrderCount?.();
+    } catch (err) {
+        console.error("processAfterLogoutNoReload error:", err);
     }
 }
 

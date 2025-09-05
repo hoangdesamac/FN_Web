@@ -25,7 +25,6 @@ function initCartCountEffect() {
 }
 
 // 🛒 Giỏ hàng
-// ================= Cập nhật số lượng giỏ hàng =================
 async function updateCartCount() {
     const cartCountElement = document.querySelector('.cart-count');
     if (!cartCountElement) return;
@@ -35,12 +34,10 @@ async function updateCartCount() {
         const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
 
         if (!isLoggedIn) {
-            // Nếu chưa đăng nhập → ẩn badge giỏ hàng
             cartCountElement.style.display = "none";
             return;
         }
 
-        // Nếu đã đăng nhập → gọi API để lấy giỏ hàng
         const res = await fetch(`${window.API_BASE}/api/cart`, {
             method: 'GET',
             credentials: 'include'
@@ -48,25 +45,21 @@ async function updateCartCount() {
 
         if (!res.ok) throw new Error(`Lỗi API: ${res.status}`);
         const data = await res.json();
-
         if (!data.success) {
-            console.warn('⚠️ API trả về lỗi khi lấy giỏ hàng:', data.error || data);
+            console.warn('⚠️ API trả lỗi giỏ hàng:', data.error || data);
             cartCountElement.style.display = "none";
             return;
         }
 
-        // Tính tổng số lượng từ serverCart và giftCart
         const serverCart = Array.isArray(data.cart) ? data.cart : [];
         const count =
             serverCart.reduce((t, i) => t + (i.quantity || 0), 0) +
             giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-        // Cập nhật UI
         cartCountElement.textContent = count;
         cartCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
     } catch (err) {
-        console.error('❌ Lỗi khi cập nhật số lượng giỏ hàng:', err);
-        // Fallback: Ẩn badge nếu có lỗi
+        console.error('❌ Lỗi giỏ hàng:', err);
         cartCountElement.style.display = "none";
     }
 }
@@ -78,23 +71,21 @@ async function updateOrderCount() {
     orderCountElement.style.display = "none";
 
     const isLoggedIn = !!localStorage.getItem('userName');
-    if (isLoggedIn) {
-        try {
-            const res = await fetch(`${window.API_BASE}/api/orders`, {
-                method: "GET",
-                credentials: "include"
-            });
-            const data = await res.json();
-            if (data.success) {
-                const count = data.orders.length;
-                orderCountElement.textContent = count;
-                orderCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
-            }
-        } catch (err) {
-            console.error("Lỗi lấy đơn hàng từ server:", err);
+    if (!isLoggedIn) return;
+
+    try {
+        const res = await fetch(`${window.API_BASE}/api/orders`, {
+            method: "GET",
+            credentials: "include"
+        });
+        const data = await res.json();
+        if (data.success) {
+            const count = data.orders.length;
+            orderCountElement.textContent = count;
+            orderCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
         }
-    } else {
-        orderCountElement.style.display = "none";
+    } catch (err) {
+        console.error("❌ Lỗi đơn hàng:", err);
     }
 }
 
@@ -125,7 +116,7 @@ function initCategoryDropdown() {
         categoriesDropdown.classList.toggle('active');
     });
 
-    document.addEventListener('click', function (event) {
+    document.addEventListener('click', (event) => {
         if (!categoryBtn.contains(event.target) && !categoriesDropdown.contains(event.target)) {
             categoriesDropdown.classList.remove('active');
         }
@@ -184,7 +175,7 @@ async function fetchUserInfo() {
             credentials: "include"
         });
         const data = await res.json();
-        if (data.loggedIn) {
+        if (data.loggedIn && data.user) {
             localStorage.setItem('userName', data.user.lastName.trim());
             localStorage.setItem('firstName', (data.user.firstName || "").trim());
             localStorage.setItem('lastName', (data.user.lastName || "").trim());
@@ -196,19 +187,23 @@ async function fetchUserInfo() {
                 localStorage.removeItem('avatarUrl');
             }
         } else {
-            localStorage.removeItem('userName');
-            localStorage.removeItem('firstName');
-            localStorage.removeItem('lastName');
-            localStorage.removeItem('email');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('avatarUrl');
+            clearUserLocalStorage();
         }
     } catch (err) {
-        console.error("Lỗi lấy thông tin user:", err);
+        console.error("❌ Lỗi user:", err);
     }
 }
 
-// ================= Hàm tạo avatar ngẫu nhiên =================
+function clearUserLocalStorage() {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
+    localStorage.removeItem('email');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('avatarUrl');
+}
+
+// ================= Avatar ngẫu nhiên =================
 function generateRandomAvatar(name) {
     const colors = ["#ff4757", "#1e90ff", "#2ed573", "#ffa502", "#eccc68", "#3742fa", "#ff6b81"];
     const color = colors[Math.floor(Math.random() * colors.length)];
@@ -233,7 +228,7 @@ function updateUserDisplay() {
     const firstName = localStorage.getItem('firstName') || "";
     const lastName = localStorage.getItem('lastName') || "";
     const avatarUrl = localStorage.getItem('avatarUrl');
-    const fullName = `${firstName} ${lastName}`.trim() || lastName || firstName || "Người dùng";
+    const fullName = `${firstName} ${lastName}`.trim() || "Người dùng";
 
     let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
@@ -257,8 +252,8 @@ function updateUserDisplay() {
                     <div style="font-size: 12px; font-weight: 600;" title="${fullName}">${shortName}</div>
                 </div>
                 <div class="user-dropdown">
-                    <div class="dropdown-item" id="profileLink"> Thông tin cá nhân</div>
-                    <div class="dropdown-item" id="logoutBtn"> Đăng xuất</div>
+                    <div class="dropdown-item" id="profileLink">Thông tin cá nhân</div>
+                    <div class="dropdown-item" id="logoutBtn">Đăng xuất</div>
                 </div>
             </div>
         `;
@@ -277,14 +272,11 @@ function updateUserDisplay() {
                     method: "POST",
                     credentials: "include"
                 });
-                localStorage.clear();
-                await processAfterLoginNoReload?.();
+                await processAfterLogoutNoReload();
             } catch (err) {
-                console.error("Lỗi đăng xuất:", err);
+                console.error("❌ Lỗi đăng xuất:", err);
             }
         });
-
-
     } else {
         userAction.innerHTML = `
             <i class="bx bx-user-circle action-icon"></i>
@@ -304,7 +296,6 @@ function initCartIconClick() {
 
     cartLink.addEventListener('click', (e) => {
         e.preventDefault();
-
         const isLoggedIn = !!localStorage.getItem('userName');
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
@@ -314,9 +305,7 @@ function initCartIconClick() {
         if (!isLoggedIn) {
             if (cartCount > 0) {
                 CyberModal.open?.();
-                if (typeof showNotification === "function") {
-                    showNotification("Vui lòng đăng nhập để xem giỏ hàng!", "info");
-                }
+                showNotification?.("Vui lòng đăng nhập để xem giỏ hàng!", "info");
             } else {
                 window.location.href = 'resetcheckout.html';
             }
@@ -333,26 +322,31 @@ function initOrderIconClick() {
 
     orderLink.addEventListener('click', (e) => {
         e.preventDefault();
-
         const isLoggedIn = !!localStorage.getItem('userName');
         if (!isLoggedIn) {
             CyberModal.open?.();
-            if (typeof showNotification === "function") {
-                showNotification("Vui lòng đăng nhập để xem đơn hàng!", "info");
-            }
+            showNotification?.("Vui lòng đăng nhập để xem đơn hàng!", "info");
             return;
         }
         window.location.href = 'resetlookup.html';
     });
 }
 
-// ================= Khi load trang =================
-document.addEventListener("DOMContentLoaded", async () => {
+// ================= Xử lý sau Login/Logout =================
+async function processAfterLoginNoReload() {
     await fetchUserInfo();
     updateUserDisplay();
     updateCartCount();
     updateOrderCount();
-});
+    CyberModal.close();
+}
+
+async function processAfterLogoutNoReload() {
+    clearUserLocalStorage();
+    updateUserDisplay();
+    updateCartCount();
+    updateOrderCount();
+}
 
 // ================= Init toàn bộ header =================
 function initHeader() {
@@ -366,3 +360,11 @@ function initHeader() {
     initCartIconClick();
     initOrderIconClick();
 }
+
+// ================= Khi load trang =================
+document.addEventListener("DOMContentLoaded", async () => {
+    await fetchUserInfo();
+    updateUserDisplay();
+    updateCartCount();
+    updateOrderCount();
+});
