@@ -83,17 +83,8 @@ async function processAfterLoginNoReload() {
     }
 }
 
-// Xử lý sau khi logout mà KHÔNG reload
-async function processAfterLogoutNoReload() {
-    try {
-        clearUserInfo();
-        updateUserDisplay?.();
-        updateCartCount?.();
-        updateOrderCount?.();
-    } catch (err) {
-        console.error("processAfterLogoutNoReload error:", err);
-    }
-}
+
+
 
 // ==================== KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP ====================
 async function checkLoginStatus() {
@@ -108,11 +99,14 @@ async function checkLoginStatus() {
         } else {
             clearUserInfo();
         }
-        updateUserDisplay?.();
+        updateUserDisplay?.();  // ✅ Luôn render lại header
     } catch (err) {
         console.error("Lỗi kiểm tra đăng nhập:", err);
+        clearUserInfo();
+        updateUserDisplay?.();
     }
 }
+
 
 // ==================== ĐĂNG KÝ ====================
 const registerForm = document.getElementById("registerForm");

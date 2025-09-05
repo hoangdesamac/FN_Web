@@ -7,6 +7,7 @@ async function loadPagePart(url, containerId, callback = null) {
         const html = await response.text();
         $(`#${containerId}`).html(html);
 
+        // Tải script trong phần HTML
         const $tempDiv = $('<div>').html(html);
         $tempDiv.find('script').each(function () {
             const src = $(this).attr('src');
@@ -17,11 +18,17 @@ async function loadPagePart(url, containerId, callback = null) {
             $('body').append($newScript);
         });
 
+        // ✅ Gọi checkLoginStatus sau khi load header
+        if (containerId === "header-container" && typeof checkLoginStatus === "function") {
+            await checkLoginStatus();
+        }
+
         if (typeof callback === 'function') callback();
     } catch (error) {
         console.error(`Lỗi khi tải ${url}:`, error);
     }
 }
+
 
 // ==========================
 // AUTH GUARD & PENDING ACTIONS

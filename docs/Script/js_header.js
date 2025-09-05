@@ -230,15 +230,12 @@ function updateUserDisplay() {
     const avatarUrl = localStorage.getItem('avatarUrl');
     const fullName = `${firstName} ${lastName}`.trim() || "Người dùng";
 
-    let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
+    // Luôn tìm wrapper cố định
+    const userAction = document.querySelector('.cyber-action.user-action');
     if (!userAction) return;
 
-    const newUserAction = userAction.cloneNode(false);
-    newUserAction.className = userAction.className;
-    userAction.parentNode.replaceChild(newUserAction, userAction);
-    userAction = newUserAction;
-
     if (fullName !== "Người dùng") {
+        // ==== Render UI khi đã login ====
         const shortName = fullName.length > 14 ? fullName.slice(0, 14) + "..." : fullName;
         const avatarHTML = avatarUrl
             ? `<img src="${avatarUrl}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
@@ -277,7 +274,9 @@ function updateUserDisplay() {
                 console.error("❌ Lỗi đăng xuất:", err);
             }
         });
+
     } else {
+        // ==== Render UI mặc định khi chưa login ====
         userAction.innerHTML = `
             <i class="bx bx-user-circle action-icon"></i>
             <div class="action-text">
@@ -288,6 +287,7 @@ function updateUserDisplay() {
         userAction.addEventListener("click", () => CyberModal.open());
     }
 }
+
 
 // ================= Xử lý click icon giỏ hàng =================
 function initCartIconClick() {
