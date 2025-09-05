@@ -99,14 +99,11 @@ async function checkLoginStatus() {
         } else {
             clearUserInfo();
         }
-        updateUserDisplay?.();  // ✅ Luôn render lại header
+        updateUserDisplay?.();
     } catch (err) {
         console.error("Lỗi kiểm tra đăng nhập:", err);
-        clearUserInfo();
-        updateUserDisplay?.();
     }
 }
-
 
 // ==================== ĐĂNG KÝ ====================
 const registerForm = document.getElementById("registerForm");
