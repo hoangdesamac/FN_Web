@@ -44,6 +44,21 @@
       <div class="col-12 mb-3">
         <img src="https://file.hstatic.net/200000722513/file/gearvn-pc-gvn-t8-header.jpg" alt="Banner GEARVN" style="width:100%;max-width:100%;border-radius:12px;box-shadow:0 0 16px var(--primary);">
       </div>
+
+      <!-- Laptop Brand Categories -->
+      <div class="col-12 mb-3" id="laptop-brand-categories" style="display: none;">
+        <div class="brand-categories-container" style="background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <div class="d-flex flex-wrap gap-3 align-items-center">
+            <span style="font-weight: 600; color: #333; margin-right: 10px;">Thương hiệu Laptop:</span>
+            <a href="?type=laptop&brand=asus" class="laptop-brand-category-link" data-brand="asus" style="text-decoration: none; color: #1976d2; padding: 5px 12px; border-radius: 6px; border: 1px solid #e0e0e0; transition: all 0.3s;">Asus</a>
+            <a href="?type=laptop&brand=acer" class="laptop-brand-category-link" data-brand="acer" style="text-decoration: none; color: #1976d2; padding: 5px 12px; border-radius: 6px; border: 1px solid #e0e0e0; transition: all 0.3s;">Acer</a>
+            <a href="?type=laptop&brand=msi" class="laptop-brand-category-link" data-brand="msi" style="text-decoration: none; color: #1976d2; padding: 5px 12px; border-radius: 6px; border: 1px solid #e0e0e0; transition: all 0.3s;">MSI</a>
+            <a href="?type=laptop&brand=lenovo" class="laptop-brand-category-link" data-brand="lenovo" style="text-decoration: none; color: #1976d2; padding: 5px 12px; border-radius: 6px; border: 1px solid #e0e0e0; transition: all 0.3s;">Lenovo</a>
+            <a href="?type=laptop&brand=dell" class="laptop-brand-category-link" data-brand="dell" style="text-decoration: none; color: #1976d2; padding: 5px 12px; border-radius: 6px; border: 1px solid #e0e0e0; transition: all 0.3s;">Dell</a>
+            <a href="?type=laptop&brand=hp" class="laptop-brand-category-link" data-brand="hp" style="text-decoration: none; color: #1976d2; padding: 5px 12px; border-radius: 6px; border: 1px solid #e0e0e0; transition: all 0.3s;">HP</a>
+          </div>
+        </div>
+      </div>
       
       <aside class="col-lg-3 mb-4">
   <!-- Sidebar PC (giữ nguyên) -->
@@ -57,50 +72,10 @@
             </div>
             <input type="range" class="price-slider" min="0" max="200000000" step="1000000" value="0" id="price-slider">
           </div>
-          <div class="filter-section" data-filter-group="brand">
-            <div class="sidebar-title collapsible">Thương hiệu <i class="fa fa-angle-down"></i></div>
-            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
-              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-asus"><label for="brand-asus">Asus</label></div>
-              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-dell"><label for="brand-dell">Dell</label></div>
-              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-hp"><label for="brand-hp">HP</label></div>
-              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-lenovo"><label for="brand-lenovo">Lenovo</label></div>
-              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-acer"><label for="brand-acer">Acer</label></div>
-              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-apple"><label for="brand-apple">Apple</label></div>
-              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-phongvu"><label for="brand-phongvu">3TD</label></div>
-              <div class="col-6 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="brand-other"><label for="brand-other">Khác</label></div>
-            </div>
-          </div>
-          <div class="filter-section">
-            <div class="sidebar-title collapsible">Loại hàng <i class="fa fa-angle-down"></i></div>
-            <div class="row g-2 mb-2">
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="loai-thanhly"><label for="loai-thanhly">Hàng thanh lý - trưng bày lẻ</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="loai-thuong"><label for="loai-thuong">Hàng thông thường</label></div>
-            </div>
-          </div>
-          <div class="filter-section" data-filter-group="series">
-            <div class="sidebar-title collapsible">Series <i class="fa fa-angle-down"></i></div>
-            <div class="row g-2 mb-2 filter-options" data-max-visible="4">
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-elite"><label for="series-elite">Elite Mini</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-ideacentre"><label for="series-ideacentre">IdeaCentre</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-inspiron"><label for="series-inspiron">Inspiron</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-nuc"><label for="series-nuc">NUC</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-thinkcentre"><label for="series-thinkcentre">ThinkCentre</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-prodesk"><label for="series-prodesk">ProDesk</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-optiplex"><label for="series-optiplex">OptiPlex</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-macmini"><label for="series-macmini">Mac Mini</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-phongvu-amd"><label for="series-phongvu-amd">3TD - AMD</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-phongvu-intel"><label for="series-phongvu-intel">3TD - Intel</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="series-thinkstation"><label for="series-thinkstation">ThinkStation</label></div>
-            </div>
-          </div>
-          <div class="filter-section">
-            <div class="sidebar-title collapsible">Nhu cầu <i class="fa fa-angle-down"></i></div>
-            <div class="row g-2 mb-2">
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="nc-gaming"><label for="nc-gaming">Gaming</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="nc-hssv"><label for="nc-hssv">Học sinh - Sinh viên</label></div>
-              <div class="col-12 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" id="nc-vanphong"><label for="nc-vanphong">Văn phòng</label></div>
-            </div>
-          </div>
+          
+          
+          
+         
           <div class="filter-section">
             <div class="sidebar-title collapsible">PC Segment <i class="fa fa-angle-down"></i></div>
             <div class="row g-2 mb-2">
