@@ -7,7 +7,6 @@ async function loadPagePart(url, containerId, callback = null) {
         const html = await response.text();
         $(`#${containerId}`).html(html);
 
-        // Tải script trong phần HTML
         const $tempDiv = $('<div>').html(html);
         $tempDiv.find('script').each(function () {
             const src = $(this).attr('src');
@@ -18,17 +17,11 @@ async function loadPagePart(url, containerId, callback = null) {
             $('body').append($newScript);
         });
 
-        // ✅ Gọi checkLoginStatus sau khi load header
-        if (containerId === "header-container" && typeof checkLoginStatus === "function") {
-            await checkLoginStatus();
-        }
-
         if (typeof callback === 'function') callback();
     } catch (error) {
         console.error(`Lỗi khi tải ${url}:`, error);
     }
 }
-
 
 // ==========================
 // AUTH GUARD & PENDING ACTIONS
@@ -1483,6 +1476,12 @@ $(document).ready(function () {
         }
     }
 
+    // Try to recover product identifying params from known places:
+    //  - localStorage.postLoginRedirect (saved before starting OAuth)
+    //  - localStorage.pendingAction (pendingAction payload may contain product)
+    //  - localStorage.pendingCartItem
+    //  - document.referrer (if it was a product link)
+    //  - sessionStorage.lastProductURL (optional)
     function tryRecoverParams() {
         // 1) postLoginRedirect
         try {
@@ -1565,6 +1564,8 @@ $(document).ready(function () {
     if (!productId && hasLoginLike) {
         console.log('[INFO] URL contains login-like params but no productId — attempting post-login recovery.');
 
+        // If processAfterLoginNoReload exists, run it to refresh header/cart and process pendingAction,
+        // then try to recover product params and redirect back to product page if found.
         if (typeof processAfterLoginNoReload === 'function') {
             processAfterLoginNoReload().then(() => {
                 const rec = tryRecoverParams();
@@ -1574,21 +1575,13 @@ $(document).ready(function () {
                     // remove sensitive/login params
                     params.delete('email'); params.delete('password'); params.delete('login');
                     if (rec.id) params.set('id', rec.id);
+                    if (rec.name) params.set('name', rec.name);
                     if (rec.type) params.set('type', rec.type);
                     const newUrl = base + '?' + params.toString();
                     try { localStorage.removeItem('postLoginRedirect'); } catch (e) {}
-                    console.log('[RECOVER] Updating URL without reload:', newUrl);
-// Cập nhật URL nhưng KHÔNG reload
-                    window.history.replaceState({}, document.title, newUrl);
-
-// Gọi processAfterLoginNoReload để cập nhật header và trạng thái user ngay
-                    if (typeof processAfterLoginNoReload === 'function') {
-                        processAfterLoginNoReload().then(() => {
-                            console.log('[INFO] UI updated after login without reload.');
-                        }).catch(err => console.warn('processAfterLoginNoReload failed:', err));
-                    }
+                    console.log('[RECOVER] Redirecting to recovered product URL:', newUrl);
+                    window.location.href = newUrl;
                     return;
-
                 } else {
                     // no recoverable product; clean login params from URL to avoid repeated confusion
                     const clean = window.location.pathname;
@@ -1604,6 +1597,7 @@ $(document).ready(function () {
                     const params = new URLSearchParams(window.location.search);
                     params.delete('email'); params.delete('password'); params.delete('login');
                     if (rec.id) params.set('id', rec.id);
+                    if (rec.name) params.set('name', rec.name);
                     if (rec.type) params.set('type', rec.type);
                     const newUrl = base + '?' + params.toString();
                     try { localStorage.removeItem('postLoginRedirect'); } catch (e) {}
@@ -1622,6 +1616,7 @@ $(document).ready(function () {
                 const params = new URLSearchParams(window.location.search);
                 params.delete('email'); params.delete('password'); params.delete('login');
                 if (rec.id) params.set('id', rec.id);
+                if (rec.name) params.set('name', rec.name);
                 if (rec.type) params.set('type', rec.type);
                 const newUrl = base + '?' + params.toString();
                 try { localStorage.removeItem('postLoginRedirect'); } catch (e) {}
@@ -1635,7 +1630,7 @@ $(document).ready(function () {
         }
     }
 
-    // If still missing product identifiers, attempt a silent recover before proceedingS
+    // If still missing product identifiers, attempt a silent recover before proceeding
     if (!productId && !normName && !type) {
         const rec = tryRecoverParams();
         if (rec) {
