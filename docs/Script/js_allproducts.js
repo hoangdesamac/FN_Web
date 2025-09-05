@@ -1,3 +1,73 @@
+// ===== AUTO CHECK LAPTOP BRAND FROM URL =====
+document.addEventListener('DOMContentLoaded', function() {
+  const params = new URLSearchParams(window.location.search);
+  const type = params.get('type');
+  const brand = params.get('brand');
+  if (type === 'laptop' && brand) {
+    // Đợi DOM render xong sidebar laptop
+    setTimeout(() => {
+      const cb = document.getElementById('laptop-brand-' + brand.toLowerCase());
+      if (cb && !cb.checked) {
+        cb.checked = true;
+        cb.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }, 800); // 800ms, có thể tăng nếu sidebar render chậm
+  }
+  // ===== AUTO CHECK MOUSE BRAND FROM URL =====
+  if (type === 'mouse' && brand) {
+    setTimeout(() => {
+      const cb = document.getElementById('mouse-brand-' + brand.toLowerCase());
+      if (cb && !cb.checked) {
+        cb.checked = true;
+        cb.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }, 800);
+  }
+  // ===== AUTO CHECK KEYBOARD BRAND FROM URL =====
+  if (type === 'keyboard' && brand) {
+    setTimeout(() => {
+      const cb = document.getElementById('keyboard-brand-' + brand.toLowerCase());
+      if (cb && !cb.checked) {
+        cb.checked = true;
+        cb.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }, 800);
+  }
+  // ===== AUTO CHECK DISPLAY BRAND FROM URL =====
+  if (type === 'display' && brand) {
+    setTimeout(() => {
+      const cb = document.getElementById('display-brand-' + brand.toLowerCase());
+      if (cb && !cb.checked) {
+        cb.checked = true;
+        cb.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }, 800);
+  }
+  // ===== AUTO CHECK PC SERIES CPU FROM URL =====
+  if (type === 'pc' && brand) {
+    setTimeout(() => {
+      let cpuId = '';
+      switch (brand.toLowerCase()) {
+        case 'i3': cpuId = 'cpu-i3'; break;
+        case 'i5': cpuId = 'cpu-i5'; break;
+        case 'i7': cpuId = 'cpu-i7'; break;
+        case 'i9': cpuId = 'cpu-i9'; break;
+        case 'r3': cpuId = 'cpu-ryzen3'; break;
+        case 'r5': cpuId = 'cpu-ryzen5'; break;
+        case 'r7': cpuId = 'cpu-ryzen7'; break;
+        case 'r9': cpuId = 'cpu-ryzen9'; break;
+        default: cpuId = '';
+      }
+      if (cpuId) {
+        const cb = document.getElementById(cpuId);
+        if (cb && !cb.checked) {
+          cb.checked = true;
+          cb.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+    }, 800);
+  }
+});
 // ================== HÀM CHUẨN HÓA DÙNG CHUNG ==================
 function normalizeName(str) {
   return (str || '')
