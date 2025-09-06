@@ -286,10 +286,8 @@ document.addEventListener("click", (e) => {
     if (btn.disabled) return;
 
     try {
-        // Lưu trang hiện tại để redirect về sau OAuth (nếu có)
-        try { localStorage.setItem('postLoginRedirect', window.location.href); } catch (err) { /* ignore */ }
-
-        window.location.href = `${window.API_BASE}/api/auth/google`;
+        // Truyền state là URL hiện tại để backend redirect đúng trang sau OAuth
+        window.location.href = `${window.API_BASE}/api/auth/google?state=${encodeURIComponent(window.location.href)}`;
     } catch (err) {
         console.error("Không thể chuyển sang Google OAuth:", err);
         showMessage("login-error", "❌ Không thể mở Google Login, vui lòng thử lại!");
@@ -306,19 +304,9 @@ document.addEventListener("click", (e) => {
             localStorage.removeItem("cartLocked");
 
             // Lấy thông tin và đồng bộ
-            // Thực hiện xử lý không reload: checkLoginStatus + sync + update header + process pending
             processAfterLoginNoReload().then(() => {
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-
-                const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                if (postLoginRedirect && postLoginRedirect !== window.location.href) {
-                    localStorage.removeItem('postLoginRedirect');
-                    window.location.href = postLoginRedirect;
-                    return;
-                } else if (postLoginRedirect) {
-                    localStorage.removeItem('postLoginRedirect');
-                }
-                // Nếu không có redirect, chỉ cập nhật UI (đã thực hiện ở processAfterLoginNoReload)
+                // Không cần xử lý localStorage postLoginRedirect nữa, đã dùng state
             }).catch(err => {
                 console.warn('Sync cart failed after Google OAuth:', err);
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
@@ -360,10 +348,8 @@ document.addEventListener("click", (e) => {
     if (btn.disabled) return;
 
     try {
-        // Lưu trang hiện tại để redirect về sau OAuth (nếu có)
-        try { localStorage.setItem('postLoginRedirect', window.location.href); } catch (err) { /* ignore */ }
-
-        window.location.href = `${window.API_BASE}/api/auth/facebook`;
+        // Truyền state là URL hiện tại để backend redirect đúng trang sau OAuth
+        window.location.href = `${window.API_BASE}/api/auth/facebook?state=${encodeURIComponent(window.location.href)}`;
     } catch (err) {
         console.error("Không thể chuyển sang Facebook OAuth:", err);
         showMessage("login-error", "❌ Không thể mở Facebook Login, vui lòng thử lại!");
@@ -382,15 +368,7 @@ document.addEventListener("click", (e) => {
             // Thực hiện xử lý không reload
             processAfterLoginNoReload().then(() => {
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-
-                const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                if (postLoginRedirect && postLoginRedirect !== window.location.href) {
-                    localStorage.removeItem('postLoginRedirect');
-                    window.location.href = postLoginRedirect;
-                    return;
-                } else if (postLoginRedirect) {
-                    localStorage.removeItem('postLoginRedirect');
-                }
+                // Không cần xử lý localStorage postLoginRedirect nữa, đã dùng state
             }).catch(err => {
                 console.warn('Sync cart failed after Facebook OAuth:', err);
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();

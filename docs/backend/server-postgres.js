@@ -345,10 +345,13 @@ app.post('/api/logout', (_req, res) => {
 // ===== Google OAuth routes =====
 app.get('/api/auth/google', async (req, res) => {
     try {
+        // Lấy state từ query (ưu tiên) hoặc từ Referer (fallback)
+        const state = req.query.state || req.headers.referer || '';
         const url = googleClient.generateAuthUrl({
             access_type: 'offline',
             prompt: 'consent',
             scope: ['openid', 'email', 'profile'],
+            state: state ? encodeURIComponent(state) : undefined
         });
         return res.redirect(url);
     } catch (err) {
@@ -426,7 +429,15 @@ app.get('/api/auth/google/callback', async (req, res) => {
 
         setAuthCookie(res, userRow);
 
-        return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=google`);
+        // Lấy state (đường url gốc trước khi login)
+        let redirectAfterLogin = req.query.state ? decodeURIComponent(req.query.state) : `${FRONTEND_ORIGIN}/index.html`;
+        // Thêm ?login=google hoặc &login=google
+        if (redirectAfterLogin.includes('?')) {
+            redirectAfterLogin += '&login=google';
+        } else {
+            redirectAfterLogin += '?login=google';
+        }
+        return res.redirect(redirectAfterLogin);
     } catch (err) {
         console.error('Google callback error:', err);
         return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
@@ -437,8 +448,8 @@ app.get('/api/auth/google/callback', async (req, res) => {
 app.get('/api/auth/facebook', (req, res) => {
     const redirectUri = process.env.FACEBOOK_CALLBACK_URL;
     const clientId = process.env.FACEBOOK_CLIENT_ID;
-
-    const fbAuthUrl = `https://www.facebook.com/v12.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=email,public_profile`;
+    const state = req.query.state || req.headers.referer || '';
+    const fbAuthUrl = `https://www.facebook.com/v12.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=email,public_profile&state=${encodeURIComponent(state)}`;
     res.redirect(fbAuthUrl);
 });
 
@@ -502,7 +513,15 @@ app.get('/api/auth/facebook/callback', async (req, res) => {
 
         // Set cookie và redirect
         setAuthCookie(res, userRow);
-        return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=facebook`);
+
+        // Lấy state (đường url gốc trước khi login)
+        let redirectAfterLogin = req.query.state ? decodeURIComponent(req.query.state) : `${FRONTEND_ORIGIN}/index.html`;
+        if (redirectAfterLogin.includes('?')) {
+            redirectAfterLogin += '&login=facebook';
+        } else {
+            redirectAfterLogin += '?login=facebook';
+        }
+        return res.redirect(redirectAfterLogin);
     } catch (err) {
         console.error("Facebook callback error:", err);
         return res.redirect(`${FRONTEND_ORIGIN}/index.html?login=failed`);
