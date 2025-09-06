@@ -351,7 +351,7 @@ function updateCartCount() {
         .css('display', totalCount > 0 ? 'inline-flex' : 'none');
 }
 
-function showToast(message, isBuyNow = false) {
+function showToast(message) {
     let $toast = $('#toastNotification');
     if (!$toast.length) {
         $toast = $('<div id="toastNotification" class="toast-notification"></div>').appendTo('body');
@@ -362,16 +362,30 @@ function showToast(message, isBuyNow = false) {
             <span class="toast-message">${message}</span>
             <button class="toast-close"><i class="fas fa-times"></i></button>
         </div>
-    `).addClass('show');
+    `).removeClass('hide').addClass('show');
 
+    // Đóng khi click vào nút X
+    $toast.find('.toast-close').on('click', () => {
+        $toast.removeClass('show').addClass('hide');
+        setTimeout(() => $toast.remove(), 300);
+    });
+
+    // Tự động ẩn sau 3 giây
     setTimeout(() => {
         if ($toast.hasClass('show')) {
             $toast.removeClass('show').addClass('hide');
             setTimeout(() => $toast.remove(), 300);
-            if (isBuyNow) window.location.href = 'resetcheckout.html';
         }
     }, 3000);
 }
+
+// Hàm riêng để redirect
+function redirectToCheckout(delay = 1000) {
+    setTimeout(() => {
+        window.location.href = 'resetcheckout.html';
+    }, delay);
+}
+
 
 // ==========================
 // MODULE: Scroll helpers
@@ -670,7 +684,7 @@ function bindEventHandlers() {
     $(document).on('click', '.buy-now', async function () {
         const productId = $(this).data('id');
 
-        // Tìm sản phẩm chính
+        // 🔎 Tìm sản phẩm chính
         let product = window.products && window.products.find
             ? window.products.find(p => p.id === productId)
             : null;
@@ -681,7 +695,7 @@ function bindEventHandlers() {
 
         if (!product) {
             console.warn('buy-now: product not found for id', productId, 'window.currentProduct=', window.currentProduct);
-            showToast('Không thể thêm sản phẩm vào giỏ (thiếu dữ liệu)', false);
+            showToast('Không thể thêm sản phẩm vào giỏ (thiếu dữ liệu)');
             return;
         }
 
@@ -744,14 +758,18 @@ function bindEventHandlers() {
                     toastMsg = `Đã thêm ${product.name} vào giỏ hàng`;
                 }
                 if (giftCart.length) {
-                    toastMsg += `, kèm theo quà tặng đính kèm vào giỏ hàng!`;
+                    toastMsg += `, kèm theo quà tặng đính kèm!`;
                 } else {
                     toastMsg += '!';
                 }
 
+                // ✅ Hiện toast
+                showToast(toastMsg);
+
                 // ✅ Chỉ redirect khi đủ combo + có quà
-                const shouldRedirect = hasAllCombos && giftCart.length > 0;
-                showToast(toastMsg, shouldRedirect);
+                if (hasAllCombos && giftCart.length > 0) {
+                    redirectToCheckout();
+                }
 
             } catch (err) {
                 console.error('Lỗi khi thêm vào giỏ hàng:', err);
@@ -766,6 +784,7 @@ function bindEventHandlers() {
             gifts: giftCart
         }, immediate);
     });
+
 
 
 
