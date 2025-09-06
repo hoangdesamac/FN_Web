@@ -99,8 +99,6 @@ async function checkLoginStatus() {
 
             // 🔓 Mở khoá giỏ hàng khi đã đăng nhập
             localStorage.removeItem("cartLocked");
-
-            // Đồng bộ giỏ hàng khi đăng nhập (chú ý: function có thể được gọi ở nơi khác)
             // syncCartToServer sẽ được gọi bởi processAfterLoginNoReload khi cần
         } else {
             // Xóa thông tin user nếu chưa đăng nhập
@@ -228,15 +226,16 @@ if (loginForm) {
 
                 // --- Thay vì reload toàn trang, xử lý cập nhật header & pending action, và redirect nếu có redirect lưu trước đó ---
                 const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                // Xoá key để tránh redirect vòng
-                if (postLoginRedirect) localStorage.removeItem('postLoginRedirect');
-
                 // Thực hiện xử lý không reload
                 await processAfterLoginNoReload();
 
                 // Nếu có redirect về trang ban đầu thì chuyển hướng, còn không giữ nguyên trang hiện tại
                 if (postLoginRedirect && postLoginRedirect !== window.location.href) {
+                    localStorage.removeItem('postLoginRedirect');
                     window.location.href = postLoginRedirect;
+                    return;
+                } else if (postLoginRedirect) {
+                    localStorage.removeItem('postLoginRedirect');
                 }
 
             } else {
@@ -309,17 +308,15 @@ document.addEventListener("click", (e) => {
             // Lấy thông tin và đồng bộ
             // Thực hiện xử lý không reload: checkLoginStatus + sync + update header + process pending
             processAfterLoginNoReload().then(() => {
-                // Đóng modal và redirect nếu cần
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
 
                 const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                if (postLoginRedirect) {
+                if (postLoginRedirect && postLoginRedirect !== window.location.href) {
                     localStorage.removeItem('postLoginRedirect');
-                    // Nếu redirect trỏ về 1 trang cụ thể (ví dụ product), chuyển hướng
-                    if (postLoginRedirect !== window.location.href) {
-                        window.location.href = postLoginRedirect;
-                        return;
-                    }
+                    window.location.href = postLoginRedirect;
+                    return;
+                } else if (postLoginRedirect) {
+                    localStorage.removeItem('postLoginRedirect');
                 }
                 // Nếu không có redirect, chỉ cập nhật UI (đã thực hiện ở processAfterLoginNoReload)
             }).catch(err => {
@@ -387,12 +384,12 @@ document.addEventListener("click", (e) => {
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
 
                 const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                if (postLoginRedirect) {
+                if (postLoginRedirect && postLoginRedirect !== window.location.href) {
                     localStorage.removeItem('postLoginRedirect');
-                    if (postLoginRedirect !== window.location.href) {
-                        window.location.href = postLoginRedirect;
-                        return;
-                    }
+                    window.location.href = postLoginRedirect;
+                    return;
+                } else if (postLoginRedirect) {
+                    localStorage.removeItem('postLoginRedirect');
                 }
             }).catch(err => {
                 console.warn('Sync cart failed after Facebook OAuth:', err);
