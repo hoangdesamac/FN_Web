@@ -4,24 +4,45 @@
 async function loadPagePart(url, containerId, callback = null) {
     try {
         const response = await fetch(url);
+        if (!response.ok) throw new Error("Fetch failed: " + response.status);
+
         const html = await response.text();
         $(`#${containerId}`).html(html);
 
+        // Xử lý script trong phần HTML được load
         const $tempDiv = $('<div>').html(html);
         $tempDiv.find('script').each(function () {
             const src = $(this).attr('src');
-            if (src && $(`script[src="${src}"]`).length) return;
             const $newScript = $('<script>');
-            if (src) $newScript.attr('src', src);
-            else $newScript.text($(this).text());
+            if (src) {
+                // ép reload script bằng cache-busting query
+                $newScript.attr('src', src + '?v=' + Date.now());
+            } else {
+                $newScript.text($(this).text());
+            }
             $('body').append($newScript);
         });
 
+        // Gọi callback sau khi DOM đã thay thế xong
         if (typeof callback === 'function') callback();
+
+        // Nếu là header thì cập nhật trạng thái đăng nhập ngay
+        if (containerId === "header-container") {
+            if (typeof checkLoginStatus === 'function') {
+                checkLoginStatus();
+            } else if (typeof fetchUserInfo === 'function') {
+                fetchUserInfo().then(() => {
+                    if (typeof updateUserDisplay === 'function') updateUserDisplay();
+                    if (typeof updateCartCount === 'function') updateCartCount();
+                    if (typeof updateOrderCount === 'function') updateOrderCount();
+                });
+            }
+        }
     } catch (error) {
         console.error(`Lỗi khi tải ${url}:`, error);
     }
 }
+
 
 // ==========================
 // AUTH GUARD & PENDING ACTIONS
