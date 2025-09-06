@@ -669,17 +669,17 @@ function bindEventHandlers() {
     // --- FIXED: use window.currentProduct fallback when window.products doesn't contain the rendered product ---
     $(document).on('click', '.buy-now', async function () {
         const productId = $(this).data('id');
-        // Try to find product in global list
-        let product = window.products && window.products.find ? window.products.find(p => p.id === productId) : null;
-        // Fallback to current rendered product if not present in window.products
+
+        // Tìm sản phẩm chính
+        let product = window.products && window.products.find
+            ? window.products.find(p => p.id === productId)
+            : null;
+
         if (!product && window.currentProduct && window.currentProduct.id === productId) {
             product = window.currentProduct;
         }
+
         if (!product) {
-            // As a last resort try to look by normalized name (some sources may have created slug id)
-            if (window.currentProduct && (!window.currentProduct.id || window.currentProduct.id === '' ) ) {
-                // nothing
-            }
             console.warn('buy-now: product not found for id', productId, 'window.currentProduct=', window.currentProduct);
             showToast('Không thể thêm sản phẩm vào giỏ (thiếu dữ liệu)', false);
             return;
@@ -691,7 +691,6 @@ function bindEventHandlers() {
         const $allCombos = $('.bundle-products .bundle-checkbox');
         const $checkedCombos = $allCombos.filter(':checked');
 
-        // Danh sách combo đã chọn
         const selectedCombos = [];
         $checkedCombos.each(function () {
             const $card = $(this).closest('.product-card');
@@ -721,15 +720,15 @@ function bindEventHandlers() {
 
         const immediate = async () => {
             try {
-                // --- Thêm sản phẩm chính vào giỏ ---
+                // --- Thêm sản phẩm chính ---
                 await addToCartAPI(cleanProduct, 1);
 
-                // --- Thêm combo vào giỏ ---
+                // --- Thêm combo ---
                 for (const combo of selectedCombos) {
                     await addToCartAPI(combo, 1);
                 }
 
-                // --- Thêm quà tặng nếu đủ combo ---
+                // --- Thêm quà tặng ---
                 for (const gift of giftCart) {
                     await addToCartAPI(gift, 1);
                 }
@@ -737,26 +736,37 @@ function bindEventHandlers() {
                 // --- Cập nhật badge giỏ hàng ---
                 await updateCartCountFromServer();
 
-                // --- Hiển thị thông báo ---
+                // --- Thông báo ---
                 let toastMsg = '';
                 if ($checkedCombos.length) {
                     toastMsg = `Đã thêm sản phẩm chính và ${$checkedCombos.length} combo`;
                 } else {
                     toastMsg = `Đã thêm ${product.name} vào giỏ hàng`;
                 }
-                if (giftCart.length) toastMsg += `, kèm theo quà tặng đính kèm vào giỏ hàng!`;
-                else toastMsg += '!';
+                if (giftCart.length) {
+                    toastMsg += `, kèm theo quà tặng đính kèm vào giỏ hàng!`;
+                } else {
+                    toastMsg += '!';
+                }
 
-                showToast(toastMsg, hasAllCombos);
+                // ✅ Chỉ redirect khi đủ combo + có quà
+                const shouldRedirect = hasAllCombos && giftCart.length > 0;
+                showToast(toastMsg, shouldRedirect);
+
             } catch (err) {
                 console.error('Lỗi khi thêm vào giỏ hàng:', err);
                 showToast('Không thể thêm vào giỏ hàng, vui lòng thử lại!');
             }
         };
 
-        // If not logged - store pending buyNow + open modal
-        requireLoginThenDo('buyNow', { product: cleanProduct, combos: selectedCombos, gifts: giftCart }, immediate);
+        // Nếu chưa đăng nhập → lưu pendingAction
+        requireLoginThenDo('buyNow', {
+            product: cleanProduct,
+            combos: selectedCombos,
+            gifts: giftCart
+        }, immediate);
     });
+
 
 
 
