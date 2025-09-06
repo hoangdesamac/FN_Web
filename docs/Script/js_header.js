@@ -55,6 +55,7 @@ function updateCartCount() {
     }
 }
 
+
 // 📦 Đơn hàng
 async function updateOrderCount() {
     const orderCountElement = document.querySelector('.order-count');
@@ -83,6 +84,7 @@ async function updateOrderCount() {
         orderCountElement.style.display = "none";
     }
 }
+
 
 // ================= Nền hexagon động =================
 function initHexagonBackground() {
@@ -281,10 +283,6 @@ function updateUserDisplay() {
         `;
         userAction.addEventListener("click", () => CyberModal.open());
     }
-
-    // Sau khi update userAction, luôn re-bind lại icon giỏ hàng & đơn hàng
-    initCartIconClick();
-    initOrderIconClick();
 }
 
 // ================= Xử lý click icon giỏ hàng =================
@@ -292,11 +290,7 @@ function initCartIconClick() {
     const cartLink = document.querySelector('a.cyber-action[href="resetcheckout.html"]');
     if (!cartLink) return;
 
-    // Xóa all old event listeners bằng cách clone lại node
-    const cartLinkClone = cartLink.cloneNode(true);
-    cartLink.parentNode.replaceChild(cartLinkClone, cartLink);
-
-    cartLinkClone.addEventListener('click', (e) => {
+    cartLink.addEventListener('click', (e) => {
         e.preventDefault();
 
         const isLoggedIn = !!localStorage.getItem('userName');
@@ -325,11 +319,7 @@ function initOrderIconClick() {
     const orderLink = document.querySelector('a.cyber-action[href="resetlookup.html"]');
     if (!orderLink) return;
 
-    // Xóa all old event listeners bằng cách clone lại node
-    const orderLinkClone = orderLink.cloneNode(true);
-    orderLink.parentNode.replaceChild(orderLinkClone, orderLink);
-
-    orderLinkClone.addEventListener('click', (e) => {
+    orderLink.addEventListener('click', (e) => {
         e.preventDefault();
 
         const isLoggedIn = !!localStorage.getItem('userName');
@@ -347,7 +337,7 @@ function initOrderIconClick() {
 // ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchUserInfo();
-    updateUserDisplay(); // sẽ re-bind lại các icon click
+    updateUserDisplay();
     updateCartCount();
     updateOrderCount();
 });
