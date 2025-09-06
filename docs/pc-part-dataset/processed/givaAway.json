@@ -1,0 +1,143 @@
+[
+  {
+    "id": "belkin-cab003-typec-60w-1m-trang",
+    "name": "Cáp sạc Belkin Type C - Type C 60W 1m trắng CAB003",
+    "image": "https://product.hstatic.net/200000722513/product/4_ea89d17d062e496380edd8923f699591_grande.jpg",
+    "originalPrice": 350000,
+    "salePrice": 280000
+  }
+  ,
+  {
+    "id": "dtech-dt-uh0015g-hdmi-1-5m",
+    "name": "Dây Cáp HDMI Dtech DT-UH0015G 2.0 1.5m",
+    "image": "https://product.hstatic.net/200000722513/product/dtech_dt-uh0015g_gearvn_1048491799fd46f5a2188db65925bf7f_grande.jpg",
+    "originalPrice": 150000,
+    "salePrice": 100000
+  },
+  {
+    "id": "lot-chuot-gearvn-da-pu-den-450x400x2",
+    "name": "Lót chuột GEARVN Da Pu Đen (450x400x2)",
+    "image": "https://product.hstatic.net/200000722513/product/gvn09174_0e775f9e04a44faabfb2e8b105dedc59_grande.png",
+    "originalPrice": 190000,
+    "salePrice": 100000
+  },
+	{
+    "id": "lot-chuot-gearvn-da-pu-xanh-450x400x2",
+    "name": "Lót chuột GEARVN Da Pu Xanh (450x400x2)",
+    "image": "https://product.hstatic.net/200000722513/product/gvn09203_0678603169b643fb90c3cd7b94bfbbf6_grande.jpg",
+    "originalPrice": 190000,
+    "salePrice": 90000
+  },
+  {
+    "id": "gia-do-laptop-n3",
+    "name": "Phụ kiện giá đỡ Laptop N3",
+    "image": "https://product.hstatic.net/200000722513/product/laptop_stand_n3_e3de80daf5804bf798be1ea741292cab_medium.jpg",
+    "originalPrice": 349000,
+    "salePrice": 199000
+  },
+  {
+    "id": "brateck-ldt97-c012e",
+    "name": "Giá treo màn hình máy tính Brateck LDT97-C012E",
+    "image": "https://product.hstatic.net/200000722513/product/brateck_ldt97-c012e_gearvn_36eaba67a82c4fdd8db643491c72af0c_medium.jpg",
+    "originalPrice": 490000,
+    "salePrice": 270000
+  },
+  {
+    "id": "dareu-eh406-multiled",
+    "name": "Tai nghe DareU EH406 (MULTI-LED)",
+    "image": "https://product.hstatic.net/200000722513/product/1_2cc845a01c7e49b092fcb5b8924c12b4_grande.jpg",
+    "originalPrice": 399000,
+    "salePrice": 260000
+  },
+  {
+    "id": "sounarc-p1-portable-speaker-dark-red",
+    "name": "Loa di động kháng nước IPX4 SOUNARC P1 Portable Speaker - Dark Red",
+    "image": "https://product.hstatic.net/200000722513/product/3_fd6f2505-fc77-49a1-8d18-d74c4b73e500_1a7915adda254a489370e633da92f0d3_grande.jpg",
+    "originalPrice": 350000,
+    "salePrice": 250000
+  },
+  {
+    "id": "microlab-b26",
+    "name": "Loa Microlab B26",
+    "image": "https://product.hstatic.net/200000722513/product/aa2a99cf253bfd3bdf93cef4dda0e9db_08e249210d8f4008b532b7404624777a_4431b2a02cea462e8f0e0221b29a7ac5_grande.jpg",
+    "originalPrice": 335000,
+    "salePrice": 280000
+  },
+  {
+    "id": "tplink-t2ub-nano-usb",
+    "name": "USB Thu Sóng TP-Link T2UB Nano",
+    "image": "https://product.hstatic.net/200000722513/product/hinh-1_3468228f18cc4ab7b59b87dc949eb6fb_bd2aa8690d1b4b2ba54b1efcbae2ede5_grande.jpg",
+    "originalPrice": 400000,
+    "salePrice": 290000
+  },
+  {
+    "id": "ugreen-cd241-typec-20w-mini",
+    "name": "Củ sạc Ugreen Type C PD 20W Mini CD241",
+    "image": "https://product.hstatic.net/200000722513/product/cu-sac-nhanh-type-c-20w-ugreen-10219-nho-gon_ea07a1e4271f4bd39dc941e1950a9289_master.png",
+    "originalPrice": 290000,
+    "salePrice": 90000
+  },
+  {
+    "id": "asus-rt-n12plus-n300-router",
+    "name": "Thiết Bị định tuyến không dây ASUS RT-N12+ Chuẩn N300",
+    "image": "https://product.hstatic.net/200000722513/product/rt-n12_-asus-wifi-router-02_b968fe776b414f24a8b2ee60cf0d2880_59ebcea34ee04ee5a3cabd5576297629_grande.png",
+    "originalPrice": 490000,
+    "salePrice": 290000
+  },
+  {
+    "id": "logitech-k120",
+    "name": "Bàn phím Logitech K120",
+    "image": "https://product.hstatic.net/200000722513/product/phim-chuyen-van-phong-logitech-k120-1_6bee6c2e4acd4130bdca6627f67f6aa3_449aab280d834df6b3f041f54d397026_grande.jpg",
+    "originalPrice": 170000,
+    "salePrice": 160000
+  },
+  {
+    "id": "dareu-lk185-gaming-keyboard",
+    "name": "Bàn phím Gaming DareU LK185",
+    "image": "https://product.hstatic.net/200000722513/product/1-1_b9e01fd9d23e4137998318177f20fa76_d20d43f924d34cbfbef407942b257ac1_grande.jpg",
+    "originalPrice": 270000,
+    "salePrice": 170000
+  },
+  {
+    "id": "rapoo-m20-wireless-mouse",
+    "name": "Chuột không dây Rapoo M20",
+    "image": "https://product.hstatic.net/200000722513/product/chuot-khong-day-rapoo-m20_2__1__bea49e83652c4d4e89a5f4db87036148_grande.png",
+    "originalPrice": 150000,
+    "salePrice": 90000
+  },
+  {
+    "id": "monsgeek-d1-pink-wireless-mouse",
+    "name": "Chuột không dây MonsGeek D1 Pink",
+    "image": "https://product.hstatic.net/200000722513/product/chuot-khong-day-monsgeek-d1-pink_44c88328efca435ca2cc4b9ef49a97cd_grande.png",
+    "originalPrice": 299000,
+    "salePrice": 120000
+  },
+  {
+    "id": "rapoo-m21-silent-wireless-mouse",
+    "name": "Chuột Không Dây Rapoo M21 Silent",
+    "image": "https://product.hstatic.net/200000722513/product/thumbchuot_319f928f991a4303a119531a028fca35_caa118908bcb4634847506512cb92ce8_grande.png",
+    "originalPrice": 200000,
+    "salePrice": 150000
+  },
+  {
+    "id": "honeywell-moxie-v50",
+    "name": "Tai nghe Honeywell Moxie V50",
+    "image": "https://product.hstatic.net/200000722513/product/download__3__d8da00c83f0b476cb6abb93d37d69c6d_grande.png",
+    "originalPrice": 100000,
+    "salePrice": 50000
+  },
+  {
+    "id": "mercusys-mw300re",
+    "name": "Bộ tiếp sóng Mercusys MW300RE",
+    "image": "https://product.hstatic.net/200000722513/product/e_un_v3_28_normal_2.00_20180113082248_ec1df3e717374857a0b723d8c04e79f9_91bfde97194d4f5bb3ab95b704127d57_grande.jpg",
+    "originalPrice": 329000,
+    "salePrice": 99000
+  },
+  {
+    "id": "orico-cat6-5m",
+    "name": "Cáp mạng ORICO 5 mét CAT6 (dây dẹp)",
+    "image": "https://product.hstatic.net/200000722513/product/download__4__672650877dfd43a193063da2cff1f244_grande.png",
+    "originalPrice": 80000,
+    "salePrice": 60000
+  }
+]
