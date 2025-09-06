@@ -99,7 +99,6 @@ async function checkLoginStatus() {
 
             // 🔓 Mở khoá giỏ hàng khi đã đăng nhập
             localStorage.removeItem("cartLocked");
-            // syncCartToServer sẽ được gọi bởi processAfterLoginNoReload khi cần
         } else {
             // Xóa thông tin user nếu chưa đăng nhập
             localStorage.removeItem("userId");
@@ -117,6 +116,15 @@ async function checkLoginStatus() {
         console.error("Lỗi kiểm tra đăng nhập:", err);
     }
 }
+
+// ==================== ĐỒNG BỘ HÓA ĐĂNG NHẬP GIỮA CÁC SCRIPT ====================
+// Lắng nghe sự kiện login để cập nhật lại UI & trạng thái trên toàn bộ các script
+window.addEventListener('user:login', () => {
+    checkLoginStatus();
+    if (typeof updateUserDisplay === 'function') updateUserDisplay();
+    if (typeof updateCartCount === 'function') updateCartCount();
+    if (typeof updateOrderCount === 'function') updateOrderCount();
+});
 
 // ==================== ĐĂNG KÝ ====================
 const registerForm = document.getElementById("registerForm");
@@ -197,7 +205,6 @@ if (loginForm) {
                     localStorage.removeItem("avatarUrl");
                 }
 
-                // 🔓 Mở khoá giỏ hàng khi login thành công
                 localStorage.removeItem("cartLocked");
 
                 // Kiểm tra và thêm sản phẩm tạm sau đăng nhập
@@ -211,13 +218,12 @@ if (loginForm) {
                 // Đồng bộ giỏ hàng sau đăng nhập
                 await syncCartToServer();
 
-                // Đóng modal nếu có
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
                 if (typeof updateUserDisplay === "function") {
                     updateUserDisplay();
                 }
 
-                // Notify other scripts in same tab to process pendingAction and refresh UI
+                // GỌI SỰ KIỆN ĐỒNG BỘ
                 try {
                     window.dispatchEvent(new Event('user:login'));
                 } catch (err) {
@@ -229,7 +235,6 @@ if (loginForm) {
                 // Thực hiện xử lý không reload
                 await processAfterLoginNoReload();
 
-                // Nếu có redirect về trang ban đầu thì chuyển hướng, còn không giữ nguyên trang hiện tại
                 if (postLoginRedirect && postLoginRedirect !== window.location.href) {
                     localStorage.removeItem('postLoginRedirect');
                     window.location.href = postLoginRedirect;
@@ -306,7 +311,6 @@ document.addEventListener("click", (e) => {
             // Lấy thông tin và đồng bộ
             processAfterLoginNoReload().then(() => {
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-                // Không cần xử lý localStorage postLoginRedirect nữa, đã dùng state
             }).catch(err => {
                 console.warn('Sync cart failed after Google OAuth:', err);
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
@@ -368,7 +372,6 @@ document.addEventListener("click", (e) => {
             // Thực hiện xử lý không reload
             processAfterLoginNoReload().then(() => {
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-                // Không cần xử lý localStorage postLoginRedirect nữa, đã dùng state
             }).catch(err => {
                 console.warn('Sync cart failed after Facebook OAuth:', err);
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();

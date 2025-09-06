@@ -31,6 +31,22 @@ async function loadPagePart(url, containerId, callback = null) {
  * pendingAction stored in localStorage as JSON:
  * { type: 'addToCart' | 'addMultipleToCart' | 'buyNow', payload: {...} }
  */
+
+// --- DÙNG API ĐỂ KIỂM TRA LOGIN "REALTIME" (không chỉ localStorage) ---
+async function isLoggedInRealTime() {
+    try {
+        const res = await fetch(`${window.API_BASE}/api/me`, {
+            method: "GET",
+            credentials: "include"
+        });
+        const data = await res.json();
+        return !!(data && data.loggedIn);
+    } catch (err) {
+        return !!localStorage.getItem('userName');
+    }
+}
+
+// --- Hàm kiểm tra login cho logic bình thường (vẫn giữ lại) ---
 function isLoggedIn() {
     return !!localStorage.getItem('userName');
 }
@@ -60,7 +76,8 @@ function openLoginModalAndNotify() {
  * Execute pending action from localStorage (if exists and user is logged in)
  */
 async function processPendingAction() {
-    if (!isLoggedIn()) return;
+    // DÙNG REALTIME CHECK ĐỂ ĐẢM BẢO KHÔNG LỖI VỚI OAUTH/CÁC TAB KHÁC
+    if (!(await isLoggedInRealTime())) return;
     const raw = localStorage.getItem('pendingAction');
     if (!raw) return;
 
@@ -75,51 +92,29 @@ async function processPendingAction() {
 
     try {
         if (action.type === 'addToCart') {
-            // payload: { product, qty }
             await addToCartAPI(action.payload.product, action.payload.qty || 1);
             await updateCartCountFromServer();
             showToast(`Đã thêm ${action.payload.product.name} vào giỏ hàng!`);
-
         } else if (action.type === 'addMultipleToCart') {
-            // payload: { products: [{product, qty}] }
             for (const it of (action.payload.products || [])) {
                 await addToCartAPI(it.product, it.qty || 1);
             }
             await updateCartCountFromServer();
             showToast(`Đã thêm ${action.payload.products.length} sản phẩm vào giỏ hàng!`);
-
         } else if (action.type === 'buyNow') {
-            // payload: { product, combos: [product], gifts: [product] }
-
-            // 1) add main product
             await addToCartAPI(action.payload.product, 1);
-
-            // 2) add combos
             for (const c of (action.payload.combos || [])) {
                 await addToCartAPI(c, 1);
             }
-
-            // 3) add gifts (if any)
             for (const g of (action.payload.gifts || [])) {
                 await addToCartAPI(g, 1);
             }
-
             await updateCartCountFromServer();
-
-            // --- Thông báo ---
             let toastMsg = `Đã thêm ${action.payload.product.name} vào giỏ hàng`;
-            if (action.payload.combos?.length) {
-                toastMsg += ` kèm ${action.payload.combos.length} combo`;
-            }
-            if (action.payload.gifts?.length) {
-                toastMsg += ` và quà tặng!`;
-            } else {
-                toastMsg += "!";
-            }
-
+            if (action.payload.combos?.length) toastMsg += ` kèm ${action.payload.combos.length} combo`;
+            if (action.payload.gifts?.length) toastMsg += ` và quà tặng!`;
+            else toastMsg += "!";
             showToast(toastMsg);
-
-            // ✅ Chỉ redirect khi có đủ combo + quà
             if (
                 action.payload.combos &&
                 action.payload.combos.length > 0 &&
@@ -128,7 +123,6 @@ async function processPendingAction() {
             ) {
                 redirectToCheckout();
             }
-
         } else {
             console.warn('Unknown pending action type:', action.type);
         }
@@ -139,11 +133,9 @@ async function processPendingAction() {
     }
 }
 
-
 // Process pending action when localStorage 'userName' changes (login event from modal or other tab)
 window.addEventListener('storage', function (e) {
     if (e.key === 'userName' && e.newValue) {
-        // small delay to let other login handlers finish
         setTimeout(() => {
             processPendingAction();
         }, 200);
@@ -158,32 +150,39 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Listen for custom same-tab login event (dispatched from js_resetauth.js)
-window.addEventListener('user:login', function () {
-    // when login happens in same tab, fetch user info & process pending action
-    setTimeout(async () => {
-        try {
-            if (typeof fetchUserInfo === 'function') await fetchUserInfo();
-            if (typeof updateUserDisplay === 'function') updateUserDisplay();
-        } catch (err) {
-            console.warn('user:login -> fetchUserInfo error', err);
-        }
-        if (typeof processPendingAction === 'function') {
-            processPendingAction();
-        }
-    }, 150);
+window.addEventListener('user:login', async function () {
+    try {
+        if (typeof fetchUserInfo === 'function') await fetchUserInfo();
+        if (typeof updateUserDisplay === 'function') updateUserDisplay();
+        if (typeof updateCartCount === 'function') updateCartCount();
+        if (typeof updateOrderCount === 'function') updateOrderCount();
+    } catch (err) {
+        console.warn('user:login -> fetchUserInfo/updateUserDisplay error', err);
+    }
+    if (typeof processPendingAction === 'function') {
+        processPendingAction();
+    }
 });
 
 // Helper to require login before running action
 function requireLoginThenDo(actionType, payload, immediateFn) {
-    if (isLoggedIn()) {
-        // If already logged in, run immediately
-        if (typeof immediateFn === 'function') immediateFn();
-        return;
-    }
-
-    // Save pending action and open modal
-    savePendingAction({ type: actionType, payload });
-    openLoginModalAndNotify();
+    // CHECK REALTIME ĐỂ ĐẢM BẢO NHẤT QUÁN (ngay cả khi localStorage chưa sync kịp)
+    isLoggedInRealTime().then((loggedIn) => {
+        if (loggedIn) {
+            if (typeof immediateFn === 'function') immediateFn();
+        } else {
+            savePendingAction({ type: actionType, payload });
+            openLoginModalAndNotify();
+        }
+    }).catch(() => {
+        // fallback: dùng localStorage check nếu lỗi mạng
+        if (isLoggedIn()) {
+            if (typeof immediateFn === 'function') immediateFn();
+        } else {
+            savePendingAction({ type: actionType, payload });
+            openLoginModalAndNotify();
+        }
+    });
 }
 
 // ==========================

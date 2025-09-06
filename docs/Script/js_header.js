@@ -55,7 +55,6 @@ function updateCartCount() {
     }
 }
 
-
 // 📦 Đơn hàng
 async function updateOrderCount() {
     const orderCountElement = document.querySelector('.order-count');
@@ -84,7 +83,6 @@ async function updateOrderCount() {
         orderCountElement.style.display = "none";
     }
 }
-
 
 // ================= Nền hexagon động =================
 function initHexagonBackground() {
@@ -333,6 +331,14 @@ function initOrderIconClick() {
         window.location.href = 'resetlookup.html';
     });
 }
+
+// ================= Đồng bộ header khi trạng thái đăng nhập thay đổi =================
+window.addEventListener('user:login', async () => {
+    await fetchUserInfo();
+    updateUserDisplay();
+    updateCartCount();
+    updateOrderCount();
+});
 
 // ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {
