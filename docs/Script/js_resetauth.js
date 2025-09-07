@@ -49,7 +49,23 @@ async function syncCartToServer() {
 async function processAfterLoginNoReload() {
     try {
         // 1) Update local user info from server
-        if (typeof checkLoginStatus === 'function') {
+        if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+            const st = window.AuthSync.getState();
+            if (st && st.loggedIn && st.user) {
+                // mirror minimal compatibility keys
+                localStorage.setItem("userId", st.user.id || "");
+                localStorage.setItem("firstName", (st.user.firstName || "").trim());
+                localStorage.setItem("lastName", (st.user.lastName || "").trim());
+                localStorage.setItem("email", st.user.email || "");
+                localStorage.setItem("userName", (st.user.lastName || "").trim());
+                if (st.user.avatar_url) {
+                    localStorage.setItem("avatarUrl", st.user.avatar_url);
+                } else {
+                    localStorage.removeItem("avatarUrl");
+                }
+                localStorage.removeItem("cartLocked");
+            }
+        } else if (typeof checkLoginStatus === 'function') {
             await checkLoginStatus();
         } else if (typeof fetchUserInfo === 'function') {
             await fetchUserInfo();
@@ -76,8 +92,32 @@ async function processAfterLoginNoReload() {
 }
 
 // ==================== KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP ====================
+// Modified: prefer AuthSync as source of truth, fallback to /api/me as before
 async function checkLoginStatus() {
     try {
+        if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+            const st = window.AuthSync.getState();
+            if (st && st.loggedIn && st.user) {
+                localStorage.setItem("userId", st.user.id || "");
+                localStorage.setItem("firstName", (st.user.firstName || "").trim());
+                localStorage.setItem("lastName", (st.user.lastName || "").trim());
+                localStorage.setItem("email", st.user.email || "");
+                localStorage.setItem("userName", (st.user.lastName || "").trim());
+                if (st.user.avatar_url) {
+                    localStorage.setItem("avatarUrl", st.user.avatar_url);
+                } else {
+                    localStorage.removeItem("avatarUrl");
+                }
+                localStorage.removeItem("cartLocked");
+                if (typeof updateUserDisplay === "function") updateUserDisplay();
+                return;
+            } else {
+                ['userId','firstName','lastName','email','userName','avatarUrl'].forEach(k => localStorage.removeItem(k));
+                if (typeof updateUserDisplay === "function") updateUserDisplay();
+                return;
+            }
+        }
+
         const res = await fetch(`${window.API_BASE}/api/me`, {
             method: "GET",
             credentials: "include"
@@ -85,7 +125,6 @@ async function checkLoginStatus() {
         const data = await res.json();
 
         if (data.loggedIn && data.user) {
-            // Lưu thông tin cần thiết vào localStorage
             localStorage.setItem("userId", data.user.id || "");
             localStorage.setItem("firstName", (data.user.firstName || "").trim());
             localStorage.setItem("lastName", (data.user.lastName || "").trim());
@@ -96,17 +135,9 @@ async function checkLoginStatus() {
             } else {
                 localStorage.removeItem("avatarUrl");
             }
-
-            // 🔓 Mở khoá giỏ hàng khi đã đăng nhập
             localStorage.removeItem("cartLocked");
         } else {
-            // Xóa thông tin user nếu chưa đăng nhập
-            localStorage.removeItem("userId");
-            localStorage.removeItem("firstName");
-            localStorage.removeItem("lastName");
-            localStorage.removeItem("email");
-            localStorage.removeItem("userName");
-            localStorage.removeItem("avatarUrl");
+            ['userId','firstName','lastName','email','userName','avatarUrl'].forEach(k => localStorage.removeItem(k));
         }
 
         if (typeof updateUserDisplay === "function") {
@@ -125,6 +156,30 @@ window.addEventListener('user:login', () => {
     if (typeof updateCartCount === 'function') updateCartCount();
     if (typeof updateOrderCount === 'function') updateOrderCount();
 });
+
+// If AuthSync emits change, handle it too (avoid duplicate heavy operations if not needed)
+if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
+    window.AuthSync.onChange((state) => {
+        if (state.loggedIn) {
+            // quick mirror of compatibility keys
+            const u = state.user || {};
+            localStorage.setItem("userId", u.id || "");
+            localStorage.setItem("firstName", (u.firstName || "").trim());
+            localStorage.setItem("lastName", (u.lastName || "").trim());
+            localStorage.setItem("email", u.email || "");
+            localStorage.setItem("userName", (u.lastName || "").trim());
+            if (u.avatar_url) localStorage.setItem("avatarUrl", u.avatar_url);
+            else localStorage.removeItem("avatarUrl");
+            localStorage.removeItem("cartLocked");
+        } else {
+            ['userId','firstName','lastName','email','userName','avatarUrl'].forEach(k => localStorage.removeItem(k));
+        }
+
+        if (typeof updateUserDisplay === 'function') updateUserDisplay();
+        if (typeof updateCartCount === 'function') updateCartCount();
+        if (typeof updateOrderCount === 'function') updateOrderCount();
+    });
+}
 
 // ==================== ĐĂNG KÝ ====================
 const registerForm = document.getElementById("registerForm");
@@ -193,16 +248,35 @@ if (loginForm) {
             const data = await res.json();
 
             if (data.success && data.user) {
-                // Lưu vào localStorage ngay khi login
-                localStorage.setItem("userId", data.user.id || "");
-                localStorage.setItem("firstName", (data.user.firstName || "").trim());
-                localStorage.setItem("lastName", (data.user.lastName || "").trim());
-                localStorage.setItem("email", data.user.email || "");
-                localStorage.setItem("userName", (data.user.lastName || "").trim());
-                if (data.user.avatar_url) {
-                    localStorage.setItem("avatarUrl", data.user.avatar_url);
+                // Prefer to let AuthSync read /api/me (cookie set) to mirror keys
+                if (window.AuthSync && typeof window.AuthSync.notifyLoginFromServer === 'function') {
+                    try {
+                        await window.AuthSync.notifyLoginFromServer();
+                    } catch (e) {
+                        // fallback to original behavior if refresh fails
+                        localStorage.setItem("userId", data.user.id || "");
+                        localStorage.setItem("firstName", (data.user.firstName || "").trim());
+                        localStorage.setItem("lastName", (data.user.lastName || "").trim());
+                        localStorage.setItem("email", data.user.email || "");
+                        localStorage.setItem("userName", (data.user.lastName || "").trim());
+                        if (data.user.avatar_url) {
+                            localStorage.setItem("avatarUrl", data.user.avatar_url);
+                        } else {
+                            localStorage.removeItem("avatarUrl");
+                        }
+                    }
                 } else {
-                    localStorage.removeItem("avatarUrl");
+                    // legacy: write compatibility keys immediately
+                    localStorage.setItem("userId", data.user.id || "");
+                    localStorage.setItem("firstName", (data.user.firstName || "").trim());
+                    localStorage.setItem("lastName", (data.user.lastName || "").trim());
+                    localStorage.setItem("email", data.user.email || "");
+                    localStorage.setItem("userName", (data.user.lastName || "").trim());
+                    if (data.user.avatar_url) {
+                        localStorage.setItem("avatarUrl", data.user.avatar_url);
+                    } else {
+                        localStorage.removeItem("avatarUrl");
+                    }
                 }
 
                 localStorage.removeItem("cartLocked");
@@ -223,16 +297,11 @@ if (loginForm) {
                     updateUserDisplay();
                 }
 
-                // GỌI SỰ KIỆN ĐỒNG BỘ
-                try {
-                    window.dispatchEvent(new Event('user:login'));
-                } catch (err) {
-                    console.warn('Không thể dispatch user:login event', err);
-                }
+                // Gọi sự kiện đồng bộ
+                try { window.dispatchEvent(new Event('user:login')); } catch (err) { console.warn('Không thể dispatch user:login event', err); }
 
-                // --- Thay vì reload toàn trang, xử lý cập nhật header & pending action, và redirect nếu có redirect lưu trước đó ---
+                // Thay vì reload toàn trang, xử lý cập nhật header & pending action, và redirect nếu có redirect lưu trước đó
                 const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                // Thực hiện xử lý không reload
                 await processAfterLoginNoReload();
 
                 if (postLoginRedirect && postLoginRedirect !== window.location.href) {

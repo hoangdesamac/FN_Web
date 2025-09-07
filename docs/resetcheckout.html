@@ -19,6 +19,9 @@
     <script>
         window.API_BASE = "https://fn-web.onrender.com";
     </script>
+
+    <!-- AuthSync: canonical auth synchronizer (loads early) -->
+    <script src="Script/js_authsync.js" defer></script>
 </head>
 
 <body class="cyber-body">
@@ -365,5 +368,79 @@
 <!-- Custom JS -->
 <script src="Script/js_header.js" defer></script>
 <script src="Script/js_resetcheckout.js" defer></script>
+
+<!-- Ensure auth script loads only after header is present.
+     When header is injected by js_resetcheckout.js, we inject js_resetauth.js and call AuthSync.refresh()
+     so header UI updates immediately and modal-open flag is handled similarly to other pages. -->
+<script>
+    (function() {
+        let authInjected = false;
+
+        function injectAuth() {
+            if (authInjected) return;
+            authInjected = true;
+
+            const s = document.createElement('script');
+            s.src = "Script/js_resetauth.js";
+            s.defer = true;
+            s.onload = async function() {
+                try {
+                    if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+                        await window.AuthSync.refresh();
+                    }
+                } catch (err) {
+                    console.warn('AuthSync.refresh() failed on checkout page:', err);
+                }
+
+                // preserve legacy behavior: open modal if showLoginAfterReset set
+                try {
+                    if (localStorage.getItem("showLoginAfterReset") === "true") {
+                        localStorage.removeItem("showLoginAfterReset");
+                        if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+                            CyberModal.open();
+                        }
+                    }
+                } catch (e) { console.warn(e); }
+            };
+            document.body.appendChild(s);
+        }
+
+        // If header already exists (synchronous), inject immediately
+        const headerContainer = document.getElementById('header-container');
+        if (headerContainer && headerContainer.children.length > 0) {
+            injectAuth();
+            return;
+        }
+
+        // Observe header container for insertion (triggered by js_resetcheckout.loadPagePart)
+        if (headerContainer) {
+            const obs = new MutationObserver((mutations, observer) => {
+                for (const m of mutations) {
+                    if (m.type === 'childList' && m.addedNodes.length > 0) {
+                        injectAuth();
+                        observer.disconnect();
+                        return;
+                    }
+                }
+            });
+            obs.observe(headerContainer, { childList: true, subtree: false });
+        } else {
+            // fallback: poll for header for a short time
+            let tries = 0;
+            const t = setInterval(() => {
+                const hc = document.getElementById('header-container');
+                tries++;
+                if (hc && hc.children.length > 0) {
+                    clearInterval(t);
+                    injectAuth();
+                } else if (tries > 40) {
+                    clearInterval(t);
+                    // best-effort inject anyway to avoid missing auth
+                    injectAuth();
+                }
+            }, 100);
+        }
+    })();
+</script>
 </body>
 </html>

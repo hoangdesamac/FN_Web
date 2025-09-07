@@ -19,6 +19,16 @@ function initBannerHeaderWrapper() {
     });
 }
 
+// Helper: trung tâm xác thực (dùng AuthSync nếu có)
+function isAuth() {
+    try {
+        if (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function') {
+            return window.AuthSync.isLoggedIn();
+        }
+    } catch (e) { /* ignore */ }
+    return !!localStorage.getItem('userName');
+}
+
 // ================= Giỏ hàng & đơn hàng =================
 function initCartCountEffect() {
     updateCartCount();
@@ -29,10 +39,10 @@ function updateCartCount() {
     const cartCountElement = document.querySelector('.cart-count');
     if (!cartCountElement) return;
 
-    const isLoggedIn = !!localStorage.getItem('userName');
+    const logged = isAuth();
     const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
 
-    if (isLoggedIn) {
+    if (logged) {
         fetch(`${window.API_BASE}/api/cart`, {
             method: 'GET',
             credentials: 'include'
@@ -50,7 +60,6 @@ function updateCartCount() {
             })
             .catch(err => console.error('Lỗi lấy giỏ hàng từ server:', err));
     } else {
-        // ❌ Chưa login → luôn ẩn icon số lượng
         cartCountElement.style.display = "none";
     }
 }
@@ -60,11 +69,10 @@ async function updateOrderCount() {
     const orderCountElement = document.querySelector('.order-count');
     if (!orderCountElement) return;
 
-    // Ẩn ngay từ đầu
     orderCountElement.style.display = "none";
 
-    const isLoggedIn = !!localStorage.getItem('userName');
-    if (isLoggedIn) {
+    const logged = isAuth();
+    if (logged) {
         try {
             const res = await fetch(`${window.API_BASE}/api/orders`, {
                 method: "GET",
@@ -163,8 +171,37 @@ function switchToForgot() { CyberModal.showForgot(); }
 function closeCyberModal() { CyberModal.close(); }
 
 // ================= User login state =================
+// Use AuthSync if present to avoid duplicate /api/me calls and race condition
 async function fetchUserInfo() {
     try {
+        if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+            const st = window.AuthSync.getState();
+            if (st && st.loggedIn && st.user) {
+                const dataUser = st.user;
+                localStorage.setItem('userName', (dataUser.lastName || '').trim());
+                localStorage.setItem('firstName', (dataUser.firstName || '').trim());
+                localStorage.setItem('lastName', (dataUser.lastName || '').trim());
+                localStorage.setItem('email', dataUser.email || "");
+                localStorage.setItem('userId', dataUser.id || "");
+                if (dataUser.avatar_url) {
+                    localStorage.setItem('avatarUrl', dataUser.avatar_url);
+                } else {
+                    localStorage.removeItem('avatarUrl');
+                }
+                return;
+            } else {
+                // fallback to clear compatibility keys
+                localStorage.removeItem('userName');
+                localStorage.removeItem('firstName');
+                localStorage.removeItem('lastName');
+                localStorage.removeItem('email');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('avatarUrl');
+                return;
+            }
+        }
+
+        // Fallback: legacy /api/me fetch
         const res = await fetch(`${window.API_BASE}/api/me`, {
             method: "GET",
             credentials: "include"
@@ -263,7 +300,13 @@ function updateUserDisplay() {
                     method: "POST",
                     credentials: "include"
                 });
-                localStorage.clear();
+                // Use AuthSync.clear() to avoid clearing unrelated keys like cart/gift
+                if (window.AuthSync && typeof window.AuthSync.clear === 'function') {
+                    window.AuthSync.clear();
+                } else {
+                    // fallback: remove only auth-related keys
+                    ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
+                }
                 updateCartCount();
                 window.location.reload();
             } catch (err) {
@@ -291,13 +334,13 @@ function initCartIconClick() {
     cartLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const isLoggedIn = !!localStorage.getItem('userName');
+        const logged = isAuth();
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
         const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
             giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-        if (!isLoggedIn) {
+        if (!logged) {
             if (cartCount > 0) {
                 CyberModal.open?.();
                 if (typeof showNotification === "function") {
@@ -320,8 +363,8 @@ function initOrderIconClick() {
     orderLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const isLoggedIn = !!localStorage.getItem('userName');
-        if (!isLoggedIn) {
+        const logged = isAuth();
+        if (!logged) {
             CyberModal.open?.();
             if (typeof showNotification === "function") {
                 showNotification("Vui lòng đăng nhập để xem đơn hàng!", "info");
@@ -333,6 +376,7 @@ function initOrderIconClick() {
 }
 
 // ================= Đồng bộ header khi trạng thái đăng nhập thay đổi =================
+// Listen legacy event
 window.addEventListener('user:login', async () => {
     await fetchUserInfo();
     updateUserDisplay();
@@ -340,9 +384,35 @@ window.addEventListener('user:login', async () => {
     updateOrderCount();
 });
 
+// If AuthSync exists, listen to its onChange to keep header in sync (preferred)
+if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
+    window.AuthSync.onChange(async (state) => {
+        // state = { loggedIn, user }
+        if (state.loggedIn) {
+            // mirror keys (fetchUserInfo will use AuthSync if available)
+            await fetchUserInfo();
+        } else {
+            // clear local auth keys
+            ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
+        }
+        updateUserDisplay();
+        updateCartCount();
+        updateOrderCount();
+    });
+}
+
 // ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {
-    await fetchUserInfo();
+    // Prefer AuthSync state
+    if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+        const st = window.AuthSync.getState();
+        if (st && st.loggedIn) {
+            // fetchUserInfo will use AuthSync to populate compatibility keys
+            await fetchUserInfo();
+        }
+    } else {
+        await fetchUserInfo();
+    }
     updateUserDisplay();
     updateCartCount();
     updateOrderCount();

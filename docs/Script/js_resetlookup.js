@@ -52,6 +52,15 @@ function loadPagePart(url, selector, callback = null, executeScripts = true) {
         .catch(error => console.error(`Lỗi khi tải ${url}:`, error));
 }
 
+function isLoggedIn() {
+    try {
+        if (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function') {
+            return window.AuthSync.isLoggedIn();
+        }
+    } catch (e) { /* ignore */ }
+    // fallback to legacy keys
+    return !!localStorage.getItem('userId') || !!localStorage.getItem('userName');
+}
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', () => {
@@ -964,24 +973,32 @@ function debounce(func, wait) {
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', async () => {
-    // 🔒 Chặn mở khi chưa login
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
+    // Wait a short moment for AuthSync to initialize if present so state isn't stale
+    if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+        try { await window.AuthSync.refresh(); } catch (e) { /* ignore */ }
+    } else {
+        // small delay to allow any other auth scripts to settle
+        await new Promise(r => setTimeout(r, 200));
+    }
+
+    // If still not logged in → show login modal (or redirect)
+    if (!isLoggedIn()) {
         if (typeof CyberModal !== "undefined" && CyberModal.open) {
             CyberModal.open();
         } else {
             window.location.href = "index.html";
         }
-        return; // ⛔ stop luôn
+        return; // stop further init
     }
 
-    // ✅ Nếu đã login thì load orders
+    // If logged in → fetch orders
     await fetchOrdersFromServer();
 
-    // Giữ nguyên logic filter bên dưới
+    // (Re-attach filters only if needed — safe to run again)
     const productKeywordInput = document.getElementById('product-keyword');
-    if (productKeywordInput) {
+    if (productKeywordInput && !productKeywordInput._lookupBound) {
         productKeywordInput.addEventListener('input', debounce(applyFilters, 300));
+        productKeywordInput._lookupBound = true;
     }
 
     const filterElements = [
@@ -990,9 +1007,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('status-filter')
     ];
     filterElements.forEach(el => {
-        if (el) el.addEventListener('change', applyFilters);
+        if (el && !el._lookupBound) {
+            el.addEventListener('change', applyFilters);
+            el._lookupBound = true;
+        }
     });
 });
+
+
+// ---------- NEW: react to cross-tab / AuthSync auth state changes ----------
+if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
+    window.AuthSync.onChange(async (state) => {
+        try {
+            if (state && state.loggedIn) {
+                // user logged in elsewhere → fetch orders for this tab
+                await fetchOrdersFromServer();
+            } else {
+                // user logged out elsewhere → clear orders and show login UI
+                serverOrders = [];
+                renderOrders([]);
+                updateOrderCount();
+                if (typeof CyberModal !== "undefined" && CyberModal.open) {
+                    CyberModal.open();
+                } else {
+                    // fallback: hide orders area
+                    const ordersContainer = document.getElementById('orders-container');
+                    if (ordersContainer) ordersContainer.innerHTML = '';
+                }
+            }
+        } catch (err) {
+            console.warn("AuthSync onChange handler error:", err);
+        }
+    });
+}
 
 let serverOrders = []; // đặt ở đầu file
 async function fetchOrdersFromServer() {

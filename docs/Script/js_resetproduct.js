@@ -35,6 +35,13 @@ async function loadPagePart(url, containerId, callback = null) {
 // --- DÙNG API ĐỂ KIỂM TRA LOGIN "REALTIME" (không chỉ localStorage) ---
 async function isLoggedInRealTime() {
     try {
+        // Nếu AuthSync tồn tại, dùng nó làm source-of-truth để tránh race/OAuth issues
+        if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+            const st = await window.AuthSync.refresh(); // sẽ gọi /api/me nội bộ
+            return !!(st && st.loggedIn);
+        }
+
+        // fallback cũ: call /api/me trực tiếp
         const res = await fetch(`${window.API_BASE}/api/me`, {
             method: "GET",
             credentials: "include"
@@ -42,13 +49,20 @@ async function isLoggedInRealTime() {
         const data = await res.json();
         return !!(data && data.loggedIn);
     } catch (err) {
-        return !!localStorage.getItem('userName');
+        // nếu lỗi mạng, fallback sang kiểm tra localStorage để có UX tốt hơn
+        return !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
     }
 }
 
 // --- Hàm kiểm tra login cho logic bình thường (vẫn giữ lại) ---
 function isLoggedIn() {
-    return !!localStorage.getItem('userName');
+    try {
+        if (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function') {
+            return window.AuthSync.isLoggedIn();
+        }
+    } catch (e) { /* ignore */ }
+    // fallback legacy
+    return !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
 }
 
 function savePendingAction(actionObj) {
@@ -135,19 +149,70 @@ async function processPendingAction() {
 
 // Process pending action when localStorage 'userName' changes (login event from modal or other tab)
 window.addEventListener('storage', function (e) {
-    if (e.key === 'userName' && e.newValue) {
-        setTimeout(() => {
-            processPendingAction();
-        }, 200);
+    try {
+        if (!e || !e.key) return;
+
+        // Legacy: userName written by older scripts
+        if (e.key === 'userName' && e.newValue) {
+            setTimeout(() => processPendingAction(), 200);
+        }
+
+        // AuthSync: canonical key + ping key
+        if (e.key === 'auth_state' || e.key === 'auth_ping') {
+            // nếu auth_state báo loggedIn thì xử lý pending
+            try {
+                const s = JSON.parse(localStorage.getItem('auth_state') || '{}');
+                if (s && s.loggedIn) {
+                    setTimeout(() => processPendingAction(), 150);
+                }
+            } catch (err) {
+                // nếu không parse được, vẫn thử gọi processPendingAction (best-effort)
+                setTimeout(() => processPendingAction(), 200);
+            }
+        }
+
+        // Nếu các key cart/gift thay đổi thì vẫn giữ behavior cũ (nếu cần xử lý, các hàm khác đã lắng nghe)
+    } catch (err) {
+        console.warn('storage listener error:', err);
     }
 });
 
 // Also try to process pending action on page load
 document.addEventListener('DOMContentLoaded', function () {
-    setTimeout(() => {
-        processPendingAction();
-    }, 200);
+    (async () => {
+        try {
+            // Nếu AuthSync có init(), chờ nó để tránh race (AuthSync sẽ tự gọi /api/me)
+            if (window.AuthSync && typeof window.AuthSync.init === 'function') {
+                await window.AuthSync.init();
+            } else {
+                // nhỏ delay để các script auth khác có thời gian cập nhật localStorage
+                await new Promise(r => setTimeout(r, 200));
+            }
+        } catch (e) {
+            // ignore init errors, vẫn tiếp tục
+            console.warn('AuthSync init error (ignored):', e);
+        }
+
+        // Sau khi AuthSync sẵn sàng (hoặc timeout), cố gắng xử lý pending action
+        try { setTimeout(() => processPendingAction(), 200); } catch (err) { console.warn(err); }
+    })();
 });
+
+
+// ----- Thêm: lắng nghe AuthSync.onChange để xử lý pending action khi auth thay đổi giữa các tab -----
+if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
+    window.AuthSync.onChange((state) => {
+        try {
+            if (state && state.loggedIn) {
+                // khi vừa login ở tab khác hoặc vừa đồng bộ, xử lý pending action
+                setTimeout(() => processPendingAction(), 150);
+            }
+            // khi logout: có thể muốn clear UI / pending (hiện preserve pending so user can login again)
+        } catch (err) {
+            console.warn('AuthSync.onChange handler error:', err);
+        }
+    });
+}
 
 // Listen for custom same-tab login event (dispatched from js_resetauth.js)
 window.addEventListener('user:login', async function () {

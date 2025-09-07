@@ -40,6 +40,14 @@ function loadPagePart(url, selector, callback = null, executeScripts = true) {
         });
 }
 
+function isLoggedIn() {
+    try {
+        if (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function') {
+            return window.AuthSync.isLoggedIn();
+        }
+    } catch (e) {}
+    return !!localStorage.getItem('userName');
+}
 let deliveryInfo = {};
 let currentStep = 1;
 
@@ -59,9 +67,9 @@ function showStep(step) {
 }
 
 async function initializeCartSystem() {
-    const isLoggedIn = !!localStorage.getItem('userName');
+    const logged = isLoggedIn();
 
-    if (isLoggedIn) {
+    if (logged) {
         try {
             // Nếu có pendingCartItem (đã thêm khi chưa login) → sync ngay
             const pending = localStorage.getItem('pendingCartItem');
@@ -144,7 +152,7 @@ async function initializeCartSystem() {
 
             const productImage = productCard.querySelector('.product-image img')?.src || '';
 
-            if (!isLoggedIn) {
+            if (!isLoggedIn()) {
                 // Nếu chưa login → lưu pending
                 localStorage.setItem('pendingCartItem', JSON.stringify({
                     id: productId,
@@ -177,6 +185,7 @@ async function initializeCartSystem() {
     // Xoá sản phẩm hết hạn (local only)
     cleanupExpiredItems();
 }
+
 
 
 
@@ -344,11 +353,11 @@ async function addToCart(productId, productName, originalPrice, salePrice, disco
 
     discountPercent = Number(discountPercent) || 0;
 
-    const isLoggedIn = !!localStorage.getItem('userName');
+    const logged = isLoggedIn();
     animateCartIcon();
 
     // ================== CHƯA LOGIN → LOCAL ONLY ==================
-    if (!isLoggedIn) {
+    if (!logged) {
         let cart = getCart();
         const existingIndex = cart.findIndex(item => item.id === productId);
 
@@ -411,8 +420,6 @@ async function addToCart(productId, productName, originalPrice, salePrice, disco
     }
 }
 
-
-
 function animateCartIcon() {
     const cartIcon = document.querySelector('.user-actions .fa-cart-shopping');
     if (cartIcon) {
@@ -425,8 +432,8 @@ function animateCartIcon() {
 
 function updateCartCount() {
     // Kiểm tra trạng thái đăng nhập trước
-    const isLoggedIn = !!localStorage.getItem('userName');
-    if (!isLoggedIn) {
+    const logged = isLoggedIn();
+    if (!logged) {
         const cartCountElement = document.querySelector('.cart-count');
         if (cartCountElement) {
             cartCountElement.style.display = 'none';
@@ -520,10 +527,10 @@ async function clearCart() {
     cartCache = [];
     selectedItems = [];
 
-    const isLoggedIn = !!localStorage.getItem('userName');
+    const logged = isLoggedIn();
 
     // ================== ĐÃ LOGIN → XOÁ TRÊN SERVER ==================
-    if (isLoggedIn) {
+    if (logged) {
         try {
             const res = await fetch(`${window.API_BASE}/api/cart`, {
                 method: 'DELETE',
@@ -549,9 +556,6 @@ async function clearCart() {
     showNotification('Đã xóa tất cả sản phẩm khỏi giỏ hàng', 'success');
 }
 
-
-
-
 async function updateQuantity(index, change) {
     const cart = getCart();
     if (!cart[index]) return;
@@ -571,10 +575,10 @@ async function updateQuantity(index, change) {
         }, 300);
     }
 
-    const isLoggedIn = !!localStorage.getItem('userName');
+    const logged = isLoggedIn();
 
     // ================== CHƯA LOGIN → LOCAL ONLY ==================
-    if (!isLoggedIn) {
+    if (!logged) {
         cart[index].quantity = newQty;
         cart[index].updatedAt = new Date().toISOString();
         saveCart(cart);
@@ -612,7 +616,6 @@ async function updateQuantity(index, change) {
     }
 }
 
-
 async function removeItem(index) {
     const cart = getCart();
     if (!cart[index]) return;
@@ -632,10 +635,10 @@ async function removeItem(index) {
 }
 
 async function performRemoveItem(index, itemName, productId) {
-    const isLoggedIn = !!localStorage.getItem('userName');
+    const logged = isLoggedIn();
 
     // ================== CHƯA LOGIN → LOCAL ONLY ==================
-    if (!isLoggedIn) {
+    if (!logged) {
         let cart = getCart();
         cart.splice(index, 1);
         saveCart(cart);
@@ -698,8 +701,6 @@ function validateGiftRequirements(cart) {
     }
 }
 
-
-
 function cleanupExpiredItems(expiryHours = 72) {
     const cart = getCart();
     const now = new Date();
@@ -723,8 +724,8 @@ function cleanupExpiredItems(expiryHours = 72) {
         console.log("Đã xóa các sản phẩm hết hạn từ giỏ hàng");
 
         // Đồng bộ với server nếu đã đăng nhập
-        const isLoggedIn = !!localStorage.getItem('userName');
-        if (isLoggedIn) {
+        const logged = isLoggedIn();
+        if (logged) {
             cleanedCart.forEach(item => {
                 fetch(`${window.API_BASE}/api/cart`, {
                     method: 'POST',
@@ -1430,7 +1431,6 @@ async function processPayment() {
     }, 2000);
 }
 
-
 function formatCurrency(amount) {
     if (typeof amount === 'string') {
         amount = parseFloat(amount.replace(/[^\d.-]/g, ''));
@@ -1443,9 +1443,9 @@ async function updateOrderCount() {
     const orderCountElement = document.querySelector('.order-count');
     if (!orderCountElement) return;
 
-    const isLoggedIn = !!localStorage.getItem('userName');
+    const logged = isLoggedIn();
 
-    if (isLoggedIn) {
+    if (logged) {
         try {
             const res = await fetch(`${window.API_BASE}/api/orders`, {
                 method: "GET",
@@ -1470,7 +1470,6 @@ async function updateOrderCount() {
     }
 }
 
-
 function setupPaymentMethodAnimations() {
     const animations = [
         { containerId: 'lottie-cod', path: '/transformanimation/cod.json' }
@@ -1493,11 +1492,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     const totalItems = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
         giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-    const isLoggedIn = !!localStorage.getItem('userName');
+    const logged = isLoggedIn();
     const isLocked = localStorage.getItem('cartLocked') === 'true';
 
     // Nếu chưa đăng nhập + giỏ hàng bị khoá HOẶC có sản phẩm cũ
-    if (!isLoggedIn && (isLocked || totalItems > 0)) {
+    if (!logged && (isLocked || totalItems > 0)) {
         const hideCheckout = () => {
             const container = document.querySelector('.checkout-container');
             if (container) {
@@ -1646,6 +1645,24 @@ document.addEventListener("DOMContentLoaded", async function () {
         formBox.style.display = "none";
     }
 });
+
+// ---------- Thêm: lắng nghe AuthSync thay đổi (nếu AuthSync tồn tại) ----------
+if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
+    window.AuthSync.onChange((state) => {
+        // Khi login → pull server cart & re-init; khi logout → render local cart and hide protected UI if needed
+        if (state.loggedIn) {
+            // re-sync cart from server
+            initializeCartSystem().catch(e => console.warn('initCart after auth change failed', e));
+        } else {
+            // logged out: show local cart (likely empty) and hide checkout if locked
+            renderCart();
+            updateCartCount();
+            updateOrderCount();
+            const container = document.querySelector('.checkout-container');
+            if (container && localStorage.getItem('cartLocked') === 'true') container.classList.add('d-none');
+        }
+    });
+}
 
 function selectMethod(method) {
     document.querySelectorAll('.method-option').forEach(opt => opt.classList.remove('selected', 'cod'));

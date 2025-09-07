@@ -922,13 +922,13 @@ app.post("/api/cart", authenticateToken, async (req, res) => {
             `INSERT INTO cart_items (user_id, product_id, name, original_price, sale_price, discount_percent, image, quantity)
              VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
              ON CONFLICT (user_id, product_id)
-             DO UPDATE SET
+            DO UPDATE SET
                 name = EXCLUDED.name,
                 original_price = EXCLUDED.original_price,
                 sale_price = EXCLUDED.sale_price,
                 discount_percent = EXCLUDED.discount_percent,
                 image = EXCLUDED.image,
-                quantity = EXCLUDED.quantity,
+                quantity = COALESCE(cart_items.quantity, 0) + COALESCE(EXCLUDED.quantity, 1),
                 created_at = NOW()`,
             [req.user.id, id, name, originalPrice, salePrice, discountPercent, image, quantity || 1]
         );

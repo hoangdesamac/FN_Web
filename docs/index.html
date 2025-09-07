@@ -27,6 +27,8 @@
         window.API_BASE = "https://fn-web.onrender.com";
     </script>
 
+    <!-- NEW: AuthSync (canonical auth-sync module) -->
+    <script src="Script/js_authsync.js" defer></script>
 
 </head>
 <body>
@@ -40,13 +42,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 
-
 <!-- ✅ JS riêng header -->
 <script src="Script/js_header.js" defer></script>
 <!-- ✅ JS riêng cho main content -->
 <script src="Script/js_maincontent.js" defer></script>
 <script src="Script/js_resetcheckout.js" defer></script>
-
 
 <!-- ✅ Script load động -->
 <script defer>
@@ -54,12 +54,21 @@
         loadSection("HTML/Layout/resetheader.html", "#header-container", function() {
             if (typeof initHeader === 'function') initHeader();
 
-            // ✅ Load auth.js sau khi header đã vào DOM
+            // ✅ Load auth.js sau khi header đã vào DOM (giữ logic hiện tại)
             const script = document.createElement('script');
             script.src = "Script/js_resetauth.js";
             script.defer = true;
-            script.onload = () => {
-                // 🔥 Sau khi auth.js đã load, kiểm tra flag mở modal
+            script.onload = async () => {
+                try {
+                    // 🔁 Sau khi auth.js đã load, ưu tiên đồng bộ trạng thái từ server (AuthSync)
+                    if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+                        await window.AuthSync.refresh();
+                    }
+                } catch (err) {
+                    console.warn('AuthSync.refresh() failed:', err);
+                }
+
+                // 🔥 Sau đó kiểm tra flag mở modal (giữ behavior cũ)
                 if (localStorage.getItem("showLoginAfterReset") === "true") {
                     localStorage.removeItem("showLoginAfterReset");
                     if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
