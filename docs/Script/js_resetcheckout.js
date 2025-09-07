@@ -1492,10 +1492,43 @@ document.addEventListener("DOMContentLoaded", async function () {
     const totalItems = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
         giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-    const logged = isLoggedIn();
+    // IMPORTANT: try to get the most up-to-date auth state.
+    // If AuthSync is present, try to refresh once (with a short timeout)
+    // so we don't mistakenly think the user is logged out right after an OAuth redirect.
+    let logged = false;
+    try {
+        if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+            try {
+                const timeoutMs = 800; // small timeout to avoid blocking UX; increase if needed
+                const refreshPromise = window.AuthSync.refresh();
+                const timeoutPromise = new Promise((_, rej) => setTimeout(() => rej(new Error('AuthSync.refresh timeout')), timeoutMs));
+                await Promise.race([refreshPromise, timeoutPromise]);
+                const st = typeof window.AuthSync.getState === 'function' ? window.AuthSync.getState() : null;
+                logged = !!(st && st.loggedIn);
+                console.log('AuthSync.refresh() succeeded, logged=', logged);
+            } catch (err) {
+                console.warn('AuthSync.refresh() failed or timed out:', err);
+                // fallback: use in-memory AuthSync.isLoggedIn() if available, otherwise legacy check
+                try {
+                    logged = !!(window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function' && window.AuthSync.isLoggedIn());
+                } catch (e) {
+                    logged = !!isLoggedIn();
+                }
+                console.log('Fallback logged=', logged);
+            }
+        } else {
+            // no AuthSync -> legacy check
+            logged = !!isLoggedIn();
+            console.log('No AuthSync, legacy isLoggedIn() ->', logged);
+        }
+    } catch (err) {
+        console.warn('Error while checking auth state on DOMContentLoaded:', err);
+        logged = !!isLoggedIn();
+    }
+
     const isLocked = localStorage.getItem('cartLocked') === 'true';
 
-    // Nếu chưa đăng nhập + giỏ hàng bị khoá HOẶC có sản phẩm cũ
+    // Nếu chưa đăng nhập + giỏ hàng bị khoá HOẶC có sản phẩm cũ → ẩn checkout và dừng init
     if (!logged && (isLocked || totalItems > 0)) {
         const hideCheckout = () => {
             const container = document.querySelector('.checkout-container');
@@ -1506,7 +1539,17 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         };
         hideCheckout();
-        return; // Dừng init
+
+        // Additionally, open login modal if header/Modal available after a short delay
+        setTimeout(() => {
+            try {
+                if (typeof CyberModal !== 'undefined' && CyberModal.open) {
+                    CyberModal.open();
+                }
+            } catch (e) { /* ignore */ }
+        }, 300);
+
+        return; // Dừng init — chờ user login
     }
 
     // ==== Nếu qua được kiểm tra thì mới chạy phần còn lại ====
@@ -1622,7 +1665,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const profileBox = document.getElementById("profile-delivery-box");
     const formBox = document.getElementById("custom-delivery-form");
 
-// Tải và render sổ địa chỉ ngay từ đầu
+    // Tải và render sổ địa chỉ ngay từ đầu
     await loadAndRenderProfileAddresses();
     document.querySelectorAll('input[name="deliveryMode"]').forEach(input => {
         input.addEventListener("change", e => {
@@ -1637,7 +1680,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     });
 
-// Mặc định chọn "Của bạn"
+    // Mặc định chọn "Của bạn"
     const defaultRadio = document.querySelector("input[name='deliveryMode'][value='profile']");
     if (defaultRadio) {
         defaultRadio.checked = true;
@@ -1650,16 +1693,20 @@ document.addEventListener("DOMContentLoaded", async function () {
 if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
     window.AuthSync.onChange((state) => {
         // Khi login → pull server cart & re-init; khi logout → render local cart and hide protected UI if needed
-        if (state.loggedIn) {
-            // re-sync cart from server
-            initializeCartSystem().catch(e => console.warn('initCart after auth change failed', e));
-        } else {
-            // logged out: show local cart (likely empty) and hide checkout if locked
-            renderCart();
-            updateCartCount();
-            updateOrderCount();
-            const container = document.querySelector('.checkout-container');
-            if (container && localStorage.getItem('cartLocked') === 'true') container.classList.add('d-none');
+        try {
+            if (state && state.loggedIn) {
+                // re-sync cart from server
+                initializeCartSystem().catch(e => console.warn('initCart after auth change failed', e));
+            } else {
+                // logged out: show local cart (likely empty) and hide checkout if locked
+                renderCart();
+                updateCartCount();
+                updateOrderCount();
+                const container = document.querySelector('.checkout-container');
+                if (container && localStorage.getItem('cartLocked') === 'true') container.classList.add('d-none');
+            }
+        } catch (err) {
+            console.warn('AuthSync.onChange handler error:', err);
         }
     });
 }
