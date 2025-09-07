@@ -26,7 +26,38 @@ async function loadPagePart(url, containerId, callback = null) {
 // ==========================
 // AUTH GUARD & PENDING ACTIONS
 // ==========================
+async function ensureSessionSynced() {
+    // Trả về object { loggedIn: boolean, data: <session payload or /api/me result|null> }
+    try {
+        // Prefer atomic session-sync if available
+        if (window.fnAuth && typeof window.fnAuth.processAfterLoginNoReload === 'function') {
+            try {
+                const data = await window.fnAuth.processAfterLoginNoReload();
+                return { loggedIn: !!(data && data.user), data };
+            } catch (err) {
+                console.warn('session-sync failed (fnAuth), falling back to checkLoginStatus:', err);
+                if (window.fnAuth && typeof window.fnAuth.checkLoginStatus === 'function') {
+                    const me = await window.fnAuth.checkLoginStatus();
+                    return { loggedIn: !!(me && me.loggedIn), data: me };
+                }
+            }
+        }
 
+        // If fnAuth not present or failed, try checkLoginStatus (if defined)
+        if (typeof checkLoginStatus === 'function') {
+            const me = await checkLoginStatus();
+            return { loggedIn: !!(me && me.loggedIn), data: me };
+        }
+
+        // Last fallback: direct /api/me call
+        const res = await fetch(`${window.API_BASE}/api/me`, { credentials: 'include' });
+        const me2 = await res.json();
+        return { loggedIn: !!(me2 && me2.loggedIn), data: me2 };
+    } catch (err) {
+        console.error('ensureSessionSynced error:', err);
+        return { loggedIn: false, data: null };
+    }
+}
 /**
  * pendingAction stored in localStorage as JSON:
  * { type: 'addToCart' | 'addMultipleToCart' | 'buyNow', payload: {...} }
@@ -35,13 +66,10 @@ async function loadPagePart(url, containerId, callback = null) {
 // --- DÙNG API ĐỂ KIỂM TRA LOGIN "REALTIME" (không chỉ localStorage) ---
 async function isLoggedInRealTime() {
     try {
-        const res = await fetch(`${window.API_BASE}/api/me`, {
-            method: "GET",
-            credentials: "include"
-        });
-        const data = await res.json();
-        return !!(data && data.loggedIn);
+        const session = await ensureSessionSynced();
+        return !!session.loggedIn;
     } catch (err) {
+        // conservative fallback to localStorage
         return !!localStorage.getItem('userName');
     }
 }
@@ -76,8 +104,10 @@ function openLoginModalAndNotify() {
  * Execute pending action from localStorage (if exists and user is logged in)
  */
 async function processPendingAction() {
-    // DÙNG REALTIME CHECK ĐỂ ĐẢM BẢO KHÔNG LỖI VỚI OAUTH/CÁC TAB KHÁC
-    if (!(await isLoggedInRealTime())) return;
+    // Ensure session is synced first (so cookie and server state are ready)
+    const session = await ensureSessionSynced();
+    if (!session.loggedIn) return;
+
     const raw = localStorage.getItem('pendingAction');
     if (!raw) return;
 
@@ -115,6 +145,8 @@ async function processPendingAction() {
             if (action.payload.gifts?.length) toastMsg += ` và quà tặng!`;
             else toastMsg += "!";
             showToast(toastMsg);
+
+            // Decide redirect: prefer server-side authoritativeness but keep existing behavior
             if (
                 action.payload.combos &&
                 action.payload.combos.length > 0 &&
@@ -166,23 +198,35 @@ window.addEventListener('user:login', async function () {
 
 // Helper to require login before running action
 function requireLoginThenDo(actionType, payload, immediateFn) {
-    // CHECK REALTIME ĐỂ ĐẢM BẢO NHẤT QUÁN (ngay cả khi localStorage chưa sync kịp)
-    isLoggedInRealTime().then((loggedIn) => {
-        if (loggedIn) {
-            if (typeof immediateFn === 'function') immediateFn();
-        } else {
+    (async () => {
+        try {
+            const session = await ensureSessionSynced();
+            if (session.loggedIn) {
+                if (typeof immediateFn === 'function') await immediateFn();
+                return;
+            }
+
+            // Not logged in: save pendingAction and open login modal
             savePendingAction({ type: actionType, payload });
             openLoginModalAndNotify();
+
+            // Also store postLoginRedirect to come back to this product page (helps OAuth flows)
+            try {
+                const currentUrl = window.location.href;
+                localStorage.setItem('postLoginRedirect', currentUrl);
+            } catch (e) { /* ignore */ }
+
+        } catch (err) {
+            console.warn('requireLoginThenDo fallback: network error, use localStorage check', err);
+            // fallback to localStorage check
+            if (isLoggedIn()) {
+                if (typeof immediateFn === 'function') immediateFn();
+            } else {
+                savePendingAction({ type: actionType, payload });
+                openLoginModalAndNotify();
+            }
         }
-    }).catch(() => {
-        // fallback: dùng localStorage check nếu lỗi mạng
-        if (isLoggedIn()) {
-            if (typeof immediateFn === 'function') immediateFn();
-        } else {
-            savePendingAction({ type: actionType, payload });
-            openLoginModalAndNotify();
-        }
-    });
+    })();
 }
 
 // ==========================
@@ -1472,7 +1516,7 @@ window.products = [
 // ==========================
 // MAIN INIT: chạy toàn trang
 // ==========================
-$(document).ready(function () {
+$(document).ready(async function () {
     // ================== HÀM CHUẨN HÓA DÙNG CHUNG ==================
     function normalizeName(str) {
         return (str || '')
@@ -1488,6 +1532,27 @@ $(document).ready(function () {
         return '';
     }
     bindEventHandlers();
+    // ===== NEW: ensure session is synced before proceeding (uses window.fnAuth if available) =====
+    try {
+        if (typeof ensureSessionSynced === 'function') {
+            // preferred atomic sync (server /api/session-sync via fnAuth)
+            await ensureSessionSynced();
+        } else if (typeof processAfterLoginNoReload === 'function') {
+            // backward-compatible fallback
+            await processAfterLoginNoReload();
+        }
+    } catch (err) {
+        console.warn('Session sync failed on product page load:', err);
+    }
+
+    // Process pendingAction (if any) after session sync so OAuth/modal flows are handled reliably
+    try {
+        if (typeof processPendingAction === 'function') {
+            await processPendingAction();
+        }
+    } catch (err) {
+        console.warn('processPendingAction failed on product page load:', err);
+    }
 
     loadPagePart("HTML/Layout/resetheader.html", "header-container", () => {
         if (typeof initHeader === 'function') initHeader();
@@ -1618,72 +1683,41 @@ $(document).ready(function () {
     // Detect if URL looks like a login callback (contains credentials or login marker) but missing product params
     const hasLoginLike = urlParams.get('email') || urlParams.get('login') || urlParams.get('password');
 
+    // ===== REPLACE: Robust login-like (OAuth) recovery using ensureSessionSynced() =====
     if (!productId && hasLoginLike) {
         console.log('[INFO] URL contains login-like params but no productId — attempting post-login recovery.');
 
-        // If processAfterLoginNoReload exists, run it to refresh header/cart and process pendingAction,
-        // then try to recover product params and redirect back to product page if found.
-        if (typeof processAfterLoginNoReload === 'function') {
-            processAfterLoginNoReload().then(() => {
-                const rec = tryRecoverParams();
-                if (rec && (rec.id || rec.name || rec.type)) {
-                    const base = window.location.pathname.replace(/\/?resetproduct\.html$/i, '/resetproduct.html');
-                    const params = new URLSearchParams(window.location.search);
-                    // remove sensitive/login params
-                    params.delete('email'); params.delete('password'); params.delete('login');
-                    if (rec.id) params.set('id', rec.id);
-                    if (rec.name) params.set('name', rec.name);
-                    if (rec.type) params.set('type', rec.type);
-                    const newUrl = base + '?' + params.toString();
-                    try { localStorage.removeItem('postLoginRedirect'); } catch (e) {}
-                    console.log('[RECOVER] Redirecting to recovered product URL:', newUrl);
-                    window.location.href = newUrl;
-                    return;
-                } else {
-                    // no recoverable product; clean login params from URL to avoid repeated confusion
-                    const clean = window.location.pathname;
-                    window.history.replaceState({}, document.title, clean);
-                    // continue initialization (will show not found below)
-                }
-            }).catch(err => {
-                console.warn('processAfterLoginNoReload failed:', err);
-                // fallback immediate recover attempt
-                const rec = tryRecoverParams();
-                if (rec && (rec.id || rec.name || rec.type)) {
-                    const base = window.location.pathname.replace(/\/?resetproduct\.html$/i, '/resetproduct.html');
-                    const params = new URLSearchParams(window.location.search);
-                    params.delete('email'); params.delete('password'); params.delete('login');
-                    if (rec.id) params.set('id', rec.id);
-                    if (rec.name) params.set('name', rec.name);
-                    if (rec.type) params.set('type', rec.type);
-                    const newUrl = base + '?' + params.toString();
-                    try { localStorage.removeItem('postLoginRedirect'); } catch (e) {}
-                    window.location.href = newUrl;
-                    return;
-                }
-            });
-
-            // stop further synchronous initialization here — the async path will redirect if recovered
-            return;
-        } else {
-            // processAfterLoginNoReload not available → try immediate recovery
-            const rec = tryRecoverParams();
-            if (rec && (rec.id || rec.name || rec.type)) {
-                const base = window.location.pathname.replace(/\/?resetproduct\.html$/i, '/resetproduct.html');
-                const params = new URLSearchParams(window.location.search);
-                params.delete('email'); params.delete('password'); params.delete('login');
-                if (rec.id) params.set('id', rec.id);
-                if (rec.name) params.set('name', rec.name);
-                if (rec.type) params.set('type', rec.type);
-                const newUrl = base + '?' + params.toString();
-                try { localStorage.removeItem('postLoginRedirect'); } catch (e) {}
-                window.location.href = newUrl;
-                return;
-            } else {
-                const clean = window.location.pathname;
-                window.history.replaceState({}, document.title, clean);
-                // continue init; will show not found
+        try {
+            // Prefer ensureSessionSynced (atomic). Fallback to processAfterLoginNoReload if older.
+            if (typeof ensureSessionSynced === 'function') {
+                await ensureSessionSynced();
+            } else if (typeof processAfterLoginNoReload === 'function') {
+                await processAfterLoginNoReload();
             }
+        } catch (err) {
+            console.warn('session-sync/processAfterLoginNoReload failed during login-like recovery:', err);
+        }
+
+        // After sync attempt, try to recover product params from known sources
+        const rec = tryRecoverParams();
+        if (rec && (rec.id || rec.name || rec.type)) {
+            const base = window.location.pathname.replace(/\/?resetproduct\.html$/i, '/resetproduct.html');
+            const params = new URLSearchParams(window.location.search);
+            // remove sensitive/login params
+            params.delete('email'); params.delete('password'); params.delete('login');
+            if (rec.id) params.set('id', rec.id);
+            if (rec.name) params.set('name', rec.name);
+            if (rec.type) params.set('type', rec.type);
+            const newUrl = base + '?' + params.toString();
+            try { localStorage.removeItem('postLoginRedirect'); } catch (e) { /* ignore */ }
+            console.log('[RECOVER] Redirecting to recovered product URL:', newUrl);
+            window.location.href = newUrl;
+            return; // stop further init (we're redirecting)
+        } else {
+            // No recoverable product — remove login params to avoid loops and continue init
+            const clean = window.location.pathname;
+            window.history.replaceState({}, document.title, clean);
+            // continue start-up (will show not found if no params later)
         }
     }
 
