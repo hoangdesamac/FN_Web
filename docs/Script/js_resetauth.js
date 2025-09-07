@@ -337,23 +337,25 @@ if (loginForm) {
             const data = await res.json();
 
             if (data.success) {
+                // OPTIMISTIC UI: cập nhật local ngay để UI phản hồi nhanh
                 if (data.user) {
                     setAuthLocals(data.user);
                     if (typeof updateUserDisplay === "function") updateUserDisplay();
                 }
 
-                try {
-                    await processAfterLoginNoReload();
-                } catch (err) {
+                // Bắt đầu đồng bộ session/giỏ hàng nhưng không chặn UI
+                processAfterLoginNoReload().catch(err => {
                     console.warn('session-sync failed after login, falling back to syncCartToServer', err);
-                    try { await syncCartToServer(); } catch (e) { /* ignore */ }
-                }
+                    syncCartToServer().catch(() => {});
+                });
 
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
 
-                try { window.dispatchEvent(new Event('user:login')); } catch (err) { console.warn('dispatch user:login failed', err); }
+                // broadcast login để các tab khác cập nhật
                 broadcastAuthEvent({ type: 'login', user: data.user || null });
+                try { window.dispatchEvent(new Event('user:login')); } catch (err) { console.warn('dispatch user:login failed', err); }
 
+                // redirect nếu có postLoginRedirect
                 const postLoginRedirect = localStorage.getItem('postLoginRedirect');
                 if (postLoginRedirect && postLoginRedirect !== window.location.href) {
                     localStorage.removeItem('postLoginRedirect');
