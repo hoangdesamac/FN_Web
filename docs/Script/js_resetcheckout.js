@@ -40,40 +40,6 @@ function loadPagePart(url, selector, callback = null, executeScripts = true) {
         });
 }
 
-async function ensureSessionSynced() {
-    // Trả về object: { loggedIn: boolean, data: <payload|null> }
-    try {
-        if (window.fnAuth && typeof window.fnAuth.processAfterLoginNoReload === 'function') {
-            try {
-                const data = await window.fnAuth.processAfterLoginNoReload();
-                return { loggedIn: !!(data && data.user), data };
-            } catch (err) {
-                // Nếu session-sync thất bại, thử checkLoginStatus nếu có
-                console.warn('session-sync failed, fallback to checkLoginStatus:', err);
-                if (window.fnAuth && typeof window.fnAuth.checkLoginStatus === 'function') {
-                    const me = await window.fnAuth.checkLoginStatus();
-                    return { loggedIn: !!(me && me.loggedIn), data: me };
-                }
-            }
-        }
-
-        // Không có window.fnAuth hoặc tất cả fallback đều lỗi → dùng local / /api/me trực tiếp
-        if (typeof checkLoginStatus === 'function') {
-            const me2 = await checkLoginStatus();
-            return { loggedIn: !!(me2 && me2.loggedIn), data: me2 };
-        } else {
-            // Fallback network call
-            const res = await fetch(`${window.API_BASE}/api/me`, { credentials: 'include' });
-            const me3 = await res.json();
-            return { loggedIn: !!(me3 && me3.loggedIn), data: me3 };
-        }
-    } catch (err) {
-        console.error('ensureSessionSynced error:', err);
-        // Không chắc được trạng thái → return loggedIn false (an toàn)
-        return { loggedIn: false, data: null };
-    }
-}
-
 let deliveryInfo = {};
 let currentStep = 1;
 
@@ -93,17 +59,14 @@ function showStep(step) {
 }
 
 async function initializeCartSystem() {
-    // Đồng bộ session (atomic) nếu có → đảm bảo cookie + server state đã sẵn sàng
-    const session = await ensureSessionSynced();
-    const isLoggedIn = !!session.loggedIn;
+    const isLoggedIn = !!localStorage.getItem('userName');
 
     if (isLoggedIn) {
         try {
-            // Nếu có pendingCartItem (đã thêm khi chưa login) → sync ngay (server đã sẵn sàng)
+            // Nếu có pendingCartItem (đã thêm khi chưa login) → sync ngay
             const pending = localStorage.getItem('pendingCartItem');
             if (pending) {
                 const item = JSON.parse(pending);
-                // addToCart đã xử lý trường hợp login: server POST
                 await addToCart(
                     item.id,
                     item.name,
@@ -115,47 +78,33 @@ async function initializeCartSystem() {
                 localStorage.removeItem('pendingCartItem');
             }
 
-            // Nếu processAfterLoginNoReload đã trả về cart (atomic), dùng ngay để tránh gọi 2 lần
-            let serverCart = null;
-            if (session.data && session.data.cart && Array.isArray(session.data.cart)) {
-                serverCart = session.data.cart;
-            }
+            // 🔑 Luôn lấy giỏ hàng từ server
+            const res = await fetch(`${window.API_BASE}/api/cart`, {
+                method: 'GET',
+                credentials: 'include'
+            });
 
-            // Nếu không có cart trong payload, gọi /api/cart
-            if (!serverCart) {
-                try {
-                    const res = await fetch(`${window.API_BASE}/api/cart`, {
-                        method: 'GET',
-                        credentials: 'include'
-                    });
-                    const data = await res.json();
-                    if (data.success) serverCart = data.cart || [];
-                    else {
-                        console.warn('⚠️ API trả về lỗi khi lấy giỏ hàng:', data.error);
-                        serverCart = [];
-                    }
-                } catch (err) {
-                    console.error('❌ Lỗi khi lấy giỏ hàng từ server:', err);
-                    serverCart = [];
-                }
-            }
+            const data = await res.json();
+            if (data.success) {
+                const serverCart = data.cart || [];
 
-            // Server là nguồn chính → cache vào local
-            try {
+                // Server là nguồn chính → cache vào local
                 localStorage.setItem('cart', JSON.stringify(serverCart));
-            } catch (e) { /* ignore quota errors */ }
-            cartCache = serverCart;
+                cartCache = serverCart;
 
-            updateCartCount();
-            updateOrderCount();
-            if (document.getElementById('cart-items-container')) {
-                renderCart(serverCart);
+                updateCartCount();
+                updateOrderCount();
+                if (document.getElementById('cart-items-container')) {
+                    renderCart(serverCart);
+                }
+            } else {
+                console.warn('⚠️ API trả về lỗi khi lấy giỏ hàng:', data.error);
             }
         } catch (err) {
-            console.error('❌ Lỗi trong initializeCartSystem (login flow):', err);
+            console.error('❌ Lỗi khi lấy giỏ hàng từ server:', err);
         }
     } else {
-        // Nếu chưa login → chỉ dùng local
+        // 🔑 Nếu chưa login → chỉ dùng local
         const localCart = JSON.parse(localStorage.getItem('cart')) || [];
         cartCache = localCart;
 
@@ -168,7 +117,7 @@ async function initializeCartSystem() {
 
     // Gắn sự kiện cho nút "Mua ngay"
     document.querySelectorAll('.buy-button').forEach(button => {
-        button.addEventListener('click', async function () {
+        button.addEventListener('click', function () {
             const productCard = this.closest('.product-card');
             if (!productCard) {
                 showNotification('Không tìm thấy thông tin sản phẩm!', 'error');
@@ -195,11 +144,7 @@ async function initializeCartSystem() {
 
             const productImage = productCard.querySelector('.product-image img')?.src || '';
 
-            // Lấy trạng thái login tươi (tránh stale localStorage)
-            const sessionNow = await ensureSessionSynced();
-            const nowLoggedIn = !!sessionNow.loggedIn;
-
-            if (!nowLoggedIn) {
+            if (!isLoggedIn) {
                 // Nếu chưa login → lưu pending
                 localStorage.setItem('pendingCartItem', JSON.stringify({
                     id: productId,
@@ -219,7 +164,7 @@ async function initializeCartSystem() {
             }
 
             // Đã login → thêm thẳng vào server
-            await addToCart(productId, productName, originalPrice, salePrice, discountPercent, productImage);
+            addToCart(productId, productName, originalPrice, salePrice, discountPercent, productImage);
             showNotification(`Đã thêm "${productName}" vào giỏ hàng!`, 'success');
         });
     });
@@ -1543,11 +1488,6 @@ function setupPaymentMethodAnimations() {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-    // Ensure session sync early so localStorage user/cart reflect server state
-    await ensureSessionSynced().catch(err => {
-        console.warn('ensureSessionSynced failed on DOMContentLoaded:', err);
-    });
-
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
     const totalItems = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
@@ -1572,7 +1512,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // ==== Nếu qua được kiểm tra thì mới chạy phần còn lại ====
     validateGiftCartOnLoad();
-    await initializeCartSystem();
+    initializeCartSystem();
 
     loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {
         initHeader();
@@ -1683,7 +1623,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const profileBox = document.getElementById("profile-delivery-box");
     const formBox = document.getElementById("custom-delivery-form");
 
-    // Tải và render sổ địa chỉ ngay từ đầu
+// Tải và render sổ địa chỉ ngay từ đầu
     await loadAndRenderProfileAddresses();
     document.querySelectorAll('input[name="deliveryMode"]').forEach(input => {
         input.addEventListener("change", e => {
@@ -1698,7 +1638,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     });
 
-    // Mặc định chọn "Của bạn"
+// Mặc định chọn "Của bạn"
     const defaultRadio = document.querySelector("input[name='deliveryMode'][value='profile']");
     if (defaultRadio) {
         defaultRadio.checked = true;

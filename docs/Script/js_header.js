@@ -50,7 +50,7 @@ function updateCartCount() {
             })
             .catch(err => console.error('Lỗi lấy giỏ hàng từ server:', err));
     } else {
-        // Chưa login → ẩn icon số lượng
+        // ❌ Chưa login → luôn ẩn icon số lượng
         cartCountElement.style.display = "none";
     }
 }
@@ -163,28 +163,15 @@ function switchToForgot() { CyberModal.showForgot(); }
 function closeCyberModal() { CyberModal.close(); }
 
 // ================= User login state =================
-// Prefer using the server-provided atomic session-sync when available (via window.fnAuth)
-// Fallback to /api/me if not available.
 async function fetchUserInfo() {
     try {
-        if (window.fnAuth && typeof window.fnAuth.processAfterLoginNoReload === 'function') {
-            try {
-                // atomic sync from server; will update localStorage and UI
-                await window.fnAuth.processAfterLoginNoReload();
-                return;
-            } catch (err) {
-                console.warn('processAfterLoginNoReload failed, falling back to /api/me', err);
-                // continue to fallback below
-            }
-        }
-
         const res = await fetch(`${window.API_BASE}/api/me`, {
             method: "GET",
             credentials: "include"
         });
         const data = await res.json();
         if (data.loggedIn) {
-            localStorage.setItem('userName', (data.user.lastName || '').trim());
+            localStorage.setItem('userName', data.user.lastName.trim());
             localStorage.setItem('firstName', (data.user.firstName || "").trim());
             localStorage.setItem('lastName', (data.user.lastName || "").trim());
             localStorage.setItem('email', data.user.email || "");
@@ -194,7 +181,6 @@ async function fetchUserInfo() {
             } else {
                 localStorage.removeItem('avatarUrl');
             }
-            localStorage.removeItem('cartLocked');
         } else {
             localStorage.removeItem('userName');
             localStorage.removeItem('firstName');
@@ -267,47 +253,23 @@ function updateUserDisplay() {
         userMenu.addEventListener('mouseenter', () => userMenu.classList.add('show'));
         userMenu.addEventListener('mouseleave', () => userMenu.classList.remove('show'));
 
-        // Profile link
-        const profileEl = document.getElementById("profileLink");
-        if (profileEl) {
-            profileEl.addEventListener("click", () => {
-                window.location.href = "profile.html";
-            });
-        }
+        document.getElementById("profileLink").addEventListener("click", () => {
+            window.location.href = "profile.html";
+        });
 
-        // Logout: prefer using window.fnAuth.doLogoutClientSide (broadcast + clear minimal keys)
-        const logoutBtn = document.getElementById("logoutBtn");
-        if (logoutBtn) {
-            logoutBtn.addEventListener("click", async () => {
-                try {
-                    if (window.fnAuth && typeof window.fnAuth.doLogoutClientSide === 'function') {
-                        await window.fnAuth.doLogoutClientSide();
-                    } else {
-                        // fallback: call server and remove auth keys only (don't clear all localStorage)
-                        try {
-                            await fetch(`${window.API_BASE}/api/logout`, {
-                                method: "POST",
-                                credentials: "include"
-                            });
-                        } catch (e) {
-                            console.warn('Logout request failed (fallback):', e);
-                        }
-                        // remove auth-related keys only
-                        ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
-                        // notify other scripts in same tab
-                        try { window.dispatchEvent(new Event('user:logout')); } catch (e) { /* ignore */ }
-                    }
-
-                    // Update UI in-place (no full reload)
-                    if (typeof updateUserDisplay === 'function') updateUserDisplay();
-                    if (typeof updateCartCount === 'function') updateCartCount();
-                    if (typeof updateOrderCount === 'function') updateOrderCount();
-
-                } catch (err) {
-                    console.error("Lỗi đăng xuất:", err);
-                }
-            });
-        }
+        document.getElementById("logoutBtn").addEventListener("click", async () => {
+            try {
+                await fetch(`${window.API_BASE}/api/logout`, {
+                    method: "POST",
+                    credentials: "include"
+                });
+                localStorage.clear();
+                updateCartCount();
+                window.location.reload();
+            } catch (err) {
+                console.error("Lỗi đăng xuất:", err);
+            }
+        });
 
     } else {
         userAction.innerHTML = `
@@ -372,17 +334,7 @@ function initOrderIconClick() {
 
 // ================= Đồng bộ header khi trạng thái đăng nhập thay đổi =================
 window.addEventListener('user:login', async () => {
-    // Prefer atomic session-sync from fnAuth if available
-    if (window.fnAuth && typeof window.fnAuth.processAfterLoginNoReload === 'function') {
-        try {
-            await window.fnAuth.processAfterLoginNoReload();
-        } catch (err) {
-            console.warn('processAfterLoginNoReload failed in header user:login handler', err);
-            await fetchUserInfo();
-        }
-    } else {
-        await fetchUserInfo();
-    }
+    await fetchUserInfo();
     updateUserDisplay();
     updateCartCount();
     updateOrderCount();
@@ -390,19 +342,7 @@ window.addEventListener('user:login', async () => {
 
 // ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {
-    // If fnAuth provided, use its atomic sync to ensure consistent state before running UI code
-    if (window.fnAuth && typeof window.fnAuth.processAfterLoginNoReload === 'function') {
-        try {
-            await window.fnAuth.processAfterLoginNoReload();
-        } catch (err) {
-            // fallback to simple /api/me
-            console.warn('processAfterLoginNoReload failed on DOMContentLoaded, falling back', err);
-            await fetchUserInfo();
-        }
-    } else {
-        await fetchUserInfo();
-    }
-
+    await fetchUserInfo();
     updateUserDisplay();
     updateCartCount();
     updateOrderCount();
