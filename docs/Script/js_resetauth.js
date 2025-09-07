@@ -317,10 +317,13 @@ if (registerForm) {
 // ==================== ĐĂNG NHẬP ====================
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
+    document.addEventListener('submit', async function (e) {
+        const form = e.target;
+        if (!form || form.id !== 'loginForm') return;
         e.preventDefault();
-        const email = document.getElementById("login-email").value.trim();
-        const password = document.getElementById("login-password").value.trim();
+
+        const email = document.getElementById("login-email")?.value.trim() || '';
+        const password = document.getElementById("login-password")?.value.trim() || '';
 
         showMessage("login-error", "");
 
@@ -334,31 +337,23 @@ if (loginForm) {
             const data = await res.json();
 
             if (data.success) {
-                // Do not assume the client-only payload is full truth — call session-sync to get canonical state.
-                // However, set a minimal local storage to allow immediate feedback (so UI shows something)
                 if (data.user) {
                     setAuthLocals(data.user);
                     if (typeof updateUserDisplay === "function") updateUserDisplay();
                 }
 
-                // Try to sync session atomically and then continue flow
                 try {
                     await processAfterLoginNoReload();
                 } catch (err) {
-                    // fallback: at least run the original syncCart flow
                     console.warn('session-sync failed after login, falling back to syncCartToServer', err);
                     try { await syncCartToServer(); } catch (e) { /* ignore */ }
                 }
 
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
 
-                // GỌI SỰ KIỆN ĐỒNG BỘ
                 try { window.dispatchEvent(new Event('user:login')); } catch (err) { console.warn('dispatch user:login failed', err); }
-
-                // Broadcast to other tabs
                 broadcastAuthEvent({ type: 'login', user: data.user || null });
 
-                // --- Thay vì reload toàn trang, xử lý redirect nếu có redirect lưu trước đó ---
                 const postLoginRedirect = localStorage.getItem('postLoginRedirect');
                 if (postLoginRedirect && postLoginRedirect !== window.location.href) {
                     localStorage.removeItem('postLoginRedirect');
