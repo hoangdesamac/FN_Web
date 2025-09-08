@@ -447,4 +447,11 @@ function initHeader() {
     initResponsiveHandler();
     initCartIconClick();
     initOrderIconClick();
+
+    try {
+        if (typeof updateUserDisplay === 'function') {
+            // do not await here to avoid blocking init (but we can await safely if desired)
+            updateUserDisplay().catch(() => {});
+        }
+    } catch (e) { /* ignore */ }
 }

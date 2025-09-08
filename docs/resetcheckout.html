@@ -394,6 +394,15 @@
                     console.warn('AuthSync.refresh() failed on checkout page:', err);
                 }
 
+                // ----- Ensure header UI is updated now that AuthSync has refreshed -----
+                try {
+                    if (typeof updateUserDisplay === 'function') await updateUserDisplay();
+                    if (typeof updateCartCount === 'function') updateCartCount();
+                    if (typeof updateOrderCount === 'function') updateOrderCount();
+                } catch (e) {
+                    console.warn('Post-refresh header update (checkout) failed:', e);
+                }
+
                 // preserve legacy behavior: open modal if showLoginAfterReset set
                 try {
                     if (localStorage.getItem("showLoginAfterReset") === "true") {

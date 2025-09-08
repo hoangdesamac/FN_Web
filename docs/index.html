@@ -70,6 +70,15 @@
                     console.warn('AuthSync.refresh() failed:', err);
                 }
 
+                // ----- IMPORTANT: ensure header renders current auth state now -----
+                try {
+                    if (typeof updateUserDisplay === 'function') await updateUserDisplay();
+                    if (typeof updateCartCount === 'function') updateCartCount();
+                    if (typeof updateOrderCount === 'function') updateOrderCount();
+                } catch (e) {
+                    console.warn('Post-refresh header update failed:', e);
+                }
+
                 // 🔥 Sau đó kiểm tra flag mở modal (giữ behavior cũ)
                 if (localStorage.getItem("showLoginAfterReset") === "true") {
                     localStorage.removeItem("showLoginAfterReset");

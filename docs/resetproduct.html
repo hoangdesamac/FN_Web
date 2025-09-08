@@ -339,11 +339,20 @@
                     if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
                         await window.AuthSync.refresh();
                     }
-                } catch (e) {
-                    console.warn('AuthSync.refresh() failed on product page:', e);
+                } catch (err) {
+                    console.warn('AuthSync.refresh() failed on checkout page:', err);
                 }
 
-                // preserve previous behavior: open modal if flag set
+                // ----- Ensure header UI is updated now that AuthSync has refreshed -----
+                try {
+                    if (typeof updateUserDisplay === 'function') await updateUserDisplay();
+                    if (typeof updateCartCount === 'function') updateCartCount();
+                    if (typeof updateOrderCount === 'function') updateOrderCount();
+                } catch (e) {
+                    console.warn('Post-refresh header update (checkout) failed:', e);
+                }
+
+                // preserve legacy behavior: open modal if showLoginAfterReset set
                 try {
                     if (localStorage.getItem("showLoginAfterReset") === "true") {
                         localStorage.removeItem("showLoginAfterReset");
