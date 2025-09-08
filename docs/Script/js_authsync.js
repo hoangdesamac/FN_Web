@@ -84,13 +84,19 @@
 
     function mirrorCompatibilityKeys(user) {
         try {
-            if (user && user.lastName) localStorage.setItem('userName', (user.lastName || '').trim());
-            if (user && user.firstName) localStorage.setItem('firstName', (user.firstName || '').trim());
-            if (user && user.lastName) localStorage.setItem('lastName', (user.lastName || '').trim());
-            if (user && user.email) localStorage.setItem('email', user.email || '');
-            if (user && user.id) localStorage.setItem('userId', String(user.id || ''));
-            if (user && user.avatar_url) localStorage.setItem('avatarUrl', user.avatar_url || '');
-            // don't overwrite if logged out - let clear() handle removals
+            // ALWAYS write compatibility keys (set to empty string when missing) to avoid stale header values
+            localStorage.setItem('userName', (user && (user.lastName || user.last_name || user.lastName)) ? String((user.lastName || user.last_name || '').trim()) : '');
+            localStorage.setItem('firstName', (user && (user.firstName || user.first_name)) ? String((user.firstName || user.first_name).trim()) : '');
+            localStorage.setItem('lastName', (user && (user.lastName || user.last_name)) ? String((user.lastName || user.last_name).trim()) : '');
+            localStorage.setItem('email', (user && (user.email || '')) ? String(user.email || '') : '');
+            localStorage.setItem('userId', (user && (user.id || '')) ? String(user.id || '') : '');
+            if (user && (user.avatar_url || user.avatarUrl)) {
+                localStorage.setItem('avatarUrl', String(user.avatar_url || user.avatarUrl || ''));
+            } else {
+                // remove avatar if not provided to avoid showing stale avatar
+                localStorage.removeItem('avatarUrl');
+            }
+            // note: do NOT remove other unrelated keys (cart etc.) here
         } catch (e) { console.warn('AuthSync mirrorCompatibilityKeys error', e); }
     }
 
