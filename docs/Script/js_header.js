@@ -19,7 +19,7 @@ function initBannerHeaderWrapper() {
     });
 }
 
-// Helper: trung tâm xác thực (dùng AuthSync nếu có)
+// Helper: nhanh kiểm tra auth (AuthSync ưu tiên)
 function isAuthFast() {
     try {
         if (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function') {
@@ -33,8 +33,6 @@ function isAuthFast() {
 function initCartCountEffect() {
     updateCartCount();
 }
-
-// 🛒 Giỏ hàng
 function updateCartCount() {
     if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
         window.cartCountShared.refresh();
@@ -120,47 +118,47 @@ function switchToLogin() { CyberModal.showLogin(); }
 function switchToForgot() { CyberModal.showForgot(); }
 function closeCyberModal() { CyberModal.close(); }
 
-// ================= Utils auth-aware =================
+// ================= Small helpers for auth sync =================
+async function waitForAuthSyncPresence(timeoutMs = 3000) {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+        if (window.AuthSync) return true;
+        await new Promise(r => setTimeout(r, 80));
+    }
+    return !!window.AuthSync;
+}
+
 async function tryAuthSyncRefreshWithTimeout(timeoutMs = 1500) {
     if (!window.AuthSync) return null;
     try {
-        // prefer refresh() (which returns state)
         if (typeof window.AuthSync.refresh === 'function') {
             const p = window.AuthSync.refresh();
             const res = await Promise.race([
                 p,
                 new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), timeoutMs))
             ]);
-            return res || window.AuthSync.getState && window.AuthSync.getState();
+            return res || (window.AuthSync.getState ? window.AuthSync.getState() : null);
         }
-        // fallback to waitUntilReady if present
         if (typeof window.AuthSync.waitUntilReady === 'function') {
             await window.AuthSync.waitUntilReady(timeoutMs);
-            return window.AuthSync.getState && window.AuthSync.getState();
+            return window.AuthSync.getState ? window.AuthSync.getState() : null;
         }
     } catch (e) {
-        // soft-fail: return whatever in-memory state we have
-        try { return window.AuthSync.getState && window.AuthSync.getState(); } catch (ee) { return null; }
+        try { return window.AuthSync.getState ? window.AuthSync.getState() : null; } catch (ee) { return null; }
     }
-    return window.AuthSync.getState && window.AuthSync.getState();
+    return window.AuthSync.getState ? window.AuthSync.getState() : null;
 }
 
-// Returns canonical auth state object { loggedIn, user } or null
 async function getCanonicalAuthState() {
     try {
         if (window.AuthSync) {
-            // Try fast in-memory first
-            if (typeof window.AuthSync.getState === 'function') {
-                const st = window.AuthSync.getState();
-                if (st && typeof st.loggedIn !== 'undefined') return st;
-            }
-            // Otherwise attempt a refresh with timeout to get authoritative result
+            const st = window.AuthSync.getState ? window.AuthSync.getState() : null;
+            if (st && typeof st.loggedIn !== 'undefined') return st;
             const r = await tryAuthSyncRefreshWithTimeout(1600);
             if (r && typeof r.loggedIn !== 'undefined') return r;
         }
-
-        // Fallback to reading legacy localStorage compatibility keys quickly (no network)
-        if (localStorage.getItem('userId') || localStorage.getItem('userName') || localStorage.getItem('firstName')) {
+        // fallback to local keys
+        if (localStorage.getItem('userId') || localStorage.getItem('userName')) {
             return {
                 loggedIn: true,
                 user: {
@@ -172,8 +170,7 @@ async function getCanonicalAuthState() {
                 }
             };
         }
-
-        // Last resort: direct /api/me (slow). Use only when absolutely necessary
+        // last resort call /api/me
         try {
             const res = await fetch(`${(window.API_BASE || '').replace(/\/$/, '')}/api/me`, {
                 method: 'GET',
@@ -181,8 +178,7 @@ async function getCanonicalAuthState() {
             });
             if (!res.ok) return { loggedIn: false };
             const data = await res.json();
-            if (data && data.loggedIn) return data;
-            return { loggedIn: false };
+            return data && data.loggedIn ? data : { loggedIn: false };
         } catch (e) {
             return { loggedIn: false };
         }
@@ -191,7 +187,6 @@ async function getCanonicalAuthState() {
     }
 }
 
-// Mirror compatibility keys to localStorage (small helper)
 function mirrorCompatibilityKeysToLocal(user) {
     try {
         if (!user) {
@@ -206,25 +201,6 @@ function mirrorCompatibilityKeysToLocal(user) {
         if (user.avatar_url) localStorage.setItem('avatarUrl', user.avatar_url || "");
         else localStorage.removeItem('avatarUrl');
     } catch (e) { console.warn('mirrorCompatibilityKeysToLocal error', e); }
-}
-
-// ================= Hàm lấy info user (ưu tiên AuthSync) =================
-async function fetchUserInfoCanonical() {
-    try {
-        const st = await getCanonicalAuthState();
-        if (st && st.loggedIn && st.user) {
-            // mirror to localStorage for legacy scripts (non-destructive)
-            mirrorCompatibilityKeysToLocal(st.user);
-            return { loggedIn: true, user: st.user };
-        } else {
-            // ensure local compatibility keys are cleared when logged out
-            ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
-            return { loggedIn: false };
-        }
-    } catch (err) {
-        console.error('fetchUserInfoCanonical error:', err);
-        return { loggedIn: false };
-    }
 }
 
 // ================= Hàm tạo avatar ngẫu nhiên =================
@@ -257,6 +233,7 @@ function renderUserActionFromState(state) {
     let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
 
+    // replace node to avoid multiple bindings
     const newUserAction = userAction.cloneNode(false);
     newUserAction.className = userAction.className;
     userAction.parentNode.replaceChild(newUserAction, userAction);
@@ -320,10 +297,10 @@ function renderUserActionFromState(state) {
     }
 }
 
-// Wrapper: fetch canonical state and render
 async function updateUserDisplay() {
     try {
-        const st = await fetchUserInfoCanonical();
+        const st = await getCanonicalAuthState();
+        if (st && st.loggedIn && st.user) mirrorCompatibilityKeysToLocal(st.user);
         renderUserActionFromState(st);
     } catch (err) {
         console.warn('updateUserDisplay error:', err);
@@ -380,89 +357,80 @@ function initOrderIconClick() {
 }
 
 // ================= Đồng bộ header khi trạng thái đăng nhập thay đổi =================
-// Listen legacy event
+// legacy event
 window.addEventListener('user:login', async () => {
     await updateUserDisplay();
     updateCartCount();
     updateOrderCount();
 });
 
-// If AuthSync exists, listen to its onChange to keep header in sync (preferred)
+// If AuthSync exists, use its onChange (preferred)
 if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
-    window.AuthSync.onChange(async (state) => {
+    window.AuthSync.onChange((state) => {
         try {
-            // mirror compatibility keys if logged in
             if (state && state.loggedIn) mirrorCompatibilityKeysToLocal(state.user);
             else ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
-
-            // render header and counts
             renderUserActionFromState(state || { loggedIn: false });
             updateCartCount();
             updateOrderCount();
-        } catch (e) {
-            console.warn('AuthSync.onChange handler error (header):', e);
-        }
+        } catch (e) { console.warn('AuthSync.onChange handler error (header):', e); }
     });
 }
 
-// Also listen to cross-tab storage changes on auth_state/auth_ping for old browsers
+// Also listen to custom event auth:changed (AuthSync sets it) and storage events
+window.addEventListener('auth:changed', (ev) => {
+    try {
+        const st = ev?.detail;
+        if (st && st.loggedIn && st.user) mirrorCompatibilityKeysToLocal(st.user);
+        renderUserActionFromState(st || { loggedIn: false });
+        updateCartCount();
+        updateOrderCount();
+    } catch (e) { /* ignore */ }
+});
+
 window.addEventListener('storage', (ev) => {
     try {
         if (!ev || !ev.key) return;
-        if (ev.key === 'auth_state' || ev.key === 'auth_ping' || ev.key === 'userName' || ev.key === 'userId') {
-            // gentle update (non-blocking)
+        if (['auth_state','auth_ping','userName','userId'].includes(ev.key)) {
             setTimeout(() => {
                 updateUserDisplay().catch(()=>{});
                 updateCartCount();
                 updateOrderCount();
-            }, 50);
+            }, 40);
         }
-    } catch (e) { /* ignore */ }
+    } catch (e) {}
 });
 
 // ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {
-    // Strategy:
-    // 1) Prefer to wait for AuthSync.refresh() (authoritative) with soft timeout.
-    // 2) Then fetch user info canonical and render header.
-    // 3) If still appears logged-out but AuthSync reports loggedIn, retry a couple of times (handles slow redirects/cookies).
+    // Ensure AuthSync is present (soft wait)
+    await waitForAuthSyncPresence(2500);
 
-    try {
-        if (window.AuthSync) {
-            // Try to get authoritative state (soft wait)
-            try {
-                await tryAuthSyncRefreshWithTimeout(1600);
-            } catch (e) { /* ignore */ }
-        }
-    } catch (err) {
-        console.warn('AuthSync initial wait error (non-fatal):', err);
+    // If AuthSync exists, prefer to let it refresh (soft timeout)
+    if (window.AuthSync) {
+        try { await tryAuthSyncRefreshWithTimeout(1600); } catch (e) { /* ignore */ }
     }
 
+    // Initial header render from canonical source
     await updateUserDisplay();
     updateCartCount();
     updateOrderCount();
 
-    // If header still shows logged-out (compat keys not set) but AuthSync says loggedIn -> retry shortly
+    // gentle retry if inconsistency detected
     (async function retryIfInconsistent(attempts = 3, delayMs = 400) {
         for (let i = 0; i < attempts; i++) {
             try {
-                const st = window.AuthSync && typeof window.AuthSync.getState === 'function'
-                    ? window.AuthSync.getState()
-                    : null;
+                const st = window.AuthSync && typeof window.AuthSync.getState === 'function' ? window.AuthSync.getState() : null;
                 const localHas = !!(localStorage.getItem('userName') || localStorage.getItem('firstName') || localStorage.getItem('userId'));
                 if (st && st.loggedIn && !localHas) {
-                    // mirror keys and re-render
                     mirrorCompatibilityKeysToLocal(st.user);
                     renderUserActionFromState(st);
                     updateCartCount();
                     updateOrderCount();
                     return;
                 }
-                // if no AuthSync or everything consistent -> stop
                 if (!window.AuthSync || (st && typeof st.loggedIn !== 'undefined' && st.loggedIn === !!localHas)) return;
-            } catch (e) {
-                // ignore and continue retry
-            }
+            } catch (e) { /* continue */ }
             await new Promise(r => setTimeout(r, delayMs));
         }
     })();
