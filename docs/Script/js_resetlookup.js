@@ -1062,16 +1062,6 @@ async function fetchOrdersFromServer() {
     }
 }
 
-
-// Update order count
-function updateOrderCount() {
-    const orderCountElement = document.querySelector('.order-count');
-    if (orderCountElement) {
-        orderCountElement.textContent = serverOrders.length;
-        orderCountElement.style.display = serverOrders.length > 0 ? 'inline-flex' : 'none';
-    }
-}
-
 /**
  * Hàm khởi tạo datepicker Flatpickr cho các input ngày
  * @param {string} inputId - ID của input cần gắn Flatpickr

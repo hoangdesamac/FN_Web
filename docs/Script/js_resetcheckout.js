@@ -1439,37 +1439,6 @@ function formatCurrency(amount) {
     return amount.toLocaleString('vi-VN') + '₫';
 }
 
-async function updateOrderCount() {
-    const orderCountElement = document.querySelector('.order-count');
-    if (!orderCountElement) return;
-
-    const logged = isLoggedIn();
-
-    if (logged) {
-        try {
-            const res = await fetch(`${window.API_BASE}/api/orders`, {
-                method: "GET",
-                credentials: "include"
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                const count = data.orders.length;
-                orderCountElement.textContent = count;
-                orderCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
-            } else {
-                orderCountElement.style.display = "none";
-            }
-        } catch (err) {
-            console.error("Lỗi lấy đơn hàng từ server:", err);
-            orderCountElement.style.display = "none";
-        }
-    } else {
-        // ❌ Chưa login → luôn ẩn
-        orderCountElement.style.display = "none";
-    }
-}
-
 function setupPaymentMethodAnimations() {
     const animations = [
         { containerId: 'lottie-cod', path: '/transformanimation/cod.json' }

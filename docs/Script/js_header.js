@@ -64,34 +64,6 @@ function updateCartCount() {
     }
 }
 
-// 📦 Đơn hàng
-async function updateOrderCount() {
-    const orderCountElement = document.querySelector('.order-count');
-    if (!orderCountElement) return;
-
-    orderCountElement.style.display = "none";
-
-    const logged = isAuth();
-    if (logged) {
-        try {
-            const res = await fetch(`${window.API_BASE}/api/orders`, {
-                method: "GET",
-                credentials: "include"
-            });
-            const data = await res.json();
-            if (data.success) {
-                const count = data.orders.length;
-                orderCountElement.textContent = count;
-                orderCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
-            }
-        } catch (err) {
-            console.error("Lỗi lấy đơn hàng từ server:", err);
-        }
-    } else {
-        orderCountElement.style.display = "none";
-    }
-}
-
 // ================= Nền hexagon động =================
 function initHexagonBackground() {
     const hexContainer = document.querySelector('.hex-container');
