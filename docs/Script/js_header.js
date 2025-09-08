@@ -20,13 +20,13 @@ function initBannerHeaderWrapper() {
 }
 
 // Helper: trung tâm xác thực (dùng AuthSync nếu có)
-function isAuth() {
+function isAuthFast() {
     try {
         if (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function') {
             return window.AuthSync.isLoggedIn();
         }
     } catch (e) { /* ignore */ }
-    return !!localStorage.getItem('userName');
+    return !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
 }
 
 // ================= Giỏ hàng & đơn hàng =================
@@ -120,64 +120,110 @@ function switchToLogin() { CyberModal.showLogin(); }
 function switchToForgot() { CyberModal.showForgot(); }
 function closeCyberModal() { CyberModal.close(); }
 
-// ================= User login state =================
-// Use AuthSync if present to avoid duplicate /api/me calls and race condition
-async function fetchUserInfo() {
+// ================= Utils auth-aware =================
+async function tryAuthSyncRefreshWithTimeout(timeoutMs = 1500) {
+    if (!window.AuthSync) return null;
     try {
-        if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
-            const st = window.AuthSync.getState();
-            if (st && st.loggedIn && st.user) {
-                const dataUser = st.user;
-                localStorage.setItem('userName', (dataUser.lastName || '').trim());
-                localStorage.setItem('firstName', (dataUser.firstName || '').trim());
-                localStorage.setItem('lastName', (dataUser.lastName || '').trim());
-                localStorage.setItem('email', dataUser.email || "");
-                localStorage.setItem('userId', dataUser.id || "");
-                if (dataUser.avatar_url) {
-                    localStorage.setItem('avatarUrl', dataUser.avatar_url);
-                } else {
-                    localStorage.removeItem('avatarUrl');
-                }
-                return;
-            } else {
-                // fallback to clear compatibility keys
-                localStorage.removeItem('userName');
-                localStorage.removeItem('firstName');
-                localStorage.removeItem('lastName');
-                localStorage.removeItem('email');
-                localStorage.removeItem('userId');
-                localStorage.removeItem('avatarUrl');
-                return;
+        // prefer refresh() (which returns state)
+        if (typeof window.AuthSync.refresh === 'function') {
+            const p = window.AuthSync.refresh();
+            const res = await Promise.race([
+                p,
+                new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), timeoutMs))
+            ]);
+            return res || window.AuthSync.getState && window.AuthSync.getState();
+        }
+        // fallback to waitUntilReady if present
+        if (typeof window.AuthSync.waitUntilReady === 'function') {
+            await window.AuthSync.waitUntilReady(timeoutMs);
+            return window.AuthSync.getState && window.AuthSync.getState();
+        }
+    } catch (e) {
+        // soft-fail: return whatever in-memory state we have
+        try { return window.AuthSync.getState && window.AuthSync.getState(); } catch (ee) { return null; }
+    }
+    return window.AuthSync.getState && window.AuthSync.getState();
+}
+
+// Returns canonical auth state object { loggedIn, user } or null
+async function getCanonicalAuthState() {
+    try {
+        if (window.AuthSync) {
+            // Try fast in-memory first
+            if (typeof window.AuthSync.getState === 'function') {
+                const st = window.AuthSync.getState();
+                if (st && typeof st.loggedIn !== 'undefined') return st;
             }
+            // Otherwise attempt a refresh with timeout to get authoritative result
+            const r = await tryAuthSyncRefreshWithTimeout(1600);
+            if (r && typeof r.loggedIn !== 'undefined') return r;
         }
 
-        // Fallback: legacy /api/me fetch
-        const res = await fetch(`${window.API_BASE}/api/me`, {
-            method: "GET",
-            credentials: "include"
-        });
-        const data = await res.json();
-        if (data.loggedIn) {
-            localStorage.setItem('userName', data.user.lastName.trim());
-            localStorage.setItem('firstName', (data.user.firstName || "").trim());
-            localStorage.setItem('lastName', (data.user.lastName || "").trim());
-            localStorage.setItem('email', data.user.email || "");
-            localStorage.setItem('userId', data.user.id || "");
-            if (data.user.avatar_url) {
-                localStorage.setItem('avatarUrl', data.user.avatar_url);
-            } else {
-                localStorage.removeItem('avatarUrl');
-            }
-        } else {
-            localStorage.removeItem('userName');
-            localStorage.removeItem('firstName');
-            localStorage.removeItem('lastName');
-            localStorage.removeItem('email');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('avatarUrl');
+        // Fallback to reading legacy localStorage compatibility keys quickly (no network)
+        if (localStorage.getItem('userId') || localStorage.getItem('userName') || localStorage.getItem('firstName')) {
+            return {
+                loggedIn: true,
+                user: {
+                    id: localStorage.getItem('userId') || null,
+                    email: localStorage.getItem('email') || null,
+                    firstName: localStorage.getItem('firstName') || null,
+                    lastName: localStorage.getItem('lastName') || null,
+                    avatar_url: localStorage.getItem('avatarUrl') || null
+                }
+            };
+        }
+
+        // Last resort: direct /api/me (slow). Use only when absolutely necessary
+        try {
+            const res = await fetch(`${(window.API_BASE || '').replace(/\/$/, '')}/api/me`, {
+                method: 'GET',
+                credentials: 'include'
+            });
+            if (!res.ok) return { loggedIn: false };
+            const data = await res.json();
+            if (data && data.loggedIn) return data;
+            return { loggedIn: false };
+        } catch (e) {
+            return { loggedIn: false };
         }
     } catch (err) {
-        console.error("Lỗi lấy thông tin user:", err);
+        return { loggedIn: false };
+    }
+}
+
+// Mirror compatibility keys to localStorage (small helper)
+function mirrorCompatibilityKeysToLocal(user) {
+    try {
+        if (!user) {
+            ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
+            return;
+        }
+        if (user.lastName) localStorage.setItem('userName', (user.lastName || '').trim());
+        if (user.firstName) localStorage.setItem('firstName', (user.firstName || '').trim());
+        if (user.lastName) localStorage.setItem('lastName', (user.lastName || '').trim());
+        if (user.email) localStorage.setItem('email', user.email || "");
+        if (user.id) localStorage.setItem('userId', String(user.id || ""));
+        if (user.avatar_url) localStorage.setItem('avatarUrl', user.avatar_url || "");
+        else localStorage.removeItem('avatarUrl');
+    } catch (e) { console.warn('mirrorCompatibilityKeysToLocal error', e); }
+}
+
+// ================= Hàm lấy info user (ưu tiên AuthSync) =================
+async function fetchUserInfoCanonical() {
+    try {
+        const st = await getCanonicalAuthState();
+        if (st && st.loggedIn && st.user) {
+            // mirror to localStorage for legacy scripts (non-destructive)
+            mirrorCompatibilityKeysToLocal(st.user);
+            return { loggedIn: true, user: st.user };
+        } else {
+            // ensure local compatibility keys are cleared when logged out
+            ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
+            return { loggedIn: false };
+        }
+    } catch (err) {
+        console.error('fetchUserInfoCanonical error:', err);
+        return { loggedIn: false };
     }
 }
 
@@ -201,12 +247,12 @@ function generateRandomAvatar(name) {
     `;
 }
 
-// ================= Update hiển thị user =================
-function updateUserDisplay() {
-    const firstName = localStorage.getItem('firstName') || "";
-    const lastName = localStorage.getItem('lastName') || "";
-    const avatarUrl = localStorage.getItem('avatarUrl');
-    const fullName = `${firstName} ${lastName}`.trim() || lastName || firstName || "Người dùng";
+// ================= Update hiển thị user sử dụng canonical state =================
+function renderUserActionFromState(state) {
+    const firstName = state?.user?.firstName || "";
+    const lastName = state?.user?.lastName || "";
+    const avatarUrl = state?.user?.avatar_url;
+    const fullName = `${firstName} ${lastName}`.trim() || lastName || firstName;
 
     let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
@@ -216,7 +262,7 @@ function updateUserDisplay() {
     userAction.parentNode.replaceChild(newUserAction, userAction);
     userAction = newUserAction;
 
-    if (fullName !== "Người dùng") {
+    if (state && state.loggedIn && fullName) {
         const shortName = fullName.length > 14 ? fullName.slice(0, 14) + "..." : fullName;
         const avatarHTML = avatarUrl
             ? `<img src="${avatarUrl}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
@@ -250,11 +296,9 @@ function updateUserDisplay() {
                     method: "POST",
                     credentials: "include"
                 });
-                // Use AuthSync.clear() to avoid clearing unrelated keys like cart/gift
                 if (window.AuthSync && typeof window.AuthSync.clear === 'function') {
                     window.AuthSync.clear();
                 } else {
-                    // fallback: remove only auth-related keys
                     ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
                 }
                 updateCartCount();
@@ -276,6 +320,16 @@ function updateUserDisplay() {
     }
 }
 
+// Wrapper: fetch canonical state and render
+async function updateUserDisplay() {
+    try {
+        const st = await fetchUserInfoCanonical();
+        renderUserActionFromState(st);
+    } catch (err) {
+        console.warn('updateUserDisplay error:', err);
+    }
+}
+
 // ================= Xử lý click icon giỏ hàng =================
 function initCartIconClick() {
     const cartLink = document.querySelector('a.cyber-action[href="resetcheckout.html"]');
@@ -284,7 +338,7 @@ function initCartIconClick() {
     cartLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const logged = isAuth();
+        const logged = isAuthFast();
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
         const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
@@ -313,7 +367,7 @@ function initOrderIconClick() {
     orderLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const logged = isAuth();
+        const logged = isAuthFast();
         if (!logged) {
             CyberModal.open?.();
             if (typeof showNotification === "function") {
@@ -328,8 +382,7 @@ function initOrderIconClick() {
 // ================= Đồng bộ header khi trạng thái đăng nhập thay đổi =================
 // Listen legacy event
 window.addEventListener('user:login', async () => {
-    await fetchUserInfo();
-    updateUserDisplay();
+    await updateUserDisplay();
     updateCartCount();
     updateOrderCount();
 });
@@ -337,70 +390,82 @@ window.addEventListener('user:login', async () => {
 // If AuthSync exists, listen to its onChange to keep header in sync (preferred)
 if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
     window.AuthSync.onChange(async (state) => {
-        // state = { loggedIn, user }
-        if (state.loggedIn) {
-            // mirror keys (fetchUserInfo will use AuthSync if available)
-            await fetchUserInfo();
-        } else {
-            // clear local auth keys
-            ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
+        try {
+            // mirror compatibility keys if logged in
+            if (state && state.loggedIn) mirrorCompatibilityKeysToLocal(state.user);
+            else ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
+
+            // render header and counts
+            renderUserActionFromState(state || { loggedIn: false });
+            updateCartCount();
+            updateOrderCount();
+        } catch (e) {
+            console.warn('AuthSync.onChange handler error (header):', e);
         }
-        updateUserDisplay();
-        updateCartCount();
-        updateOrderCount();
     });
 }
 
+// Also listen to cross-tab storage changes on auth_state/auth_ping for old browsers
+window.addEventListener('storage', (ev) => {
+    try {
+        if (!ev || !ev.key) return;
+        if (ev.key === 'auth_state' || ev.key === 'auth_ping' || ev.key === 'userName' || ev.key === 'userId') {
+            // gentle update (non-blocking)
+            setTimeout(() => {
+                updateUserDisplay().catch(()=>{});
+                updateCartCount();
+                updateOrderCount();
+            }, 50);
+        }
+    } catch (e) { /* ignore */ }
+});
+
 // ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {
+    // Strategy:
+    // 1) Prefer to wait for AuthSync.refresh() (authoritative) with soft timeout.
+    // 2) Then fetch user info canonical and render header.
+    // 3) If still appears logged-out but AuthSync reports loggedIn, retry a couple of times (handles slow redirects/cookies).
+
     try {
-        // WAIT for AuthSync to be ready if available (preferred)
         if (window.AuthSync) {
-            if (typeof window.AuthSync.waitUntilReady === 'function') {
-                // wait short time (ms) for AuthSync to finish initial refresh
-                await window.AuthSync.waitUntilReady(1500).catch(() => {});
-            } else if (typeof window.AuthSync.init === 'function') {
-                // fallback to init (may call fetch internally)
-                try { await window.AuthSync.init(); } catch (e) { /* ignore */ }
-            } else if (typeof window.AuthSync.refresh === 'function') {
-                // best-effort refresh with timeout
-                const p = window.AuthSync.refresh();
-                await Promise.race([p, new Promise(res => setTimeout(res, 800))]).catch(()=>{});
-            }
-        } else {
-            // no AuthSync - continue (legacy behavior)
+            // Try to get authoritative state (soft wait)
+            try {
+                await tryAuthSyncRefreshWithTimeout(1600);
+            } catch (e) { /* ignore */ }
         }
     } catch (err) {
-        console.warn('AuthSync wait/init error (non-fatal):', err);
+        console.warn('AuthSync initial wait error (non-fatal):', err);
     }
 
-    // After waiting, fetch or mirror user info and update header
-    try {
-        await fetchUserInfo();
-        updateUserDisplay();
-        updateCartCount();
-        updateOrderCount();
+    await updateUserDisplay();
+    updateCartCount();
+    updateOrderCount();
 
-        // If after first render header still shows logged-out but a cookie / AuthSync indicates logged-in,
-        // try one gentle retry after short delay to handle slow networks / timing edgecases.
-        setTimeout(async () => {
+    // If header still shows logged-out (compat keys not set) but AuthSync says loggedIn -> retry shortly
+    (async function retryIfInconsistent(attempts = 3, delayMs = 400) {
+        for (let i = 0; i < attempts; i++) {
             try {
-                const believedLoggedIn = (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function')
-                    ? window.AuthSync.isLoggedIn()
-                    : !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
-
-                const headerShowsLoggedIn = !!(localStorage.getItem('userName') || localStorage.getItem('firstName') || localStorage.getItem('lastName'));
-                if (believedLoggedIn && !headerShowsLoggedIn) {
-                    await fetchUserInfo();
-                    updateUserDisplay();
+                const st = window.AuthSync && typeof window.AuthSync.getState === 'function'
+                    ? window.AuthSync.getState()
+                    : null;
+                const localHas = !!(localStorage.getItem('userName') || localStorage.getItem('firstName') || localStorage.getItem('userId'));
+                if (st && st.loggedIn && !localHas) {
+                    // mirror keys and re-render
+                    mirrorCompatibilityKeysToLocal(st.user);
+                    renderUserActionFromState(st);
+                    updateCartCount();
+                    updateOrderCount();
+                    return;
                 }
+                // if no AuthSync or everything consistent -> stop
+                if (!window.AuthSync || (st && typeof st.loggedIn !== 'undefined' && st.loggedIn === !!localHas)) return;
             } catch (e) {
-                /* ignore retry errors */
+                // ignore and continue retry
             }
-        }, 500);
-    } catch (err) {
-        console.warn('Header initial user fetch/update error:', err);
-    }
+            await new Promise(r => setTimeout(r, delayMs));
+        }
+    })();
 });
 
 // ================= Init toàn bộ header =================
