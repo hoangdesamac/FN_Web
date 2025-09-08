@@ -1620,37 +1620,64 @@ document.addEventListener("DOMContentLoaded", async function () {
     const totalItems = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
         giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
+    // Helper: kiểm tra auth với "soft timeout" và fallback an toàn
+    async function checkAuthWithSoftTimeout(timeoutMs = 1500) {
+        try {
+            // 1) Nếu AuthSync có waitUntilReady -> dùng nó (đã coalesce refresh bên trong)
+            if (window.AuthSync && typeof window.AuthSync.waitUntilReady === 'function') {
+                try {
+                    await window.AuthSync.waitUntilReady(timeoutMs);
+                    const st = window.AuthSync.getState ? window.AuthSync.getState() : null;
+                    return !!(st && st.loggedIn);
+                } catch (e) {
+                    console.warn('AuthSync.waitUntilReady rejected/errored:', e);
+                    // fallback xuống phần tiếp theo
+                }
+            }
+
+            // 2) Nếu AuthSync chỉ có refresh -> gọi refresh() nhưng không để nó ném (soft timeout)
+            if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+                try {
+                    const refreshPromise = window.AuthSync.refresh();
+                    const race = await Promise.race([
+                        refreshPromise.then(r => ({ ok: true, data: r })).catch(err => ({ ok: false, error: err })),
+                        new Promise(resolve => setTimeout(() => resolve({ ok: false, timedOut: true }), timeoutMs))
+                    ]);
+                    // Nếu refresh hoàn tất (ok: true), đọc state từ in-memory
+                    if (race.ok) {
+                        const st = window.AuthSync.getState ? window.AuthSync.getState() : null;
+                        return !!(st && st.loggedIn) || !!(race.data && race.data.loggedIn);
+                    }
+                    // nếu timeout hoặc refresh lỗi -> dùng trạng thái hiện tại (in-memory) như fallback
+                    const stFallback = window.AuthSync.getState ? window.AuthSync.getState() : null;
+                    if (stFallback && stFallback.loggedIn) return true;
+                    // else rơi xuống legacy fallback
+                } catch (e) {
+                    console.warn('AuthSync.refresh soft-fallback error:', e);
+                    // tiếp tục xuống legacy fallback
+                }
+            }
+
+            // 3) Nếu không có AuthSync hoặc tất cả đều thất bại -> fallback legacy nhanh (localStorage / header)
+            try {
+                return !!isLoggedIn();
+            } catch (e) {
+                return !!(localStorage.getItem('userName') || localStorage.getItem('userId'));
+            }
+        } catch (err) {
+            console.warn('checkAuthWithSoftTimeout unexpected error:', err);
+            return !!(localStorage.getItem('userName') || localStorage.getItem('userId'));
+        }
+    }
+
     // IMPORTANT: try to get the most up-to-date auth state.
-    // If AuthSync is present, try to refresh once (with a short timeout)
-    // so we don't mistakenly think the user is logged out right after an OAuth redirect.
+    // Use soft timeout to avoid throwing on slow networks
     let logged = false;
     try {
-        if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
-            try {
-                const timeoutMs = 800; // small timeout to avoid blocking UX; increase if needed
-                const refreshPromise = window.AuthSync.refresh();
-                const timeoutPromise = new Promise((_, rej) => setTimeout(() => rej(new Error('AuthSync.refresh timeout')), timeoutMs));
-                await Promise.race([refreshPromise, timeoutPromise]);
-                const st = typeof window.AuthSync.getState === 'function' ? window.AuthSync.getState() : null;
-                logged = !!(st && st.loggedIn);
-                console.log('AuthSync.refresh() succeeded, logged=', logged);
-            } catch (err) {
-                console.warn('AuthSync.refresh() failed or timed out:', err);
-                // fallback: use in-memory AuthSync.isLoggedIn() if available, otherwise legacy check
-                try {
-                    logged = !!(window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function' && window.AuthSync.isLoggedIn());
-                } catch (e) {
-                    logged = !!isLoggedIn();
-                }
-                console.log('Fallback logged=', logged);
-            }
-        } else {
-            // no AuthSync -> legacy check
-            logged = !!isLoggedIn();
-            console.log('No AuthSync, legacy isLoggedIn() ->', logged);
-        }
+        logged = await checkAuthWithSoftTimeout(1500); // 1.5s soft timeout
+        console.log('Auth check (soft) result logged=', logged);
     } catch (err) {
-        console.warn('Error while checking auth state on DOMContentLoaded:', err);
+        console.warn('Error while checking auth state on DOMContentLoaded (final fallback):', err);
         logged = !!isLoggedIn();
     }
 

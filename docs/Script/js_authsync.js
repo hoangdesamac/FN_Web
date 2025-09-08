@@ -3,13 +3,6 @@
    - Sync channel: localStorage key "auth_state" + storage events
    - Compatibility: mirrors legacy localStorage keys used in your code:
        userName, firstName, lastName, email, userId, avatarUrl
-   Usage:
-     - Include this file on all pages (before loading dynamic header)
-     - Call AuthSync.init() on page load
-     - After login (when server-set cookie present) call AuthSync.refresh()
-     - After logout call AuthSync.clear()
-     - Listen to window events: 'auth:changed' (detail: { loggedIn, user })
-       or legacy 'user:login' / 'user:logout' (fired for compatibility)
 */
 (function (global) {
     const API = (() => {
@@ -22,6 +15,9 @@
     const listeners = new Set();
 
     let internalState = { loggedIn: false, user: null };
+
+    // coalesced refresh promise (avoid duplicate network calls)
+    let _refreshPromise = null;
 
     function getStoredState() {
         try {
@@ -133,29 +129,60 @@
         },
 
         // force re-check /api/me and update stored state
-        refresh: async function () {
-            const data = await fetchMe();
-            if (data && data.loggedIn) {
-                // standardize user object
-                const user = {
-                    id: data.user?.id ?? data.userId ?? data.id ?? null,
-                    email: data.user?.email ?? data.email ?? null,
-                    firstName: data.user?.firstName ?? data.user?.first_name ?? null,
-                    lastName: data.user?.lastName ?? data.user?.last_name ?? null,
-                    avatar_url: data.user?.avatar_url ?? data.user?.avatarUrl ?? null,
-                    phone: data.user?.phone ?? null,
-                    phone_verified: data.user?.phone_verified ?? false,
-                    // keep other fields if any
-                    ...((data.user && typeof data.user === 'object') ? data.user : {})
-                };
+        refresh: function () {
+            // coalesce concurrent refresh calls
+            if (_refreshPromise) return _refreshPromise;
 
-                mirrorCompatibilityKeys(user);
-                setStoredState({ loggedIn: true, user });
-                return { loggedIn: true, user };
-            } else {
-                // logged out
-                AuthSync.clear(false); // don't remove KEEP_KEYS
-                return { loggedIn: false };
+            _refreshPromise = (async () => {
+                try {
+                    const data = await fetchMe();
+                    if (data && data.loggedIn) {
+                        // standardize user object
+                        const user = {
+                            id: data.user?.id ?? data.userId ?? data.id ?? null,
+                            email: data.user?.email ?? data.email ?? null,
+                            firstName: data.user?.firstName ?? data.user?.first_name ?? null,
+                            lastName: data.user?.lastName ?? data.user?.last_name ?? null,
+                            avatar_url: data.user?.avatar_url ?? data.user?.avatarUrl ?? null,
+                            phone: data.user?.phone ?? null,
+                            phone_verified: data.user?.phone_verified ?? false,
+                            // keep other fields if any
+                            ...((data.user && typeof data.user === 'object') ? data.user : {})
+                        };
+
+                        mirrorCompatibilityKeys(user);
+                        setStoredState({ loggedIn: true, user });
+                        return { loggedIn: true, user };
+                    } else {
+                        // logged out
+                        AuthSync.clear(false); // don't remove KEEP_KEYS
+                        return { loggedIn: false };
+                    }
+                } catch (err) {
+                    console.warn('AuthSync.refresh internal error', err);
+                    AuthSync.clear(false);
+                    return { loggedIn: false };
+                } finally {
+                    // allow new refreshes next time
+                    _refreshPromise = null;
+                }
+            })();
+
+            return _refreshPromise;
+        },
+
+        // wait for an in-flight refresh to finish (soft timeout)
+        waitUntilReady: async function (timeoutMs = 1500) {
+            if (!_refreshPromise) return internalState;
+            try {
+                const res = await Promise.race([
+                    _refreshPromise,
+                    new Promise(resolve => setTimeout(() => resolve(null), timeoutMs))
+                ]);
+                // return current internalState (likely updated by refresh)
+                return internalState;
+            } catch (e) {
+                return internalState;
             }
         },
 
