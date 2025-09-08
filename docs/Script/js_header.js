@@ -36,31 +36,9 @@ function initCartCountEffect() {
 
 // 🛒 Giỏ hàng
 function updateCartCount() {
-    const cartCountElement = document.querySelector('.cart-count');
-    if (!cartCountElement) return;
-
-    const logged = isAuth();
-    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
-
-    if (logged) {
-        fetch(`${window.API_BASE}/api/cart`, {
-            method: 'GET',
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    const serverCart = data.cart || [];
-                    const count = serverCart.reduce((t, i) => t + (i.quantity || 1), 0) +
-                        giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
-
-                    cartCountElement.textContent = count;
-                    cartCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
-                }
-            })
-            .catch(err => console.error('Lỗi lấy giỏ hàng từ server:', err));
-    } else {
-        cartCountElement.style.display = "none";
+    if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+        window.cartCountShared.refresh();
+        return;
     }
 }
 

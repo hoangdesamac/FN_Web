@@ -90,8 +90,17 @@ function openLoginModalAndNotify() {
  * Execute pending action from localStorage (if exists and user is logged in)
  */
 async function processPendingAction() {
-    // DÙNG REALTIME CHECK ĐỂ ĐẢM BẢO KHÔNG LỖI VỚI OAUTH/CÁC TAB KHÁC
-    if (!(await isLoggedInRealTime())) return;
+    // Ensure user actually logged-in now (realtime)
+    try {
+        if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+            const s = await window.AuthSync.refresh();
+            if (!s || !s.loggedIn) return;
+        }
+    } catch (e) {
+        // fallback to legacy check
+        if (!isLoggedIn()) return;
+    }
+
     const raw = localStorage.getItem('pendingAction');
     if (!raw) return;
 
@@ -106,37 +115,21 @@ async function processPendingAction() {
 
     try {
         if (action.type === 'addToCart') {
-            await addToCartAPI(action.payload.product, action.payload.qty || 1);
-            await updateCartCountFromServer();
-            showToast(`Đã thêm ${action.payload.product.name} vào giỏ hàng!`);
+            const res = await addToCartAPI(action.payload.product, action.payload.qty || 1);
+            await processAddToCartResponse(res);
+            if (typeof showToast === 'function') showToast(`Đã thêm ${action.payload.product.name} vào giỏ hàng!`);
         } else if (action.type === 'addMultipleToCart') {
             for (const it of (action.payload.products || [])) {
-                await addToCartAPI(it.product, it.qty || 1);
+                const res = await addToCartAPI(it.product, it.qty || 1);
+                await processAddToCartResponse(res);
             }
-            await updateCartCountFromServer();
-            showToast(`Đã thêm ${action.payload.products.length} sản phẩm vào giỏ hàng!`);
+            if (typeof showToast === 'function') showToast(`Đã thêm ${action.payload.products.length} sản phẩm vào giỏ hàng!`);
         } else if (action.type === 'buyNow') {
-            await addToCartAPI(action.payload.product, 1);
-            for (const c of (action.payload.combos || [])) {
-                await addToCartAPI(c, 1);
-            }
-            for (const g of (action.payload.gifts || [])) {
-                await addToCartAPI(g, 1);
-            }
-            await updateCartCountFromServer();
-            let toastMsg = `Đã thêm ${action.payload.product.name} vào giỏ hàng`;
-            if (action.payload.combos?.length) toastMsg += ` kèm ${action.payload.combos.length} combo`;
-            if (action.payload.gifts?.length) toastMsg += ` và quà tặng!`;
-            else toastMsg += "!";
-            showToast(toastMsg);
-            if (
-                action.payload.combos &&
-                action.payload.combos.length > 0 &&
-                action.payload.gifts &&
-                action.payload.gifts.length > 0
-            ) {
-                redirectToCheckout();
-            }
+            // Use handleBuyNowImmediate so we get unified behavior (optimistic + reconcile + redirect)
+            const product = action.payload.product;
+            const combos = action.payload.combos || [];
+            const gifts = action.payload.gifts || [];
+            await handleBuyNowImmediate(product, combos, gifts, { redirectIfEligible: true });
         } else {
             console.warn('Unknown pending action type:', action.type);
         }
@@ -248,6 +241,69 @@ function requireLoginThenDo(actionType, payload, immediateFn) {
             openLoginModalAndNotify();
         }
     });
+}
+
+function _mergeCartWithGifts(cartArray) {
+    try {
+        const gifts = JSON.parse(localStorage.getItem('giftCart') || '[]') || [];
+        const normalizedGifts = Array.isArray(gifts) ? gifts.map(g => ({ ...g, quantity: Number(g.quantity) || 1 })) : [];
+        return Array.isArray(cartArray) ? cartArray.concat(normalizedGifts) : normalizedGifts;
+    } catch (e) {
+        return cartArray || [];
+    }
+}
+
+// Try to refresh via shared module; fallback to legacy updateCartCount()
+async function _refreshCartCountFromSharedOrFallback() {
+    try {
+        if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+            await window.cartCountShared.refresh();
+            return;
+        }
+    } catch (err) {
+        console.warn('cartCountShared.refresh() failed:', err);
+    }
+    // Fallback: call legacy DOM updater if available
+    try { if (typeof updateCartCount === 'function') updateCartCount(); } catch (e) { /* ignore */ }
+}
+function reconcileServerCart(data) {
+    try {
+        if (data && Array.isArray(data.cart)) {
+            try { localStorage.setItem('cart', JSON.stringify(data.cart)); } catch (e) {}
+            const merged = _mergeCartWithGifts(data.cart);
+
+            // Prefer shared module
+            try {
+                if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
+                    window.cartCountShared.setFromCart(merged);
+                    return;
+                }
+            } catch (e) {
+                console.warn('cartCountShared.setFromCart error:', e);
+            }
+
+            // Legacy DOM update fallback
+            try {
+                const total = merged.reduce((s, it) => s + (Number(it.quantity) || 0), 0);
+                if (window.jQuery) {
+                    $('.cart-count').text(total).css('display', total > 0 ? 'inline-flex' : 'none');
+                } else {
+                    const el = document.querySelector('.cart-count');
+                    if (el) {
+                        el.textContent = String(total);
+                        el.style.display = total > 0 ? 'inline-flex' : 'none';
+                    }
+                }
+            } catch (err) {
+                console.warn('reconcileServerCart DOM update failed:', err);
+            }
+            return;
+        }
+    } catch (err) {
+        console.warn('reconcileServerCart error:', err);
+    }
+    // If no authoritative cart returned, ask shared to refresh
+    _refreshCartCountFromSharedOrFallback();
 }
 
 // ==========================
@@ -409,15 +465,207 @@ async function updateCartCountFromServer() {
         const res = await fetch(`${window.API_BASE}/api/cart`, { credentials: 'include' });
         if (!res.ok) throw new Error(`API lỗi ${res.status}`);
         const data = await res.json();
-        if (!data.success) return;
-        const totalCount = data.cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-        $('.cart-count').text(totalCount).css('display', totalCount > 0 ? 'inline-flex' : 'none');
+        if (!data || !data.success) {
+            await _refreshCartCountFromSharedOrFallback();
+            return;
+        }
+        reconcileServerCart(data);
     } catch (err) {
         console.error('Lỗi lấy số lượng giỏ:', err);
+        await _refreshCartCountFromSharedOrFallback();
     }
 }
+async function processAddToCartResponse(res) {
+    try {
+        // No response → fallback refresh
+        if (!res) {
+            if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+                await window.cartCountShared.refresh();
+            } else if (typeof updateCartCountFromServer === 'function') {
+                await updateCartCountFromServer();
+            } else if (typeof updateCartCount === 'function') {
+                updateCartCount();
+            }
+            return;
+        }
 
+        // If server returned authoritative cart array, reconcile immediately
+        if (res.success && Array.isArray(res.cart)) {
+            try {
+                // persist server cart locally
+                try { localStorage.setItem('cart', JSON.stringify(res.cart)); } catch (e) { /* ignore */ }
 
+                // merge with local giftCart so badge includes gifts
+                const gifts = JSON.parse(localStorage.getItem('giftCart') || '[]') || [];
+                const merged = Array.isArray(res.cart) ? res.cart.concat(gifts) : gifts;
+
+                // Prefer shared module
+                if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
+                    window.cartCountShared.setFromCart(merged);
+                } else {
+                    // fallback: compute total and update DOM
+                    const total = merged.reduce((s, it) => s + (Number(it.quantity) || 0), 0);
+                    const $el = window.jQuery ? window.jQuery('.cart-count') : document.querySelector('.cart-count');
+                    if ($el) {
+                        if (window.jQuery) {
+                            $el.text(total).css('display', total > 0 ? 'inline-flex' : 'none');
+                        } else {
+                            $el.textContent = String(total);
+                            $el.style.display = total > 0 ? 'inline-flex' : 'none';
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn('processAddToCartResponse: reconcile failed', err);
+                if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+                    await window.cartCountShared.refresh();
+                } else if (typeof updateCartCountFromServer === 'function') {
+                    await updateCartCountFromServer();
+                }
+            }
+            return;
+        }
+
+        // No authoritative cart returned → trigger background refresh (debounced by cartCountShared)
+        if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+            await window.cartCountShared.refresh();
+        } else if (typeof updateCartCountFromServer === 'function') {
+            await updateCartCountFromServer();
+        } else if (typeof updateCartCount === 'function') {
+            updateCartCount();
+        }
+    } catch (err) {
+        console.warn('processAddToCartResponse error:', err);
+        try {
+            if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+                await window.cartCountShared.refresh();
+            } else if (typeof updateCartCountFromServer === 'function') {
+                await updateCartCountFromServer();
+            } else if (typeof updateCartCount === 'function') {
+                updateCartCount();
+            }
+        } catch (e) { /* ignore */ }
+    }
+}
+async function handleBuyNowImmediate(product, selectedCombos = [], giftCart = [], options = { redirectIfEligible: true, forceRedirect: false }) {
+    try {
+        // Quick optimistic feedback
+        const delta = 1 + (Array.isArray(selectedCombos) ? selectedCombos.length : 0) + (Array.isArray(giftCart) ? giftCart.reduce((s,g)=>s + (Number(g.quantity)||1),0) : 0);
+        try {
+            if (window.cartCountShared && typeof window.cartCountShared.increment === 'function') {
+                window.cartCountShared.increment(delta);
+            } else {
+                // fallback: call updateCartCount (will read local storage or do server refresh)
+                if (typeof updateCartCount === 'function') updateCartCount();
+            }
+        } catch (e) { console.warn('Optimistic increment failed:', e); }
+
+        let lastServerCart = null;
+        let lastRes = null;
+
+        // Helper to POST and process response
+        async function postAndProcess(item, qty = 1) {
+            try {
+                const res = await addToCartAPI(item, qty);
+                lastRes = res;
+                if (res && res.success && Array.isArray(res.cart)) {
+                    lastServerCart = res.cart;
+                }
+                await processAddToCartResponse(res);
+                return res;
+            } catch (err) {
+                console.warn('postAndProcess error for', item?.id, err);
+                return null;
+            }
+        }
+
+        // 1) add main product
+        await postAndProcess(product, 1);
+
+        // 2) add combos
+        if (Array.isArray(selectedCombos) && selectedCombos.length) {
+            for (const combo of selectedCombos) {
+                await postAndProcess(combo, 1);
+            }
+        }
+
+        // 3) add gifts
+        if (Array.isArray(giftCart) && giftCart.length) {
+            for (const gift of giftCart) {
+                const qty = Number(gift.quantity) || 1;
+                await postAndProcess(gift, qty);
+            }
+        }
+
+        // 4) Reconcile authoritative lastServerCart (if any) or ensure refresh
+        if (lastServerCart) {
+            try {
+                // persist & notify shared
+                try { localStorage.setItem('cart', JSON.stringify(lastServerCart)); } catch (e) {}
+                const merged = (Array.isArray(lastServerCart) ? lastServerCart.concat(JSON.parse(localStorage.getItem('giftCart')||'[]')) : JSON.parse(localStorage.getItem('giftCart')||'[]'));
+                if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
+                    window.cartCountShared.setFromCart(merged);
+                } else if (typeof updateCartCount === 'function') {
+                    updateCartCount();
+                }
+            } catch (e) {
+                console.warn('handleBuyNowImmediate reconcile failed', e);
+                if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+                    await window.cartCountShared.refresh();
+                } else if (typeof updateCartCountFromServer === 'function') {
+                    await updateCartCountFromServer();
+                } else if (typeof updateCartCount === 'function') {
+                    updateCartCount();
+                }
+            }
+        } else {
+            // No server cart returned → ensure a refresh
+            if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+                await window.cartCountShared.refresh();
+            } else if (typeof updateCartCountFromServer === 'function') {
+                await updateCartCountFromServer();
+            } else if (typeof updateCartCount === 'function') {
+                updateCartCount();
+            }
+        }
+
+        // 5) Ensure checkout won't be blocked by leftover flags
+        try { localStorage.removeItem('cartLocked'); } catch (e) { /* ignore */ }
+
+        // 6) Show toast
+        let toastMsg = product && product.name ? `Đã thêm ${product.name} vào giỏ hàng` : 'Đã thêm sản phẩm vào giỏ hàng';
+        if (Array.isArray(selectedCombos) && selectedCombos.length) toastMsg += ` và ${selectedCombos.length} combo`;
+        if (Array.isArray(giftCart) && giftCart.length) toastMsg += `, kèm quà tặng`;
+        toastMsg += '!';
+        if (typeof showToast === 'function') showToast(toastMsg);
+
+        // 7) Decide redirect: original rule was "redirect when all combos selected AND gifts added"
+        const hasCombo = Array.isArray(selectedCombos) && selectedCombos.length > 0;
+        const hasGifts = Array.isArray(giftCart) && giftCart.length > 0;
+        const shouldRedirect = options.forceRedirect || (options.redirectIfEligible && hasCombo && hasGifts);
+
+        if (shouldRedirect) {
+            // Delay slightly to let UI update
+            setTimeout(() => { window.location.href = 'resetcheckout.html'; }, 300);
+        }
+
+        return { success: true, lastRes, lastServerCart };
+    } catch (err) {
+        console.error('handleBuyNowImmediate error:', err);
+        // best-effort refresh badge
+        try {
+            if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+                await window.cartCountShared.refresh();
+            } else if (typeof updateCartCountFromServer === 'function') {
+                await updateCartCountFromServer();
+            } else if (typeof updateCartCount === 'function') {
+                updateCartCount();
+            }
+        } catch (e) { /* ignore */ }
+        if (typeof showToast === 'function') showToast('Không thể thêm vào giỏ hàng, vui lòng thử lại!');
+        return { success: false, error: err };
+    }
+}
 function addToSelectedCart(product) {
     let selectedCart = JSON.parse(localStorage.getItem('selectedCart')) || [];
     const existing = selectedCart.find(item => item.id === product.id);
@@ -431,18 +679,99 @@ function addToSelectedCart(product) {
     localStorage.setItem('selectedCart', JSON.stringify(selectedCart));
 }
 
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
+async function updateCartCount() {
+    try {
+        // Prefer shared cart module (debounced/throttled). Await it so callers that want to can await.
+        if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+            try {
+                await window.cartCountShared.refresh();
+            } catch (e) {
+                console.warn('cartCountShared.refresh threw, falling back:', e);
+            }
+            return;
+        }
+    } catch (e) {
+        console.warn('cartCountShared.refresh error (fallback):', e);
+    }
 
-    const totalCount =
-        cart.reduce((sum, item) => sum + (item.quantity || 0), 0) +
-        giftCart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+    // Legacy fallback: compute from localStorage
+    try {
+        const cartCountElement = document.querySelector('.cart-count');
+        if (!cartCountElement) return;
 
-    $('.cart-count')
-        .text(totalCount)
-        .css('display', totalCount > 0 ? 'inline-flex' : 'none');
+        // Auth check (AuthSync preferred)
+        let logged = false;
+        try {
+            if (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function') {
+                logged = window.AuthSync.isLoggedIn();
+            } else {
+                logged = !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
+            }
+        } catch (e) {
+            logged = !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
+        }
+
+        if (!logged) {
+            // hide badge when not logged
+            cartCountElement.style.display = 'none';
+            if (window._cartCountCache) window._cartCountCache.lastCount = null;
+            return;
+        }
+
+        // Read localStorage safely
+        let cart = [];
+        let giftCart = [];
+        try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) { cart = []; }
+        try { giftCart = JSON.parse(localStorage.getItem('giftCart') || '[]'); } catch (e) { giftCart = []; }
+
+        // sum helper that supports { quantity } or { qty }
+        const sumQty = (arr) => {
+            if (!Array.isArray(arr)) return 0;
+            return arr.reduce((s, it) => s + (Number(it?.quantity ?? it?.qty ?? 0) || 0), 0);
+        };
+
+        const normal = sumQty(cart);
+        const gifts = sumQty(giftCart);
+        const total = normal + gifts;
+
+        // update DOM only if changed (animate on change)
+        const old = parseInt(cartCountElement.textContent || '0') || 0;
+        if (old !== total) {
+            cartCountElement.classList.add('cart-count-update');
+            setTimeout(() => cartCountElement.classList.remove('cart-count-update'), 500);
+        }
+
+        if (window.jQuery) {
+            $('.cart-count').text(total).css('display', total > 0 ? 'inline-flex' : 'none');
+        } else {
+            cartCountElement.textContent = String(total);
+            cartCountElement.style.display = total > 0 ? 'inline-flex' : 'none';
+        }
+
+        // update local cache if present (helps other logic)
+        try {
+            window._cartCountCache = window._cartCountCache || {};
+            window._cartCountCache.lastCount = total;
+            window._cartCountCache.lastFetch = Date.now();
+        } catch (e) { /* ignore */ }
+
+        return total;
+    } catch (err) {
+        console.warn('updateCartCount fallback error:', err);
+        // final best-effort: try shared refresh if available
+        try {
+            if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+                await window.cartCountShared.refresh();
+            }
+        } catch (e) { /* ignore */ }
+    }
 }
+
+// Expose / flag so other scripts can detect shared implementation
+try {
+    window.updateCartCount = updateCartCount;
+    window.updateCartCount._isCartShared = true;
+} catch (e) { /* ignore */ }
 
 function showToast(message) {
     let $toast = $('#toastNotification');
@@ -640,12 +969,19 @@ function renderRelatedProducts(related) {
         const immediate = async () => {
             try {
                 const res = await addToCartAPI(cleanProduct, 1);
-                if (!res.success) throw new Error(res.error || "Lỗi khi thêm giỏ hàng");
-                await updateCartCountFromServer();
-                showToast(`Đã thêm ${cleanProduct.name} vào giỏ hàng!`);
+                if (!res || !res.success) {
+                    // server-side error or network error
+                    throw new Error((res && res.error) || 'Lỗi khi thêm giỏ hàng');
+                }
+
+                // Use the new response handler which will reconcile cart if server returned authoritative cart
+                await processAddToCartResponse(res);
+
+                // UX feedback
+                showToast && showToast(`Đã thêm ${cleanProduct.name} vào giỏ hàng!`);
             } catch (err) {
-                console.error("❌ Lỗi thêm sản phẩm:", err);
-                showToast("Không thể thêm sản phẩm vào giỏ hàng!");
+                console.error("❌ Lỗi thêm sản phẩm (related):", err);
+                showToast && showToast("Không thể thêm sản phẩm vào giỏ hàng!");
             }
         };
 
@@ -826,48 +1162,8 @@ function bindEventHandlers() {
         }
 
         const immediate = async () => {
-            try {
-                // --- Thêm sản phẩm chính ---
-                await addToCartAPI(cleanProduct, 1);
-
-                // --- Thêm combo ---
-                for (const combo of selectedCombos) {
-                    await addToCartAPI(combo, 1);
-                }
-
-                // --- Thêm quà tặng ---
-                for (const gift of giftCart) {
-                    await addToCartAPI(gift, 1);
-                }
-
-                // --- Cập nhật badge giỏ hàng ---
-                await updateCartCountFromServer();
-
-                // --- Thông báo ---
-                let toastMsg = '';
-                if ($checkedCombos.length) {
-                    toastMsg = `Đã thêm sản phẩm chính và ${$checkedCombos.length} combo`;
-                } else {
-                    toastMsg = `Đã thêm ${product.name} vào giỏ hàng`;
-                }
-                if (giftCart.length) {
-                    toastMsg += `, kèm theo quà tặng đính kèm!`;
-                } else {
-                    toastMsg += '!';
-                }
-
-                // ✅ Hiện toast
-                showToast(toastMsg);
-
-                // ✅ Chỉ redirect khi đủ combo + có quà
-                if (hasAllCombos && giftCart.length > 0) {
-                    redirectToCheckout();
-                }
-
-            } catch (err) {
-                console.error('Lỗi khi thêm vào giỏ hàng:', err);
-                showToast('Không thể thêm vào giỏ hàng, vui lòng thử lại!');
-            }
+            // Delegate all add/combo/gift/optimistic/reconcile/redirect logic
+            await handleBuyNowImmediate(cleanProduct, selectedCombos, giftCart, { redirectIfEligible: true });
         };
 
         // Nếu chưa đăng nhập → lưu pendingAction
@@ -895,6 +1191,7 @@ function bindEventHandlers() {
         updateSubtotal();
     });
 
+    // --- Updated: add-to-cart-bundle handler (uses processAddToCartResponse + cartCountShared) ---
     $(document).on('click', '.add-to-cart-bundle', async function () {
         const $checked = $('.bundle-products .bundle-checkbox:checked');
         if (!$checked.length) {
@@ -925,19 +1222,82 @@ function bindEventHandlers() {
 
         const immediate = async () => {
             try {
-                // Thêm từng sản phẩm combo vào giỏ qua API
-                for (const it of productsToAdd) {
-                    const res = await addToCartAPI(it.product, it.qty);
-                    if (!res.success) throw new Error(res.error || "Lỗi thêm combo");
+                // optimistic increment for immediate UX feedback
+                const totalQty = productsToAdd.reduce((s, it) => s + (Number(it.qty) || 1), 0);
+                try {
+                    if (window.cartCountShared && typeof window.cartCountShared.increment === 'function') {
+                        window.cartCountShared.increment(totalQty);
+                    } else if (typeof updateCartCount === 'function') {
+                        // best-effort fallback (will schedule background sync)
+                        updateCartCount();
+                    }
+                } catch (e) {
+                    console.warn('Optimistic cart increment failed:', e);
                 }
 
-                // Cập nhật số lượng giỏ từ server
-                await updateCartCountFromServer();
+                let addedCount = 0;
+                let lastServerCart = null;
+                const errors = [];
 
-                // Thông báo thành công
-                showToast(`Đã thêm ${productsToAdd.length} sản phẩm combo vào giỏ!`);
+                // Add each product sequentially; continue on errors so other items can still be added
+                for (const it of productsToAdd) {
+                    try {
+                        const res = await addToCartAPI(it.product, it.qty);
+                        if (!res || !res.success) {
+                            console.warn('⚠️ Không thể thêm item vào giỏ:', it.product?.name, res && res.error);
+                            errors.push({ product: it.product, error: (res && res.error) || 'API failed' });
+                            // still call processAddToCartResponse to let shared module decide if needed (pass res even if failed)
+                            await processAddToCartResponse(res);
+                            continue;
+                        }
+                        // success for this item
+                        addedCount += (Number(it.qty) || 1);
+                        if (Array.isArray(res.cart)) lastServerCart = res.cart;
+                        // let handler reconcile badge/state
+                        await processAddToCartResponse(res);
+                    } catch (err) {
+                        console.warn('❌ Lỗi khi thêm item combo:', it.product?.name, err);
+                        errors.push({ product: it.product, error: err });
+                        // continue with next item
+                    }
+                }
+
+                // If server never returned authoritative cart, ensure a refresh (shared module handles debouncing)
+                if (!lastServerCart) {
+                    if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+                        await window.cartCountShared.refresh();
+                    } else if (typeof updateCartCountFromServer === 'function') {
+                        await updateCartCountFromServer();
+                    } else if (typeof updateCartCount === 'function') {
+                        updateCartCount();
+                    }
+                } else {
+                    // persist last returned authoritative cart (reconcileServerCart already called inside processAddToCartResponse,
+                    // but we keep this as best-effort to ensure localStorage/cart state is consistent)
+                    try { localStorage.setItem('cart', JSON.stringify(lastServerCart)); } catch (e) {}
+                }
+
+                // UX: show toast about success/fail
+                if (addedCount > 0) {
+                    showToast(`Đã thêm ${addedCount} sản phẩm combo vào giỏ!`);
+                }
+                if (errors.length) {
+                    console.warn('Một số item không thêm được:', errors);
+                    // show a secondary message only when nothing was added
+                    if (addedCount === 0) showToast('Không thể thêm combo vào giỏ hàng!');
+                }
             } catch (err) {
-                console.error('❌ Lỗi thêm combo:', err);
+                console.error('❌ Lỗi thêm combo (immediate):', err);
+                // best-effort refresh
+                try {
+                    if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+                        await window.cartCountShared.refresh();
+                    } else if (typeof updateCartCountFromServer === 'function') {
+                        await updateCartCountFromServer();
+                    } else if (typeof updateCartCount === 'function') {
+                        updateCartCount();
+                    }
+                } catch (e) { /* ignore */ }
                 showToast('Không thể thêm combo vào giỏ hàng!');
             }
         };
@@ -1007,15 +1367,18 @@ function renderGiftItems(giftItems) {
     container.html(`
         <h5 class="gift-title">🎁 Quà tặng kèm</h5>
         <div class="gift-list">
-            ${giftItems.map(g => `
+            ${giftItems.map(g => {
+        const qty = g.qty ?? g.quantity ?? 1;
+        return `
                 <div class="gift-item">
                     <img src="${g.image}" alt="${g.name}">
                     <div class="gift-info">
                         <p class="gift-name">${g.name}</p>
-                        <span class="gift-qty">x${g.qty}</span>
+                        <span class="gift-qty">x${qty}</span>
                     </div>
                 </div>
-            `).join('')}
+            `;
+    }).join('')}
         </div>
     `);
     container.show();

@@ -465,6 +465,29 @@ function closeRewardPopup() {
     document.getElementById('reward-popup').classList.add('d-none');
 }
 
+function _mergeCartWithGifts(cartArray) {
+    try {
+        const gifts = JSON.parse(localStorage.getItem('giftCart') || '[]') || [];
+        const normalizedGifts = Array.isArray(gifts) ? gifts.map(g => ({ ...g, quantity: Number(g.quantity) || 1 })) : [];
+        return Array.isArray(cartArray) ? cartArray.concat(normalizedGifts) : normalizedGifts;
+    } catch (e) {
+        return cartArray || [];
+    }
+}
+
+// Helper: try to refresh cart count via shared module, fallback to legacy updateCartCount if missing
+async function _refreshCartCountFromSharedOrFallback() {
+    try {
+        if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+            await window.cartCountShared.refresh();
+            return;
+        }
+    } catch (err) {
+        console.warn('cartCountShared.refresh() failed:', err);
+    }
+    try { if (typeof updateCartCount === 'function') updateCartCount(); } catch (e) {}
+}
+
 // Cancel order
 // ==================== HỦY HOẶC XOÁ ĐƠN ====================
 async function cancelOrder(orderId) {
@@ -530,17 +553,21 @@ async function rebuyOrder(orderId) {
             return;
         }
 
+        // Track last authoritative cart returned by server (if any)
+        let lastServerCart = null;
+
+        // Add each item to cart on server. Do not call GET /api/cart repeatedly.
         for (const item of order.items) {
             try {
                 const payload = {
-                    id: item.productId || item.id, // 🔹 Sửa thành id
+                    id: item.productId || item.id,
                     name: item.name,
                     originalPrice: item.originalPrice,
                     salePrice: item.salePrice,
                     discountPercent:
                         item.discountPercent !== undefined
                             ? item.discountPercent
-                            : Math.round(100 - (item.salePrice / item.originalPrice * 100)),
+                            : (item.originalPrice ? Math.round(100 - (item.salePrice / item.originalPrice * 100)) : 0),
                     image: item.image,
                     quantity: item.quantity || 1
                 };
@@ -553,8 +580,14 @@ async function rebuyOrder(orderId) {
                 });
 
                 const data = await res.json();
-                if (!data.success) {
-                    console.warn(`⚠️ Không thể thêm ${item.name}: ${data.error || "Lỗi"}`);
+                if (!data || !data.success) {
+                    console.warn(`⚠️ Không thể thêm ${item.name}: ${data && data.error ? data.error : 'Lỗi'}`);
+                    // continue adding other items
+                } else {
+                    // If server returns authoritative cart, keep it for final badge update
+                    if (Array.isArray(data.cart)) {
+                        lastServerCart = data.cart;
+                    }
                 }
             } catch (err) {
                 console.error(`❌ Lỗi khi thêm sản phẩm ${item.name}:`, err);
@@ -569,11 +602,11 @@ async function rebuyOrder(orderId) {
                     credentials: "include"
                 });
                 const delData = await delRes.json();
-                if (delData.success) {
+                if (delData && delData.success) {
                     message = `✅ Đã mua lại và xoá đơn hàng #${orderId}!`;
                     await fetchOrdersFromServer();
                 } else {
-                    message = `❌ Không thể xoá đơn: ${delData.error || "Lỗi server"}`;
+                    message = `❌ Không thể xoá đơn: ${delData && delData.error ? delData.error : "Lỗi server"}`;
                 }
             } catch (err) {
                 console.error("❌ Lỗi khi xoá đơn:", err);
@@ -582,16 +615,33 @@ async function rebuyOrder(orderId) {
         }
         showToast(message);
 
+        // Small delay so server processes inserts
         await new Promise(resolve => setTimeout(resolve, 500));
+
         try {
-            await fetch(`${window.API_BASE}/api/cart`, {
-                method: "GET",
-                credentials: "include"
-            });
+            if (lastServerCart) {
+                // Persist returned authoritative cart locally and update badge via shared API
+                try { localStorage.setItem('cart', JSON.stringify(lastServerCart)); } catch (e) {}
+                if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
+                    window.cartCountShared.setFromCart(_mergeCartWithGifts(lastServerCart));
+                } else {
+                    await _refreshCartCountFromSharedOrFallback();
+                }
+            } else {
+                // No authoritative cart returned -> ask shared module to refresh (throttled) or fallback GET
+                await _refreshCartCountFromSharedOrFallback();
+            }
         } catch (err) {
-            console.warn("⚠️ Không thể đồng bộ giỏ trước khi chuyển trang:", err);
+            console.warn("⚠️ Không thể đồng bộ giỏ bằng cartCountShared:", err);
+            // Best-effort fallback: a single GET to /api/cart (rare)
+            try {
+                await fetch(`${window.API_BASE}/api/cart`, { method: "GET", credentials: "include" });
+            } catch (err2) {
+                console.warn("⚠️ Fallback GET /api/cart failed:", err2);
+            }
         }
 
+        // Redirect to checkout
         window.location.href = "resetcheckout.html";
 
     } catch (err) {

@@ -36,7 +36,9 @@ async function syncCartToServer() {
         const data = await res.json();
         if (data.success) {
             localStorage.setItem('cart', JSON.stringify(data.cart));
-            if (typeof updateCartCount === 'function') {
+            if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
+                window.cartCountShared.setFromCart(data.cart);
+            } else if (typeof updateCartCount === 'function') {
                 updateCartCount();
             }
         }
