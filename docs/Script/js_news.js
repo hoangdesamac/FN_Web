@@ -13,7 +13,7 @@ export async function getNewsByTitle(title) {
 }
 // Hàm lấy dữ liệu tin tức từ news.json (dùng fetch, trả về Promise)
 export async function getTechNews() {
-	const response = await fetch('/docs/pc-part-dataset/processed/news.json');
+	const response = await fetch('/pc-part-dataset/processed/news.json');
 	if (!response.ok) throw new Error('Không thể tải news.json');
 	return await response.json();
 }
