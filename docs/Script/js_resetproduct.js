@@ -35,22 +35,45 @@ async function loadPagePart(url, containerId, callback = null) {
 // --- DÙNG API ĐỂ KIỂM TRA LOGIN "REALTIME" (không chỉ localStorage) ---
 async function isLoggedInRealTime() {
     try {
-        // Nếu AuthSync tồn tại, dùng nó làm source-of-truth để tránh race/OAuth issues
-        if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
-            const st = await window.AuthSync.refresh(); // sẽ gọi /api/me nội bộ
-            return !!(st && st.loggedIn);
+        // 1) Fast local check via AuthSync internal state if available
+        if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+            try {
+                const st = window.AuthSync.getState();
+                if (st && st.loggedIn) return true;
+            } catch (e) { /* ignore */ }
         }
 
-        // fallback cũ: call /api/me trực tiếp
-        const res = await fetch(`${window.API_BASE}/api/me`, {
-            method: "GET",
-            credentials: "include"
-        });
-        const data = await res.json();
-        return !!(data && data.loggedIn);
+        // 2) If AuthSync exists, try its refresh() but with a short timeout
+        if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+            try {
+                const refreshPromise = window.AuthSync.refresh();
+                const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('AuthSync.refresh timeout')), 800));
+                const result = await Promise.race([refreshPromise, timeout]);
+                return !!(result && result.loggedIn);
+            } catch (e) {
+                // fall through to next check
+            }
+        }
+
+        // 3) Fallback to direct /api/me GET with a short timeout
+        try {
+            const controller = new AbortController();
+            const t = setTimeout(() => controller.abort(), 800);
+            const res = await fetch(`${(window.API_BASE || '').replace(/\/$/, '')}/api/me`, {
+                method: 'GET',
+                credentials: 'include',
+                signal: controller.signal
+            });
+            clearTimeout(t);
+            if (!res.ok) return !!(localStorage.getItem('userName') || localStorage.getItem('userId'));
+            const data = await res.json();
+            return !!(data && data.loggedIn);
+        } catch (e) {
+            // network or aborted
+            return !!(localStorage.getItem('userName') || localStorage.getItem('userId'));
+        }
     } catch (err) {
-        // nếu lỗi mạng, fallback sang kiểm tra localStorage để có UX tốt hơn
-        return !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
+        return !!(localStorage.getItem('userName') || localStorage.getItem('userId'));
     }
 }
 
@@ -224,23 +247,70 @@ window.addEventListener('user:login', async function () {
 
 // Helper to require login before running action
 function requireLoginThenDo(actionType, payload, immediateFn) {
-    // CHECK REALTIME ĐỂ ĐẢM BẢO NHẤT QUÁN (ngay cả khi localStorage chưa sync kịp)
-    isLoggedInRealTime().then((loggedIn) => {
-        if (loggedIn) {
-            if (typeof immediateFn === 'function') immediateFn();
-        } else {
-            savePendingAction({ type: actionType, payload });
+    (async () => {
+        try {
+            // 1) Fast check: if AuthSync already knows user is logged -> immediate
+            if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+                try {
+                    const st = window.AuthSync.getState();
+                    if (st && st.loggedIn) {
+                        if (typeof immediateFn === 'function') return immediateFn();
+                    }
+                } catch (e) { /* ignore */ }
+            } else {
+                // legacy quick check
+                if (!!localStorage.getItem('userName') || !!localStorage.getItem('userId')) {
+                    if (typeof immediateFn === 'function') return immediateFn();
+                }
+            }
+
+            // 2) Wait briefly (poll) for AuthSync to initialize (useful when header/auth script is loading)
+            const waitTotal = 600; // ms
+            const pollInterval = 100; // ms
+            let waited = 0;
+            while (waited < waitTotal) {
+                await new Promise(r => setTimeout(r, pollInterval));
+                waited += pollInterval;
+                try {
+                    if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+                        const st2 = window.AuthSync.getState();
+                        if (st2 && st2.loggedIn) {
+                            if (typeof immediateFn === 'function') return immediateFn();
+                        }
+                    } else {
+                        if (!!localStorage.getItem('userName') || !!localStorage.getItem('userId')) {
+                            if (typeof immediateFn === 'function') return immediateFn();
+                        }
+                    }
+                } catch (e) { /* ignore and continue waiting */ }
+            }
+
+            // 3) Final realtime check (with network timeout) just before deciding
+            let logged = false;
+            try {
+                logged = await isLoggedInRealTime();
+            } catch (e) {
+                logged = !!(localStorage.getItem('userName') || localStorage.getItem('userId'));
+            }
+
+            if (logged) {
+                if (typeof immediateFn === 'function') return immediateFn();
+            }
+
+            // 4) Not logged → persist pendingAction and open login modal
+            try { savePendingAction({ type: actionType, payload }); } catch (err) { console.warn('savePendingAction failed', err); }
             openLoginModalAndNotify();
+        } catch (err) {
+            console.warn('requireLoginThenDo error (fallback to legacy):', err);
+            // fallback: if localStorage indicates login then run, else store pending and open modal
+            if (localStorage.getItem('userName') || localStorage.getItem('userId')) {
+                if (typeof immediateFn === 'function') immediateFn();
+            } else {
+                try { savePendingAction({ type: actionType, payload }); } catch (e) {}
+                openLoginModalAndNotify();
+            }
         }
-    }).catch(() => {
-        // fallback: dùng localStorage check nếu lỗi mạng
-        if (isLoggedIn()) {
-            if (typeof immediateFn === 'function') immediateFn();
-        } else {
-            savePendingAction({ type: actionType, payload });
-            openLoginModalAndNotify();
-        }
-    });
+    })();
 }
 
 function _mergeCartWithGifts(cartArray) {
@@ -665,18 +735,6 @@ async function handleBuyNowImmediate(product, selectedCombos = [], giftCart = []
         if (typeof showToast === 'function') showToast('Không thể thêm vào giỏ hàng, vui lòng thử lại!');
         return { success: false, error: err };
     }
-}
-function addToSelectedCart(product) {
-    let selectedCart = JSON.parse(localStorage.getItem('selectedCart')) || [];
-    const existing = selectedCart.find(item => item.id === product.id);
-
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        selectedCart.push(product);
-    }
-
-    localStorage.setItem('selectedCart', JSON.stringify(selectedCart));
 }
 
 async function updateCartCount() {
@@ -1111,67 +1169,79 @@ function bindEventHandlers() {
 
     // --- FIXED: use window.currentProduct fallback when window.products doesn't contain the rendered product ---
     $(document).on('click', '.buy-now', async function () {
-        const productId = $(this).data('id');
+        const $btn = $(this);
+        if ($btn.data('processing')) return;
+        $btn.data('processing', true).prop('disabled', true).addClass('processing');
 
-        // 🔎 Tìm sản phẩm chính
-        let product = window.products && window.products.find
-            ? window.products.find(p => p.id === productId)
-            : null;
+        try {
+            const productId = $btn.data('id');
 
-        if (!product && window.currentProduct && window.currentProduct.id === productId) {
-            product = window.currentProduct;
-        }
+            // 🔎 Tìm sản phẩm chính - prefer currentProduct (rendered)
+            let product = null;
+            try {
+                if (window.currentProduct && window.currentProduct.id === productId) product = window.currentProduct;
+                if (!product && Array.isArray(window.products)) {
+                    product = window.products.find(p => p.id === productId) || null;
+                }
+            } catch (e) { /* ignore */ }
 
-        if (!product) {
-            console.warn('buy-now: product not found for id', productId, 'window.currentProduct=', window.currentProduct);
-            showToast('Không thể thêm sản phẩm vào giỏ (thiếu dữ liệu)');
-            return;
-        }
+            if (!product) {
+                console.warn('buy-now: product not found for id', productId, 'window.currentProduct=', window.currentProduct);
+                showToast('Không thể thêm sản phẩm vào giỏ (thiếu dữ liệu)');
+                return;
+            }
 
-        const cleanProduct = prepareProduct(product);
+            const cleanProduct = prepareProduct(product);
 
-        // --- Lấy tất cả combo đã check ---
-        const $allCombos = $('.bundle-products .bundle-checkbox');
-        const $checkedCombos = $allCombos.filter(':checked');
+            // --- Lấy tất cả combo đã check ---
+            const $allCombos = $('.bundle-products .bundle-checkbox');
+            const $checkedCombos = $allCombos.filter(':checked');
 
-        const selectedCombos = [];
-        $checkedCombos.each(function () {
-            const $card = $(this).closest('.product-card');
-            selectedCombos.push(prepareProduct({
-                id: $card.data('id'),
-                name: $card.find('.product-name').text().trim(),
-                image: $card.find('img').attr('src'),
-                originalPrice: parsePrice($card.find('.original-price').text()),
-                salePrice: parsePrice($card.find('.sale-price').text()),
-            }));
-        });
-
-        // --- Xử lý quà tặng ---
-        const hasAllCombos = ($allCombos.length > 0 && $checkedCombos.length === $allCombos.length);
-        let giftCart = [];
-        if (hasAllCombos) {
-            giftCart.push({
-                id: "north-bayou-dual-monitor-nb-p160",
-                name: "Giá treo màn hình máy tính North Bayou Dual Monitor NB-P160",
-                image: "https://product.hstatic.net/200000722513/product/nb-p160_gearvn_f943c1ef5d8a4973b555cc6086b90ce1_master.jpg",
-                originalPrice: 990000,
-                salePrice: 0,
-                discount: 100,
-                quantity: 1
+            const selectedCombos = [];
+            $checkedCombos.each(function () {
+                const $card = $(this).closest('.product-card');
+                selectedCombos.push(prepareProduct({
+                    id: $card.data('id'),
+                    name: $card.find('.product-name').text().trim(),
+                    image: $card.find('img').attr('src'),
+                    originalPrice: parsePrice($card.find('.original-price').text()),
+                    salePrice: parsePrice($card.find('.sale-price').text()),
+                }));
             });
+
+            // --- Xử lý quà tặng ---
+            const hasAllCombos = ($allCombos.length > 0 && $checkedCombos.length === $allCombos.length);
+            let giftCart = [];
+            if (hasAllCombos && product.gift && product.gift.length) {
+                giftCart = product.gift.map(g => ({
+                    id: g.id,
+                    name: g.name,
+                    image: g.image,
+                    originalPrice: parsePrice(g.originalPrice),
+                    salePrice: 0,
+                    discount: 100,
+                    quantity: g.qty ?? g.quantity ?? 1,
+                    isGift: true
+                }));
+            }
+
+            const immediate = async () => {
+                await handleBuyNowImmediate(cleanProduct, selectedCombos, giftCart, { redirectIfEligible: true });
+            };
+
+            // Use the robust requireLoginThenDo
+            requireLoginThenDo('buyNow', {
+                product: cleanProduct,
+                combos: selectedCombos,
+                gifts: giftCart
+            }, immediate);
+
+        } finally {
+            // small delay so UI feedback shows then re-enable
+            setTimeout(() => {
+                $btn.removeData('processing').prop('disabled', false).removeClass('processing');
+            }, 800);
         }
-
-        const immediate = async () => {
-            // Delegate all add/combo/gift/optimistic/reconcile/redirect logic
-            await handleBuyNowImmediate(cleanProduct, selectedCombos, giftCart, { redirectIfEligible: true });
-        };
-
-        // Nếu chưa đăng nhập → lưu pendingAction
-        requireLoginThenDo('buyNow', {
-            product: cleanProduct,
-            combos: selectedCombos,
-            gifts: giftCart
-        }, immediate);
     });
 
 
