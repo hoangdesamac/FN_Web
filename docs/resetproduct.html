@@ -21,6 +21,11 @@
     <script>
         window.API_BASE = "https://fn-web.onrender.com";
     </script>
+
+    <!-- AuthSync: canonical auth synchronizer (loads early) -->
+    <script src="Script/js_authsync.js" defer></script>
+    <script src="Script/js_cartcount.js" defer></script>
+    <script src="Script/js_ordercount.js" defer></script>
 </head>
 <body>
 <!-- Cyber Grid Background -->
@@ -267,8 +272,6 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 
     <div id="tab4" class="tab-content">
@@ -289,8 +292,6 @@
         <button class="nav-btn nav-next"><i class="fas fa-chevron-right"></i></button>
     </div>
 </section>
-
-
 
 <!-- Enhanced Toast Notification -->
 <div id="toastNotification" class="toast-notification">
@@ -313,9 +314,87 @@
 <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- header script remains (but header is injected by js_resetproduct) -->
 <script src="Script/js_header.js"></script>
-<script src="Script/js_resetauth.js"></script>
+<!-- NOTICE: don't load js_resetauth.js here directly — we will inject it after header exists -->
 <script src="Script/js_resetproduct.js"></script>
+
+<!-- After js_resetproduct loads it will inject header; use MutationObserver to detect header insertion
+     then load js_resetauth.js so auth runs after header is present. Also call AuthSync.refresh()
+     to ensure header UI gets the latest user info from server. -->
+<script>
+    (function() {
+        // avoid double-injection
+        let authInjected = false;
+
+        function injectAuthScript() {
+            if (authInjected) return;
+            authInjected = true;
+
+            const s = document.createElement('script');
+            s.src = "Script/js_resetauth.js";
+            s.defer = true;
+            s.onload = async function() {
+                try {
+                    if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+                        await window.AuthSync.refresh();
+                    }
+                } catch (e) {
+                    console.warn('AuthSync.refresh() failed on product page:', e);
+                }
+
+                // preserve previous behavior: open modal if flag set
+                try {
+                    if (localStorage.getItem("showLoginAfterReset") === "true") {
+                        localStorage.removeItem("showLoginAfterReset");
+                        if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+                            CyberModal.open();
+                        }
+                    }
+                } catch (e) { console.warn(e); }
+            };
+            document.body.appendChild(s);
+        }
+
+        // If header already exists (rendered synchronously), inject immediately.
+        const headerContainer = document.getElementById('header-container');
+        if (headerContainer && headerContainer.children.length > 0) {
+            injectAuthScript();
+            return;
+        }
+
+        // Otherwise observe header container for child insertion
+        const obs = new MutationObserver((mutations, observer) => {
+            for (const m of mutations) {
+                if (m.type === 'childList' && m.addedNodes.length > 0) {
+                    // header injected — do the auth script injection and stop observing
+                    injectAuthScript();
+                    observer.disconnect();
+                    break;
+                }
+            }
+        });
+
+        if (headerContainer) {
+            obs.observe(headerContainer, { childList: true, subtree: false });
+        } else {
+            // fallback: poll for header-container and then inject
+            let tries = 0;
+            const t = setInterval(() => {
+                const hc = document.getElementById('header-container');
+                tries++;
+                if (hc && hc.children.length > 0) {
+                    clearInterval(t);
+                    injectAuthScript();
+                } else if (tries > 40) { // ~4s timeout
+                    clearInterval(t);
+                    // still inject to avoid leaving auth out (best-effort)
+                    injectAuthScript();
+                }
+            }, 100);
+        }
+    })();
+</script>
 
 </body>
 </html>

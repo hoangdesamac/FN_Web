@@ -19,72 +19,26 @@ function initBannerHeaderWrapper() {
     });
 }
 
+// Helper: nhanh kiểm tra auth (AuthSync ưu tiên)
+function isAuthFast() {
+    try {
+        if (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function') {
+            return window.AuthSync.isLoggedIn();
+        }
+    } catch (e) { /* ignore */ }
+    return !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
+}
+
 // ================= Giỏ hàng & đơn hàng =================
 function initCartCountEffect() {
     updateCartCount();
 }
-
-// 🛒 Giỏ hàng
 function updateCartCount() {
-    const cartCountElement = document.querySelector('.cart-count');
-    if (!cartCountElement) return;
-
-    const isLoggedIn = !!localStorage.getItem('userName');
-    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
-
-    if (isLoggedIn) {
-        fetch(`${window.API_BASE}/api/cart`, {
-            method: 'GET',
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    const serverCart = data.cart || [];
-                    const count = serverCart.reduce((t, i) => t + (i.quantity || 1), 0) +
-                        giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
-
-                    cartCountElement.textContent = count;
-                    cartCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
-                }
-            })
-            .catch(err => console.error('Lỗi lấy giỏ hàng từ server:', err));
-    } else {
-        // ❌ Chưa login → luôn ẩn icon số lượng
-        cartCountElement.style.display = "none";
+    if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
+        window.cartCountShared.refresh();
+        return;
     }
 }
-
-
-// 📦 Đơn hàng
-async function updateOrderCount() {
-    const orderCountElement = document.querySelector('.order-count');
-    if (!orderCountElement) return;
-
-    // Ẩn ngay từ đầu
-    orderCountElement.style.display = "none";
-
-    const isLoggedIn = !!localStorage.getItem('userName');
-    if (isLoggedIn) {
-        try {
-            const res = await fetch(`${window.API_BASE}/api/orders`, {
-                method: "GET",
-                credentials: "include"
-            });
-            const data = await res.json();
-            if (data.success) {
-                const count = data.orders.length;
-                orderCountElement.textContent = count;
-                orderCountElement.style.display = count > 0 ? 'inline-flex' : 'none';
-            }
-        } catch (err) {
-            console.error("Lỗi lấy đơn hàng từ server:", err);
-        }
-    } else {
-        orderCountElement.style.display = "none";
-    }
-}
-
 
 // ================= Nền hexagon động =================
 function initHexagonBackground() {
@@ -164,36 +118,89 @@ function switchToLogin() { CyberModal.showLogin(); }
 function switchToForgot() { CyberModal.showForgot(); }
 function closeCyberModal() { CyberModal.close(); }
 
-// ================= User login state =================
-async function fetchUserInfo() {
+// ================= Small helpers for auth sync =================
+async function waitForAuthSyncPresence(timeoutMs = 3000) {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+        if (window.AuthSync) return true;
+        await new Promise(r => setTimeout(r, 80));
+    }
+    return !!window.AuthSync;
+}
+
+async function tryAuthSyncRefreshWithTimeout(timeoutMs = 1500) {
+    if (!window.AuthSync) return null;
     try {
-        const res = await fetch(`${window.API_BASE}/api/me`, {
-            method: "GET",
-            credentials: "include"
-        });
-        const data = await res.json();
-        if (data.loggedIn) {
-            localStorage.setItem('userName', data.user.lastName.trim());
-            localStorage.setItem('firstName', (data.user.firstName || "").trim());
-            localStorage.setItem('lastName', (data.user.lastName || "").trim());
-            localStorage.setItem('email', data.user.email || "");
-            localStorage.setItem('userId', data.user.id || "");
-            if (data.user.avatar_url) {
-                localStorage.setItem('avatarUrl', data.user.avatar_url);
-            } else {
-                localStorage.removeItem('avatarUrl');
-            }
-        } else {
-            localStorage.removeItem('userName');
-            localStorage.removeItem('firstName');
-            localStorage.removeItem('lastName');
-            localStorage.removeItem('email');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('avatarUrl');
+        if (typeof window.AuthSync.refresh === 'function') {
+            const p = window.AuthSync.refresh();
+            const res = await Promise.race([
+                p,
+                new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), timeoutMs))
+            ]);
+            return res || (window.AuthSync.getState ? window.AuthSync.getState() : null);
+        }
+        if (typeof window.AuthSync.waitUntilReady === 'function') {
+            await window.AuthSync.waitUntilReady(timeoutMs);
+            return window.AuthSync.getState ? window.AuthSync.getState() : null;
+        }
+    } catch (e) {
+        try { return window.AuthSync.getState ? window.AuthSync.getState() : null; } catch (ee) { return null; }
+    }
+    return window.AuthSync.getState ? window.AuthSync.getState() : null;
+}
+
+async function getCanonicalAuthState() {
+    try {
+        if (window.AuthSync) {
+            const st = window.AuthSync.getState ? window.AuthSync.getState() : null;
+            if (st && typeof st.loggedIn !== 'undefined') return st;
+            const r = await tryAuthSyncRefreshWithTimeout(1600);
+            if (r && typeof r.loggedIn !== 'undefined') return r;
+        }
+        // fallback to local keys
+        if (localStorage.getItem('userId') || localStorage.getItem('userName')) {
+            return {
+                loggedIn: true,
+                user: {
+                    id: localStorage.getItem('userId') || null,
+                    email: localStorage.getItem('email') || null,
+                    firstName: localStorage.getItem('firstName') || null,
+                    lastName: localStorage.getItem('lastName') || null,
+                    avatar_url: localStorage.getItem('avatarUrl') || null
+                }
+            };
+        }
+        // last resort call /api/me
+        try {
+            const res = await fetch(`${(window.API_BASE || '').replace(/\/$/, '')}/api/me`, {
+                method: 'GET',
+                credentials: 'include'
+            });
+            if (!res.ok) return { loggedIn: false };
+            const data = await res.json();
+            return data && data.loggedIn ? data : { loggedIn: false };
+        } catch (e) {
+            return { loggedIn: false };
         }
     } catch (err) {
-        console.error("Lỗi lấy thông tin user:", err);
+        return { loggedIn: false };
     }
+}
+
+function mirrorCompatibilityKeysToLocal(user) {
+    try {
+        if (!user) {
+            ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
+            return;
+        }
+        if (user.lastName) localStorage.setItem('userName', (user.lastName || '').trim());
+        if (user.firstName) localStorage.setItem('firstName', (user.firstName || '').trim());
+        if (user.lastName) localStorage.setItem('lastName', (user.lastName || '').trim());
+        if (user.email) localStorage.setItem('email', user.email || "");
+        if (user.id) localStorage.setItem('userId', String(user.id || ""));
+        if (user.avatar_url) localStorage.setItem('avatarUrl', user.avatar_url || "");
+        else localStorage.removeItem('avatarUrl');
+    } catch (e) { console.warn('mirrorCompatibilityKeysToLocal error', e); }
 }
 
 // ================= Hàm tạo avatar ngẫu nhiên =================
@@ -216,22 +223,23 @@ function generateRandomAvatar(name) {
     `;
 }
 
-// ================= Update hiển thị user =================
-function updateUserDisplay() {
-    const firstName = localStorage.getItem('firstName') || "";
-    const lastName = localStorage.getItem('lastName') || "";
-    const avatarUrl = localStorage.getItem('avatarUrl');
-    const fullName = `${firstName} ${lastName}`.trim() || lastName || firstName || "Người dùng";
+// ================= Update hiển thị user sử dụng canonical state =================
+function renderUserActionFromState(state) {
+    const firstName = state?.user?.firstName || "";
+    const lastName = state?.user?.lastName || "";
+    const avatarUrl = state?.user?.avatar_url;
+    const fullName = `${firstName} ${lastName}`.trim() || lastName || firstName;
 
     let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
 
+    // replace node to avoid multiple bindings
     const newUserAction = userAction.cloneNode(false);
     newUserAction.className = userAction.className;
     userAction.parentNode.replaceChild(newUserAction, userAction);
     userAction = newUserAction;
 
-    if (fullName !== "Người dùng") {
+    if (state && state.loggedIn && fullName) {
         const shortName = fullName.length > 14 ? fullName.slice(0, 14) + "..." : fullName;
         const avatarHTML = avatarUrl
             ? `<img src="${avatarUrl}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
@@ -265,7 +273,11 @@ function updateUserDisplay() {
                     method: "POST",
                     credentials: "include"
                 });
-                localStorage.clear();
+                if (window.AuthSync && typeof window.AuthSync.clear === 'function') {
+                    window.AuthSync.clear();
+                } else {
+                    ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
+                }
                 updateCartCount();
                 window.location.reload();
             } catch (err) {
@@ -285,6 +297,16 @@ function updateUserDisplay() {
     }
 }
 
+async function updateUserDisplay() {
+    try {
+        const st = await getCanonicalAuthState();
+        if (st && st.loggedIn && st.user) mirrorCompatibilityKeysToLocal(st.user);
+        renderUserActionFromState(st);
+    } catch (err) {
+        console.warn('updateUserDisplay error:', err);
+    }
+}
+
 // ================= Xử lý click icon giỏ hàng =================
 function initCartIconClick() {
     const cartLink = document.querySelector('a.cyber-action[href="resetcheckout.html"]');
@@ -293,13 +315,13 @@ function initCartIconClick() {
     cartLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const isLoggedIn = !!localStorage.getItem('userName');
+        const logged = isAuthFast();
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
         const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
             giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
 
-        if (!isLoggedIn) {
+        if (!logged) {
             if (cartCount > 0) {
                 CyberModal.open?.();
                 if (typeof showNotification === "function") {
@@ -322,8 +344,8 @@ function initOrderIconClick() {
     orderLink.addEventListener('click', (e) => {
         e.preventDefault();
 
-        const isLoggedIn = !!localStorage.getItem('userName');
-        if (!isLoggedIn) {
+        const logged = isAuthFast();
+        if (!logged) {
             CyberModal.open?.();
             if (typeof showNotification === "function") {
                 showNotification("Vui lòng đăng nhập để xem đơn hàng!", "info");
@@ -334,12 +356,84 @@ function initOrderIconClick() {
     });
 }
 
-// ================= Khi load trang =================
-document.addEventListener("DOMContentLoaded", async () => {
-    await fetchUserInfo();
-    updateUserDisplay();
+// ================= Đồng bộ header khi trạng thái đăng nhập thay đổi =================
+// legacy event
+window.addEventListener('user:login', async () => {
+    await updateUserDisplay();
     updateCartCount();
     updateOrderCount();
+});
+
+// If AuthSync exists, use its onChange (preferred)
+if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
+    window.AuthSync.onChange((state) => {
+        try {
+            if (state && state.loggedIn) mirrorCompatibilityKeysToLocal(state.user);
+            else ['userName','firstName','lastName','email','userId','avatarUrl'].forEach(k => localStorage.removeItem(k));
+            renderUserActionFromState(state || { loggedIn: false });
+            updateCartCount();
+            updateOrderCount();
+        } catch (e) { console.warn('AuthSync.onChange handler error (header):', e); }
+    });
+}
+
+// Also listen to custom event auth:changed (AuthSync sets it) and storage events
+window.addEventListener('auth:changed', (ev) => {
+    try {
+        const st = ev?.detail;
+        if (st && st.loggedIn && st.user) mirrorCompatibilityKeysToLocal(st.user);
+        renderUserActionFromState(st || { loggedIn: false });
+        updateCartCount();
+        updateOrderCount();
+    } catch (e) { /* ignore */ }
+});
+
+window.addEventListener('storage', (ev) => {
+    try {
+        if (!ev || !ev.key) return;
+        if (['auth_state','auth_ping','userName','userId'].includes(ev.key)) {
+            setTimeout(() => {
+                updateUserDisplay().catch(()=>{});
+                updateCartCount();
+                updateOrderCount();
+            }, 40);
+        }
+    } catch (e) {}
+});
+
+// ================= Khi load trang =================
+document.addEventListener("DOMContentLoaded", async () => {
+    // Ensure AuthSync is present (soft wait)
+    await waitForAuthSyncPresence(2500);
+
+    // If AuthSync exists, prefer to let it refresh (soft timeout)
+    if (window.AuthSync) {
+        try { await tryAuthSyncRefreshWithTimeout(1600); } catch (e) { /* ignore */ }
+    }
+
+    // Initial header render from canonical source
+    await updateUserDisplay();
+    updateCartCount();
+    updateOrderCount();
+
+    // gentle retry if inconsistency detected
+    (async function retryIfInconsistent(attempts = 3, delayMs = 400) {
+        for (let i = 0; i < attempts; i++) {
+            try {
+                const st = window.AuthSync && typeof window.AuthSync.getState === 'function' ? window.AuthSync.getState() : null;
+                const localHas = !!(localStorage.getItem('userName') || localStorage.getItem('firstName') || localStorage.getItem('userId'));
+                if (st && st.loggedIn && !localHas) {
+                    mirrorCompatibilityKeysToLocal(st.user);
+                    renderUserActionFromState(st);
+                    updateCartCount();
+                    updateOrderCount();
+                    return;
+                }
+                if (!window.AuthSync || (st && typeof st.loggedIn !== 'undefined' && st.loggedIn === !!localHas)) return;
+            } catch (e) { /* continue */ }
+            await new Promise(r => setTimeout(r, delayMs));
+        }
+    })();
 });
 
 // ================= Init toàn bộ header =================

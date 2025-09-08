@@ -36,7 +36,9 @@ async function syncCartToServer() {
         const data = await res.json();
         if (data.success) {
             localStorage.setItem('cart', JSON.stringify(data.cart));
-            if (typeof updateCartCount === 'function') {
+            if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
+                window.cartCountShared.setFromCart(data.cart);
+            } else if (typeof updateCartCount === 'function') {
                 updateCartCount();
             }
         }
@@ -49,7 +51,23 @@ async function syncCartToServer() {
 async function processAfterLoginNoReload() {
     try {
         // 1) Update local user info from server
-        if (typeof checkLoginStatus === 'function') {
+        if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+            const st = window.AuthSync.getState();
+            if (st && st.loggedIn && st.user) {
+                // mirror minimal compatibility keys
+                localStorage.setItem("userId", st.user.id || "");
+                localStorage.setItem("firstName", (st.user.firstName || "").trim());
+                localStorage.setItem("lastName", (st.user.lastName || "").trim());
+                localStorage.setItem("email", st.user.email || "");
+                localStorage.setItem("userName", (st.user.lastName || "").trim());
+                if (st.user.avatar_url) {
+                    localStorage.setItem("avatarUrl", st.user.avatar_url);
+                } else {
+                    localStorage.removeItem("avatarUrl");
+                }
+                localStorage.removeItem("cartLocked");
+            }
+        } else if (typeof checkLoginStatus === 'function') {
             await checkLoginStatus();
         } else if (typeof fetchUserInfo === 'function') {
             await fetchUserInfo();
@@ -76,8 +94,32 @@ async function processAfterLoginNoReload() {
 }
 
 // ==================== KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP ====================
+// Modified: prefer AuthSync as source of truth, fallback to /api/me as before
 async function checkLoginStatus() {
     try {
+        if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+            const st = window.AuthSync.getState();
+            if (st && st.loggedIn && st.user) {
+                localStorage.setItem("userId", st.user.id || "");
+                localStorage.setItem("firstName", (st.user.firstName || "").trim());
+                localStorage.setItem("lastName", (st.user.lastName || "").trim());
+                localStorage.setItem("email", st.user.email || "");
+                localStorage.setItem("userName", (st.user.lastName || "").trim());
+                if (st.user.avatar_url) {
+                    localStorage.setItem("avatarUrl", st.user.avatar_url);
+                } else {
+                    localStorage.removeItem("avatarUrl");
+                }
+                localStorage.removeItem("cartLocked");
+                if (typeof updateUserDisplay === "function") updateUserDisplay();
+                return;
+            } else {
+                ['userId','firstName','lastName','email','userName','avatarUrl'].forEach(k => localStorage.removeItem(k));
+                if (typeof updateUserDisplay === "function") updateUserDisplay();
+                return;
+            }
+        }
+
         const res = await fetch(`${window.API_BASE}/api/me`, {
             method: "GET",
             credentials: "include"
@@ -85,7 +127,6 @@ async function checkLoginStatus() {
         const data = await res.json();
 
         if (data.loggedIn && data.user) {
-            // Lưu thông tin cần thiết vào localStorage
             localStorage.setItem("userId", data.user.id || "");
             localStorage.setItem("firstName", (data.user.firstName || "").trim());
             localStorage.setItem("lastName", (data.user.lastName || "").trim());
@@ -96,20 +137,9 @@ async function checkLoginStatus() {
             } else {
                 localStorage.removeItem("avatarUrl");
             }
-
-            // 🔓 Mở khoá giỏ hàng khi đã đăng nhập
             localStorage.removeItem("cartLocked");
-
-            // Đồng bộ giỏ hàng khi đăng nhập (chú ý: function có thể được gọi ở nơi khác)
-            // syncCartToServer sẽ được gọi bởi processAfterLoginNoReload khi cần
         } else {
-            // Xóa thông tin user nếu chưa đăng nhập
-            localStorage.removeItem("userId");
-            localStorage.removeItem("firstName");
-            localStorage.removeItem("lastName");
-            localStorage.removeItem("email");
-            localStorage.removeItem("userName");
-            localStorage.removeItem("avatarUrl");
+            ['userId','firstName','lastName','email','userName','avatarUrl'].forEach(k => localStorage.removeItem(k));
         }
 
         if (typeof updateUserDisplay === "function") {
@@ -118,6 +148,39 @@ async function checkLoginStatus() {
     } catch (err) {
         console.error("Lỗi kiểm tra đăng nhập:", err);
     }
+}
+
+// ==================== ĐỒNG BỘ HÓA ĐĂNG NHẬP GIỮA CÁC SCRIPT ====================
+// Lắng nghe sự kiện login để cập nhật lại UI & trạng thái trên toàn bộ các script
+window.addEventListener('user:login', () => {
+    checkLoginStatus();
+    if (typeof updateUserDisplay === 'function') updateUserDisplay();
+    if (typeof updateCartCount === 'function') updateCartCount();
+    if (typeof updateOrderCount === 'function') updateOrderCount();
+});
+
+// If AuthSync emits change, handle it too (avoid duplicate heavy operations if not needed)
+if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
+    window.AuthSync.onChange((state) => {
+        if (state.loggedIn) {
+            // quick mirror of compatibility keys
+            const u = state.user || {};
+            localStorage.setItem("userId", u.id || "");
+            localStorage.setItem("firstName", (u.firstName || "").trim());
+            localStorage.setItem("lastName", (u.lastName || "").trim());
+            localStorage.setItem("email", u.email || "");
+            localStorage.setItem("userName", (u.lastName || "").trim());
+            if (u.avatar_url) localStorage.setItem("avatarUrl", u.avatar_url);
+            else localStorage.removeItem("avatarUrl");
+            localStorage.removeItem("cartLocked");
+        } else {
+            ['userId','firstName','lastName','email','userName','avatarUrl'].forEach(k => localStorage.removeItem(k));
+        }
+
+        if (typeof updateUserDisplay === 'function') updateUserDisplay();
+        if (typeof updateCartCount === 'function') updateCartCount();
+        if (typeof updateOrderCount === 'function') updateOrderCount();
+    });
 }
 
 // ==================== ĐĂNG KÝ ====================
@@ -187,19 +250,37 @@ if (loginForm) {
             const data = await res.json();
 
             if (data.success && data.user) {
-                // Lưu vào localStorage ngay khi login
-                localStorage.setItem("userId", data.user.id || "");
-                localStorage.setItem("firstName", (data.user.firstName || "").trim());
-                localStorage.setItem("lastName", (data.user.lastName || "").trim());
-                localStorage.setItem("email", data.user.email || "");
-                localStorage.setItem("userName", (data.user.lastName || "").trim());
-                if (data.user.avatar_url) {
-                    localStorage.setItem("avatarUrl", data.user.avatar_url);
+                // Prefer to let AuthSync read /api/me (cookie set) to mirror keys
+                if (window.AuthSync && typeof window.AuthSync.notifyLoginFromServer === 'function') {
+                    try {
+                        await window.AuthSync.notifyLoginFromServer();
+                    } catch (e) {
+                        // fallback to original behavior if refresh fails
+                        localStorage.setItem("userId", data.user.id || "");
+                        localStorage.setItem("firstName", (data.user.firstName || "").trim());
+                        localStorage.setItem("lastName", (data.user.lastName || "").trim());
+                        localStorage.setItem("email", data.user.email || "");
+                        localStorage.setItem("userName", (data.user.lastName || "").trim());
+                        if (data.user.avatar_url) {
+                            localStorage.setItem("avatarUrl", data.user.avatar_url);
+                        } else {
+                            localStorage.removeItem("avatarUrl");
+                        }
+                    }
                 } else {
-                    localStorage.removeItem("avatarUrl");
+                    // legacy: write compatibility keys immediately
+                    localStorage.setItem("userId", data.user.id || "");
+                    localStorage.setItem("firstName", (data.user.firstName || "").trim());
+                    localStorage.setItem("lastName", (data.user.lastName || "").trim());
+                    localStorage.setItem("email", data.user.email || "");
+                    localStorage.setItem("userName", (data.user.lastName || "").trim());
+                    if (data.user.avatar_url) {
+                        localStorage.setItem("avatarUrl", data.user.avatar_url);
+                    } else {
+                        localStorage.removeItem("avatarUrl");
+                    }
                 }
 
-                // 🔓 Mở khoá giỏ hàng khi login thành công
                 localStorage.removeItem("cartLocked");
 
                 // Kiểm tra và thêm sản phẩm tạm sau đăng nhập
@@ -213,30 +294,24 @@ if (loginForm) {
                 // Đồng bộ giỏ hàng sau đăng nhập
                 await syncCartToServer();
 
-                // Đóng modal nếu có
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
                 if (typeof updateUserDisplay === "function") {
                     updateUserDisplay();
                 }
 
-                // Notify other scripts in same tab to process pendingAction and refresh UI
-                try {
-                    window.dispatchEvent(new Event('user:login'));
-                } catch (err) {
-                    console.warn('Không thể dispatch user:login event', err);
-                }
+                // Gọi sự kiện đồng bộ
+                try { window.dispatchEvent(new Event('user:login')); } catch (err) { console.warn('Không thể dispatch user:login event', err); }
 
-                // --- Thay vì reload toàn trang, xử lý cập nhật header & pending action, và redirect nếu có redirect lưu trước đó ---
+                // Thay vì reload toàn trang, xử lý cập nhật header & pending action, và redirect nếu có redirect lưu trước đó
                 const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                // Xoá key để tránh redirect vòng
-                if (postLoginRedirect) localStorage.removeItem('postLoginRedirect');
-
-                // Thực hiện xử lý không reload
                 await processAfterLoginNoReload();
 
-                // Nếu có redirect về trang ban đầu thì chuyển hướng, còn không giữ nguyên trang hiện tại
                 if (postLoginRedirect && postLoginRedirect !== window.location.href) {
+                    localStorage.removeItem('postLoginRedirect');
                     window.location.href = postLoginRedirect;
+                    return;
+                } else if (postLoginRedirect) {
+                    localStorage.removeItem('postLoginRedirect');
                 }
 
             } else {
@@ -287,10 +362,8 @@ document.addEventListener("click", (e) => {
     if (btn.disabled) return;
 
     try {
-        // Lưu trang hiện tại để redirect về sau OAuth (nếu có)
-        try { localStorage.setItem('postLoginRedirect', window.location.href); } catch (err) { /* ignore */ }
-
-        window.location.href = `${window.API_BASE}/api/auth/google`;
+        // Truyền state là URL hiện tại để backend redirect đúng trang sau OAuth
+        window.location.href = `${window.API_BASE}/api/auth/google?state=${encodeURIComponent(window.location.href)}`;
     } catch (err) {
         console.error("Không thể chuyển sang Google OAuth:", err);
         showMessage("login-error", "❌ Không thể mở Google Login, vui lòng thử lại!");
@@ -307,21 +380,8 @@ document.addEventListener("click", (e) => {
             localStorage.removeItem("cartLocked");
 
             // Lấy thông tin và đồng bộ
-            // Thực hiện xử lý không reload: checkLoginStatus + sync + update header + process pending
             processAfterLoginNoReload().then(() => {
-                // Đóng modal và redirect nếu cần
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-
-                const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                if (postLoginRedirect) {
-                    localStorage.removeItem('postLoginRedirect');
-                    // Nếu redirect trỏ về 1 trang cụ thể (ví dụ product), chuyển hướng
-                    if (postLoginRedirect !== window.location.href) {
-                        window.location.href = postLoginRedirect;
-                        return;
-                    }
-                }
-                // Nếu không có redirect, chỉ cập nhật UI (đã thực hiện ở processAfterLoginNoReload)
             }).catch(err => {
                 console.warn('Sync cart failed after Google OAuth:', err);
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
@@ -363,10 +423,8 @@ document.addEventListener("click", (e) => {
     if (btn.disabled) return;
 
     try {
-        // Lưu trang hiện tại để redirect về sau OAuth (nếu có)
-        try { localStorage.setItem('postLoginRedirect', window.location.href); } catch (err) { /* ignore */ }
-
-        window.location.href = `${window.API_BASE}/api/auth/facebook`;
+        // Truyền state là URL hiện tại để backend redirect đúng trang sau OAuth
+        window.location.href = `${window.API_BASE}/api/auth/facebook?state=${encodeURIComponent(window.location.href)}`;
     } catch (err) {
         console.error("Không thể chuyển sang Facebook OAuth:", err);
         showMessage("login-error", "❌ Không thể mở Facebook Login, vui lòng thử lại!");
@@ -385,15 +443,6 @@ document.addEventListener("click", (e) => {
             // Thực hiện xử lý không reload
             processAfterLoginNoReload().then(() => {
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
-
-                const postLoginRedirect = localStorage.getItem('postLoginRedirect');
-                if (postLoginRedirect) {
-                    localStorage.removeItem('postLoginRedirect');
-                    if (postLoginRedirect !== window.location.href) {
-                        window.location.href = postLoginRedirect;
-                        return;
-                    }
-                }
             }).catch(err => {
                 console.warn('Sync cart failed after Facebook OAuth:', err);
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
