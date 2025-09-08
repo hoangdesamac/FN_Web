@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tất cả sản phẩm - 3TD SHOP</title>
+    <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Boxicons + FontAwesome -->
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="HTML/Style/common.css">
+    <link rel="stylesheet" href="HTML/Style/allproducts.css">
+    <link rel="stylesheet" href="HTML/Style/news.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        window.API_BASE = "https://fn-web.onrender.com";
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="Script/js_header.js"></script>
+
+</head>
+<body>
+<!-- Header -->
+<div id="header-container"></div>
+
+
+
+<script type="module">
+  import { getTechNews } from './js_news.js';
+  async function renderNews() {
+    const news = await getTechNews();
+    const list = document.getElementById('news-list');
+    if (!news || !news.length) {
+      list.innerHTML = '<p>Không có tin tức.</p>';
+      return;
+    }
+    // Hiển thị tiêu đề, hình ảnh, tóm tắt cho mỗi tin
+    list.innerHTML = news.map(item => `
+      <div class="card mb-4">
+        <img src="${item.image || ''}" class="card-img-top" alt="${item.title}">
+        <div class="card-body">
+          <h2 class="card-title">${item.title}</h2>
+          <p class="card-text">${item.summary || ''}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+  renderNews();
+  
+  function renderTableOfContents(sections) {
+    return `<nav class="toc"><b>Mục lục:</b><ol>${sections.map((s, i) => `<li><a href="#section${i}">${s.heading}</a></li>`).join('')}</ol></nav>`;
+  }
+  
+  function renderProduct(product) {
+    return `
+      <section class="product-section">
+        <div class="product-header">
+          <img src="${product.image}" alt="${product.name}" class="product-img" />
+          <div>
+            <h3>${product.name}</h3>
+            <div class="product-price">${product.price ? `<b>Giá:</b> ${product.price}` : ''}</div>
+          </div>
+        </div>
+        <ul class="product-specs">
+          <li><b>CPU:</b> ${product.cpu || ''}</li>
+          <li><b>RAM:</b> ${product.ram || ''}</li>
+          <li><b>Ổ cứng:</b> ${product.storage || ''}</li>
+          <li><b>Màn hình:</b> ${product.display || product.screen || ''}</li>
+          <li><b>VGA:</b> ${product.gpu || product.vga || ''}</li>
+          <li><b>OS:</b> ${product.os || ''}</li>
+        </ul>
+        <button class="btn-detail">Xem thêm</button>
+      </section>
+    `;
+  }
+  
+  function renderNews(news) {
+    return `
+      <article class="news-article">
+        <h1 class="news-title">${news.title}</h1>
+        <div class="news-meta">
+          <span>Tác giả: ${news.author}</span> |
+          <span>Ngày đăng: ${news.date}</span>
+        </div>
+        ${news.sections && news.sections.length > 1 ? renderTableOfContents(news.sections) : ''}
+        <section class="news-summary">${news.summary || ''}</section>
+        <section class="news-content">
+          ${news.sections.map((sec, i) => `
+            <section id="section${i}" class="news-section">
+              <h2>${sec.heading}</h2>
+              <div class="section-content">${sec.content || ''}</div>
+              ${sec.products && sec.products.length ? sec.products.map(renderProduct).join('') : ''}
+            </section>
+          `).join('')}
+        </section>
+        <section class="news-conclusion">${news.conclusion || ''}</section>
+      </article>
+    `;
+  }
+  
+  getTechNews().then(newsArr => {
+    if (!newsArr || !newsArr.length) return;
+    document.getElementById('news-list').innerHTML = renderNews(newsArr[0]);
+  });
+</script>
+<script defer>
+    document.addEventListener("DOMContentLoaded", function() {
+        loadSection("HTML/Layout/resetheader.html", "#header-container", function() {
+            if (typeof initHeader === 'function') initHeader();
+
+            // ✅ Load auth.js sau khi header đã vào DOM
+            const script = document.createElement('script');
+            script.src = "Script/js_resetauth.js";
+            script.defer = true;
+            script.onload = () => {
+                // 🔥 Sau khi auth.js đã load, kiểm tra flag mở modal
+                if (localStorage.getItem("showLoginAfterReset") === "true") {
+                    localStorage.removeItem("showLoginAfterReset");
+                    if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+                        CyberModal.open();
+                    }
+                }
+            };
+            document.body.appendChild(script);
+        });
+
+
+        loadSection("HTML/Layout/resetmaincontent.html", "#maincontent-container", function() {
+            initializeCartSystem(); // Gọi lại để gắn sự kiện cho nút "Mua ngay"
+            if (typeof initMainContent === 'function') initMainContent();
+        });
+
+        loadSection("HTML/Layout/resetfooter.html", "#footer-container", function() {
+            if (typeof initFooter === 'function') initFooter();
+        });
+    });
+
+    function loadSection(url, selector, callback) {
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.querySelector(selector).innerHTML = data;
+
+                // ✅ Gọi callback nếu có
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading section:', error);
+            });
+    }
+</script>
+
+</head>
+<body>
+    <div id="header-container"></div>
+    <main class="container my-4">
+        <div id="news-detail"></div>
+    </main>
+    <div id="footer-container"></div>
+
+    <script type="module">
+      import { getNewsByIndex, getNewsByTitle } from "./Script/js_news.js";
+      function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+      async function renderNewsDetail() {
+        const newsIndex = getQueryParam("news");
+        const newsTitle = getQueryParam("title");
+        const newsContainer = document.getElementById("news-detail");
+        if (!newsContainer) return;
+        try {
+          let news = null;
+          if (newsTitle) {
+            news = await getNewsByTitle(newsTitle);
+          } else if (newsIndex !== null) {
+            news = await getNewsByIndex(Number(newsIndex));
+          }
+          if (!news) {
+            newsContainer.innerHTML = '<div class="alert alert-danger">Bài báo không tồn tại hoặc đã bị xóa.</div>';
+            return;
+          }
+          let html = `<div class="news-block" style="padding-bottom:0;">
+            <h1 class="news-title">${news.title}</h1>
+            <div class="news-meta">Tác giả: ${news.author} | Ngày đăng: ${news.date}</div>
+            ${news.image ? `<img src="${news.image}" alt="${news.title}" class="img-fluid my-3">` : ''}
+          </div>`;
+          if (news.summary) html += `<div class="news-block"><p class="news-summary">${news.summary}</p></div>`;
+          if (Array.isArray(news.sections)) {
+            news.sections.forEach(section => {
+              html += `<div class="news-block">`;
+              if (section.heading) html += `<h3>${section.heading}</h3>`;
+              if (Array.isArray(section.content)) {
+                section.content.forEach(p => html += `<p>${p}</p>`);
+              } else if (typeof section.content === 'string') {
+                html += `<p>${section.content}</p>`;
+              }
+              if (Array.isArray(section.products)) {
+                section.products.forEach(product => {
+                  html += `<div class="news-product-block">
+                    <img src="${product.image || ''}" class="news-product-img" alt="${product.name || ''}">
+                    <div class="news-product-info">
+                      <div class="news-product-title">${product.name || ''}</div>
+                      ${product.description ? `<div class="news-product-desc">${product.description}</div>` : ''}
+                      ${product.salePrice ? `<span class="news-product-price">${product.salePrice.toLocaleString()}₫</span>` : ''}
+                      ${product.originalPrice && !product.salePrice ? `<span class="news-product-price">${product.originalPrice.toLocaleString()}₫</span>` : ''}
+                      ${!product.salePrice && !product.originalPrice ? `<span class="news-product-contact">Liên hệ</span>` : ''}
+                      <ul class="news-product-specs">
+                        ${product.cpu ? `<li><b>CPU:</b> ${product.cpu}</li>` : ''}
+                        ${product.gpu ? `<li><b>VGA:</b> ${product.gpu}</li>` : ''}
+                        ${product.ram ? `<li><b>RAM:</b> ${product.ram}</li>` : ''}
+                        ${product.storage ? `<li><b>Ổ cứng:</b> ${product.storage}</li>` : ''}
+                        ${product.display ? `<li><b>Màn hình:</b> ${product.display}</li>` : ''}
+                        ${product.category ? `<li><b>Danh mục:</b> ${Array.isArray(product.category) ? product.category.join(', ') : product.category}</li>` : ''}
+                      </ul>
+                      <button class="news-product-btn" data-id="${product.id || ''}">Xem thêm</button>
+                    </div>
+                  </div>`;
+                });
+              }
+              html += `</div>`;
+            });
+          }
+          if (news.related && Array.isArray(news.related)) {
+            html += '<div class="news-block news-related mt-4"><h4>Bài viết liên quan</h4><ul>';
+            news.related.forEach(rel => {
+              html += `<li>${rel}</li>`;
+            });
+            html += '</ul></div>';
+          }
+          if (news.authorBio) {
+            html += `<div class="news-block news-author-bio mt-4"><strong>Về tác giả:</strong> <p>${news.authorBio}</p></div>`;
+          }
+          newsContainer.innerHTML = html;
+        } catch (err) {
+          newsContainer.innerHTML = `<div class="alert alert-danger">Lỗi tải dữ liệu: ${err.message}</div>`;
+        }
+      }
+      renderNewsDetail();
+      // Bắt sự kiện click cho nút Xem thêm sản phẩm
+      document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.news-product-btn[data-id]');
+        if (btn) {
+          const id = btn.getAttribute('data-id');
+          if (id) {
+            window.location.href = `resetproduct.html?id=${encodeURIComponent(id)}`;
+          }
+        }
+      });
+    </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        loadSection("HTML/Layout/resetheader.html", "#header-container", function() {
+            if (typeof initHeader === 'function') initHeader();
+            const script = document.createElement('script');
+            script.src = "Script/js_resetauth.js";
+            script.defer = true;
+            script.onload = () => {
+                if (localStorage.getItem("showLoginAfterReset") === "true") {
+                    localStorage.removeItem("showLoginAfterReset");
+                    if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+                        CyberModal.open();
+                    }
+                }
+            };
+            document.body.appendChild(script);
+        });
+        loadSection("HTML/Layout/resetmaincontent.html", "#maincontent-container", function() {
+            if (typeof initializeCartSystem === 'function') initializeCartSystem();
+            if (typeof initMainContent === 'function') initMainContent();
+        });
+        loadSection("HTML/Layout/resetfooter.html", "#footer-container", function() {
+            if (typeof initFooter === 'function') initFooter();
+        });
+    });
+    function loadSection(url, selector, callback) {
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.querySelector(selector).innerHTML = data;
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading section:', error);
+            });
+    }
+    </script>
+</body>
+</html>

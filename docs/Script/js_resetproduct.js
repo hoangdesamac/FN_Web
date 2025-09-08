@@ -1753,8 +1753,9 @@ $(document).ready(function () {
 
         console.log('[DEBUG] Render product:', product);
 
-        // 🔹 Chuẩn hoá category cho laptop
-        if (typeof type !== 'undefined' && type === 'laptop' && Array.isArray(product.category)) {
+
+        // 🔹 Luôn chuẩn hoá category về string để tránh lỗi khi là mảng
+        if (Array.isArray(product.category)) {
             product.category = product.category.join(' ');
         }
 
@@ -1773,7 +1774,7 @@ $(document).ready(function () {
         window.currentProduct = product;
 
         // 🔹 Set thông tin cơ bản
-        $('#productCategory').text(product.category || '');
+    $('#productCategory').text(product.category || '');
         $('#productName, #productTitle').text(product.name || '');
 
         // 🔹 Rating
@@ -1845,8 +1846,9 @@ $(document).ready(function () {
         // 🔹 Bảng thông số kỹ thuật
         let specsHtml = '<tr><th>Thành phần</th><th>Chi tiết</th></tr>';
 
+        const categoryStr = typeof product.category === 'string' ? product.category.toLowerCase() : '';
         if (
-            ((product.category?.toLowerCase()?.includes('chuột') || product.name?.toLowerCase()?.includes('chuột'))
+            (categoryStr.includes('chuột') || product.name?.toLowerCase()?.includes('chuột')
                 || window.location.search.includes('type=mouse'))
         ) {
             // 🖱 Chuột
@@ -1877,7 +1879,7 @@ $(document).ready(function () {
 
         } else if (
             window.location.search.includes('type=display') ||
-            product.category?.toLowerCase()?.includes('màn hình') ||
+            categoryStr.includes('màn hình') ||
             product.name?.toLowerCase()?.includes('màn hình')
         ) {
             // 🖥 Màn hình
@@ -1899,6 +1901,7 @@ $(document).ready(function () {
                 { key: 'GPU', value: product.gpu },
                 { key: 'RAM', value: product.ram },
                 { key: 'Ổ cứng', value: product.storage },
+                { key: 'Màn hình', value: product.display || product.screen },
                 { key: 'Mainboard', value: product.mainboard },
                 { key: 'PSU', value: product.psu },
                 { key: 'Case', value: product.case },
@@ -1936,30 +1939,62 @@ $(document).ready(function () {
 
     // Nếu có id (từ index) → tìm trong window.products hoặc fetch all types
     if (productId) {
-        // Kiểm tra trong window.products trước (dữ liệu từ index)
-        const foundInWindow = window.products.find(p => p.id === productId);
-        if (foundInWindow) {
-            renderProduct(foundInWindow);
-        } else {
-            // Nếu không tìm thấy, fetch tất cả types để tìm theo id
+        (async () => {
+            // 1. Kiểm tra trong window.products trước (dữ liệu từ index)
+            const foundInWindow = window.products.find(p => p.id === productId);
+            if (foundInWindow) {
+                renderProduct(foundInWindow);
+                return;
+            }
+            // 2. Thử tìm trong các file loại sản phẩm
             const allTypes = ['pc', 'laptop', 'mouse', 'keyboard', 'display'];
             let allProducts = [];
-            let promises = allTypes.map(t => new Promise(resolve => {
-                fetchProductsByType(t, list => {
-                    allProducts = allProducts.concat(list);
-                    resolve();
+            for (const t of allTypes) {
+                await new Promise(resolve => {
+                    fetchProductsByType(t, list => {
+                        allProducts = allProducts.concat(list);
+                        resolve();
+                    });
                 });
-            }));
-            Promise.all(promises).then(() => {
-                console.log('[DEBUG] Fetched all types lists:', allProducts);
-                const found = allProducts.find(p => p.id === productId);
-                if (found) renderProduct(found);
-                else showNotFound(`Không tìm thấy sản phẩm với ID: ${productId}`);
-            }).catch(err => {
-                console.error('[DEBUG] Lỗi fetch all types:', err);
+            }
+            const found = allProducts.find(p => p.id === productId);
+            if (found) {
+                renderProduct(found);
+                return;
+            }
+            // 3. Nếu vẫn không thấy, thử tìm trong news.json (tìm trong từng bài và từng section)
+            try {
+                const resp = await fetch('./pc-part-dataset/processed/news.json');
+                if (!resp.ok) throw new Error('Fetch news.json failed: ' + resp.status);
+                const newsList = await resp.json();
+                let foundProduct = null;
+                for (const news of newsList) {
+                    // Kiểm tra trực tiếp trong news.products (nếu có)
+                    if (Array.isArray(news.products)) {
+                        foundProduct = news.products.find(p => p.id === productId);
+                        if (foundProduct) break;
+                    }
+                    // Kiểm tra trong từng section.products (nếu có)
+                    if (Array.isArray(news.sections)) {
+                        for (const section of news.sections) {
+                            if (Array.isArray(section.products)) {
+                                foundProduct = section.products.find(p => p.id === productId);
+                                if (foundProduct) break;
+                            }
+                        }
+                        if (foundProduct) break;
+                    }
+                }
+                if (foundProduct) {
+                    renderProduct(foundProduct);
+                } else {
+                    showNotFound(`Không tìm thấy sản phẩm với ID: ${productId}`);
+                }
+            } catch (err) {
+                console.error('[DEBUG] Lỗi fetch news.json:', err);
                 showNotFound('Lỗi tải dữ liệu sản phẩm');
-            });
-        }
+            }
+        })();
         // Nếu có type và name (từ allproducts) → giữ logic cũ
     } else if (type && normName) {
         fetchProductsByType(type, list => {
