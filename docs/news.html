@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="Image_Showroom/Slogan_w_logo.png">
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
     <!-- Boxicons + FontAwesome -->
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -14,175 +14,131 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Custom CSS -->
+
+    <!-- Custom CSS (giữ nguyên dữ liệu cũ) -->
     <link rel="stylesheet" href="HTML/Style/common.css">
     <link rel="stylesheet" href="HTML/Style/allproducts.css">
     <link rel="stylesheet" href="HTML/Style/news.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <script>
         window.API_BASE = "https://fn-web.onrender.com";
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="Script/js_header.js"></script>
 
-</head>
+    <!-- ==== Ensure auth + counters are available on this page ==== -->
+    <script src="Script/js_authsync.js" defer></script>
+    <script src="Script/js_cartcount.js" defer></script>
+    <script src="Script/js_ordercount.js" defer></script>
 
-<!-- Header -->
+    <!-- Central handler: will inject js_resetauth.js after header is present and call AuthSync.refresh() -->
+    <script src="Script/js_resethandler.js" defer></script>
 
-
-
-
-<script type="module">
-    import { getTechNews } from './js_news.js';
-    async function renderNews() {
-        const news = await getTechNews();
-        const list = document.getElementById('news-list');
-        if (!news || !news.length) {
-            list.innerHTML = '<p>Không có tin tức.</p>';
-            return;
-        }
-        // Hiển thị tiêu đề, hình ảnh, tóm tắt cho mỗi tin
-        list.innerHTML = news.map(item => `
-      <div class="card mb-4">
-        <img src="${item.image || ''}" class="card-img-top" alt="${item.title}">
-        <div class="card-body">
-          <h2 class="card-title">${item.title}</h2>
-          <p class="card-text">${item.summary || ''}</p>
-        </div>
-      </div>
-    `).join('');
-    }
-    renderNews();
-
-    function renderTableOfContents(sections) {
-        return `<nav class="toc"><b>Mục lục:</b><ol>${sections.map((s, i) => `<li><a href="#section${i}">${s.heading}</a></li>`).join('')}</ol></nav>`;
-    }
-
-    function renderProduct(product) {
-        return `
-      <section class="product-section">
-        <div class="product-header">
-          <img src="${product.image}" alt="${product.name}" class="product-img" />
-          <div>
-            <h3>${product.name}</h3>
-            <div class="product-price">${product.price ? `<b>Giá:</b> ${product.price}` : ''}</div>
-          </div>
-        </div>
-        <ul class="product-specs">
-          <li><b>CPU:</b> ${product.cpu || ''}</li>
-          <li><b>RAM:</b> ${product.ram || ''}</li>
-          <li><b>Ổ cứng:</b> ${product.storage || ''}</li>
-          <li><b>Màn hình:</b> ${product.display || product.screen || ''}</li>
-          <li><b>VGA:</b> ${product.gpu || product.vga || ''}</li>
-          <li><b>OS:</b> ${product.os || ''}</li>
-        </ul>
-        <button class="btn-detail">Xem thêm</button>
-      </section>
-    `;
-    }
-
-    function renderNews(news) {
-        return `
-      <article class="news-article">
-        <h1 class="news-title">${news.title}</h1>
-        <div class="news-meta">
-          <span>Tác giả: ${news.author}</span> |
-          <span>Ngày đăng: ${news.date}</span>
-        </div>
-        ${news.sections && news.sections.length > 1 ? renderTableOfContents(news.sections) : ''}
-        <section class="news-summary">${news.summary || ''}</section>
-        <section class="news-content">
-          ${news.sections.map((sec, i) => `
-            <section id="section${i}" class="news-section">
-              <h2>${sec.heading}</h2>
-              <div class="section-content">${sec.content || ''}</div>
-              ${sec.products && sec.products.length ? sec.products.map(renderProduct).join('') : ''}
-            </section>
-          `).join('')}
-        </section>
-        <section class="news-conclusion">${news.conclusion || ''}</section>
-      </article>
-    `;
-    }
-
-    getTechNews().then(newsArr => {
-        if (!newsArr || !newsArr.length) return;
-        document.getElementById('news-list').innerHTML = renderNews(newsArr[0]);
-    });
-</script>
-<script defer>
-    document.addEventListener("DOMContentLoaded", function() {
-        loadSection("HTML/Layout/resetheader.html", "#header-container", function() {
-            if (typeof initHeader === 'function') initHeader();
-
-            // ✅ Load auth.js sau khi header đã vào DOM
-            const script = document.createElement('script');
-            script.src = "Script/js_resetauth.js";
-            script.defer = true;
-            script.onload = () => {
-                // 🔥 Sau khi auth.js đã load, kiểm tra flag mở modal
-                if (localStorage.getItem("showLoginAfterReset") === "true") {
-                    localStorage.removeItem("showLoginAfterReset");
-                    if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                        CyberModal.open();
-                    }
-                }
-            };
-            document.body.appendChild(script);
-        });
-
-
-        loadSection("HTML/Layout/resetmaincontent.html", "#maincontent-container", function() {
-            initializeCartSystem(); // Gọi lại để gắn sự kiện cho nút "Mua ngay"
-            if (typeof initMainContent === 'function') initMainContent();
-        });
-
-        loadSection("HTML/Layout/resetfooter.html", "#footer-container", function() {
-            if (typeof initFooter === 'function') initFooter();
-        });
-    });
-
-    function loadSection(url, selector, callback) {
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.text();
-            })
-            .then(data => {
-                document.querySelector(selector).innerHTML = data;
-
-                // ✅ Gọi callback nếu có
-                if (callback && typeof callback === 'function') {
-                    callback();
-                }
-            })
-            .catch(error => {
-                console.error('Error loading section:', error);
-            });
-    }
-</script>
-
+    <!-- Page scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    <script src="Script/js_header.js" defer></script>
 </head>
 <body>
+<!-- Header -->
 <div id="header-container"></div>
+
 <main class="container my-4">
     <div id="news-detail"></div>
+    <div id="news-list" class="mt-4"></div>
 </main>
+
+<!-- Footer -->
 <div id="footer-container"></div>
 
+<!-- ========== News list / article render (module) ========== -->
 <script type="module">
-    import { getNewsByIndex, getNewsByTitle } from "./Script/js_news.js";
-    function getQueryParam(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
+    // Preserve your original logic while standardizing module path to Script/
+    import { getTechNews, getNewsByIndex, getNewsByTitle } from './Script/js_news.js';
+
+    // Render list of news (or first article summary)
+    async function renderNewsListOrFirst() {
+        try {
+            const newsArr = await getTechNews();
+            const list = document.getElementById('news-list');
+            if (!newsArr || !newsArr.length) {
+                if (list) list.innerHTML = '<p>Không có tin tức.</p>';
+                return;
+            }
+
+            // If query param requests a detail view, don't overwrite detail area here
+            const params = new URLSearchParams(window.location.search);
+            const qIndex = params.get('news');
+            const qTitle = params.get('title');
+            if (!qIndex && !qTitle) {
+                // render first article summary into #news-detail (keeps original data)
+                const first = newsArr[0];
+                if (first) {
+                    document.getElementById('news-detail').innerHTML = `
+                        <div class="news-block" style="padding-bottom:0;">
+                            <h1 class="news-title">${first.title}</h1>
+                            <div class="news-meta">Tác giả: ${first.author || ''} | Ngày đăng: ${first.date || ''}</div>
+                            ${first.image ? `<img src="${first.image}" alt="${first.title}" class="img-fluid my-3">` : ''}
+                            ${first.summary ? `<div class="news-block"><p class="news-summary">${first.summary}</p></div>` : ''}
+                        </div>
+                    `;
+                }
+
+                // render list of headlines
+                if (list) {
+                    list.innerHTML = newsArr.map((n, i) => `
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-3">
+                                    ${n.image ? `<img src="${n.image}" class="img-fluid rounded-start" alt="${n.title}">` : ''}
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><a href="news.html?news=${i}">${n.title}</a></h5>
+                                        <p class="card-text">${n.summary || ''}</p>
+                                        <p class="card-text"><small class="text-muted">${n.date || ''} • ${n.author || ''}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        } catch (err) {
+            console.error('renderNewsListOrFirst error:', err);
+        }
     }
+
+    // Helper to render a product block (keeps your original markup)
+    function renderProduct(product) {
+        return `
+          <section class="product-section">
+            <div class="product-header d-flex gap-3">
+              ${product.image ? `<img src="${product.image}" alt="${product.name}" class="product-img" style="width:120px;height:auto;" />` : ''}
+              <div>
+                <h3>${product.name}</h3>
+                <div class="product-price">${product.price ? `<b>Giá:</b> ${product.price}` : ''}</div>
+              </div>
+            </div>
+            <ul class="product-specs">
+              <li><b>CPU:</b> ${product.cpu || ''}</li>
+              <li><b>RAM:</b> ${product.ram || ''}</li>
+              <li><b>Ổ cứng:</b> ${product.storage || ''}</li>
+              <li><b>Màn hình:</b> ${product.display || product.screen || ''}</li>
+              <li><b>VGA:</b> ${product.gpu || product.vga || ''}</li>
+              <li><b>OS:</b> ${product.os || ''}</li>
+            </ul>
+            <button class="btn-detail btn btn-outline-secondary btn-sm">Xem thêm</button>
+          </section>
+        `;
+    }
+
+    // Render full news detail if query param present (keeps your original detail rendering)
     async function renderNewsDetail() {
-        const newsIndex = getQueryParam("news");
-        const newsTitle = getQueryParam("title");
+        const params = new URLSearchParams(window.location.search);
+        const newsIndex = params.get("news");
+        const newsTitle = params.get("title");
         const newsContainer = document.getElementById("news-detail");
         if (!newsContainer) return;
+
         try {
             let news = null;
             if (newsTitle) {
@@ -191,14 +147,15 @@
                 news = await getNewsByIndex(Number(newsIndex));
             }
             if (!news) {
-                newsContainer.innerHTML = '<div class="alert alert-danger">Bài báo không tồn tại hoặc đã bị xóa.</div>';
+                // If no specific news requested, leave summary (renderNewsListOrFirst handled)
                 return;
             }
+
             let html = `<div class="news-block" style="padding-bottom:0;">
-            <h1 class="news-title">${news.title}</h1>
-            <div class="news-meta">Tác giả: ${news.author} | Ngày đăng: ${news.date}</div>
-            ${news.image ? `<img src="${news.image}" alt="${news.title}" class="img-fluid my-3">` : ''}
-          </div>`;
+                <h1 class="news-title">${news.title}</h1>
+                <div class="news-meta">Tác giả: ${news.author} | Ngày đăng: ${news.date}</div>
+                ${news.image ? `<img src="${news.image}" alt="${news.title}" class="img-fluid my-3">` : ''}
+            </div>`;
             if (news.summary) html += `<div class="news-block"><p class="news-summary">${news.summary}</p></div>`;
             if (Array.isArray(news.sections)) {
                 news.sections.forEach(section => {
@@ -211,25 +168,25 @@
                     }
                     if (Array.isArray(section.products)) {
                         section.products.forEach(product => {
-                            html += `<div class="news-product-block">
-                    <img src="${product.image || ''}" class="news-product-img" alt="${product.name || ''}">
-                    <div class="news-product-info">
-                      <div class="news-product-title">${product.name || ''}</div>
-                      ${product.description ? `<div class="news-product-desc">${product.description}</div>` : ''}
-                      ${product.salePrice ? `<span class="news-product-price">${product.salePrice.toLocaleString()}₫</span>` : ''}
-                      ${product.originalPrice && !product.salePrice ? `<span class="news-product-price">${product.originalPrice.toLocaleString()}₫</span>` : ''}
-                      ${!product.salePrice && !product.originalPrice ? `<span class="news-product-contact">Liên hệ</span>` : ''}
-                      <ul class="news-product-specs">
-                        ${product.cpu ? `<li><b>CPU:</b> ${product.cpu}</li>` : ''}
-                        ${product.gpu ? `<li><b>VGA:</b> ${product.gpu}</li>` : ''}
-                        ${product.ram ? `<li><b>RAM:</b> ${product.ram}</li>` : ''}
-                        ${product.storage ? `<li><b>Ổ cứng:</b> ${product.storage}</li>` : ''}
-                        ${product.display ? `<li><b>Màn hình:</b> ${product.display}</li>` : ''}
-                        ${product.category ? `<li><b>Danh mục:</b> ${Array.isArray(product.category) ? product.category.join(', ') : product.category}</li>` : ''}
-                      </ul>
-                      <button class="news-product-btn" data-id="${product.id || ''}">Xem thêm</button>
-                    </div>
-                  </div>`;
+                            html += `<div class="news-product-block d-flex gap-3 mb-3">
+                                ${product.image ? `<img src="${product.image}" class="news-product-img" alt="${product.name || ''}" style="width:120px;height:auto;">` : ''}
+                                <div class="news-product-info">
+                                  <div class="news-product-title">${product.name || ''}</div>
+                                  ${product.description ? `<div class="news-product-desc">${product.description}</div>` : ''}
+                                  ${product.salePrice ? `<div class="news-product-price text-danger fw-bold">${product.salePrice.toLocaleString()}₫</div>` : ''}
+                                  ${product.originalPrice && !product.salePrice ? `<div class="news-product-price">${product.originalPrice.toLocaleString()}₫</div>` : ''}
+                                  ${!product.salePrice && !product.originalPrice ? `<div class="news-product-contact">Liên hệ</div>` : ''}
+                                  <ul class="news-product-specs small mt-2 mb-2">
+                                    ${product.cpu ? `<li><b>CPU:</b> ${product.cpu}</li>` : ''}
+                                    ${product.gpu ? `<li><b>VGA:</b> ${product.gpu}</li>` : ''}
+                                    ${product.ram ? `<li><b>RAM:</b> ${product.ram}</li>` : ''}
+                                    ${product.storage ? `<li><b>Ổ cứng:</b> ${product.storage}</li>` : ''}
+                                    ${product.display ? `<li><b>Màn hình:</b> ${product.display}</li>` : ''}
+                                    ${product.category ? `<li><b>Danh mục:</b> ${Array.isArray(product.category) ? product.category.join(', ') : product.category}</li>` : ''}
+                                  </ul>
+                                  <button class="news-product-btn btn btn-outline-primary btn-sm" data-id="${product.id || ''}">Xem thêm</button>
+                                </div>
+                              </div>`;
                         });
                     }
                     html += `</div>`;
@@ -250,8 +207,14 @@
             newsContainer.innerHTML = `<div class="alert alert-danger">Lỗi tải dữ liệu: ${err.message}</div>`;
         }
     }
-    renderNewsDetail();
-    // Bắt sự kiện click cho nút Xem thêm sản phẩm
+
+    // Initialize both list and detail (detail will render only if query present)
+    (async function initNewsPage(){
+        await renderNewsListOrFirst();
+        await renderNewsDetail();
+    })();
+
+    // Click handler to go to product page (keeps your original behavior)
     document.addEventListener('click', function(e) {
         const btn = e.target.closest('.news-product-btn[data-id]');
         if (btn) {
@@ -263,31 +226,9 @@
     });
 </script>
 
+<!-- ========== Fragment loader and header/footer init ========== -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        loadSection("HTML/Layout/resetheader.html", "#header-container", function() {
-            if (typeof initHeader === 'function') initHeader();
-            const script = document.createElement('script');
-            script.src = "Script/js_resetauth.js";
-            script.defer = true;
-            script.onload = () => {
-                if (localStorage.getItem("showLoginAfterReset") === "true") {
-                    localStorage.removeItem("showLoginAfterReset");
-                    if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                        CyberModal.open();
-                    }
-                }
-            };
-            document.body.appendChild(script);
-        });
-        loadSection("HTML/Layout/resetmaincontent.html", "#maincontent-container", function() {
-            if (typeof initializeCartSystem === 'function') initializeCartSystem();
-            if (typeof initMainContent === 'function') initMainContent();
-        });
-        loadSection("HTML/Layout/resetfooter.html", "#footer-container", function() {
-            if (typeof initFooter === 'function') initFooter();
-        });
-    });
+    // Reuse your loadSection helper (keeps original behavior/data)
     function loadSection(url, selector, callback) {
         fetch(url)
             .then(response => {
@@ -297,15 +238,33 @@
                 return response.text();
             })
             .then(data => {
-                document.querySelector(selector).innerHTML = data;
-                if (callback && typeof callback === 'function') {
-                    callback();
-                }
+                const target = document.querySelector(selector);
+                if (target) target.innerHTML = data;
+                if (callback && typeof callback === 'function') callback();
             })
             .catch(error => {
                 console.error('Error loading section:', error);
             });
     }
+
+    // On DOM ready, load header/main/footer. js_resethandler.js (in head) will inject js_resetauth.js after header is present.
+    document.addEventListener("DOMContentLoaded", function() {
+        loadSection("HTML/Layout/resetheader.html", "#header-container", function() {
+            if (typeof initHeader === 'function') initHeader();
+            // js_resethandler.js will handle loading js_resetauth.js and calling AuthSync.refresh(),
+            // then updateUserDisplay/updateCartCount/updateOrderCount — so we remove explicit injection here to avoid duplication.
+        });
+
+        loadSection("HTML/Layout/resetmaincontent.html", "#maincontent-container", function() {
+            if (typeof initializeCartSystem === 'function') initializeCartSystem();
+            if (typeof initMainContent === 'function') initMainContent();
+        });
+
+        loadSection("HTML/Layout/resetfooter.html", "#footer-container", function() {
+            if (typeof initFooter === 'function') initFooter();
+        });
+    });
 </script>
+
 </body>
 </html>
