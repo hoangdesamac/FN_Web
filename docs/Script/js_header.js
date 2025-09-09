@@ -450,8 +450,11 @@ function initHeader() {
 
     try {
         if (typeof updateUserDisplay === 'function') {
-            // do not await here to avoid blocking init (but we can await safely if desired)
-            updateUserDisplay().catch(() => {});
+            // don't block init; updateUserDisplay may be async
+            const maybe = updateUserDisplay();
+            if (maybe && typeof maybe.then === 'function') {
+                maybe.catch(()=>{});
+            }
         }
     } catch (e) { /* ignore */ }
 }
