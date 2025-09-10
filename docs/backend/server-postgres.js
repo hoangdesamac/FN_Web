@@ -888,24 +888,54 @@ app.delete('/api/addresses/:id', async (req, res) => {
     }
 });
 
-// ==================== GIFT HELPERS (place these near the top of file, after other requires) ====================
-const fs = require('fs');       // <-- ensure required once near top of file
-const path = require('path');   // <-- ensure required once near top of file
+// ==================== GIFT HELPERS ====================
+const fs = require('fs');
+const path = require('path');
 
 let GIFT_CACHE = null;
+
 async function loadGiftCatalog() {
     if (GIFT_CACHE) return GIFT_CACHE;
+
+    // 1) Ưu tiên: cho phép chỉ định đường dẫn qua ENV (tuyệt đối hoặc tương đối)
+    const envPath = process.env.GIFT_CATALOG_PATH ? path.resolve(process.cwd(), process.env.GIFT_CATALOG_PATH) : null;
+
+    // 2) Các path ứng viên phổ biến theo cấu trúc repo của bạn
+    const candidates = [
+        envPath, // nếu có
+        // Trường hợp file nằm ở cùng cấp backend/pc-part-dataset/...
+        path.resolve(__dirname, 'pc-part-dataset', 'processed', 'givaAway.json'),
+        // Trường hợp file nằm ở docs/pc-part-dataset/... (ra ngoài 1 cấp)
+        path.resolve(__dirname, '..', 'pc-part-dataset', 'processed', 'givaAway.json'),
+        // Trường hợp chạy từ project root (process.cwd() = /opt/render/project/src)
+        path.resolve(process.cwd(), 'docs', 'pc-part-dataset', 'processed', 'givaAway.json'),
+        path.resolve(process.cwd(), 'pc-part-dataset', 'processed', 'givaAway.json')
+    ].filter(Boolean);
+
+    let chosen = null;
+    for (const p of candidates) {
+        try {
+            if (fs.existsSync(p)) {
+                chosen = p;
+                break;
+            }
+        } catch (_) {}
+    }
+
     try {
-        // pc-part-dataset/processed/givaAway.json
-        const p = path.join(__dirname, 'pc-part-dataset', 'processed', 'givaAway.json');
-        const json = fs.readFileSync(p, 'utf-8');
+        if (!chosen) {
+            throw new Error(`Không tìm thấy givaAway.json trong các đường dẫn ứng viên:\n${candidates.join('\n')}`);
+        }
+        const json = fs.readFileSync(chosen, 'utf-8');
         GIFT_CACHE = JSON.parse(json);
+        console.log(`✅ Đã tải gift catalog từ: ${chosen} (items=${Array.isArray(GIFT_CACHE) ? GIFT_CACHE.length : 0})`);
     } catch (e) {
         console.error('❌ Không đọc được givaAway.json, fallback rỗng:', e.message);
         GIFT_CACHE = [];
     }
     return GIFT_CACHE;
 }
+
 function pickRandomUnique(arr, n) {
     const res = [];
     const used = new Set();
@@ -918,17 +948,15 @@ function pickRandomUnique(arr, n) {
     }
     return res;
 }
+
 async function computeGiftsForTotal(total) {
     const catalog = await loadGiftCatalog();
     if (!Array.isArray(catalog) || catalog.length === 0) return [];
 
-    // Quy tắc tặng quà theo tổng tiền (có thể sửa linh hoạt):
-    // >= 8.000.000đ: 3 quà; >= 5.000.000đ: 2 quà; >= 3.000.000đ: 1 quà; < 3.000.000đ: 0 quà
     let giftCount = 0;
     if (total >= 8000000) giftCount = 3;
     else if (total >= 5000000) giftCount = 2;
     else if (total >= 3000000) giftCount = 1;
-    else giftCount = 0;
 
     if (giftCount === 0) return [];
 
