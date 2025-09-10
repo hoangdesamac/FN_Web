@@ -24,92 +24,10 @@
     <script src="Script/js_authsync.js" defer></script>
     <script src="Script/js_cartcount.js" defer></script>
     <script src="Script/js_ordercount.js" defer></script>
-
-    <!-- Guard: prevent immediate automatic modal open during initial page load for guest-with-cart.
-         We still allow the modal to open if a safe per-tab flag (session) is present or after the grace period. -->
-    <script>
-        (function () {
-            // small grace window (ms) where automatic opens will be blocked unless the per-tab flag exists
-            window.__preventAutoOpenUntil = Date.now() + 1200;
-
-            function safeConsumeFlagFallback() {
-                try {
-                    if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('showLoginAfterReset') === 'true') {
-                        try { sessionStorage.removeItem('showLoginAfterReset'); } catch (_) {}
-                        return true;
-                    }
-                    const v = localStorage.getItem('showLoginAfterReset');
-                    if (!v) return false;
-                    const ts = Number(localStorage.getItem('showLoginAfterReset_ts') || '0');
-                    if (ts && (Date.now() - ts) < 10 * 1000) {
-                        try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
-                        return true;
-                    }
-                    try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
-                    return false;
-                } catch (e) {
-                    try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
-                    try { sessionStorage.removeItem('showLoginAfterReset'); } catch (_) {}
-                    return false;
-                }
-            }
-
-            function wrapCyberModalOpenWhenReady() {
-                try {
-                    if (!window.CyberModal || typeof window.CyberModal.open !== 'function') return;
-                    if (window.CyberModal._openWrapped) return;
-
-                    const origOpen = window.CyberModal.open.bind(window.CyberModal);
-                    window.CyberModal.open = function (...args) {
-                        try {
-                            // If a canonical helper exists, prefer it.
-                            let consumed = false;
-                            if (typeof window._consumeShowLoginFlag === 'function') {
-                                try { consumed = !!window._consumeShowLoginFlag(); } catch (e) { consumed = false; }
-                            } else {
-                                consumed = safeConsumeFlagFallback();
-                            }
-
-                            // If flag consumed -> allow open (this tab requested it).
-                            if (consumed) return origOpen(...args);
-
-                            // Otherwise block auto-open during the initial grace period to avoid annoying popups
-                            if (Date.now() < (window.__preventAutoOpenUntil || 0)) {
-                                console.info('Blocked automatic CyberModal.open during initial grace period');
-                                return;
-                            }
-
-                            // Outside the grace period, allow open.
-                            return origOpen(...args);
-                        } catch (e) {
-                            // On any error, fall back to original behavior
-                            try { return origOpen(...args); } catch (_) { /* swallow */ }
-                        }
-                    };
-                    window.CyberModal._openWrapped = true;
-                } catch (e) {
-                    // ignore
-                }
-            }
-
-            // Poll for CyberModal to be defined then wrap
-            const poll = setInterval(() => {
-                wrapCyberModalOpenWhenReady();
-                if (window.CyberModal && window.CyberModal._openWrapped) clearInterval(poll);
-            }, 80);
-
-            // Try to wrap on DOMContentLoaded too
-            document.addEventListener('DOMContentLoaded', wrapCyberModalOpenWhenReady);
-        })();
-    </script>
 </head>
 
 <body class="cyber-body">
 <div id="header-container"></div>
-
-<!-- Banner container (for non-blocking CTA) -->
-<div id="login-cta-banner-wrapper" style="position:relative; z-index:40;"></div>
-
 <div class="container-fluid checkout-container cyber-main">
     <!-- Breadcrumb Steps -->
     <div class="breadcrumb-steps d-flex justify-content-between align-items-center mb-4 p-3 rounded">
@@ -314,10 +232,115 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="confirmation-modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content cyber-modal">
+                <h2 class="text-center mb-4">Xác nhận thanh toán</h2>
+                <div id="modal-summary"></div>
+                <div class="modal-buttons d-flex gap-3 mt-4">
+                    <button class="modal-btn btn btn-danger flex-fill" onclick="closeModal()">Hủy</button>
+                    <button class="modal-btn btn btn-success flex-fill" onclick="processPayment()">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- Modals and other elements unchanged ... -->
-    <!-- (omitted here for brevity; keep the same modal markup as original) -->
+    <!-- Modal: Loading -->
+    <div class="modal fade" id="loading-overlay">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content cyber-modal loading-content">
+                <div id="loading-lottie"></div>
+                <p>Đang xử lý thanh toán...</p>
+            </div>
+        </div>
+    </div>
 
+    <!-- Modal: Payment Success -->
+    <div class="modal fade" id="success-modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content cyber-modal text-center">
+                <div id="success-lottie" style="width: 150px; height: 150px; margin: 0 auto;"></div>
+                <h2 class="mt-4">Thanh toán thành công!</h2>
+                <p>Cảm ơn bạn đã mua hàng tại 3TD Shop.</p>
+                <button class="modal-btn btn btn-success mt-3" onclick="goToLookup()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Terms and Conditions -->
+    <div class="modal fade" id="terms-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content cyber-modal text-light"
+                 style="background: rgba(10,10,30,0.95); backdrop-filter: blur(6px); border: 1px solid var(--cyber-primary);">
+
+                <h2 class="text-center mb-3">Chính sách & Điều khoản 3TDShop</h2>
+
+                <div style="max-height: 400px; overflow-y: auto;" class="terms-body px-3">
+                    <p>
+                        Tại <strong>3TDShop</strong>, chúng tôi mong muốn mang lại trải nghiệm mua sắm trực tuyến
+                        <em>dễ dùng – dễ tương tác – dễ kết nối</em>, đồng thời đảm bảo quyền lợi và sự an toàn dữ liệu cho khách hàng.
+                    </p>
+
+                    <h5 class="mt-3 text-cyber">1. Bảo mật & xử lý dữ liệu</h5>
+                    <ul>
+                        <li>Thông tin cá nhân được thu thập chỉ nhằm phục vụ đơn hàng & chăm sóc khách hàng.</li>
+                        <li>Mọi dữ liệu đều được bảo mật, không chia sẻ cho bên thứ ba khi chưa có sự đồng ý của bạn.</li>
+                        <li>Bạn có quyền yêu cầu chỉnh sửa hoặc <u>xóa dữ liệu</u> khi không còn sử dụng dịch vụ.</li>
+                    </ul>
+
+                    <h5 class="mt-3 text-cyber">2. Trách nhiệm của khách hàng</h5>
+                    <ul>
+                        <li>Cung cấp thông tin chính xác (họ tên, số điện thoại, địa chỉ).</li>
+                        <li>Kiểm tra kỹ giỏ hàng và đơn hàng trước khi xác nhận.</li>
+                        <li>Tôn trọng các quy định mua sắm và thanh toán của hệ thống.</li>
+                    </ul>
+
+                    <h5 class="mt-3 text-cyber">3. Xuất hóa đơn theo yêu cầu</h5>
+                    <ul>
+                        <li>Hóa đơn chỉ được phát hành nếu bạn <strong>tích chọn “Xuất hóa đơn”</strong> trước khi hoàn tất đặt hàng.</li>
+                        <li>Thông tin xuất hóa đơn cần chính xác ngay tại thời điểm mua hàng.</li>
+                        <li>Hóa đơn điện tử sẽ được gửi qua email đã đăng ký.</li>
+                        <li>3TDShop không cấp lại hóa đơn nếu bạn bỏ chọn lúc đầu.</li>
+                    </ul>
+
+                    <h5 class="mt-3 text-cyber">4. Cam kết dịch vụ</h5>
+                    <p>
+                        Chúng tôi luôn nỗ lực tối đa để mang lại trải nghiệm mua sắm an toàn và tiện lợi.
+                        Mọi thắc mắc hoặc khiếu nại, vui lòng liên hệ bộ phận <strong>Hỗ trợ khách hàng 24/7</strong> qua hotline hoặc email.
+                    </p>
+                </div>
+
+                <div class="modal-buttons d-flex justify-content-center mt-4">
+                    <button class="btn btn-success" data-bs-dismiss="modal">Tôi đã hiểu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal: Cảnh báo chưa đồng ý -->
+    <div class="modal fade" id="must-agree-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content cyber-modal text-light text-center"
+                 style="background: rgba(20,20,40,0.95); backdrop-filter: blur(6px); border: 1px solid #ffcc00; box-shadow: 0 0 12px rgba(255, 204, 0, 0.5);">
+
+                <h4 class="mb-3 text-warning">
+                    <i class="fa fa-exclamation-triangle me-2"></i> Thông báo từ 3TDShop
+                </h4>
+
+                <p class="px-3">
+                    Bạn cần <strong>đọc và đồng ý</strong> với
+                    <span class="text-cyber">Chính sách &amp; Điều khoản sử dụng</span>
+                    của dịch vụ <span class="fw-bold text-cyber">3TDShop</span> trước khi tiếp tục.
+                </p>
+                <p class="px-3">
+                    Việc này nhằm đảm bảo quyền lợi và sự bảo mật thông tin cho bạn.
+                </p>
+
+                <div class="modal-buttons d-flex justify-content-center mt-4">
+                    <button class="btn btn-warning px-4 fw-bold" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="footer-container"></div>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -340,9 +363,7 @@
 <script src="Script/js_header.js" defer></script>
 <script src="Script/js_resetcheckout.js" defer></script>
 
-<!-- Ensure auth script loads only after header is present.
-     When header is injected by js_resetcheckout.js, we inject js_resetauth.js and call AuthSync.refresh()
-     so header UI updates immediately and modal-open flag is handled similarly to other pages. -->
+<!-- Inject auth script AFTER header; refresh only; KHÔNG auto-open modal -->
 <script>
     (function() {
         let authInjected = false;
@@ -363,7 +384,7 @@
                     console.warn('AuthSync.refresh() failed on checkout page:', err);
                 }
 
-                // ----- Ensure header UI is updated now that AuthSync has refreshed -----
+                // ----- Update header/cart/orders -----
                 try {
                     if (typeof updateUserDisplay === 'function') await updateUserDisplay();
                     if (typeof updateCartCount === 'function') updateCartCount();
@@ -371,130 +392,15 @@
                 } catch (e) {
                     console.warn('Post-refresh header update (checkout) failed:', e);
                 }
-
-                // Safe consume flag (prefer exported helper)
-                try {
-                    let consumed = false;
-                    if (typeof window._consumeShowLoginFlag === 'function') {
-                        try { consumed = !!window._consumeShowLoginFlag(); } catch (err) { consumed = false; }
-                    } else {
-                        try {
-                            if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('showLoginAfterReset') === 'true') {
-                                try { sessionStorage.removeItem('showLoginAfterReset'); } catch (_) {}
-                                consumed = true;
-                            } else {
-                                const v = localStorage.getItem('showLoginAfterReset');
-                                if (v) {
-                                    const ts = Number(localStorage.getItem('showLoginAfterReset_ts') || '0');
-                                    if (ts && (Date.now() - ts) < 10 * 1000) {
-                                        try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
-                                        consumed = true;
-                                    } else {
-                                        try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
-                                        consumed = false;
-                                    }
-                                }
-                            }
-                        } catch (e) { consumed = false; }
-                    }
-
-                    if (consumed) {
-                        if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                            CyberModal.open();
-                        }
-                    } else {
-                        // If not consumed (normal guest/no explicit per-tab request), show a gentle banner
-                        try { showLoginBannerIfGuest(); } catch (e) {}
-                    }
-                } catch (e) { console.warn(e); }
+                // NOTE: KHÔNG tiêu thụ flag & KHÔNG mở modal tự động
             };
             document.body.appendChild(s);
         }
 
-        // Show non-blocking banner for guests who have items in cart (do not auto open modal)
-        function showLoginBannerIfGuest() {
-            try {
-                // Quick auth check (in-memory AuthSync preferred)
-                let logged = false;
-                try {
-                    if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
-                        const st = window.AuthSync.getState();
-                        logged = !!(st && st.loggedIn);
-                    } else {
-                        logged = !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
-                    }
-                } catch (e) {
-                    logged = !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
-                }
-                if (logged) return;
-
-                const cart = JSON.parse(localStorage.getItem('cart') || '[]') || [];
-                const giftCart = JSON.parse(localStorage.getItem('giftCart') || '[]') || [];
-                const normal = Array.isArray(cart) ? cart.reduce((t, i) => t + (Number(i.quantity) || 0), 0) : 0;
-                const gifts = Array.isArray(giftCart) ? giftCart.reduce((t, i) => t + (Number(i.quantity) || 0), 0) : 0;
-                const totalItems = normal + gifts;
-                const isLocked = localStorage.getItem('cartLocked') === 'true';
-
-                if (totalItems > 0 && !isLocked) {
-                    // create banner if not exists
-                    if (!document.getElementById('login-required-banner')) {
-                        const wrapper = document.getElementById('login-cta-banner-wrapper') || document.body;
-                        const banner = document.createElement('div');
-                        banner.id = 'login-required-banner';
-                        banner.className = 'p-3';
-                        banner.style.cssText = 'background: linear-gradient(90deg,#fff8e1,#fff); border:1px solid #ffd54f; display:flex; align-items:center; justify-content:center; gap:12px;';
-                        banner.innerHTML = `
-                            <div style="flex:1; text-align:center;">
-                                Bạn có <strong>${totalItems}</strong> sản phẩm trong giỏ. Đăng nhập để lưu & thanh toán nhanh hoặc tiếp tục xem sản phẩm.
-                            </div>
-                            <div style="display:flex; gap:8px;">
-                                <button id="open-login-cta" class="btn btn-sm btn-primary">Đăng nhập</button>
-                                <button id="continue-guest" class="btn btn-sm btn-outline-secondary">Tiếp tục xem</button>
-                            </div>
-                        `;
-                        wrapper.appendChild(banner);
-
-                        document.getElementById('open-login-cta').addEventListener('click', () => {
-                            try {
-                                // prefer per-tab modal; set session flag and open
-                                try {
-                                    if (typeof window.setShowLoginAfterReset === 'function') window.setShowLoginAfterReset(true);
-                                    else if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('showLoginAfterReset','true');
-                                } catch (_) {}
-                                if (typeof CyberModal !== 'undefined' && typeof CyberModal.open === 'function') CyberModal.open();
-                            } catch (e) { console.warn(e); }
-                        });
-
-                        document.getElementById('continue-guest').addEventListener('click', () => {
-                            try { banner.remove(); } catch (e) {}
-                            // reveal checkout if it was hidden by legacy script
-                            try {
-                                const container = document.querySelector('.checkout-container');
-                                if (container) container.classList.remove('d-none');
-                            } catch (e) {}
-                        });
-
-                        // Also ensure checkout container visible (we prefer not to force modal)
-                        try {
-                            const container = document.querySelector('.checkout-container');
-                            if (container) container.classList.remove('d-none');
-                        } catch (e) {}
-                    }
-                }
-            } catch (err) {
-                console.warn('showLoginBannerIfGuest error', err);
-            }
-        }
-
-        // If header already exists (synchronous), inject immediately
         const headerContainer = document.getElementById('header-container');
         if (headerContainer && headerContainer.children.length > 0) {
             injectAuth();
-            return;
-        }
-
-        // Observe header container for insertion (triggered by js_resetcheckout.loadPagePart)
-        if (headerContainer) {
+        } else if (headerContainer) {
             const obs = new MutationObserver((mutations, observer) => {
                 for (const m of mutations) {
                     if (m.type === 'childList' && m.addedNodes.length > 0) {
@@ -505,8 +411,8 @@
                 }
             });
             obs.observe(headerContainer, { childList: true, subtree: false });
+            setTimeout(() => { try { obs.disconnect(); } catch(e){} if (!authInjected) injectAuth(); }, 3500);
         } else {
-            // fallback: poll for header for a short time
             let tries = 0;
             const t = setInterval(() => {
                 const hc = document.getElementById('header-container');
@@ -516,16 +422,10 @@
                     injectAuth();
                 } else if (tries > 40) {
                     clearInterval(t);
-                    // best-effort inject anyway to avoid missing auth
                     injectAuth();
                 }
             }, 100);
         }
-
-        // Also attempt a best-effort banner check on DOMContentLoaded in case auth not injected yet
-        document.addEventListener('DOMContentLoaded', function() {
-            try { setTimeout(showLoginBannerIfGuest, 400); } catch (e) {}
-        });
     })();
 </script>
 </body>

@@ -1615,99 +1615,7 @@ function setupPaymentMethodAnimations() {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
-    const totalItems = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
-        giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
-
-    // Helper: kiểm tra auth với "soft timeout" và fallback an toàn
-    async function checkAuthWithSoftTimeout(timeoutMs = 1500) {
-        try {
-            // 1) Nếu AuthSync có waitUntilReady -> dùng nó (đã coalesce refresh bên trong)
-            if (window.AuthSync && typeof window.AuthSync.waitUntilReady === 'function') {
-                try {
-                    await window.AuthSync.waitUntilReady(timeoutMs);
-                    const st = window.AuthSync.getState ? window.AuthSync.getState() : null;
-                    return !!(st && st.loggedIn);
-                } catch (e) {
-                    console.warn('AuthSync.waitUntilReady rejected/errored:', e);
-                    // fallback xuống phần tiếp theo
-                }
-            }
-
-            // 2) Nếu AuthSync chỉ có refresh -> gọi refresh() nhưng không để nó ném (soft timeout)
-            if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
-                try {
-                    const refreshPromise = window.AuthSync.refresh();
-                    const race = await Promise.race([
-                        refreshPromise.then(r => ({ ok: true, data: r })).catch(err => ({ ok: false, error: err })),
-                        new Promise(resolve => setTimeout(() => resolve({ ok: false, timedOut: true }), timeoutMs))
-                    ]);
-                    // Nếu refresh hoàn tất (ok: true), đọc state từ in-memory
-                    if (race.ok) {
-                        const st = window.AuthSync.getState ? window.AuthSync.getState() : null;
-                        return !!(st && st.loggedIn) || !!(race.data && race.data.loggedIn);
-                    }
-                    // nếu timeout hoặc refresh lỗi -> dùng trạng thái hiện tại (in-memory) như fallback
-                    const stFallback = window.AuthSync.getState ? window.AuthSync.getState() : null;
-                    if (stFallback && stFallback.loggedIn) return true;
-                    // else rơi xuống legacy fallback
-                } catch (e) {
-                    console.warn('AuthSync.refresh soft-fallback error:', e);
-                    // tiếp tục xuống legacy fallback
-                }
-            }
-
-            // 3) Nếu không có AuthSync hoặc tất cả đều thất bại -> fallback legacy nhanh (localStorage / header)
-            try {
-                return !!isLoggedIn();
-            } catch (e) {
-                return !!(localStorage.getItem('userName') || localStorage.getItem('userId'));
-            }
-        } catch (err) {
-            console.warn('checkAuthWithSoftTimeout unexpected error:', err);
-            return !!(localStorage.getItem('userName') || localStorage.getItem('userId'));
-        }
-    }
-
-    // IMPORTANT: try to get the most up-to-date auth state.
-    // Use soft timeout to avoid throwing on slow networks
-    let logged = false;
-    try {
-        logged = await checkAuthWithSoftTimeout(1500); // 1.5s soft timeout
-        console.log('Auth check (soft) result logged=', logged);
-    } catch (err) {
-        console.warn('Error while checking auth state on DOMContentLoaded (final fallback):', err);
-        logged = !!isLoggedIn();
-    }
-
-    const isLocked = localStorage.getItem('cartLocked') === 'true';
-
-    // Nếu chưa đăng nhập + giỏ hàng bị khoá HOẶC có sản phẩm cũ → ẩn checkout và dừng init
-    if (!logged && (isLocked || totalItems > 0)) {
-        const hideCheckout = () => {
-            const container = document.querySelector('.checkout-container');
-            if (container) {
-                container.classList.add('d-none');
-            } else {
-                setTimeout(hideCheckout, 50);
-            }
-        };
-        hideCheckout();
-
-        // Additionally, open login modal if header/Modal available after a short delay
-        setTimeout(() => {
-            try {
-                if (typeof CyberModal !== 'undefined' && CyberModal.open) {
-                    CyberModal.open();
-                }
-            } catch (e) { /* ignore */ }
-        }, 300);
-
-        return; // Dừng init — chờ user login
-    }
-
-    // ==== Nếu qua được kiểm tra thì mới chạy phần còn lại ====
+    // Always render checkout page (no auth gate here)
     validateGiftCartOnLoad();
     initializeCartSystem();
 
@@ -1732,7 +1640,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (typeof initFooter === 'function') initFooter();
     });
 
-    // ==== Các event khác ====
+    // Events
     const selectAllCheckbox = document.getElementById('select-all-checkbox');
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', () => {
@@ -1774,10 +1682,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     const proceedStep3Btn = document.getElementById('proceed-to-step-3');
     if (proceedStep3Btn) {
         proceedStep3Btn.addEventListener('click', () => {
-            // 1. Kiểm tra form giao hàng
             if (!validateDeliveryInfo()) return;
 
-            // 2. Kiểm tra đã tick đồng ý điều khoản chưa
             const agreeCheckbox = document.getElementById('agree-terms');
             if (!agreeCheckbox || !agreeCheckbox.checked) {
                 const mustAgreeModal = new bootstrap.Modal(document.getElementById('must-agree-modal'));
@@ -1785,14 +1691,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                 return;
             }
 
-            // 3. Nếu hợp lệ thì lưu & sang Step 3
             saveDeliveryInfo();
             renderOrderSummary();
             renderDeliverySummary();
             showStep(3);
         });
     }
-
 
     const clearCartBtn = document.getElementById('clear-cart');
     if (clearCartBtn) clearCartBtn.addEventListener('click', clearCart);
@@ -1816,18 +1720,17 @@ document.addEventListener("DOMContentLoaded", async function () {
         path: '/transformanimation/emptycart.json'
     });
 
-    // ================= BƯỚC 2: Delivery Mode =================
+    // Step 2: Delivery mode
     const profileBox = document.getElementById("profile-delivery-box");
     const formBox = document.getElementById("custom-delivery-form");
 
-    // Tải và render sổ địa chỉ ngay từ đầu
     await loadAndRenderProfileAddresses();
     document.querySelectorAll('input[name="deliveryMode"]').forEach(input => {
         input.addEventListener("change", e => {
             if (e.target.value === "profile") {
                 profileBox.style.display = "block";
                 formBox.style.display = "none";
-                loadAndRenderProfileAddresses(); // 🆕 load + render luôn khi chọn
+                loadAndRenderProfileAddresses();
             } else {
                 profileBox.style.display = "none";
                 formBox.style.display = "block";
@@ -1835,7 +1738,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     });
 
-    // Mặc định chọn "Của bạn"
+    // Default to "Của bạn"
     const defaultRadio = document.querySelector("input[name='deliveryMode'][value='profile']");
     if (defaultRadio) {
         defaultRadio.checked = true;
@@ -1844,24 +1747,21 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 });
 
-// ---------- Thêm: lắng nghe AuthSync thay đổi (nếu AuthSync tồn tại) ----------
 if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
     window.AuthSync.onChange((state) => {
-        // Khi login → pull server cart & re-init; khi logout → render local cart and hide protected UI if needed
         try {
             if (state && state.loggedIn) {
-                // re-sync cart from server
+                // Đăng nhập: đồng bộ lại giỏ hàng từ server
                 initializeCartSystem().catch(e => console.warn('initCart after auth change failed', e));
             } else {
-                // logged out: show local cart (likely empty) and hide checkout if locked
+                // Đăng xuất: giữ nguyên trang checkout hiển thị, render theo local cart
                 renderCart();
-                updateCartCount();
-                updateOrderCount();
-                const container = document.querySelector('.checkout-container');
-                if (container && localStorage.getItem('cartLocked') === 'true') container.classList.add('d-none');
+                if (typeof updateCartCount === 'function') updateCartCount();
+                if (typeof updateOrderCount === 'function') updateOrderCount();
+                // KHÔNG ẩn .checkout-container, KHÔNG mở modal ở đây
             }
         } catch (err) {
-            console.warn('AuthSync.onChange handler error:', err);
+            console.warn('AuthSync.onChange handler error (checkout):', err);
         }
     });
 }

@@ -22,18 +22,13 @@ function initBannerHeaderWrapper() {
 // Helper: nhanh kiểm tra auth (AuthSync ưu tiên)
 async function isAuthFast() {
     try {
-        // If AuthSync is present and already has in-memory state -> return immediately
         if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
             const st = window.AuthSync.getState();
             if (st && typeof st.loggedIn !== 'undefined') return !!st.loggedIn;
         }
-
-        // If AuthSync exposes waitUntilReady or refresh, try a short wait (non-blocking caller should await if needed)
         if (window.AuthSync) {
             try {
-                // prefer waitUntilReady (coalesced), fallback to refresh() with timeout
                 if (typeof window.AuthSync.waitUntilReady === 'function') {
-                    // Do not throw on timeout; return current in-memory state afterwards
                     await Promise.race([
                         window.AuthSync.waitUntilReady(800),
                         new Promise(resolve => setTimeout(resolve, 800))
@@ -47,15 +42,12 @@ async function isAuthFast() {
                     if (st3 && typeof st3.loggedIn !== 'undefined') return !!st3.loggedIn;
                 }
             } catch (e) {
-                // swallow errors and fall through to legacy fallback
                 console.warn('isAuthFast: AuthSync quick check failed', e);
             }
         }
     } catch (e) {
         console.warn('isAuthFast unexpected error', e);
     }
-
-    // Legacy fallback for pages that still rely on compatibility keys
     try {
         return !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
     } catch (e) {
@@ -191,7 +183,6 @@ async function getCanonicalAuthState() {
             const r = await tryAuthSyncRefreshWithTimeout(1600);
             if (r && typeof r.loggedIn !== 'undefined') return r;
         }
-        // fallback to local keys
         if (localStorage.getItem('userId') || localStorage.getItem('userName')) {
             return {
                 loggedIn: true,
@@ -204,7 +195,6 @@ async function getCanonicalAuthState() {
                 }
             };
         }
-        // last resort call /api/me
         try {
             const res = await fetch(`${(window.API_BASE || '').replace(/\/$/, '')}/api/me`, {
                 method: 'GET',
@@ -267,7 +257,6 @@ function renderUserActionFromState(state) {
     let userAction = document.querySelector('.cyber-action .bx-user-circle')?.closest('.cyber-action');
     if (!userAction) return;
 
-    // replace node to avoid multiple bindings
     const newUserAction = userAction.cloneNode(false);
     newUserAction.className = userAction.className;
     userAction.parentNode.replaceChild(newUserAction, userAction);
@@ -346,26 +335,26 @@ function initCartIconClick() {
     const cartLink = document.querySelector('a.cyber-action[href="resetcheckout.html"]');
     if (!cartLink) return;
 
-    cartLink.addEventListener('click', (e) => {
+    cartLink.addEventListener('click', async (e) => {
         e.preventDefault();
 
-        const logged = isAuthFast();
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
-        const cartCount = cart.reduce((t, i) => t + (i.quantity || 1), 0) +
-            giftCart.reduce((t, g) => t + (g.quantity || 0), 0);
+        let logged = false;
+        try {
+            logged = await isAuthFast(); // isAuthFast là async
+        } catch (_) {
+            logged = !!(localStorage.getItem('userName') || localStorage.getItem('userId'));
+        }
 
         if (!logged) {
-            if (cartCount > 0) {
-                CyberModal.open?.();
-                if (typeof showNotification === "function") {
-                    showNotification("Vui lòng đăng nhập để xem giỏ hàng!", "info");
-                }
-            } else {
-                window.location.href = 'resetcheckout.html';
+            // Nhấn icon trên Header khi chưa login → mở modal (theo yêu cầu)
+            if (typeof CyberModal !== 'undefined' && CyberModal.open) CyberModal.open();
+            if (typeof showNotification === "function") {
+                showNotification("Bạn cần đăng nhập để xem giỏ hàng!", "info");
             }
             return;
         }
+
+        // Đã đăng nhập → điều hướng bình thường
         window.location.href = 'resetcheckout.html';
     });
 }
@@ -375,30 +364,37 @@ function initOrderIconClick() {
     const orderLink = document.querySelector('a.cyber-action[href="resetlookup.html"]');
     if (!orderLink) return;
 
-    orderLink.addEventListener('click', (e) => {
+    orderLink.addEventListener('click', async (e) => {
         e.preventDefault();
 
-        const logged = isAuthFast();
+        let logged = false;
+        try {
+            logged = await isAuthFast();
+        } catch (_) {
+            logged = !!(localStorage.getItem('userName') || localStorage.getItem('userId'));
+        }
+
         if (!logged) {
-            CyberModal.open?.();
+            // Nhấn icon trên Header khi chưa login → mở modal (theo yêu cầu)
+            if (typeof CyberModal !== 'undefined' && CyberModal.open) CyberModal.open();
             if (typeof showNotification === "function") {
-                showNotification("Vui lòng đăng nhập để xem đơn hàng!", "info");
+                showNotification("Bạn cần đăng nhập để xem đơn hàng!", "info");
             }
             return;
         }
+
+        // Đã đăng nhập → điều hướng
         window.location.href = 'resetlookup.html';
     });
 }
 
 // ================= Đồng bộ header khi trạng thái đăng nhập thay đổi =================
-// legacy event
 window.addEventListener('user:login', async () => {
     await updateUserDisplay();
     updateCartCount();
     updateOrderCount();
 });
 
-// If AuthSync exists, use its onChange (preferred)
 if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
     window.AuthSync.onChange((state) => {
         try {
@@ -411,7 +407,6 @@ if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
     });
 }
 
-// Also listen to custom event auth:changed (AuthSync sets it) and storage events
 window.addEventListener('auth:changed', (ev) => {
     try {
         const st = ev?.detail;
@@ -437,20 +432,14 @@ window.addEventListener('storage', (ev) => {
 
 // ================= Khi load trang =================
 document.addEventListener("DOMContentLoaded", async () => {
-    // Ensure AuthSync is present (soft wait)
     await waitForAuthSyncPresence(2500);
-
-    // If AuthSync exists, prefer to let it refresh (soft timeout)
     if (window.AuthSync) {
         try { await tryAuthSyncRefreshWithTimeout(1600); } catch (e) { /* ignore */ }
     }
-
-    // Initial header render from canonical source
     await updateUserDisplay();
     updateCartCount();
     updateOrderCount();
 
-    // gentle retry if inconsistency detected
     (async function retryIfInconsistent(attempts = 3, delayMs = 400) {
         for (let i = 0; i < attempts; i++) {
             try {
@@ -484,7 +473,6 @@ function initHeader() {
 
     try {
         if (typeof updateUserDisplay === 'function') {
-            // don't block init; updateUserDisplay may be async
             const maybe = updateUserDisplay();
             if (maybe && typeof maybe.then === 'function') {
                 maybe.catch(()=>{});

@@ -1,10 +1,13 @@
-// ==================== js_resetauth.js (updated safe showLoginAfterReset handling) ====================
+// ==================== js_resetauth.js (NO auto-open modal) ====================
+// Mục tiêu:
+// - KHÔNG tự động mở modal đăng nhập ở bất kỳ trang nào.
+// - Modal CHỈ được mở khi user tự click icon "Đăng nhập" trên Header,
+//   hoặc khi thực hiện hành động cần đăng nhập như "Mua ngay", "Thêm vào giỏ" mà chưa đăng nhập.
 
-// Safe consume helper for showLoginAfterReset
-// Prefer sessionStorage (per-tab). Fallback to localStorage only if recent (10s).
+// ==================== SAFE FLAGS (compat only, no auto-open) ====================
+// Safe consume helper for showLoginAfterReset (giữ cho tương thích — KHÔNG dùng để auto mở modal)
 function _consumeShowLoginFlag() {
     try {
-        // sessionStorage: per-tab, best for "open modal once in same tab"
         if (sessionStorage.getItem('showLoginAfterReset') === 'true') {
             sessionStorage.removeItem('showLoginAfterReset');
             return true;
@@ -13,15 +16,13 @@ function _consumeShowLoginFlag() {
         const v = localStorage.getItem('showLoginAfterReset');
         if (!v) return false;
 
-        // guard by timestamp to avoid stale cross-tab triggers
         const ts = Number(localStorage.getItem('showLoginAfterReset_ts') || '0');
-        if (ts && (Date.now() - ts) < 10 * 1000) { // 10 seconds window
+        if (ts && (Date.now() - ts) < 10 * 1000) {
             localStorage.removeItem('showLoginAfterReset');
             localStorage.removeItem('showLoginAfterReset_ts');
             return true;
         }
 
-        // stale or no ts -> clear and ignore
         localStorage.removeItem('showLoginAfterReset');
         localStorage.removeItem('showLoginAfterReset_ts');
         return false;
@@ -34,6 +35,7 @@ function _consumeShowLoginFlag() {
 }
 
 // Optional helper to set the flag safely (use session=true to set in this tab only)
+// Giữ cho tương thích với code cũ (KHÔNG auto mở modal dựa vào flag này trong file này)
 function setShowLoginAfterReset(useSession = true) {
     try {
         if (useSession && typeof sessionStorage !== 'undefined') {
@@ -48,8 +50,11 @@ function setShowLoginAfterReset(useSession = true) {
     }
 }
 
-// ==================== HÀM HỖ TRỢ ====================
-// Hiển thị lỗi hoặc thông báo
+// Expose helpers (compat)
+try { if (!window._consumeShowLoginFlag) window._consumeShowLoginFlag = _consumeShowLoginFlag; } catch (e) {}
+try { if (!window.setShowLoginAfterReset) window.setShowLoginAfterReset = setShowLoginAfterReset; } catch (e) {}
+
+// ==================== HỖ TRỢ UI & ĐỒNG BỘ ====================
 function showMessage(elementId, message, type = "error") {
     const box = document.getElementById(elementId);
     if (box) {
@@ -97,14 +102,13 @@ async function syncCartToServer() {
     }
 }
 
-// Helper: xử lý hành động cần làm *sau* khi đã login (cùng-tab hoặc OAuth redirect)
+// ==================== XỬ LÝ SAU KHI LOGIN (NO RELOAD) ====================
 async function processAfterLoginNoReload() {
     try {
-        // 1) Update local user info from server
+        // 1) Update local user info từ AuthSync (nếu có), fallback legacy
         if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
             const st = window.AuthSync.getState();
             if (st && st.loggedIn && st.user) {
-                // mirror minimal compatibility keys
                 localStorage.setItem("userId", st.user.id || "");
                 localStorage.setItem("firstName", (st.user.firstName || "").trim());
                 localStorage.setItem("lastName", (st.user.lastName || "").trim());
@@ -123,18 +127,18 @@ async function processAfterLoginNoReload() {
             await fetchUserInfo();
         }
 
-        // 2) Đồng bộ giỏ hàng từ local -> server (nếu cần)
+        // 2) Đồng bộ giỏ hàng local -> server
         try { await syncCartToServer(); } catch (e) { /* ignore */ }
 
-        // 3) Cập nhật hiển thị header
+        // 3) Cập nhật UI header
         if (typeof updateUserDisplay === 'function') updateUserDisplay();
         if (typeof updateCartCount === 'function') updateCartCount();
         if (typeof updateOrderCount === 'function') updateOrderCount();
 
-        // 4) Thông báo cho các script trong cùng tab (ví dụ resetproduct.js sẽ process pendingAction)
+        // 4) Thông báo cùng tab
         try { window.dispatchEvent(new Event('user:login')); } catch (err) { console.warn('dispatch user:login failed', err); }
 
-        // 5) Nếu có pendingAction lưu trong localStorage thì gọi hàm xử lý (nếu định nghĩa)
+        // 5) Xử lý pendingAction (nếu có)
         if (typeof processPendingAction === 'function') {
             try { await processPendingAction(); } catch (err) { console.warn('processPendingAction error', err); }
         }
@@ -144,7 +148,6 @@ async function processAfterLoginNoReload() {
 }
 
 // ==================== KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP ====================
-// Modified: prefer AuthSync as source of truth, fallback to /api/me as before
 async function checkLoginStatus() {
     try {
         if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
@@ -201,7 +204,6 @@ async function checkLoginStatus() {
 }
 
 // ==================== ĐỒNG BỘ HÓA ĐĂNG NHẬP GIỮA CÁC SCRIPT ====================
-// Lắng nghe sự kiện login để cập nhật lại UI & trạng thái trên toàn bộ các script
 window.addEventListener('user:login', () => {
     checkLoginStatus();
     if (typeof updateUserDisplay === 'function') updateUserDisplay();
@@ -209,11 +211,9 @@ window.addEventListener('user:login', () => {
     if (typeof updateOrderCount === 'function') updateOrderCount();
 });
 
-// If AuthSync emits change, handle it too (avoid duplicate heavy operations if not needed)
 if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
     window.AuthSync.onChange((state) => {
         if (state && state.loggedIn) {
-            // quick mirror of compatibility keys
             const u = state.user || {};
             localStorage.setItem("userId", u.id || "");
             localStorage.setItem("firstName", (u.firstName || "").trim());
@@ -255,14 +255,13 @@ if (registerForm) {
             const data = await res.json();
             if (data.success) {
                 showMessage("register-error", "✅ Đăng ký thành công! Vui lòng đăng nhập.", "success");
-                // Kiểm tra và thêm sản phẩm tạm sau đăng ký
+                // Nếu đang mở modal đăng ký, chuyển qua UI đăng nhập (KHÔNG mở modal mới)
                 const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
                 if (pendingItem) {
                     addToCart(pendingItem.id, pendingItem.name, pendingItem.originalPrice, pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image);
                     localStorage.removeItem('pendingCartItem');
                     showMessage("register-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng ký!`, "success");
                 }
-                // Cập nhật UI header
                 if (typeof updateUserDisplay === "function") {
                     updateUserDisplay();
                 }
@@ -300,12 +299,11 @@ if (loginForm) {
             const data = await res.json();
 
             if (data.success && data.user) {
-                // Prefer AuthSync to refresh /api/me and mirror keys.
+                // Prefer AuthSync để đồng bộ
                 if (window.AuthSync && typeof window.AuthSync.notifyLoginFromServer === 'function') {
                     try {
                         await window.AuthSync.notifyLoginFromServer();
                     } catch (e) {
-                        // fallback to writing compatibility keys if notify fails
                         localStorage.setItem("userId", data.user.id || "");
                         localStorage.setItem("firstName", (data.user.firstName || "").trim());
                         localStorage.setItem("lastName", (data.user.lastName || "").trim());
@@ -318,7 +316,6 @@ if (loginForm) {
                         }
                     }
                 } else {
-                    // legacy mirror
                     localStorage.setItem("userId", data.user.id || "");
                     localStorage.setItem("firstName", (data.user.firstName || "").trim());
                     localStorage.setItem("lastName", (data.user.lastName || "").trim());
@@ -333,7 +330,7 @@ if (loginForm) {
 
                 localStorage.removeItem("cartLocked");
 
-                // Add pendingCartItem if present (legacy behavior)
+                // pendingCartItem (legacy)
                 const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
                 if (pendingItem) {
                     try {
@@ -345,7 +342,7 @@ if (loginForm) {
                     showMessage("login-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng nhập!`, "success");
                 }
 
-                // Sync cart -> server (best-effort)
+                // Sync cart -> server
                 await syncCartToServer().catch(()=>{});
 
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
@@ -353,25 +350,21 @@ if (loginForm) {
                     updateUserDisplay();
                 }
 
-                // Emit same-tab event
                 try { window.dispatchEvent(new Event('user:login')); } catch (err) { console.warn('dispatch user:login failed', err); }
 
-                // Prefer sessionStorage for postLoginRedirect (per-tab). Fall back to localStorage if none.
+                // postLoginRedirect (per-tab ưu tiên)
                 const postLoginRedirect = (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('postLoginRedirect'))
                     ? sessionStorage.getItem('postLoginRedirect')
                     : localStorage.getItem('postLoginRedirect');
 
-                // Run post-login processing (sync header, process pendingAction, etc.)
                 await processAfterLoginNoReload();
 
-                // If redirect exists and differs from current, perform it and clean both storages
                 if (postLoginRedirect && postLoginRedirect !== window.location.href) {
                     try { sessionStorage.removeItem('postLoginRedirect'); } catch (_) {}
                     try { localStorage.removeItem('postLoginRedirect'); } catch (_) {}
                     window.location.href = postLoginRedirect;
                     return;
                 } else {
-                    // ensure we clear any lingering redirect keys
                     try { sessionStorage.removeItem('postLoginRedirect'); } catch (_) {}
                     try { localStorage.removeItem('postLoginRedirect'); } catch (_) {}
                 }
@@ -432,7 +425,7 @@ document.addEventListener("click", (e) => {
     }
 });
 
-(function handleGoogleCallbackAndAutoOpen() {
+(function handleGoogleCallbackNoAutoOpen() {
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const loginStatus = urlParams.get("login");
@@ -457,22 +450,12 @@ document.addEventListener("click", (e) => {
             window.history.replaceState({}, document.title, window.location.pathname);
         }
 
-        // Always update check login on load
+        // Cập nhật trạng thái (KHÔNG auto-open modal)
         checkLoginStatus();
 
-        // Safe consume flag (sessionStorage preferred)
-        if (_consumeShowLoginFlag()) {
-            const openLoginModal = () => {
-                if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                    CyberModal.open();
-                } else {
-                    setTimeout(openLoginModal, 200);
-                }
-            };
-            openLoginModal();
-        }
+        // KHÔNG sử dụng _consumeShowLoginFlag để mở modal trong file này
     } catch (err) {
-        console.error("Lỗi xử lý callback Google/auto open:", err);
+        console.error("Lỗi xử lý callback Google:", err);
     }
 })();
 
@@ -493,7 +476,7 @@ document.addEventListener("click", (e) => {
     }
 });
 
-(function handleFacebookCallback() {
+(function handleFacebookCallbackNoAutoOpen() {
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const loginStatus = urlParams.get("login");
@@ -517,14 +500,7 @@ document.addEventListener("click", (e) => {
             window.history.replaceState({}, document.title, window.location.pathname);
         }
 
-        // Safe consume flag (sessionStorage preferred)
-        if (_consumeShowLoginFlag()) {
-            try {
-                if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                    CyberModal.open();
-                }
-            } catch (err) { /* ignore */ }
-        }
+        // KHÔNG auto-open modal dựa theo flag
     } catch (err) {
         console.error("Lỗi xử lý callback Facebook:", err);
     }

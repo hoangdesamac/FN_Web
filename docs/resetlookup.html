@@ -118,8 +118,6 @@
 <script src="Script/js_header.js"></script>
 <script src="Script/js_resetcheckout.js" defer></script>
 
-<!-- Inject auth script only after header exists, then sync auth with server.
-     This prevents race conditions where header renders after auth and shows stale state. -->
 <script>
     (function() {
         let authInjected = false;
@@ -136,27 +134,17 @@
                         await window.AuthSync.refresh();
                     }
                 } catch (err) {
-                    console.warn('AuthSync.refresh() failed on checkout page:', err);
+                    console.warn('AuthSync.refresh() failed on lookup page:', err);
                 }
 
-                // ----- Ensure header UI is updated now that AuthSync has refreshed -----
+                // Update header UI
                 try {
                     if (typeof updateUserDisplay === 'function') await updateUserDisplay();
                     if (typeof updateCartCount === 'function') updateCartCount();
                     if (typeof updateOrderCount === 'function') updateOrderCount();
                 } catch (e) {
-                    console.warn('Post-refresh header update (checkout) failed:', e);
+                    console.warn('Post-refresh header update (lookup) failed:', e);
                 }
-
-                // preserve legacy behavior: open modal if showLoginAfterReset set
-                try {
-                    if (localStorage.getItem("showLoginAfterReset") === "true") {
-                        localStorage.removeItem("showLoginAfterReset");
-                        if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                            CyberModal.open();
-                        }
-                    }
-                } catch (e) { console.warn(e); }
             };
             document.body.appendChild(s);
         }

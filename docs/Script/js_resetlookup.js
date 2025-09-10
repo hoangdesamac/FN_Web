@@ -1023,28 +1023,24 @@ function debounce(func, wait) {
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', async () => {
-    // Wait a short moment for AuthSync to initialize if present so state isn't stale
+    // Cập nhật trạng thái AuthSync (nếu có), nhưng KHÔNG mở modal tự động
     if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
         try { await window.AuthSync.refresh(); } catch (e) { /* ignore */ }
     } else {
-        // small delay to allow any other auth scripts to settle
         await new Promise(r => setTimeout(r, 200));
     }
 
-    // If still not logged in → show login modal (or redirect)
     if (!isLoggedIn()) {
-        if (typeof CyberModal !== "undefined" && CyberModal.open) {
-            CyberModal.open();
-        } else {
-            window.location.href = "index.html";
-        }
-        return; // stop further init
+        // Chưa đăng nhập: render trạng thái rỗng và vẫn cho người dùng thao tác/lọc UI
+        serverOrders = [];
+        renderOrders([]);
+        updateOrderCount();
+    } else {
+        // Đã đăng nhập: tải đơn hàng
+        await fetchOrdersFromServer();
     }
 
-    // If logged in → fetch orders
-    await fetchOrdersFromServer();
-
-    // (Re-attach filters only if needed — safe to run again)
+    // Gắn bộ lọc (idempotent-safe)
     const productKeywordInput = document.getElementById('product-keyword');
     if (productKeywordInput && !productKeywordInput._lookupBound) {
         productKeywordInput.addEventListener('input', debounce(applyFilters, 300));
@@ -1064,26 +1060,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
-
 // ---------- NEW: react to cross-tab / AuthSync auth state changes ----------
 if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
     window.AuthSync.onChange(async (state) => {
         try {
             if (state && state.loggedIn) {
-                // user logged in elsewhere → fetch orders for this tab
                 await fetchOrdersFromServer();
             } else {
-                // user logged out elsewhere → clear orders and show login UI
+                // Đăng xuất: không mở modal, chỉ làm trống danh sách
                 serverOrders = [];
                 renderOrders([]);
                 updateOrderCount();
-                if (typeof CyberModal !== "undefined" && CyberModal.open) {
-                    CyberModal.open();
-                } else {
-                    // fallback: hide orders area
-                    const ordersContainer = document.getElementById('orders-container');
-                    if (ordersContainer) ordersContainer.innerHTML = '';
-                }
             }
         } catch (err) {
             console.warn("AuthSync onChange handler error:", err);

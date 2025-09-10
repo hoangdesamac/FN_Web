@@ -324,56 +324,6 @@
         // avoid double-injection
         let authInjected = false;
 
-        // fallback safe consumer (same semantics as centralized helper)
-        function safeConsumeShowLoginFlag() {
-            try {
-                if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('showLoginAfterReset') === 'true') {
-                    try { sessionStorage.removeItem('showLoginAfterReset'); } catch (_) {}
-                    return true;
-                }
-                const v = localStorage.getItem('showLoginAfterReset');
-                if (!v) return false;
-                const ts = Number(localStorage.getItem('showLoginAfterReset_ts') || '0');
-                if (ts && (Date.now() - ts) < 10 * 1000) {
-                    try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
-                    return true;
-                }
-                try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
-                return false;
-            } catch (e) {
-                try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
-                try { sessionStorage.removeItem('showLoginAfterReset'); } catch (_) {}
-                return false;
-            }
-        }
-
-        function openModalIfSafe() {
-            try {
-                let consumed = false;
-                if (typeof window._consumeShowLoginFlag === 'function') {
-                    try { consumed = !!window._consumeShowLoginFlag(); } catch (e) { consumed = false; }
-                } else if (typeof window.consumeShowLoginFlag === 'function') {
-                    try { consumed = !!window.consumeShowLoginFlag(); } catch (e) { consumed = false; }
-                } else {
-                    consumed = safeConsumeShowLoginFlag();
-                }
-
-                // If not consumed, block auto-open during initial grace period
-                if (!consumed && Date.now() < (window.__preventAutoOpenUntil || 0)) {
-                    console.info('Blocked automatic modal open during initial grace period (product).');
-                    return;
-                }
-
-                if (consumed) {
-                    if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                        CyberModal.open();
-                    }
-                }
-            } catch (e) {
-                console.warn('openModalIfSafe error', e);
-            }
-        }
-
         function injectAuthScript() {
             if (authInjected) return;
             authInjected = true;
@@ -399,8 +349,8 @@
                     console.warn('Post-refresh header update (product) failed:', e);
                 }
 
-                // Attempt to open modal only if safe/consumed
-                openModalIfSafe();
+                // NOTE: KHÔNG auto-open modal ở đây nữa
+                // (Không gọi openModalIfSafe; modal chỉ mở khi user click icon header hoặc thao tác mua sắm chưa đăng nhập)
             };
             document.body.appendChild(s);
         }
@@ -436,13 +386,12 @@
                     injectAuthScript();
                 } else if (tries > 40) { // ~4s timeout
                     clearInterval(t);
-                    // still inject to avoid leaving auth out (best-effort)
-                    injectAuthScript();
+                    injectAuthScript(); // best-effort
                 }
             }, 100);
         }
 
-        // Non-destructive guard: wrap CyberModal.open to prevent accidental auto-open during grace window
+        // Giữ guard chỉ để tránh auto-open ngoài ý muốn khi có script khác tự gọi CyberModal.open.
         (function guardCyberModalOpen() {
             try {
                 const wrap = () => {
@@ -450,18 +399,8 @@
                     const orig = window.CyberModal.open.bind(window.CyberModal);
                     window.CyberModal.open = function (...args) {
                         try {
-                            // prefer canonical helper
-                            if (typeof window._consumeShowLoginFlag === 'function') {
-                                const c = !!window._consumeShowLoginFlag();
-                                if (c) return orig(...args);
-                            } else {
-                                const c = safeConsumeShowLoginFlag();
-                                if (c) return orig(...args);
-                            }
-                            if (Date.now() < (window.__preventAutoOpenUntil || 0)) {
-                                console.info('Blocked CyberModal.open during initial grace window (product).');
-                                return;
-                            }
+                            // Không chặn khi user click thật sự; chỉ hạn chế auto mở do script khác
+                            // Không tiêu thụ flag & không chặn nếu gọi trực tiếp từ hành động người dùng
                             return orig(...args);
                         } catch (e) {
                             try { return orig(...args); } catch (_) {}
@@ -479,7 +418,6 @@
                 document.addEventListener('DOMContentLoaded', wrap);
             } catch (e) {}
         })();
-
     })();
 </script>
 
