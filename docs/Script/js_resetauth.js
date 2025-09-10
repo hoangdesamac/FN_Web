@@ -13,7 +13,7 @@ function _consumeShowLoginFlag() {
         const v = localStorage.getItem('showLoginAfterReset');
         if (!v) return false;
 
-        // guard by timestamp to avoid stale cross-tab triggers
+        // guard by timestamp to avoid stale cross-tab trigger
         const ts = Number(localStorage.getItem('showLoginAfterReset_ts') || '0');
         if (ts && (Date.now() - ts) < 10 * 1000) { // 10 seconds window
             localStorage.removeItem('showLoginAfterReset');
