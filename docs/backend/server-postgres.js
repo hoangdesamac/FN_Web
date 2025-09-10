@@ -888,8 +888,63 @@ app.delete('/api/addresses/:id', async (req, res) => {
     }
 });
 
-// ==================== CART APIS ====================
+// ==================== GIFT HELPERS (place these near the top of file, after other requires) ====================
+const fs = require('fs');       // <-- ensure required once near top of file
+const path = require('path');   // <-- ensure required once near top of file
 
+let GIFT_CACHE = null;
+async function loadGiftCatalog() {
+    if (GIFT_CACHE) return GIFT_CACHE;
+    try {
+        // pc-part-dataset/processed/givaAway.json
+        const p = path.join(__dirname, 'pc-part-dataset', 'processed', 'givaAway.json');
+        const json = fs.readFileSync(p, 'utf-8');
+        GIFT_CACHE = JSON.parse(json);
+    } catch (e) {
+        console.error('❌ Không đọc được givaAway.json, fallback rỗng:', e.message);
+        GIFT_CACHE = [];
+    }
+    return GIFT_CACHE;
+}
+function pickRandomUnique(arr, n) {
+    const res = [];
+    const used = new Set();
+    while (res.length < n && used.size < arr.length) {
+        const idx = Math.floor(Math.random() * arr.length);
+        if (!used.has(idx)) {
+            used.add(idx);
+            res.push(arr[idx]);
+        }
+    }
+    return res;
+}
+async function computeGiftsForTotal(total) {
+    const catalog = await loadGiftCatalog();
+    if (!Array.isArray(catalog) || catalog.length === 0) return [];
+
+    // Quy tắc tặng quà theo tổng tiền (có thể sửa linh hoạt):
+    // >= 8.000.000đ: 3 quà; >= 5.000.000đ: 2 quà; >= 3.000.000đ: 1 quà; < 3.000.000đ: 0 quà
+    let giftCount = 0;
+    if (total >= 8000000) giftCount = 3;
+    else if (total >= 5000000) giftCount = 2;
+    else if (total >= 3000000) giftCount = 1;
+    else giftCount = 0;
+
+    if (giftCount === 0) return [];
+
+    const chosen = pickRandomUnique(catalog, giftCount);
+    return chosen.map(g => ({
+        id: g.id,
+        name: g.name,
+        image: g.image,
+        originalPrice: Number(g.originalPrice) || 0,
+        salePrice: 0,
+        discountPercent: 100,
+        quantity: 1,
+        isGift: true
+    }));
+}
+// ==================== CART APIS ====================
 // GET giỏ hàng
 app.get("/api/cart", authenticateToken, async (req, res) => {
     try {
@@ -902,14 +957,18 @@ app.get("/api/cart", authenticateToken, async (req, res) => {
              ORDER BY created_at DESC`,
             [req.user.id]
         );
-        res.json({ success: true, cart: result.rows });
+        const cart = result.rows || [];
+        const total = cart.reduce((s, it) => s + (Number(it.salePrice) || 0) * (Number(it.quantity) || 0), 0);
+        const gifts = await computeGiftsForTotal(total);
+
+        res.json({ success: true, cart, gifts });
     } catch (err) {
         console.error("❌ Lỗi GET /api/cart:", err);
         res.status(500).json({ success: false, error: "Server error" });
     }
 });
 
-// ADD (hoặc cộng dồn) sản phẩm vào giỏ
+// ADD (hoặc set số lượng) sản phẩm vào giỏ
 app.post("/api/cart", authenticateToken, async (req, res) => {
     try {
         const { id, name, originalPrice, salePrice, discountPercent, image, quantity } = req.body;
@@ -917,23 +976,21 @@ app.post("/api/cart", authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu sản phẩm" });
         }
 
-        // ✅ UPSERT: nếu đã có → cộng thêm số lượng, nếu chưa → thêm mới
         await pool.query(
             `INSERT INTO cart_items (user_id, product_id, name, original_price, sale_price, discount_percent, image, quantity)
              VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-             ON CONFLICT (user_id, product_id)
+                 ON CONFLICT (user_id, product_id)
              DO UPDATE SET
                 name = EXCLUDED.name,
-                original_price = EXCLUDED.original_price,
-                sale_price = EXCLUDED.sale_price,
-                discount_percent = EXCLUDED.discount_percent,
-                image = EXCLUDED.image,
-                quantity = EXCLUDED.quantity,
-                created_at = NOW()`,
+                                     original_price = EXCLUDED.original_price,
+                                     sale_price = EXCLUDED.sale_price,
+                                     discount_percent = EXCLUDED.discount_percent,
+                                     image = EXCLUDED.image,
+                                     quantity = EXCLUDED.quantity,
+                                     created_at = NOW()`,
             [req.user.id, id, name, originalPrice, salePrice, discountPercent, image, quantity || 1]
         );
 
-        // ✅ Luôn trả về giỏ hàng mới
         const cartRes = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
                     sale_price AS "salePrice", discount_percent AS "discountPercent",
@@ -944,12 +1001,17 @@ app.post("/api/cart", authenticateToken, async (req, res) => {
             [req.user.id]
         );
 
-        res.json({ success: true, cart: cartRes.rows });
+        const cart = cartRes.rows || [];
+        const total = cart.reduce((s, it) => s + (Number(it.salePrice) || 0) * (Number(it.quantity) || 0), 0);
+        const gifts = await computeGiftsForTotal(total);
+
+        res.json({ success: true, cart, gifts });
     } catch (err) {
         console.error("❌ Lỗi POST /api/cart:", err);
         res.status(500).json({ success: false, error: "Server error" });
     }
 });
+
 
 // UPDATE số lượng tuyệt đối cho 1 sản phẩm
 app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
@@ -974,7 +1036,6 @@ app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
             return res.status(404).json({ success: false, error: "Không tìm thấy sản phẩm trong giỏ" });
         }
 
-        // ✅ Trả lại giỏ hàng mới
         const cartRes = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
                     sale_price AS "salePrice", discount_percent AS "discountPercent",
@@ -985,7 +1046,11 @@ app.put("/api/cart/:productId", authenticateToken, async (req, res) => {
             [userId]
         );
 
-        res.json({ success: true, cart: cartRes.rows });
+        const cart = cartRes.rows || [];
+        const total = cart.reduce((s, it) => s + (Number(it.salePrice) || 0) * (Number(it.quantity) || 0), 0);
+        const gifts = await computeGiftsForTotal(total);
+
+        res.json({ success: true, cart, gifts });
     } catch (err) {
         console.error("❌ Lỗi PUT /api/cart/:id:", err);
         res.status(500).json({ success: false, error: "Lỗi server khi cập nhật số lượng" });
@@ -1000,7 +1065,6 @@ app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
             [req.user.id, req.params.productId]
         );
 
-        // ✅ Trả lại giỏ hàng mới
         const cartRes = await pool.query(
             `SELECT product_id AS id, name, original_price AS "originalPrice",
                     sale_price AS "salePrice", discount_percent AS "discountPercent",
@@ -1011,7 +1075,11 @@ app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
             [req.user.id]
         );
 
-        res.json({ success: true, cart: cartRes.rows });
+        const cart = cartRes.rows || [];
+        const total = cart.reduce((s, it) => s + (Number(it.salePrice) || 0) * (Number(it.quantity) || 0), 0);
+        const gifts = await computeGiftsForTotal(total);
+
+        res.json({ success: true, cart, gifts });
     } catch (err) {
         console.error("❌ Lỗi DELETE /api/cart/:id:", err);
         res.status(500).json({ success: false, error: "Server error" });
@@ -1022,7 +1090,7 @@ app.delete("/api/cart/:productId", authenticateToken, async (req, res) => {
 app.delete("/api/cart", authenticateToken, async (req, res) => {
     try {
         await pool.query(`DELETE FROM cart_items WHERE user_id=$1`, [req.user.id]);
-        res.json({ success: true, cart: [] });
+        res.json({ success: true, cart: [], gifts: [] });
     } catch (err) {
         console.error("❌ Lỗi DELETE /api/cart:", err);
         res.status(500).json({ success: false, error: "Server error" });
@@ -1054,15 +1122,16 @@ app.post("/api/cart/bulk-delete", authenticateToken, async (req, res) => {
             [req.user.id]
         );
 
-        res.json({ success: true, cart: cartRes.rows });
+        const cart = cartRes.rows || [];
+        const total = cart.reduce((s, it) => s + (Number(it.salePrice) || 0) * (Number(it.quantity) || 0), 0);
+        const gifts = await computeGiftsForTotal(total);
+
+        res.json({ success: true, cart, gifts });
     } catch (err) {
         console.error("❌ Lỗi POST /api/cart/bulk-delete:", err);
         res.status(500).json({ success: false, error: "Server error" });
     }
 });
-
-
-
 
 // ================== Middleware xác thực JWT ==================
 function authenticateToken(req, res, next) {
@@ -1183,25 +1252,15 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu đơn hàng" });
         }
 
-        // Lấy danh sách product_id thực sự cần xoá (bỏ quà tặng nếu có isGift)
-        const productIdsToDelete = items
-            .filter(it => !it.isGift)
-            .map(it => String(it.id));
+        // Chuẩn hoá và tính lại tổng tiền từ items (bỏ qua isGift của client nếu có)
+        const normalized = items.map(it => ({
+            ...it,
+            salePrice: Number(it.salePrice) || 0,
+            quantity: Number(it.quantity) || 1
+        }));
+        const computedTotal = normalized.reduce((s, it) => s + it.salePrice * it.quantity, 0);
 
         await client.query("BEGIN");
-
-        // Kiểm tra giỏ hàng của user
-        if (productIdsToDelete.length) {
-            const chk = await client.query(
-                `SELECT product_id FROM cart_items
-                 WHERE user_id=$1 AND product_id = ANY($2)`,
-                [req.user.id, productIdsToDelete]
-            );
-            if (chk.rows.length === 0) {
-                await client.query("ROLLBACK");
-                return res.status(400).json({ success: false, error: "Không tìm thấy sản phẩm đã chọn trong giỏ" });
-            }
-        }
 
         // Sinh mã đơn hàng unique
         let orderCode, exists = true;
@@ -1211,7 +1270,12 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             exists = check.rows.length > 0;
         }
 
-        // Tạo đơn hàng
+        // [NEW] Tính quà theo computedTotal (server là nguồn quyết định)
+        const gifts = await computeGiftsForTotal(computedTotal);
+
+        // [NEW] Gộp items + gifts vào đơn hàng
+        const orderItems = [...normalized, ...gifts];
+
         const insert = await client.query(
             `INSERT INTO orders (user_id, order_code, items, total, delivery_info, payment_method, unseen)
              VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6, true)
@@ -1222,18 +1286,19 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             [
                 req.user.id,
                 orderCode,
-                JSON.stringify(items),
-                total,
+                JSON.stringify(orderItems),
+                computedTotal,
                 deliveryInfo ? JSON.stringify(deliveryInfo) : null,
                 paymentMethod || null
             ]
         );
 
-        // ❗️Xoá CÓ CHỌN LỌC sản phẩm đã thanh toán
+        // Xoá CÓ CHỌN LỌC sản phẩm thường đã thanh toán khỏi giỏ (bỏ qua gifts)
+        const productIdsToDelete = normalized.filter(it => !it.isGift).map(it => String(it.id));
         if (productIdsToDelete.length) {
             await client.query(
                 `DELETE FROM cart_items
-                 WHERE user_id=$1 AND product_id = ANY($2)`,
+                 WHERE user_id=$1 AND product_id = ANY($2::text[])`,
                 [req.user.id, productIdsToDelete]
             );
         }
@@ -1326,9 +1391,6 @@ app.delete("/api/orders/:id", authenticateToken, async (req, res) => {
         res.status(500).json({ success: false, error: "Server error" });
     }
 });
-
-
-
 
 // ===== Start =====
 const PORT = process.env.PORT || 3000;

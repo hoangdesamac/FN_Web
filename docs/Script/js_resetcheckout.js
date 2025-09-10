@@ -68,12 +68,11 @@ function showStep(step) {
 
 function _mergeCartWithGifts(cartArray) {
     try {
-        const gifts = JSON.parse(localStorage.getItem('giftCart') || '[]') || [];
-        // Ensure gifts have quantity numeric
+        const gifts = getServerGifts();
         const normalizedGifts = gifts.map(g => ({ ...g, quantity: Number(g.quantity) || 1 }));
         return Array.isArray(cartArray) ? cartArray.concat(normalizedGifts) : normalizedGifts;
     } catch (e) {
-        return cartArray || [];
+        return Array.isArray(cartArray) ? cartArray : [];
     }
 }
 
@@ -94,12 +93,11 @@ async function _refreshCartCountFromSharedOrFallback() {
 async function initializeCartSystem() {
     const logged = isLoggedIn();
 
-    // If pendingCartItem exist, try to add it
+    // Nếu có pendingCartItem (khi click mua khi chưa login) → thêm sau khi login
     try {
         const pending = localStorage.getItem('pendingCartItem');
         if (pending) {
             const item = JSON.parse(pending);
-            // Use addToCart which itself handles logged/not-logged branches
             await addToCart(
                 item.id,
                 item.name,
@@ -116,7 +114,6 @@ async function initializeCartSystem() {
 
     if (logged) {
         try {
-            // Always fetch authoritative cart from server
             const res = await fetch(`${window.API_BASE}/api/cart`, {
                 method: 'GET',
                 credentials: 'include'
@@ -124,16 +121,15 @@ async function initializeCartSystem() {
             const data = await res.json();
             if (data && data.success) {
                 const serverCart = data.cart || [];
-                // persist local cache
+                const gifts = data.gifts || [];
                 try { localStorage.setItem('cart', JSON.stringify(serverCart)); } catch (e) {}
+                setServerGifts(gifts);
                 cartCache = serverCart;
 
-                // Update badge via shared API (include giftCart counts)
                 try {
                     if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                        window.cartCountShared.setFromCart(_mergeCartWithGifts(serverCart));
+                        window.cartCountShared.setFromCart(serverCart.concat(gifts));
                     } else {
-                        // fallback
                         updateCartCount && updateCartCount();
                     }
                 } catch (e) {
@@ -141,10 +137,8 @@ async function initializeCartSystem() {
                     updateCartCount && updateCartCount();
                 }
 
-                // Update orders count (existing behaviour)
                 updateOrderCount && updateOrderCount();
 
-                // Render cart UI if container present
                 if (document.getElementById('cart-items-container')) {
                     renderCart(serverCart);
                 }
@@ -153,8 +147,8 @@ async function initializeCartSystem() {
             }
         } catch (err) {
             console.error('❌ Lỗi khi lấy giỏ hàng từ server (init):', err);
-            // best-effort fallback to local
             cartCache = JSON.parse(localStorage.getItem('cart') || '[]');
+            setServerGifts([]);
             try {
                 if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
                     window.cartCountShared.setFromCart(_mergeCartWithGifts(cartCache));
@@ -163,9 +157,9 @@ async function initializeCartSystem() {
             if (document.getElementById('cart-items-container')) renderCart(cartCache);
         }
     } else {
-        // Not logged: use local cache only
         const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
         cartCache = localCart;
+        setServerGifts([]); // khách chưa đăng nhập không có quà server
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
@@ -184,9 +178,9 @@ async function initializeCartSystem() {
         }
     }
 
-    // Ensure buy-button event binding (kept as before)
+    // Bind sự kiện buy-button như cũ
     document.querySelectorAll('.buy-button').forEach(button => {
-        if (button._boundBuy) return; // avoid double-binding
+        if (button._boundBuy) return;
         button._boundBuy = true;
         button.addEventListener('click', function () {
             const productCard = this.closest('.product-card');
@@ -202,21 +196,15 @@ async function initializeCartSystem() {
             }
 
             const productName = productCard.querySelector('.product-name')?.textContent.trim() || 'Sản phẩm không tên';
-
-            // Giá gốc & sale
             const originalPriceText = productCard.querySelector('.original-price')?.textContent || '0';
             const salePriceText = productCard.querySelector('.sale-price')?.textContent || originalPriceText;
             const originalPrice = parseInt(originalPriceText.replace(/\D/g, '')) || 0;
             const salePrice = parseInt(salePriceText.replace(/\D/g, '')) || originalPrice;
-
-            // % giảm
             const discountPercentText = productCard.querySelector('.discount-badge')?.textContent || '0%';
             const discountPercent = parseInt(discountPercentText.replace(/[^0-9]/g, '')) || 0;
-
             const productImage = productCard.querySelector('.product-image img')?.src || '';
 
             if (!isLoggedIn()) {
-                // Nếu chưa login → lưu pending
                 localStorage.setItem('pendingCartItem', JSON.stringify({
                     id: productId,
                     name: productName,
@@ -234,111 +222,17 @@ async function initializeCartSystem() {
                 return;
             }
 
-            // Đã login → thêm thẳng vào server
             addToCart(productId, productName, originalPrice, salePrice, discountPercent, productImage);
             showNotification(`Đã thêm "${productName}" vào giỏ hàng!`, 'success');
         });
     });
 
-    // ensure notification element exists
     if (!document.getElementById('notification')) createNotificationElement();
-
-    // cleanup expired items (local only)
     cleanupExpiredItems();
 }
 
-
-
-
-
-
 let cartCache = null;
 let selectedItems = [];
-
-function getGiftCart() {
-    return (JSON.parse(localStorage.getItem('giftCart')) || []).map(g => ({
-        ...g,
-        quantity: parseInt(g.quantity) || 1
-    }));
-}
-
-function saveGiftCart(giftCart) {
-    localStorage.setItem('giftCart', JSON.stringify(giftCart));
-}
-
-function addGiftToCart(gift) {
-    const gifts = getGiftCart();
-    if (gifts.some(g => g.id === gift.id)) return;
-    const orig = typeof gift.originalPrice === 'string' ? parseInt(gift.originalPrice.replace(/\D/g, '')) || 0 : (gift.originalPrice || 0);
-    const giftItem = {
-        id: gift.id,
-        name: gift.name,
-        image: gift.image,
-        originalPrice: orig,
-        salePrice: 0,
-        discountPercent: 100,
-        quantity: 1,
-        isGift: true,
-        addedAt: new Date().toISOString()
-    };
-    gifts.push(giftItem);
-    saveGiftCart(gifts);
-
-    let selected = JSON.parse(localStorage.getItem('selectedCart')) || [];
-    if (!selected.some(i => i.id === giftItem.id)) {
-        selected.push(giftItem);
-        localStorage.setItem('selectedCart', JSON.stringify(selected));
-    }
-
-    updateCartCount();
-    renderCart();
-}
-
-function removeGiftFromCart(giftId) {
-    let gifts = getGiftCart();
-    gifts = gifts.filter(g => g.id !== giftId);
-    saveGiftCart(gifts);
-
-    let selected = JSON.parse(localStorage.getItem('selectedCart')) || [];
-    selected = selected.filter(i => i.id !== giftId);
-    localStorage.setItem('selectedCart', JSON.stringify(selected));
-
-    updateCartCount();
-    renderCart();
-}
-
-function validateGiftCartOnLoad() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
-    const requiredIds = JSON.parse(localStorage.getItem('giftRequirements')) || [];
-
-    if (giftCart.length && requiredIds.length) {
-        const hasAllRequired = requiredIds.every(id => cart.some(item => item.id === id));
-        if (!hasAllRequired) {
-            localStorage.removeItem('giftCart');
-            localStorage.removeItem('giftRequirements');
-        }
-    } else {
-        localStorage.removeItem('giftCart');
-        localStorage.removeItem('giftRequirements');
-    }
-}
-
-function updateGiftVisibility() {
-    const giftCart = JSON.parse(localStorage.getItem('giftCart')) || [];
-    const requiredIds = JSON.parse(localStorage.getItem('giftRequirements')) || [];
-    const selected = JSON.parse(localStorage.getItem('selectedCart')) || [];
-
-    if (!giftCart.length || !requiredIds.length) {
-        document.querySelectorAll('.gift-section').forEach(el => el.style.display = 'none');
-        return;
-    }
-
-    const hasAllRequired = requiredIds.every(id => selected.some(s => s.id === id));
-    document.querySelectorAll('.gift-section').forEach(el => {
-        el.style.display = hasAllRequired ? '' : 'none';
-    });
-}
 
 function handleSelectItem(checkbox, index) {
     const cart = getCart();
@@ -357,7 +251,6 @@ function handleSelectItem(checkbox, index) {
 
     const selected = cart.filter(item => selectedItems.includes(item.id));
     localStorage.setItem('selectedCart', JSON.stringify(selected));
-    updateGiftVisibility();
 
     const selectAllCheckbox = document.getElementById('select-all-checkbox');
     if (selectAllCheckbox) {
@@ -372,17 +265,11 @@ function handleSelectAllToggle(checked) {
 
     const selected = cart.filter(item => selectedItems.includes(item.id));
     localStorage.setItem('selectedCart', JSON.stringify(selected));
-    updateGiftVisibility();
 
-    document.querySelectorAll('.normal-cart-item').forEach((itemDiv, index) => {
+    document.querySelectorAll('.normal-cart-item').forEach((itemDiv) => {
         const checkbox = itemDiv.querySelector('.select-checkbox');
         if (checkbox) checkbox.checked = checked;
-
-        if (checked) {
-            itemDiv.classList.add('selected-item');
-        } else {
-            itemDiv.classList.remove('selected-item');
-        }
+        itemDiv.classList.toggle('selected-item', checked);
     });
 }
 
@@ -437,7 +324,6 @@ async function addToCart(productId, productName, originalPrice, salePrice, disco
         saveCart(cart);
         cartCache = cart;
 
-        // Update badge via shared API (fast)
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
                 window.cartCountShared.setFromCart(_mergeCartWithGifts(cart));
@@ -455,7 +341,6 @@ async function addToCart(productId, productName, originalPrice, salePrice, disco
 
     // LOGGED: server sync (optimistic)
     try {
-        // Optimistic UI increment
         try {
             if (window.cartCountShared && typeof window.cartCountShared.increment === 'function') {
                 window.cartCountShared.increment(1);
@@ -484,19 +369,19 @@ async function addToCart(productId, productName, originalPrice, salePrice, disco
         const data = await res.json();
         if (!data.success) {
             console.error('❌ Lỗi thêm sản phẩm trên server:', data.error);
-            // Reconcile: refresh authoritative count
             await _refreshCartCountFromSharedOrFallback();
             return;
         }
 
-        // Server returns authoritative cart → sync local and UI
         const serverCart = data.cart || [];
+        const gifts = data.gifts || [];
         saveCart(serverCart);
+        setServerGifts(gifts);
         cartCache = serverCart;
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                window.cartCountShared.setFromCart(_mergeCartWithGifts(serverCart));
+                window.cartCountShared.setFromCart(serverCart.concat(gifts));
             } else {
                 updateCartCount && updateCartCount();
             }
@@ -508,7 +393,6 @@ async function addToCart(productId, productName, originalPrice, salePrice, disco
         renderCart(serverCart);
     } catch (err) {
         console.error('❌ Lỗi gọi API addToCart:', err);
-        // On network error, refresh authoritative to avoid wrong badge
         await _refreshCartCountFromSharedOrFallback();
     }
 }
@@ -525,7 +409,6 @@ function animateCartIcon() {
 }
 
 function updateCartCount() {
-    // Preferred: delegate to cartCountShared
     try {
         if (window.cartCountShared && typeof window.cartCountShared.refresh === 'function') {
             window.cartCountShared.refresh();
@@ -535,22 +418,23 @@ function updateCartCount() {
         console.warn('cartCountShared.refresh error (fallback to legacy):', e);
     }
 
-    // Legacy fallback calculation from localStorage / cache
     try {
         const cartCountElement = document.querySelector('.cart-count');
         if (!cartCountElement) return;
 
-        // If not logged -> hide
-        if (!(window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function' ? window.AuthSync.isLoggedIn() : !!localStorage.getItem('userName'))) {
+        const logged = (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function')
+            ? window.AuthSync.isLoggedIn()
+            : !!localStorage.getItem('userName');
+
+        if (!logged) {
             cartCountElement.style.display = 'none';
             return;
         }
 
-        validateGiftCartOnLoad();
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const giftCart = JSON.parse(localStorage.getItem('giftCart') || '[]');
+        const gifts = getServerGifts();
         const normalCount = Array.isArray(cart) ? cart.reduce((t, i) => t + (Number(i.quantity) || 0), 0) : 0;
-        const giftCount = Array.isArray(giftCart) ? giftCart.reduce((t, g) => t + (Number(g.quantity) || 0), 0) : 0;
+        const giftCount = Array.isArray(gifts) ? gifts.reduce((t, g) => t + (Number(g.quantity) || 0), 0) : 0;
         const total = normalCount + giftCount;
 
         cartCountElement.textContent = String(total);
@@ -559,8 +443,6 @@ function updateCartCount() {
         console.warn('updateCartCount fallback error:', err);
     }
 }
-
-
 
 function createNotificationElement() {
     const oldNotification = document.getElementById('notification');
@@ -606,10 +488,9 @@ function showNotification(message = 'Đã thêm sản phẩm vào giỏ hàng!',
 async function clearCart() {
     if (!confirm('Bạn có chắc chắn muốn xóa tất cả sản phẩm khỏi giỏ hàng?')) return;
 
-    // Local clear first (instant)
     try {
         saveCart([]);
-        saveGiftCart([]);
+        setServerGifts([]);
         localStorage.removeItem('selectedCart');
         cartCache = [];
         selectedItems = [];
@@ -619,7 +500,6 @@ async function clearCart() {
 
     const logged = isLoggedIn();
 
-    // Server-side clear if logged
     if (logged) {
         try {
             const res = await fetch(`${window.API_BASE}/api/cart`, {
@@ -630,9 +510,10 @@ async function clearCart() {
             if (!data.success) {
                 console.error('❌ Lỗi xoá toàn bộ giỏ hàng trên server:', data.error);
             } else {
-                // If server returned authoritative cart, use it
                 const serverCart = data.cart || [];
+                const gifts = data.gifts || [];
                 saveCart(serverCart);
+                setServerGifts(gifts);
                 cartCache = serverCart;
             }
         } catch (err) {
@@ -640,14 +521,11 @@ async function clearCart() {
         }
     }
 
-    // Unlock checkout
     localStorage.removeItem('cartLocked');
 
-    // Update UI and shared badge
     try {
         if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-            // empty cart + gifts
-            window.cartCountShared.setFromCart([]);
+            window.cartCountShared.setFromCart(getCart().concat(getServerGifts()));
         } else {
             updateCartCount && updateCartCount();
         }
@@ -657,21 +535,18 @@ async function clearCart() {
     }
 
     renderCart([]);
-    updateGiftVisibility();
     showNotification('Đã xóa tất cả sản phẩm khỏi giỏ hàng', 'success');
 }
 
 async function updateQuantity(index, change) {
     const cart = getCart();
     if (!cart[index]) return;
-
     if (cart[index].isGift) return;
 
     const oldQty = Number(cart[index].quantity || 0);
     const newQty = oldQty + change;
     if (newQty < 1) return;
 
-    // UI animation
     const cartItems = document.querySelectorAll('.cart-item');
     if (cartItems[index]) {
         cartItems[index].classList.add('quantity-change');
@@ -680,7 +555,6 @@ async function updateQuantity(index, change) {
 
     const logged = isLoggedIn();
 
-    // NOT LOGGED: local update and badge update
     if (!logged) {
         cart[index].quantity = newQty;
         cart[index].updatedAt = new Date().toISOString();
@@ -698,15 +572,11 @@ async function updateQuantity(index, change) {
             console.warn('updateQuantity local setFromCart failed:', e);
             updateCartCount && updateCartCount();
         }
-
-        updateGiftVisibility();
         return;
     }
 
-    // LOGGED: optimistic delta then server update
     const delta = newQty - oldQty;
     try {
-        // optimistic
         try {
             if (window.cartCountShared && typeof window.cartCountShared.increment === 'function') {
                 window.cartCountShared.increment(delta);
@@ -725,27 +595,25 @@ async function updateQuantity(index, change) {
         const data = await res.json();
         if (!data.success) {
             console.error('❌ Lỗi cập nhật số lượng trên server:', data.error);
-            // reconcile
             await _refreshCartCountFromSharedOrFallback();
             return;
         }
 
-        // sync authoritative
         const serverCart = data.cart || [];
+        const gifts = data.gifts || [];
         saveCart(serverCart);
+        setServerGifts(gifts);
         cartCache = serverCart;
         renderCart(serverCart);
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                window.cartCountShared.setFromCart(_mergeCartWithGifts(serverCart));
+                window.cartCountShared.setFromCart(serverCart.concat(gifts));
             } else updateCartCount && updateCartCount();
         } catch (e) {
             console.warn('updateQuantity setFromCart failed:', e);
             updateCartCount && updateCartCount();
         }
-
-        updateGiftVisibility();
     } catch (err) {
         console.error('❌ Lỗi gọi API updateQuantity:', err);
         await _refreshCartCountFromSharedOrFallback();
@@ -773,14 +641,12 @@ async function removeItem(index) {
 async function performRemoveItem(index, itemName, productId) {
     const logged = isLoggedIn();
 
-    // NOT LOGGED: local removal
     if (!logged) {
         let cart = getCart();
         cart.splice(index, 1);
         saveCart(cart);
         cartCache = cart;
 
-        validateGiftRequirements(cart);
         renderCart(cart);
 
         try {
@@ -792,19 +658,15 @@ async function performRemoveItem(index, itemName, productId) {
             updateCartCount && updateCartCount();
         }
 
-        updateGiftVisibility();
-
         if (cart.length === 0) localStorage.removeItem('cartLocked');
 
         showNotification(`Đã xóa "${itemName}" khỏi giỏ hàng`, 'success');
         return;
     }
 
-    // LOGGED: optimistic decrement then server call
     const cart = getCart();
     const toRemoveQty = (cart[index] && Number(cart[index].quantity)) || 1;
     try {
-        // optimistic decrement
         try {
             if (window.cartCountShared && typeof window.cartCountShared.decrement === 'function') {
                 window.cartCountShared.decrement(toRemoveQty);
@@ -819,28 +681,26 @@ async function performRemoveItem(index, itemName, productId) {
         const data = await res.json();
         if (!data.success) {
             console.error('❌ Lỗi xoá sản phẩm trên server:', data.error);
-            // reconcile
             await _refreshCartCountFromSharedOrFallback();
             return;
         }
 
         const serverCart = data.cart || [];
+        const gifts = data.gifts || [];
         saveCart(serverCart);
+        setServerGifts(gifts);
         cartCache = serverCart;
 
-        validateGiftRequirements(serverCart);
         renderCart(serverCart);
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                window.cartCountShared.setFromCart(_mergeCartWithGifts(serverCart));
+                window.cartCountShared.setFromCart(serverCart.concat(gifts));
             } else updateCartCount && updateCartCount();
         } catch (e) {
             console.warn('performRemoveItem setFromCart failed:', e);
             updateCartCount && updateCartCount();
         }
-
-        updateGiftVisibility();
 
         if (serverCart.length === 0) localStorage.removeItem('cartLocked');
 
@@ -851,16 +711,7 @@ async function performRemoveItem(index, itemName, productId) {
     }
 }
 
-// 🔑 Kiểm tra quà tặng khi giỏ hàng thay đổi
-function validateGiftRequirements(cart) {
-    const requiredIds = JSON.parse(localStorage.getItem('giftRequirements')) || [];
-    const hasAllRequired = requiredIds.every(id => cart.some(item => item.id === id));
-    if (!hasAllRequired) {
-        saveGiftCart([]);
-    }
-}
-
-function cleanupExpiredItems(expiryHours = 72) {
+async function cleanupExpiredItems(expiryHours = 72) {
     const cart = getCart();
     const now = new Date();
     let hasExpired = false;
@@ -868,7 +719,6 @@ function cleanupExpiredItems(expiryHours = 72) {
     const cleanedCart = cart.filter(item => {
         const addedAt = new Date(item.addedAt || now);
         const hoursDiff = (now - addedAt) / (1000 * 60 * 60);
-
         if (hoursDiff > expiryHours) {
             hasExpired = true;
             return false;
@@ -876,33 +726,82 @@ function cleanupExpiredItems(expiryHours = 72) {
         return true;
     });
 
-    if (hasExpired) {
-        saveCart(cleanedCart);
-        updateCartCount();
-        renderCart();
-        console.log("Đã xóa các sản phẩm hết hạn từ giỏ hàng");
+    if (!hasExpired) return;
 
-        // Đồng bộ với server nếu đã đăng nhập
-        const logged = isLoggedIn();
-        if (logged) {
-            cleanedCart.forEach(item => {
-                fetch(`${window.API_BASE}/api/cart`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        id: item.id,
-                        name: item.name,
-                        originalPrice: item.originalPrice,
-                        salePrice: item.salePrice,
-                        discountPercent: item.discountPercent,
-                        image: item.image,
-                        quantity: item.quantity
-                    })
-                }).catch(err => console.error('Lỗi đồng bộ sản phẩm:', err));
+    // Tìm danh sách ID bị xoá do hết hạn
+    const removedIds = cart
+        .filter(oldItem => !cleanedCart.some(n => n.id === oldItem.id))
+        .map(it => String(it.id));
+
+    // Cập nhật local trước để UI nhanh
+    saveCart(cleanedCart);
+    renderCart();
+    updateCartCount();
+    console.log("Đã xóa các sản phẩm hết hạn từ giỏ hàng");
+
+    // Đồng bộ với server nếu đã đăng nhập
+    const logged = isLoggedIn();
+    if (!logged) return;
+
+    try {
+        // Xoá các item hết hạn trên server (nếu có)
+        if (removedIds.length) {
+            await fetch(`${window.API_BASE}/api/cart/bulk-delete`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ ids: removedIds })
             });
         }
+
+        // Đảm bảo số lượng cho các item còn lại (idempotent)
+        await Promise.all(cleanedCart.map(item => fetch(`${window.API_BASE}/api/cart`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                id: item.id,
+                name: item.name,
+                originalPrice: item.originalPrice,
+                salePrice: item.salePrice,
+                discountPercent: item.discountPercent,
+                image: item.image,
+                quantity: item.quantity
+            })
+        }).catch(err => console.error('Lỗi đồng bộ sản phẩm:', err))));
+
+        // Lấy lại giỏ authoritative và cập nhật gifts
+        const res = await fetch(`${window.API_BASE}/api/cart`, { credentials: 'include' });
+        const data = await res.json();
+        if (data && data.success) {
+            const serverCart = data.cart || [];
+            const gifts = data.gifts || [];
+            saveCart(serverCart);
+            setServerGifts(gifts);
+            cartCache = serverCart;
+
+            try {
+                if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
+                    window.cartCountShared.setFromCart(serverCart.concat(gifts));
+                } else {
+                    updateCartCount && updateCartCount();
+                }
+            } catch (e) {
+                console.warn('cleanupExpiredItems setFromCart failed:', e);
+                updateCartCount && updateCartCount();
+            }
+            renderCart(serverCart);
+        }
+    } catch (err) {
+        console.error('Lỗi cleanupExpiredItems sync server:', err);
     }
+}
+
+function getServerGifts() {
+    try { return JSON.parse(localStorage.getItem('serverGifts') || '[]'); } catch { return []; }
+}
+function setServerGifts(gifts) {
+    try { localStorage.setItem('serverGifts', JSON.stringify(Array.isArray(gifts) ? gifts : [])); } catch {}
 }
 
 function renderCart() {
@@ -923,7 +822,6 @@ function renderCart() {
     const cartItemsContainer = document.getElementById('cart-items-container');
     if (!cartItemsContainer) return;
 
-    // 🛠 Fix: Xoá nội dung cũ trước khi render mới
     cartItemsContainer.innerHTML = '';
 
     const emptyCart = document.getElementById('empty-cart');
@@ -932,8 +830,7 @@ function renderCart() {
     const continueBtn = document.getElementById('continue-shopping-btn');
 
     let cart = getCart();
-    validateGiftCartOnLoad();
-    let giftCart = getGiftCart();
+    let giftCart = getServerGifts();
 
     if ((cart.length === 0) && (giftCart.length === 0)) {
         if (emptyCart) emptyCart.classList.remove('d-none');
@@ -972,41 +869,29 @@ function renderCart() {
             <div class="price-section">
                 <span class="original-price me-2">${formatCurrency(item.originalPrice)}</span>
                 <span class="sale-price">${formatCurrency(item.salePrice)}</span>
-                <span class="discount-badge badge bg-danger ms-2">
-                   -${item.discountPercent !== undefined
+                <span class="discount-badge badge bg-danger ms-2">-${item.discountPercent !== undefined
             ? item.discountPercent
             : Math.round(100 - (item.salePrice / item.originalPrice * 100))
-        }%
-                </span>
+        }%</span>
             </div>
         </div>
         <div class="cart-item__quantity d-flex align-items-center">
-            <button class="quantity-btn quantity-btn--decrease ${minusDisabled}" 
-                    onclick="updateQuantity(${index}, -1)" ${minusDisabled ? 'disabled' : ''}>
-                <i class="fa fa-minus"></i>
-            </button>
+            <button class="quantity-btn quantity-btn--decrease ${minusDisabled}" onclick="updateQuantity(${index}, -1)" ${minusDisabled ? 'disabled' : ''}><i class="fa fa-minus"></i></button>
             <input type="number" class="quantity-input" value="${item.quantity}" readonly>
-            <button class="quantity-btn quantity-btn--increase" onclick="updateQuantity(${index}, 1)">
-                <i class="fa fa-plus"></i>
-            </button>
+            <button class="quantity-btn quantity-btn--increase" onclick="updateQuantity(${index}, 1)"><i class="fa fa-plus"></i></button>
         </div>
         <div class="cart-item__total ms-3" style="margin-top: 6px;">${formatCurrency(item.salePrice * item.quantity)}</div>
-        <button class="cart-item__remove ms-3" onclick="removeItem(${index})">
-            <i class="fa fa-trash"></i>
-        </button>
+        <button class="cart-item__remove ms-3" onclick="removeItem(${index})"><i class="fa fa-trash"></i></button>
     </div>
     `;
     });
 
-    // Render quà tặng nếu có
     if (giftCart.length) {
-        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🎁 Sản phẩm tặng kèm</h5>`;
-        giftCart.forEach((g, gi) => {
+        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🎁 Quà tặng của bạn</h5>`;
+        giftCart.forEach((g) => {
             const safeQty = parseInt(g.quantity) || 1;
-            const safePrice = parseInt(g.salePrice) || 0;
-            total += safePrice * safeQty;
             cartItemsHTML += `
-    <div class="cart-item gift-cart-item d-flex align-items-start p-3 mb-3 rounded position-relative" data-gift-index="${gi}" data-gift-id="${g.id}">
+    <div class="cart-item gift-cart-item d-flex align-items-start p-3 mb-3 rounded position-relative" data-gift-id="${g.id}">
         <img src="${g.image}" alt="${g.name}" class="cart-item__image me-3" style="width: 80px; height: 80px; object-fit: cover;">
         <div class="cart-item__info flex-grow-1">
             <h5 class="cart-item__name">${g.name}</h5>
@@ -1016,17 +901,13 @@ function renderCart() {
                 <span class="discount-badge badge bg-danger ms-2">-100%</span>
             </div>
         </div>
-        <div class="cart-item__quantity d-flex align-items-center">
-            <span class="gift-qty">x${safeQty}</span>
-        </div>
+        <div class="cart-item__quantity d-flex align-items-center"><span class="gift-qty">x${safeQty}</span></div>
         <div class="cart-item__total ms-3" style="margin-top: 6px;">${formatCurrency(0)}</div>
-    </div>
-            `;
+    </div>`;
         });
         cartItemsHTML += `</div>`;
     }
 
-    // Gắn HTML mới vào container
     cartItemsContainer.innerHTML = cartItemsHTML;
 
     const savedSelected = JSON.parse(localStorage.getItem('selectedCart')) || [];
@@ -1481,7 +1362,6 @@ async function processPayment() {
     loadingModal.show();
 
     try {
-        // Hiển thị animation loading
         lottie.loadAnimation({
             container: document.getElementById("loading-lottie"),
             renderer: "svg",
@@ -1493,7 +1373,6 @@ async function processPayment() {
         console.error("⚠️ Lỗi khi tải Lottie animation:", error);
     }
 
-    // Giả lập delay xử lý thanh toán
     setTimeout(async () => {
         try {
             let selectedCart = JSON.parse(localStorage.getItem("selectedCart")) || [];
@@ -1504,16 +1383,15 @@ async function processPayment() {
                 return;
             }
 
-            // 🔎 Chuẩn hoá dữ liệu giỏ hàng đã chọn
             selectedCart = selectedCart.map(it => (typeof it === "string" ? JSON.parse(it) : it));
             selectedCart = sanitizeCart(selectedCart);
 
             const selectedMethod =
                 document.querySelector('input[name="payment-method"]:checked')?.value || "COD";
-            const deliveryInfo = getDeliveryInfo(); // Lấy info chuẩn từ form
+            const deliveryInfo = getDeliveryInfo();
             const total = selectedCart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
 
-            // 1️⃣ Gửi yêu cầu tạo đơn hàng lên server
+            // 1) Tạo đơn
             const res = await fetch(`${window.API_BASE}/api/orders`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -1525,7 +1403,6 @@ async function processPayment() {
                     deliveryInfo
                 })
             });
-
             const data = await res.json();
 
             if (!res.ok || !data.success) {
@@ -1535,9 +1412,7 @@ async function processPayment() {
                 return;
             }
 
-            console.log("✅ Đơn hàng mới từ server:", data.order);
-
-            // 2️⃣ Xoá các sản phẩm đã thanh toán trên server
+            // 2) Xoá item đã mua khỏi giỏ (server đã xoá có chọn lọc trong /api/orders, gọi lại để an toàn)
             try {
                 const idsToRemove = selectedCart.map(item => item.id);
                 await fetch(`${window.API_BASE}/api/cart/bulk-delete`, {
@@ -1546,26 +1421,29 @@ async function processPayment() {
                     credentials: "include",
                     body: JSON.stringify({ ids: idsToRemove })
                 });
-                console.log("🗑️ Đã xoá sản phẩm đã thanh toán khỏi giỏ server.");
             } catch (err) {
                 console.warn("⚠️ Không xoá được sản phẩm đã thanh toán:", err);
             }
 
-            // 3️⃣ Đồng bộ lại giỏ hàng còn lại từ server
+            // 3) Đồng bộ lại giỏ hàng còn lại + gifts từ server (authoritative)
             try {
                 const cartRes = await fetch(`${window.API_BASE}/api/cart`, { credentials: "include" });
                 const updated = await cartRes.json();
-                if (updated.success) {
-                    saveCart(updated.cart || []);
-                    cartCache = updated.cart || [];
+                if (updated && updated.success) {
+                    const serverCart = updated.cart || [];
+                    const gifts = updated.gifts || [];
+                    saveCart(serverCart);
+                    setServerGifts(gifts);
+                    cartCache = serverCart;
                 }
             } catch (err) {
                 console.error("⚠️ Không thể đồng bộ giỏ hàng sau thanh toán:", err);
             }
 
-            // 4️⃣ Dọn localStorage (chỉ xoá selectedCart và giftCart)
+            // 4) Dọn localStorage:
+            //    - Chỉ xoá danh sách đã chọn; KHÔNG xoá serverGifts để giữ đúng quà do server tính cho phần giỏ còn lại
             localStorage.removeItem("selectedCart");
-            localStorage.removeItem("giftCart");
+            // KHÔNG xoá 'serverGifts' ở đây
 
             // Giữ lại note & invoiceRequired cho lần sau
             const savedInfo = {
@@ -1574,12 +1452,12 @@ async function processPayment() {
             };
             localStorage.setItem("deliveryInfo", JSON.stringify(savedInfo));
 
-            // 5️⃣ Cập nhật lại UI
+            // 5) Cập nhật lại UI
             updateCartCount();
             renderCart();
             updateOrderCount();
 
-            // 6️⃣ Đóng loading và mở modal thành công
+            // 6) Đóng loading và mở modal thành công
             loadingModal.hide();
             showSuccessModal();
         } catch (err) {
@@ -1616,7 +1494,6 @@ function setupPaymentMethodAnimations() {
 
 document.addEventListener("DOMContentLoaded", async function () {
     // Always render checkout page (no auth gate here)
-    validateGiftCartOnLoad();
     initializeCartSystem();
 
     loadPagePart("HTML/Layout/resetheader.html", "#header-container", () => {
@@ -1662,19 +1539,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         proceedStep2Btn.addEventListener('click', () => {
             const cart = getCart();
             const selected = cart.filter(item => selectedItems.includes(item.id));
-            const giftCart = getGiftCart();
-
-            const merged = [...selected];
-            giftCart.forEach(g => {
-                if (!merged.some(m => m.id === g.id)) merged.push(g);
-            });
 
             if (selected.length === 0) {
                 showNotification('Vui lòng chọn ít nhất một sản phẩm để tiếp tục!', 'error');
                 return;
             }
 
-            localStorage.setItem('selectedCart', JSON.stringify(merged));
+            // KHÔNG gộp quà; server sẽ tự chèn dựa trên tổng tiền khi tạo đơn
+            localStorage.setItem('selectedCart', JSON.stringify(selected));
             showStep(2);
         });
     }
@@ -1822,8 +1694,7 @@ window.addEventListener('storage', function (e) {
     try {
         if (!e || !e.key) return;
 
-        if (e.key === 'cart' || e.key === 'giftCart') {
-            // local change -> update cache & badge & UI
+        if (e.key === 'cart' || e.key === 'serverGifts') {
             refreshCartCache();
             try {
                 const merged = _mergeCartWithGifts(JSON.parse(localStorage.getItem('cart') || '[]'));
@@ -1836,16 +1707,12 @@ window.addEventListener('storage', function (e) {
                 console.warn('storage handler setFromCart err:', err);
                 updateCartCount && updateCartCount();
             }
-            // update UI if cart page open
             try { renderCart(); } catch (err) {}
         }
 
-        // Orders key -> update order count
         if (e.key === 'orders') {
             updateOrderCount && updateOrderCount();
         }
-
-        // Auth change via AuthSync will call onChange handlers elsewhere
     } catch (err) {
         console.warn('storage listener error:', err);
     }
