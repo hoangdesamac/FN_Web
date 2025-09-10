@@ -990,7 +990,7 @@ function renderCart() {
     });
 
     if (giftCart.length) {
-        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🎁 Quà tặng của bạn</h5>`;
+        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🔮 Quà tặng cho bạn</h5>`;
         giftCart.forEach((g) => {
             const safeQty = parseInt(g.quantity) || 1;
             cartItemsHTML += `
@@ -1016,7 +1016,7 @@ function renderCart() {
     selectedItems = savedSelected.filter(it => !it.isGift).map(item => item.id);
 
     if (Array.isArray(previewGifts) && previewGifts.length && Array.isArray(selectedItems) && selectedItems.length) {
-        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🔮 Quà tặng cho bạn</h5>`;
+        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🎁 Quà tặng của bạn</h5>`;
         previewGifts.forEach((g) => {
             const safeQty = parseInt(g.quantity) || 1;
             cartItemsHTML += `
@@ -1362,7 +1362,7 @@ function renderOrderSummary() {
     if (Array.isArray(previewGifts) && previewGifts.length) {
         giftsHTML = `
             <div class="order-gifts mt-3">
-                <h5>🔮 Quà tặng cho bạn</h5>
+                <h5>🎁 Quà tặng của bạn</h5>
                 ${previewGifts.map(g => `
                     <div class="order-product d-flex align-items-center p-2 mb-2 rounded">
                         <img src="${g.image}" alt="${g.name}" class="me-3" style="width: 48px; height: 48px; object-fit: cover; background: white">
