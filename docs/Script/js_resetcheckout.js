@@ -993,8 +993,8 @@ function renderCart() {
     const clearCartBtn = document.getElementById('clear-cart');
     const continueBtn = document.getElementById('continue-shopping-btn');
 
-    const cart = getCart();                     // sản phẩm thường
-    const giftCart = getServerGifts();          // quà tính theo toàn giỏ (server)
+    const cart = getCart();                       // sản phẩm thường
+    const giftCart = getServerGifts();            // quà tính theo toàn giỏ (server)
     const previewGifts = getServerGiftsPreview(); // quà dự kiến theo phần đã chọn
 
     if ((cart.length === 0) && (giftCart.length === 0)) {
@@ -1060,8 +1060,8 @@ function renderCart() {
     const shouldShowServerGifts = !hasSelection || !hasPreview; // Ẩn giftCart nếu đã có preview theo phần chọn
 
     if (shouldShowServerGifts && giftCart.length) {
-        // Quà server tính cho toàn giỏ (đơn cũ / toàn giỏ)
-        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🎁 Quà tặng của bạn</h5>`;
+        // BAN ĐẦU (chưa tick) → hiển thị là "Quà tặng dự kiến cho bạn"
+        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🔮 Quà tặng dự kiến cho bạn</h5>`;
         giftCart.forEach((g) => {
             const safeQty = parseInt(g.quantity) || 1;
             cartItemsHTML += `
@@ -1082,10 +1082,9 @@ function renderCart() {
         cartItemsHTML += `</div>`;
     }
 
-    // Hiển thị preview theo phần chọn với tiêu đề động
+    // Khi ĐÃ CÓ TICK (có preview theo phần chọn) → luôn là "Quà tặng của bạn"
     if (hasSelection && hasPreview) {
-        const confirmed = isGiftPreviewConfirmed();
-        const title = confirmed ? '🎁 Quà tặng của bạn' : '🔮 Quà tặng dự kiến cho bạn';
+        const title = '🎁 Quà tặng của bạn';
         cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">${title}</h5>`;
         previewGifts.forEach((g) => {
             const safeQty = parseInt(g.quantity) || 1;
@@ -1429,8 +1428,8 @@ function renderOrderSummary() {
     const previewGifts = getServerGiftsPreview();
     let giftsHTML = '';
     if (Array.isArray(previewGifts) && previewGifts.length) {
-        const confirmed = isGiftPreviewConfirmed();
-        const title = confirmed ? '🎁 Quà tặng của bạn' : '🔮 Quà tặng dự kiến cho bạn';
+        // ĐÃ CÓ TICK → luôn hiển thị "Quà tặng của bạn"
+        const title = '🎁 Quà tặng của bạn';
         giftsHTML = `
             <div class="order-gifts mt-3">
                 <h5>${title}</h5>
