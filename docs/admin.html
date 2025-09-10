@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Quản lý người dùng mua hàng</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+	<style>
+		body { background: #f8f9fa; }
+		.container { margin-top: 40px; }
+		.table-img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
+		.table thead { background: #343a40; color: #fff; }
+	</style>
+
+</head>
+<body>
+	<div class="container">
+		<h2 class="mb-4 text-center">Quản lý người dùng mua hàng</h2>
+		<div class="table-responsive">
+			<table class="table table-bordered table-hover align-middle">
+				<thead>
+					<tr>
+						<th>id</th>
+						<th>user_id</th>
+						<th>product_id</th>
+						<th>name</th>
+						<th>original_price</th>
+						<th>sale_price</th>
+						<th>discount_percent</th>
+						<th>image</th>
+						<th>quantity</th>
+						<th>Hành động</th>
+						<th>Xác nhận</th>
+					</tr>
+				</thead>
+				<tbody id="admin-table-body">
+					<!-- Dữ liệu sẽ được thêm ở đây bằng JavaScript -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script>
+		// Dữ liệu mẫu để demo giao diện
+		const users = [
+			{
+				id: 1,
+				user_id: 'U001',
+				product_id: 'P1001',
+				name: 'Ổ cứng SSD 1TB',
+				original_price: 2500000,
+				sale_price: 2100000,
+				discount_percent: 16,
+				image: 'https://via.placeholder.com/60',
+				quantity: 2,
+				confirmed: false
+			},
+			{
+				id: 2,
+				user_id: 'U002',
+				product_id: 'P1002',
+				name: 'RAM 16GB DDR4',
+				original_price: 1200000,
+				sale_price: 990000,
+				discount_percent: 18,
+				image: 'https://via.placeholder.com/60',
+				quantity: 1,
+				confirmed: false
+			}
+		];
+
+		function renderTable() {
+			const tbody = document.getElementById('admin-table-body');
+			tbody.innerHTML = '';
+			users.forEach((user, idx) => {
+				tbody.innerHTML += `
+					<tr>
+						<td>${user.id}</td>
+						<td>${user.user_id}</td>
+						<td>${user.product_id}</td>
+						<td>${user.name}</td>
+						<td>${user.original_price.toLocaleString('vi-VN')}₫</td>
+						<td>${user.sale_price.toLocaleString('vi-VN')}₫</td>
+						<td>${user.discount_percent}%</td>
+						<td><img src="${user.image}" class="table-img" alt="Ảnh sản phẩm"></td>
+						<td>${user.quantity}</td>
+						<td>
+							<button class="btn btn-sm btn-primary">Sửa</button>
+							<button class="btn btn-sm btn-danger">Xóa</button>
+						</td>
+						<td>
+							<button class="btn btn-sm btn-success confirm-btn" data-idx="${idx}" ${user.confirmed ? 'disabled' : ''}>
+								${user.confirmed ? 'Đã xác nhận' : 'Xác nhận'}
+							</button>
+						</td>
+					</tr>
+				`;
+			});
+			// Gán sự kiện cho nút xác nhận
+			document.querySelectorAll('.confirm-btn').forEach(btn => {
+				btn.addEventListener('click', function() {
+					const idx = this.getAttribute('data-idx');
+					users[idx].confirmed = true;
+					renderTable();
+				});
+			});
+		}
+		renderTable();
+	</script>
+</body>
+</html>
