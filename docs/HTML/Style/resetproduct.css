@@ -1829,7 +1829,6 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 14px 16px;
     box-shadow: var(--shadow);
 }
 
@@ -1906,11 +1905,6 @@ h1, h2, h3, h4, h5, h6 {
     color: #000;
     padding: 0 6px;
     border-radius: 6px;
-    font-weight: 700;
-}
-
-.gift-free {
-    color: #00e676; /* xanh neon */
     font-weight: 700;
 }
 

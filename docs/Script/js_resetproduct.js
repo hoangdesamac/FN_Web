@@ -932,13 +932,12 @@ function renderSingleGiftBox(gifts) {
             </div>
 
             <div class="gift-list">
-                <div class="gift-item">
+                <div class="gift-item gift-item--bare">
                     <img src="${g.image}" alt="${g.name}">
                     <div class="gift-info">
                         <div class="gift-name">${g.name}</div>
                         <div class="gift-meta">
                             <span class="gift-qty">x${qty}</span>
-                            <span class="gift-free">-100%</span>
                         </div>
                     </div>
                 </div>
