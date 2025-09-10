@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng - 3TD</title>
+    <link rel="stylesheet" href="Style/style.css">
+    <style>
+        .cart-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .item-image img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .item-info {
+            flex: 1;
+            margin-left: 20px;
+        }
+        .item-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .item-price {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            margin-right: 10px;
+        }
+        .discount-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .item-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+        }
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .gift-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        .gift-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .gift-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+        }
+        .gift-image img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .gift-info {
+            flex: 1;
+            margin-left: 15px;
+        }
+        .gift-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .free-badge {
+            background: #28a745;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .cart-total {
+            text-align: right;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+        .checkout-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            float: right;
+            margin-top: 20px;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <h1>Giỏ hàng của bạn</h1>
+        
+        <div class="cart-items">
+            <!-- Cart items will be populated by JavaScript -->
+        </div>
+        
+        <div class="gift-section" style="display: none;">
+            <h2>🎁 Sản phẩm tặng kèm</h2>
+            <p>Chúc mừng! Bạn được tặng những sản phẩm sau:</p>
+            <div class="gift-items">
+                <!-- Gift items will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="cart-summary">
+            <div class="cart-total">
+                Tổng tiền: <span id="total-amount">0 ₫</span>
+            </div>
+            <button class="checkout-btn" onclick="proceedToCheckout()">Tiến hành thanh toán</button>
+        </div>
+    </div>
+
+    <script src="Script/js_resetcheckout.js"></script>
+    <script>
+        function proceedToCheckout() {
+            // Navigate to checkout
+            window.location.href = 'checkout.html';
+        }
+        
+        // Initialize cart when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            cartSystem.initializeCartSystem();
+        });
+    </script>
+</body>
+</html>
