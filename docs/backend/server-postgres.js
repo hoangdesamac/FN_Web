@@ -894,32 +894,39 @@ const path = require('path');
 
 let GIFT_CACHE = null;
 
+// ENV configs (tinh chỉnh logic quà)
+const GIFT_MIN_TOTAL = Number(process.env.GIFT_MIN_TOTAL || 20000000); // 20,000,000
+const GIFT_MAX_COUNT = Math.max(1, Number(process.env.GIFT_MAX_COUNT || 5));
+const GIFT_MIN_BUDGET = Math.max(0, Number(process.env.GIFT_MIN_BUDGET || 200000)); // sàn ngân sách quà
+const GIFT_SORT = (process.env.GIFT_SORT || 'desc').toLowerCase() === 'asc' ? 'asc' : 'desc'; // 'asc'|'desc'
+
+// Chấp nhận '0.03', '3', hoặc '3%' cho 3%
+function parseBudgetPercent(input, def = 0.03) {
+    if (input === undefined || input === null) return def;
+    let s = String(input).trim();
+    if (s.endsWith('%')) s = s.slice(0, -1);
+    const n = Number(s);
+    if (isNaN(n)) return def;
+    return n > 1 ? (n / 100) : n;
+}
+const GIFT_BUDGET_PERCENT = parseBudgetPercent(process.env.GIFT_BUDGET_PERCENT, 0.03);
+
 async function loadGiftCatalog() {
     if (GIFT_CACHE) return GIFT_CACHE;
 
-    // 1) Ưu tiên: cho phép chỉ định đường dẫn qua ENV (tuyệt đối hoặc tương đối)
     const envPath = process.env.GIFT_CATALOG_PATH ? path.resolve(process.cwd(), process.env.GIFT_CATALOG_PATH) : null;
 
-    // 2) Các path ứng viên phổ biến theo cấu trúc repo của bạn
     const candidates = [
-        envPath, // nếu có
-        // Trường hợp file nằm ở cùng cấp backend/pc-part-dataset/...
+        envPath,
         path.resolve(__dirname, 'pc-part-dataset', 'processed', 'givaAway.json'),
-        // Trường hợp file nằm ở docs/pc-part-dataset/... (ra ngoài 1 cấp)
         path.resolve(__dirname, '..', 'pc-part-dataset', 'processed', 'givaAway.json'),
-        // Trường hợp chạy từ project root (process.cwd() = /opt/render/project/src)
         path.resolve(process.cwd(), 'docs', 'pc-part-dataset', 'processed', 'givaAway.json'),
         path.resolve(process.cwd(), 'pc-part-dataset', 'processed', 'givaAway.json')
     ].filter(Boolean);
 
     let chosen = null;
     for (const p of candidates) {
-        try {
-            if (fs.existsSync(p)) {
-                chosen = p;
-                break;
-            }
-        } catch (_) {}
+        try { if (fs.existsSync(p)) { chosen = p; break; } } catch (_) {}
     }
 
     try {
@@ -927,8 +934,19 @@ async function loadGiftCatalog() {
             throw new Error(`Không tìm thấy givaAway.json trong các đường dẫn ứng viên:\n${candidates.join('\n')}`);
         }
         const json = fs.readFileSync(chosen, 'utf-8');
-        GIFT_CACHE = JSON.parse(json);
-        console.log(`✅ Đã tải gift catalog từ: ${chosen} (items=${Array.isArray(GIFT_CACHE) ? GIFT_CACHE.length : 0})`);
+        const raw = JSON.parse(json);
+
+        // Chuẩn hoá dữ liệu và loại bỏ quà không hợp lệ
+        GIFT_CACHE = Array.isArray(raw) ? raw
+            .map(g => ({
+                id: g.id,
+                name: g.name,
+                image: g.image,
+                originalPrice: Number(g.originalPrice) || 0
+            }))
+            .filter(g => g.id && g.name && g.originalPrice >= 0) : [];
+
+        console.log(`✅ Đã tải gift catalog từ: ${chosen} (items=${GIFT_CACHE.length})`);
     } catch (e) {
         console.error('❌ Không đọc được givaAway.json, fallback rỗng:', e.message);
         GIFT_CACHE = [];
@@ -936,32 +954,75 @@ async function loadGiftCatalog() {
     return GIFT_CACHE;
 }
 
-function pickRandomUnique(arr, n) {
-    const res = [];
-    const used = new Set();
-    while (res.length < n && used.size < arr.length) {
-        const idx = Math.floor(Math.random() * arr.length);
-        if (!used.has(idx)) {
-            used.add(idx);
-            res.push(arr[idx]);
-        }
-    }
-    return res;
+// Tính số lượng quà theo tổng tiền: mốc 20tr → 1 quà, cứ thêm 10tr → +1 quà, tối đa GIFT_MAX_COUNT
+function computeGiftCount(total) {
+    if (total < GIFT_MIN_TOTAL) return 0;
+    const steps = Math.floor((total - GIFT_MIN_TOTAL) / 10000000); // mỗi 10,000,000
+    const count = 1 + steps;
+    return Math.min(Math.max(count, 1), GIFT_MAX_COUNT);
 }
 
-async function computeGiftsForTotal(total) {
-    const catalog = await loadGiftCatalog();
-    if (!Array.isArray(catalog) || catalog.length === 0) return [];
+// Ngân sách quà = GIFT_BUDGET_PERCENT * total, nhưng không thấp hơn GIFT_MIN_BUDGET
+function computeGiftBudget(total) {
+    const pctBudget = Math.floor(total * GIFT_BUDGET_PERCENT);
+    return Math.max(pctBudget, GIFT_MIN_BUDGET);
+}
 
-    let giftCount = 0;
-    if (total >= 8000000) giftCount = 3;
-    else if (total >= 5000000) giftCount = 2;
-    else if (total >= 3000000) giftCount = 1;
+// Chọn quà thông minh theo ngân sách + số lượng + hướng sắp xếp giá
+function smartPickGifts(catalog, giftCount, total) {
+    if (!Array.isArray(catalog) || catalog.length === 0 || giftCount <= 0) return [];
 
-    if (giftCount === 0) return [];
+    const budget = computeGiftBudget(total);
 
-    const chosen = pickRandomUnique(catalog, giftCount);
-    return chosen.map(g => ({
+    // Sắp xếp theo giá
+    const sorted = catalog.slice().sort((a, b) => {
+        const pa = Number(a.originalPrice) || 0;
+        const pb = Number(b.originalPrice) || 0;
+        return GIFT_SORT === 'asc' ? (pa - pb) : (pb - pa);
+    });
+
+    const picked = [];
+    let spent = 0;
+
+    // Chiến lược: đi theo thứ tự đã sắp xếp, bỏ qua item quá đắt so với ngân sách còn lại
+    for (let i = 0; i < sorted.length && picked.length < giftCount; i++) {
+        const g = sorted[i];
+        const price = g.originalPrice;
+
+        // Ưu tiên chọn trong ngân sách còn lại
+        if (spent + price <= budget) {
+            picked.push(g);
+            spent += price;
+        } else {
+            // Nếu item này quá đắt, thử tìm item rẻ hơn về sau (khi sort=desc) hoặc đắt hơn về sau (khi sort=asc)
+            // để cố gắng nhặt đủ số lượng theo ngân sách
+            let foundIdx = -1;
+            for (let j = i + 1; j < sorted.length; j++) {
+                const cand = sorted[j];
+                if (picked.some(p => p.id === cand.id)) continue;
+                if (spent + cand.originalPrice <= budget) {
+                    foundIdx = j;
+                    break;
+                }
+            }
+            if (foundIdx !== -1) {
+                const cand = sorted[foundIdx];
+                picked.push(cand);
+                spent += cand.originalPrice;
+                // tiếp tục vòng for với i không đổi để vẫn duyệt được các item còn lại
+            }
+            // nếu không tìm thấy ứng viên vừa ngân sách, bỏ qua item này và tiếp tục
+        }
+    }
+
+    // Nếu vẫn chưa đạt giftCount mà đã duyệt hết:
+    // - Nếu chưa có quà nào, thử “bất chấp ngân sách”: lấy item rẻ nhất để đảm bảo tối thiểu 1 quà cho đơn >= 20tr
+    if (picked.length === 0) {
+        const cheapest = sorted.slice().sort((a, b) => (a.originalPrice - b.originalPrice))[0];
+        if (cheapest) picked.push(cheapest);
+    }
+
+    return picked.slice(0, giftCount).map(g => ({
         id: g.id,
         name: g.name,
         image: g.image,
@@ -972,6 +1033,44 @@ async function computeGiftsForTotal(total) {
         isGift: true
     }));
 }
+
+async function computeGiftsForTotal(total) {
+    try {
+        const catalog = await loadGiftCatalog();
+        const count = computeGiftCount(total);
+        if (count <= 0) return [];
+        return smartPickGifts(catalog, count, total);
+    } catch (err) {
+        console.error('computeGiftsForTotal error:', err);
+        return [];
+    }
+}
+
+app.post('/api/gifts/preview', async (req, res) => {
+    try {
+        const body = req.body || {};
+        let total = 0;
+
+        if (Array.isArray(body.items)) {
+            const normalized = body.items.map(it => ({
+                salePrice: Number(it.salePrice) || 0,
+                quantity: Number(it.quantity) || 1
+            }));
+            total = normalized.reduce((s, it) => s + it.salePrice * it.quantity, 0);
+        } else if (body.total !== undefined) {
+            total = Number(body.total) || 0;
+        } else {
+            return res.status(400).json({ success: false, error: 'Thiếu items hoặc total' });
+        }
+
+        const gifts = await computeGiftsForTotal(total);
+        return res.json({ success: true, total, gifts });
+    } catch (err) {
+        console.error('❌ Lỗi POST /api/gifts/preview:', err);
+        return res.status(500).json({ success: false, error: 'Lỗi server khi preview quà' });
+    }
+});
+
 // ==================== CART APIS ====================
 // GET giỏ hàng
 app.get("/api/cart", authenticateToken, async (req, res) => {
