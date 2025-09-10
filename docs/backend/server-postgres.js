@@ -957,9 +957,17 @@ async function loadGiftCatalog() {
 // Tính số lượng quà theo tổng tiền: mốc 20tr → 1 quà, cứ thêm 10tr → +1 quà, tối đa GIFT_MAX_COUNT
 function computeGiftCount(total) {
     if (total < GIFT_MIN_TOTAL) return 0;
-    const steps = Math.floor((total - GIFT_MIN_TOTAL) / 10000000); // mỗi 10,000,000
+    const steps = Math.floor((total - GIFT_MIN_TOTAL) / 10000000); // mỗi +10,000,000 sau mốc đầu tiên
     const count = 1 + steps;
     return Math.min(Math.max(count, 1), GIFT_MAX_COUNT);
+}
+
+// [NEW] Số “bước vượt trần” (mỗi bước = +10tr sau khi đã đạt tối đa số quà)
+function computeExtraStepsBeyondCap(total) {
+    if (total < GIFT_MIN_TOTAL) return 0;
+    const steps = Math.floor((total - GIFT_MIN_TOTAL) / 10000000);
+    const preCapCount = 1 + steps; // số quà lý thuyết nếu không bị trần
+    return Math.max(0, preCapCount - GIFT_MAX_COUNT);
 }
 
 // Ngân sách quà = GIFT_BUDGET_PERCENT * total, nhưng không thấp hơn GIFT_MIN_BUDGET
@@ -994,8 +1002,7 @@ function smartPickGifts(catalog, giftCount, total) {
             picked.push(g);
             spent += price;
         } else {
-            // Nếu item này quá đắt, thử tìm item rẻ hơn về sau (khi sort=desc) hoặc đắt hơn về sau (khi sort=asc)
-            // để cố gắng nhặt đủ số lượng theo ngân sách
+            // Nếu item này quá đắt, thử tìm item phù hợp phía sau
             let foundIdx = -1;
             for (let j = i + 1; j < sorted.length; j++) {
                 const cand = sorted[j];
@@ -1009,14 +1016,11 @@ function smartPickGifts(catalog, giftCount, total) {
                 const cand = sorted[foundIdx];
                 picked.push(cand);
                 spent += cand.originalPrice;
-                // tiếp tục vòng for với i không đổi để vẫn duyệt được các item còn lại
             }
-            // nếu không tìm thấy ứng viên vừa ngân sách, bỏ qua item này và tiếp tục
         }
     }
 
-    // Nếu vẫn chưa đạt giftCount mà đã duyệt hết:
-    // - Nếu chưa có quà nào, thử “bất chấp ngân sách”: lấy item rẻ nhất để đảm bảo tối thiểu 1 quà cho đơn >= 20tr
+    // Nếu vẫn chưa nhặt đủ (ngân sách quá chặt), đảm bảo tối thiểu 1 quà bằng cách lấy rẻ nhất
     if (picked.length === 0) {
         const cheapest = sorted.slice().sort((a, b) => (a.originalPrice - b.originalPrice))[0];
         if (cheapest) picked.push(cheapest);
@@ -1034,12 +1038,32 @@ function smartPickGifts(catalog, giftCount, total) {
     }));
 }
 
+// [NEW] Phân phối phần vượt trần theo vòng tròn, mỗi bước +1 (deterministic: SP1 → SP2 → ... → SPn → SP1)
+function distributeExtraQuantitiesRoundRobin(gifts, extraSteps) {
+    if (!Array.isArray(gifts) || gifts.length === 0 || extraSteps <= 0) return;
+    gifts.forEach(g => { g.quantity = Number(g.quantity) || 1; });
+    for (let step = 0; step < extraSteps; step++) {
+        const idx = step % gifts.length;
+        gifts[idx].quantity += 1;
+    }
+}
+
+// [CHANGE] Nâng cấp computeGiftsForTotal với phân phối vượt trần theo vòng +1/10tr
 async function computeGiftsForTotal(total) {
     try {
         const catalog = await loadGiftCatalog();
-        const count = computeGiftCount(total);
-        if (count <= 0) return [];
-        return smartPickGifts(catalog, count, total);
+        const baseCount = computeGiftCount(total);
+        if (baseCount <= 0) return [];
+
+        // Chọn 'baseCount' phần quà (mỗi quà quantity=1)
+        const baseGifts = smartPickGifts(catalog, baseCount, total);
+
+        // Sau khi đạt trần (5 quà) → mỗi +10tr cộng +1 theo vòng
+        const extraSteps = computeExtraStepsBeyondCap(total);
+        if (extraSteps > 0 && baseGifts.length > 0) {
+            distributeExtraQuantitiesRoundRobin(baseGifts, extraSteps);
+        }
+        return baseGifts;
     } catch (err) {
         console.error('computeGiftsForTotal error:', err);
         return [];
