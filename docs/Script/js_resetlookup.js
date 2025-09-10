@@ -151,12 +151,22 @@ function formatCurrency(amount) {
 
 // Get payment method text
 function getPaymentMethodText(method) {
-    switch (method) {
-        case 'cod': return 'Thanh toán khi nhận hàng (COD)';
-        case 'credit': return 'Thẻ tín dụng/Thẻ ghi nợ';
-        case 'wallet': return 'Ví điện tử (MoMo, ZaloPay,...)';
-        default: return 'Không xác định';
-    }
+    const key = String(method || '').toLowerCase();
+    const map = {
+        cod: 'Thanh toán khi nhận hàng (COD)',
+        cash: 'Thanh toán tiền mặt khi nhận hàng',
+        card: 'Thẻ tín dụng/Thẻ ghi nợ',
+        credit: 'Thẻ tín dụng/Thẻ ghi nợ',
+        debit: 'Thẻ tín dụng/Thẻ ghi nợ',
+        wallet: 'Ví điện tử (MoMo, ZaloPay,...)',
+        momo: 'Ví điện tử MoMo',
+        zalopay: 'Ví điện tử ZaloPay',
+        vnpay: 'Ví điện tử VNPay',
+        bank: 'Chuyển khoản ngân hàng',
+        qr: 'Quét mã QR'
+    };
+    if (!key) return 'Không xác định';
+    return map[key] || method || 'Không xác định';
 }
 
 function getServerGifts() {

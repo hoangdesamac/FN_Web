@@ -104,54 +104,115 @@ async function refreshGiftPreviewForSelection() {
         const selected = getSelectedCartFromState();
         const selectedTotal = selected.reduce((s, it) => s + (Number(it.salePrice) || 0) * (Number(it.quantity) || 1), 0);
 
-        // Cập nhật Summary ngay theo tổng phần chọn
         updateCartSummary(selectedTotal);
 
-        // Không có phần chọn → xoá preview và re-render để ẩn khu vực preview
         if (!selected.length) {
             setServerGiftsPreview([]);
+            setGiftPreviewConfirmedFlag(false);
             try { renderCart(); } catch (e) {}
             return;
         }
 
-        // Gọi preview API — không yêu cầu login
-        // Dùng items (salePrice, quantity) để tính chính xác mốc quà
         const controller = new AbortController();
-        if (_previewInFlight) {
-            try { _previewInFlight.abort(); } catch (_) {}
-        }
+        if (_previewInFlight) { try { _previewInFlight.abort(); } catch (_) {} }
         _previewInFlight = controller;
 
-        const res = await fetch(`${window.API_BASE}/api/gifts/preview`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include', // không bắt buộc, nhưng giữ nguyên cho đồng nhất
-            body: JSON.stringify({
-                items: selected.map(it => ({ salePrice: Number(it.salePrice) || 0, quantity: Number(it.quantity) || 1 }))
-            }),
-            signal: controller.signal
-        }).catch(err => {
-            if (err.name !== 'AbortError') throw err;
-        });
+        const { group, setCount } = findMatchedGroupAndSetCount(selected);
 
-        if (!res) return; // bị abort
+        let data = null, ok = false;
 
-        const data = await res.json();
-        if (res.ok && data && data.success) {
-            setServerGiftsPreview(data.gifts || []);
+        if (group && setCount > 0) {
+            // Đủ bộ → xin single gift duy nhất với quantity = setCount
+            const body = {
+                items: group.requiredIds.map(id => {
+                    const it = selected.find(x => String(x.id) === String(id));
+                    return { id, quantity: it ? Number(it.quantity) || 1 : 0 };
+                }),
+                requiredIds: group.requiredIds
+            };
+            const res = await fetch(`${window.API_BASE}/api/gifts/single-select`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(body),
+                signal: controller.signal
+            }).catch(err => { if (err.name !== 'AbortError') throw err; });
+
+            if (res) { data = await res.json(); ok = res.ok && data && data.success; }
+            if (ok) {
+                setServerGiftsPreview(data.gifts || []);
+                setGiftPreviewConfirmedFlag(true);
+            } else {
+                setServerGiftsPreview([]);
+                setGiftPreviewConfirmedFlag(false);
+            }
         } else {
-            setServerGiftsPreview([]);
+            // Chưa đủ bộ → chỉ preview theo tổng (dự kiến)
+            const res = await fetch(`${window.API_BASE}/api/gifts/preview`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    items: selected.map(it => ({ salePrice: Number(it.salePrice) || 0, quantity: Number(it.quantity) || 1 }))
+                }),
+                signal: controller.signal
+            }).catch(err => { if (err.name !== 'AbortError') throw err; });
+
+            if (res) { data = await res.json(); ok = res.ok && data && data.success; }
+            if (ok) {
+                setServerGiftsPreview(data.gifts || []);
+            } else {
+                setServerGiftsPreview([]);
+            }
+            setGiftPreviewConfirmedFlag(false);
         }
 
-        // Re-render để hiển thị “Quà tặng dự kiến”
         try { renderCart(); } catch (e) {}
     } catch (err) {
         console.warn('refreshGiftPreviewForSelection error:', err);
         setServerGiftsPreview([]);
+        setGiftPreviewConfirmedFlag(false);
         try { renderCart(); } catch (e) {}
     } finally {
         _previewInFlight = null;
     }
+}
+
+function getComboGroups() {
+    try { return JSON.parse(localStorage.getItem('comboGroups') || '[]'); } catch { return []; }
+}
+function setGiftPreviewConfirmedFlag(v) {
+    try { localStorage.setItem('giftPreviewConfirmed', v ? '1' : '0'); } catch {}
+}
+function isGiftPreviewConfirmed() {
+    try { return localStorage.getItem('giftPreviewConfirmed') === '1'; } catch { return false; }
+}
+
+// [ADD] Tìm group khớp và số "bộ đầy đủ" trong phần đã chọn
+function findMatchedGroupAndSetCount(selected) {
+    const groups = getComboGroups();
+    if (!groups.length) return { group: null, setCount: 0 };
+
+    const idToQty = new Map();
+    selected.forEach(it => idToQty.set(String(it.id), (idToQty.get(String(it.id)) || 0) + (Number(it.quantity) || 1)));
+
+    for (const g of groups) {
+        const req = (g.requiredIds || []).map(String);
+        if (!req.length) continue;
+        // đủ id?
+        if (!req.every(id => idToQty.has(id))) continue;
+        // min qty
+        let minSet = Infinity;
+        for (const id of req) {
+            const q = idToQty.get(id) || 0;
+            if (q <= 0) { minSet = 0; break; }
+            if (q < minSet) minSet = q;
+        }
+        if (Number.isFinite(minSet) && minSet > 0) {
+            return { group: g, setCount: minSet };
+        }
+    }
+    return { group: null, setCount: 0 };
 }
 
 async function initializeCartSystem() {
@@ -562,8 +623,9 @@ async function clearCart() {
     try {
         saveCart([]);
         setServerGifts([]);
-        localStorage.removeItem('serverGiftsPreview'); // NEW
+        localStorage.removeItem('serverGiftsPreview');
         localStorage.removeItem('selectedCart');
+        localStorage.removeItem('giftPreviewConfirmed'); // NEW
         cartCache = [];
         selectedItems = [];
     } catch (e) {
@@ -597,7 +659,7 @@ async function clearCart() {
 
     try {
         if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-            window.cartCountShared.setFromCart(getCart()); // KHÔNG gộp gifts
+            window.cartCountShared.setFromCart(getCart());
         } else {
             updateCartCount && updateCartCount();
         }
@@ -931,9 +993,9 @@ function renderCart() {
     const clearCartBtn = document.getElementById('clear-cart');
     const continueBtn = document.getElementById('continue-shopping-btn');
 
-    const cart = getCart();                    // sản phẩm thường
-    const giftCart = getServerGifts();         // quà tính theo toàn giỏ (server)
-    const previewGifts = getServerGiftsPreview(); // NEW: quà dự kiến theo phần đã chọn
+    const cart = getCart();                     // sản phẩm thường
+    const giftCart = getServerGifts();          // quà tính theo toàn giỏ (server)
+    const previewGifts = getServerGiftsPreview(); // quà dự kiến theo phần đã chọn
 
     if ((cart.length === 0) && (giftCart.length === 0)) {
         if (emptyCart) emptyCart.classList.remove('d-none');
@@ -989,8 +1051,17 @@ function renderCart() {
     `;
     });
 
-    if (giftCart.length) {
-        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🔮 Quà tặng cho bạn</h5>`;
+    // Khôi phục selectedItems từ localStorage cho phần chọn hiện tại
+    const savedSelected = JSON.parse(localStorage.getItem('selectedCart') || '[]');
+    selectedItems = savedSelected.filter(it => !it.isGift).map(item => item.id);
+
+    const hasSelection = Array.isArray(selectedItems) && selectedItems.length > 0;
+    const hasPreview = Array.isArray(previewGifts) && previewGifts.length > 0;
+    const shouldShowServerGifts = !hasSelection || !hasPreview; // Ẩn giftCart nếu đã có preview theo phần chọn
+
+    if (shouldShowServerGifts && giftCart.length) {
+        // Quà server tính cho toàn giỏ (đơn cũ / toàn giỏ)
+        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🎁 Quà tặng của bạn</h5>`;
         giftCart.forEach((g) => {
             const safeQty = parseInt(g.quantity) || 1;
             cartItemsHTML += `
@@ -1011,12 +1082,11 @@ function renderCart() {
         cartItemsHTML += `</div>`;
     }
 
-    // NEW: Hiển thị “Quà tặng dự kiến” nếu có lựa chọn + có preview
-    const savedSelected = JSON.parse(localStorage.getItem('selectedCart') || '[]');
-    selectedItems = savedSelected.filter(it => !it.isGift).map(item => item.id);
-
-    if (Array.isArray(previewGifts) && previewGifts.length && Array.isArray(selectedItems) && selectedItems.length) {
-        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">🎁 Quà tặng của bạn</h5>`;
+    // Hiển thị preview theo phần chọn với tiêu đề động
+    if (hasSelection && hasPreview) {
+        const confirmed = isGiftPreviewConfirmed();
+        const title = confirmed ? '🎁 Quà tặng của bạn' : '🔮 Quà tặng dự kiến cho bạn';
+        cartItemsHTML += `<div class="gift-section mt-2 mb-2"><h5 class="mb-2">${title}</h5>`;
         previewGifts.forEach((g) => {
             const safeQty = parseInt(g.quantity) || 1;
             cartItemsHTML += `
@@ -1356,13 +1426,14 @@ function renderOrderSummary() {
         `;
     });
 
-    // NEW: hiển thị quà tặng dự kiến
     const previewGifts = getServerGiftsPreview();
     let giftsHTML = '';
     if (Array.isArray(previewGifts) && previewGifts.length) {
+        const confirmed = isGiftPreviewConfirmed();
+        const title = confirmed ? '🎁 Quà tặng của bạn' : '🔮 Quà tặng dự kiến cho bạn';
         giftsHTML = `
             <div class="order-gifts mt-3">
-                <h5>🎁 Quà tặng của bạn</h5>
+                <h5>${title}</h5>
                 ${previewGifts.map(g => `
                     <div class="order-product d-flex align-items-center p-2 mb-2 rounded">
                         <img src="${g.image}" alt="${g.name}" class="me-3" style="width: 48px; height: 48px; object-fit: cover; background: white">
@@ -1420,15 +1491,17 @@ function showConfirmation() {
         return;
     }
 
-    const selectedMethod = document.querySelector('input[name="payment-method"]:checked')?.value;
-    if (!selectedMethod) {
+    const selectedMethodEl = document.querySelector('input[name="payment-method"]:checked');
+    if (!selectedMethodEl) {
         showNotification('Vui lòng chọn phương thức thanh toán!', 'error');
         return;
     }
-
-    const methodText = {
+    const selectedMethodRaw = selectedMethodEl.value || 'cod';
+    const methodKey = String(selectedMethodRaw).toLowerCase();
+    const methodTextMap = {
         cod: 'Thanh toán khi nhận hàng (COD)'
-    }[selectedMethod];
+    };
+    const methodText = methodTextMap[methodKey] || selectedMethodRaw;
 
     const total = cart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
 
@@ -1545,6 +1618,7 @@ async function processPayment() {
                 return;
             }
 
+            // Chuẩn hoá dữ liệu
             selectedCart = selectedCart.map(it => (typeof it === "string" ? JSON.parse(it) : it));
             selectedCart = sanitizeCart(selectedCart);
 
@@ -1553,17 +1627,24 @@ async function processPayment() {
             const deliveryInfo = getDeliveryInfo();
             const total = selectedCart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
 
+            // Tính group/setCount từ selectedCart để quyết định gửi comboRequiredIds
+            const { group, setCount } = findMatchedGroupAndSetCount(selectedCart);
+            const payload = {
+                items: selectedCart,
+                total,
+                paymentMethod: selectedMethod,
+                deliveryInfo
+            };
+            if (group && setCount > 0) {
+                payload.comboRequiredIds = group.requiredIds;
+            }
+
             // 1) Tạo đơn
             const res = await fetch(`${window.API_BASE}/api/orders`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify({
-                    items: selectedCart,
-                    total,
-                    paymentMethod: selectedMethod,
-                    deliveryInfo
-                })
+                body: JSON.stringify(payload)
             });
             const data = await res.json();
 
@@ -1602,10 +1683,10 @@ async function processPayment() {
                 console.error("⚠️ Không thể đồng bộ giỏ hàng sau thanh toán:", err);
             }
 
-            // 4) Dọn localStorage:
-            //    - Chỉ xoá danh sách đã chọn; KHÔNG xoá serverGifts để giữ đúng quà do server tính cho phần giỏ còn lại
+            // 4) Dọn localStorage: chỉ xoá danh sách đã chọn; giữ serverGifts
             localStorage.removeItem("selectedCart");
-            // KHÔNG xoá 'serverGifts' ở đây
+            // Reset cờ preview confirmed
+            localStorage.removeItem("giftPreviewConfirmed");
 
             // Giữ lại note & invoiceRequired cho lần sau
             const savedInfo = {
@@ -1614,12 +1695,12 @@ async function processPayment() {
             };
             localStorage.setItem("deliveryInfo", JSON.stringify(savedInfo));
 
-            // 5) Cập nhật lại UI
+            // 5) Cập nhật UI
             updateCartCount();
             renderCart();
             updateOrderCount();
 
-            // 6) Đóng loading và mở modal thành công
+            // 6) Hoàn tất
             loadingModal.hide();
             showSuccessModal();
         } catch (err) {

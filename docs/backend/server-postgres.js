@@ -1046,6 +1046,101 @@ async function computeGiftsForTotal(total) {
     }
 }
 
+// [ADD] Single gift: chọn duy nhất 1 quà ổn định và nhân theo số "bộ đầy đủ"
+function pickSingleGift(catalog) {
+    if (!Array.isArray(catalog) || !catalog.length) return null;
+    // Dựa trên cấu hình GIFT_SORT: 'desc' → chọn quà giá cao nhất; 'asc' → rẻ nhất
+    const sorted = catalog.slice().sort((a, b) => {
+        const pa = Number(a.originalPrice) || 0;
+        const pb = Number(b.originalPrice) || 0;
+        return GIFT_SORT === 'asc' ? (pa - pb) : (pb - pa);
+    });
+    return sorted[0] || null;
+}
+
+// Tính số "bộ đầy đủ" dựa trên requiredIds: min(quantity của từng id bắt buộc)
+function computeFullSetCount(items, requiredIds) {
+    if (!Array.isArray(requiredIds) || !requiredIds.length) return 0;
+    if (!Array.isArray(items) || !items.length) return 0;
+
+    // map id -> qty
+    const qtyMap = new Map();
+    items.forEach(it => {
+        const id = String(it.id);
+        const q = Number(it.quantity) || 0;
+        qtyMap.set(id, (qtyMap.get(id) || 0) + q);
+    });
+
+    let minSet = Infinity;
+    for (const rid of requiredIds.map(String)) {
+        const q = qtyMap.get(rid) || 0;
+        if (q <= 0) return 0;
+        if (q < minSet) minSet = q;
+    }
+    return Number.isFinite(minSet) ? minSet : 0;
+}
+
+// Tính 1 quà duy nhất theo requiredIds (nếu đủ bộ) hoặc theo total -> giftCount (fallback)
+async function computeSingleGift({ items, requiredIds, total }) {
+    const catalog = await loadGiftCatalog();
+
+    // Case A: Có requiredIds → chỉ cấp quà nếu đủ "bộ đầy đủ"
+    if (Array.isArray(requiredIds) && requiredIds.length) {
+        const setCount = computeFullSetCount(items || [], requiredIds);
+        if (setCount <= 0) return [];
+        const g = pickSingleGift(catalog);
+        if (!g) return [];
+        return [{
+            id: g.id, name: g.name, image: g.image,
+            originalPrice: Number(g.originalPrice) || 0,
+            salePrice: 0, discountPercent: 100,
+            quantity: setCount, isGift: true
+        }];
+    }
+
+    // Case B: Fallback theo tổng tiền → gom tất cả về 1 quà duy nhất và nhân quantity = giftCount
+    if (typeof total === 'number') {
+        const count = computeGiftCount(total);
+        if (count <= 0) return [];
+        const g = pickSingleGift(catalog);
+        if (!g) return [];
+        return [{
+            id: g.id, name: g.name, image: g.image,
+            originalPrice: Number(g.originalPrice) || 0,
+            salePrice: 0, discountPercent: 100,
+            quantity: count, isGift: true
+        }];
+    }
+
+    return [];
+}
+
+// [ADD] API: Single-select gift (duy nhất 1 quà)
+// body: { items:[{id,quantity}], requiredIds:[...]}  -> ưu tiên requiredIds
+//    hoặc { total: number }                          -> fallback theo mốc tiền
+app.post('/api/gifts/single-select', async (req, res) => {
+    try {
+        const body = req.body || {};
+        const items = Array.isArray(body.items) ? body.items.map(it => ({
+            id: String(it.id),
+            quantity: Number(it.quantity) || 0
+        })) : [];
+
+        const requiredIds = Array.isArray(body.requiredIds) ? body.requiredIds.map(String) : [];
+        const total = (body.total !== undefined) ? Number(body.total) : undefined;
+
+        if ((!requiredIds.length && typeof total !== 'number')) {
+            return res.status(400).json({ success: false, error: 'Thiếu requiredIds hoặc total' });
+        }
+
+        const gifts = await computeSingleGift({ items, requiredIds, total });
+        return res.json({ success: true, gifts });
+    } catch (err) {
+        console.error('❌ Lỗi POST /api/gifts/single-select:', err);
+        return res.status(500).json({ success: false, error: 'Lỗi server single-select' });
+    }
+});
+
 app.post('/api/gifts/preview', async (req, res) => {
     try {
         const body = req.body || {};
@@ -1370,18 +1465,19 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
 });
 
 // Tạo đơn hàng mới (checkout) - Chỉ xoá sản phẩm đã chọn khỏi giỏ
+// [CHANGE] POST /api/orders: hỗ trợ "single gift" khi client gửi comboRequiredIds
 app.post("/api/orders", authenticateToken, async (req, res) => {
     const client = await pool.connect();
     try {
-        const { items, total, deliveryInfo, paymentMethod } = req.body;
+        const { items, total, deliveryInfo, paymentMethod, comboRequiredIds } = req.body;
 
         if (!items || !Array.isArray(items) || !items.length || !total) {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu đơn hàng" });
         }
 
-        // Chuẩn hoá và tính lại tổng tiền từ items (bỏ qua isGift của client nếu có)
         const normalized = items.map(it => ({
             ...it,
+            id: String(it.id),
             salePrice: Number(it.salePrice) || 0,
             quantity: Number(it.quantity) || 1
         }));
@@ -1389,7 +1485,6 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
 
         await client.query("BEGIN");
 
-        // Sinh mã đơn hàng unique
         let orderCode, exists = true;
         while (exists) {
             orderCode = generateOrderCode();
@@ -1397,10 +1492,17 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             exists = check.rows.length > 0;
         }
 
-        // [NEW] Tính quà theo computedTotal (server là nguồn quyết định)
-        const gifts = await computeGiftsForTotal(computedTotal);
+        // [NEW] Single gift ưu tiên khi có comboRequiredIds đủ bộ; ngược lại fallback computeGiftsForTotal
+        let gifts = [];
+        const requiredIds = Array.isArray(comboRequiredIds) ? comboRequiredIds.map(String) : [];
+        if (requiredIds.length) {
+            const single = await computeSingleGift({ items: normalized, requiredIds });
+            gifts = Array.isArray(single) ? single : [];
+        }
+        if (!gifts.length) {
+            gifts = await computeGiftsForTotal(computedTotal);
+        }
 
-        // [NEW] Gộp items + gifts vào đơn hàng
         const orderItems = [...normalized, ...gifts];
 
         const insert = await client.query(
@@ -1420,7 +1522,6 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             ]
         );
 
-        // Xoá CÓ CHỌN LỌC sản phẩm thường đã thanh toán khỏi giỏ (bỏ qua gifts)
         const productIdsToDelete = normalized.filter(it => !it.isGift).map(it => String(it.id));
         if (productIdsToDelete.length) {
             await client.query(

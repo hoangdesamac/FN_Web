@@ -788,18 +788,15 @@ async function updateCartCount() {
         }
 
         let cart = [];
-        let serverGifts = [];
         try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) { cart = []; }
-        try { serverGifts = JSON.parse(localStorage.getItem('serverGifts') || '[]'); } catch (e) { serverGifts = []; }
 
         const sumQty = (arr) => {
             if (!Array.isArray(arr)) return 0;
             return arr.reduce((s, it) => s + (Number(it?.quantity ?? it?.qty ?? 0) || 0), 0);
         };
 
-        const normal = sumQty(cart);
-        const gifts = sumQty(serverGifts);
-        const total = normal + gifts;
+        // KHÔNG gộp quà vào badge — chỉ đếm sản phẩm thường để đồng bộ với checkout
+        const total = sumQty(cart);
 
         const old = parseInt(cartCountElement.textContent || '0') || 0;
         if (old !== total) {
@@ -886,6 +883,100 @@ function scrollRecent(direction) {
 // ==========================
 // MODULE: Helpers
 // ==========================
+// [ADD] Helpers lưu metadata "bộ combo" để giỏ hàng/checkout biết cách xét quà
+function getComboGroupsStore() {
+    try { return JSON.parse(localStorage.getItem('comboGroups') || '[]'); } catch { return []; }
+}
+function setComboGroupsStore(arr) {
+    try { localStorage.setItem('comboGroups', JSON.stringify(Array.isArray(arr) ? arr : [])); } catch {}
+}
+function saveComboGroup(requiredIds) {
+    const groups = getComboGroupsStore();
+    const key = requiredIds.map(String).sort().join('|');
+    if (!groups.some(g => (g.key === key))) {
+        groups.push({ key, requiredIds: requiredIds.map(String) });
+        setComboGroupsStore(groups);
+    }
+}
+
+// [ADD] Lấy danh sách ID bắt buộc của “bộ” = sản phẩm chính + toàn bộ combo
+function getRequiredIdsForCurrentProduct() {
+    try {
+        const mainId = window.currentProduct?.id;
+        const bundle = Array.isArray(window.currentProduct?.bundle) ? window.currentProduct.bundle : [];
+        const comboIds = bundle.map(b => String(b.id)).filter(Boolean);
+        if (!mainId || !comboIds.length) return [];
+        return [String(mainId), ...comboIds];
+    } catch { return []; }
+}
+
+// [ADD] Render box quà đơn (single gift) trên trang sản phẩm
+function renderSingleGiftBox(gifts) {
+    const box = document.getElementById('gift-container');
+    if (!box) return;
+    if (!Array.isArray(gifts) || !gifts.length) {
+        box.style.display = 'none';
+        box.innerHTML = '';
+        return;
+    }
+    const g = gifts[0];
+    const qty = parseInt(g.quantity) || 1;
+    box.innerHTML = `
+        <div class="gift-box-inner">
+            <h4 class="mb-2"><i class="fas fa-gift"></i> Quà tặng của bạn</h4>
+            <div class="d-flex align-items-center p-2 rounded" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);">
+                <img src="${g.image}" alt="${g.name}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;background:#fff;">
+                <div class="ms-3">
+                    <div style="font-weight:600">${g.name}</div>
+                    <div class="text-muted" style="font-size:12px">x${qty} • -100%</div>
+                </div>
+            </div>
+        </div>
+    `;
+    box.style.display = 'block';
+}
+
+// [ADD] Cập nhật preview quà trên trang SP: chỉ hiện khi tick đủ toàn bộ combo
+async function updateProductPageGiftPreview() {
+    try {
+        const reqIds = getRequiredIdsForCurrentProduct();
+        const allCombo = Array.isArray(window.currentProduct?.bundle) ? window.currentProduct.bundle : [];
+        const checked = Array.from(document.querySelectorAll('.bundle-products .bundle-checkbox:checked'));
+        const isFull = reqIds.length && checked.length === allCombo.length; // đủ toàn bộ combo
+        const box = document.getElementById('gift-container');
+
+        if (!isFull) {
+            if (box) { box.style.display = 'none'; box.innerHTML = ''; }
+            return;
+        }
+
+        // Lưu metadata group để checkout dùng lại
+        saveComboGroup(reqIds);
+
+        // items: mỗi id bắt buộc số lượng 1 (trang SP)
+        const items = reqIds.map(id => ({ id, quantity: 1 }));
+        const res = await fetch(`${window.API_BASE}/api/gifts/single-select`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ items, requiredIds: reqIds })
+        });
+        const data = await res.json();
+        if (res.ok && data && data.success) {
+            renderSingleGiftBox(data.gifts || []);
+            // Optionally, lưu gift đã chọn để đồng nhất hiển thị trên checkout
+            try {
+                localStorage.setItem('lastSingleGift', JSON.stringify((data.gifts || [])[0] || null));
+            } catch {}
+        } else {
+            renderSingleGiftBox([]);
+        }
+    } catch (err) {
+        console.warn('updateProductPageGiftPreview error:', err);
+        renderSingleGiftBox([]);
+    }
+}
+
 function saveRecentlyViewed(product) {
     let viewed = JSON.parse(localStorage.getItem('recentProducts')) || [];
     viewed = viewed.filter(p => p.id !== product.id);
@@ -1141,11 +1232,13 @@ function bindEventHandlers() {
         updateBundleSubtotal();
         updateBuyNowSubText();
 
-        // Phục hồi trạng thái tick combo vào localStorage (giữ nguyên)
         const selectedIds = $('.bundle-checkbox:checked').map(function () {
             return $(this).closest('.product-card').data('id');
         }).get();
         localStorage.setItem('selectedComboIds', JSON.stringify(selectedIds));
+
+        // NEW
+        updateProductPageGiftPreview();
     });
 
     $(document).on('click', '.product-card.clickable', function () {
@@ -1193,6 +1286,20 @@ function bindEventHandlers() {
                     salePrice: parsePrice($card.find('.sale-price').text()),
                 }));
             });
+
+            // NEW: nếu có đủ metadata combo → lưu group để checkout nhận diện
+            const mainAndAllComboIds = (function () {
+                try {
+                    const mainId = window.currentProduct?.id;
+                    const bundle = Array.isArray(window.currentProduct?.bundle) ? window.currentProduct.bundle : [];
+                    const comboIds = bundle.map(b => String(b.id)).filter(Boolean);
+                    if (!mainId || !comboIds.length) return [];
+                    return [String(mainId), ...comboIds];
+                } catch { return []; }
+            })();
+            if (mainAndAllComboIds.length) {
+                saveComboGroup(mainAndAllComboIds);
+            }
 
             const giftCart = []; // Quà do server quyết định
 
@@ -1246,6 +1353,20 @@ function bindEventHandlers() {
             productsToAdd.push({ product, qty: 1 });
         });
 
+        // NEW: lưu group để checkout nhận diện
+        const mainAndAllComboIds = (function () {
+            try {
+                const mainId = window.currentProduct?.id;
+                const bundle = Array.isArray(window.currentProduct?.bundle) ? window.currentProduct.bundle : [];
+                const comboIds = bundle.map(b => String(b.id)).filter(Boolean);
+                if (!mainId || !comboIds.length) return [];
+                return [String(mainId), ...comboIds];
+            } catch { return []; }
+        })();
+        if (mainAndAllComboIds.length) {
+            saveComboGroup(mainAndAllComboIds);
+        }
+
         const immediate = async () => {
             try {
                 const totalQty = productsToAdd.reduce((s, it) => s + (Number(it.qty) || 1), 0);
@@ -1274,7 +1395,6 @@ function bindEventHandlers() {
                         }
                         addedCount += (Number(it.qty) || 1);
                         if (Array.isArray(res.cart)) lastServerCart = res.cart;
-                        // Lưu gifts nếu API trả về
                         if (Array.isArray(res.gifts)) {
                             try { localStorage.setItem('serverGifts', JSON.stringify(res.gifts)); } catch (e) {}
                         }
@@ -2295,6 +2415,7 @@ $(document).ready(function () {
             desc.toggleClass('expanded collapsed');
             btn.toggleClass('expanded').html(`${isExpanded ? 'Xem thêm' : 'Thu gọn'} <i class="fas fa-chevron-down"></i>`);
         });
+        setTimeout(() => updateProductPageGiftPreview(), 0);
     }
 
 
