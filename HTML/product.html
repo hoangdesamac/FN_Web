@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sản phẩm - 3TD</title>
+    <link rel="stylesheet" href="/Style/style.css">
+    <style>
+        .product-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .product-images {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .product-main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .product-thumbnails {
+            display: flex;
+            gap: 10px;
+        }
+        .product-thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .product-thumbnail.active {
+            border-color: #e74c3c;
+        }
+        .product-info h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .product-price {
+            margin-bottom: 20px;
+        }
+        .current-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            margin-left: 10px;
+        }
+        .discount-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .product-option-group {
+            margin-bottom: 20px;
+        }
+        .product-option-group h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .product-option-btn {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            background: white;
+            margin-right: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .product-option-btn.active {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+        .quantity-selector {
+            margin-bottom: 20px;
+        }
+        .quantity-input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .add-to-cart-btn, .buy-now-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .add-to-cart-btn {
+            background: #007bff;
+            color: white;
+        }
+        .buy-now-btn {
+            background: #28a745;
+            color: white;
+        }
+        .add-to-cart-btn:hover {
+            background: #0056b3;
+        }
+        .buy-now-btn:hover {
+            background: #1e7e34;
+        }
+        .add-to-cart-btn.success {
+            background: #28a745;
+        }
+        .add-to-cart-btn.error {
+            background: #dc3545;
+        }
+        .bundle-container {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .bundle-checkbox {
+            margin-right: 10px;
+        }
+        .bundle-price {
+            margin-top: 10px;
+        }
+        .savings {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="product-container" 
+         data-product-id="product_001" 
+         data-original-price="2500000" 
+         data-sale-price="2000000" 
+         data-discount-percent="20">
+        
+        <div class="product-images">
+            <img src="https://via.placeholder.com/600x400/f0f0f0/999999?text=Chuột+Gaming" 
+                 alt="Chuột Gaming Pro" 
+                 class="product-main-image">
+            <div class="product-thumbnails">
+                <img src="https://via.placeholder.com/80x80/f0f0f0/999999?text=1" 
+                     alt="View 1" 
+                     class="product-thumbnail active">
+                <img src="https://via.placeholder.com/80x80/f0f0f0/999999?text=2" 
+                     alt="View 2" 
+                     class="product-thumbnail">
+                <img src="https://via.placeholder.com/80x80/f0f0f0/999999?text=3" 
+                     alt="View 3" 
+                     class="product-thumbnail">
+            </div>
+        </div>
+
+        <div class="product-info">
+            <h1 class="product-name">Chuột Gaming Pro Max 2024</h1>
+            
+            <div class="product-price">
+                <span class="current-price">2,000,000 ₫</span>
+                <span class="original-price">2,500,000 ₫</span>
+                <span class="discount-badge">-20%</span>
+            </div>
+
+            <div class="product-option-group" data-option-type="color">
+                <h3>Màu sắc:</h3>
+                <button class="product-option-btn active" data-value="black" data-price-modifier="0">Đen</button>
+                <button class="product-option-btn" data-value="white" data-price-modifier="100000">Trắng</button>
+                <button class="product-option-btn" data-value="red" data-price-modifier="50000">Đỏ</button>
+            </div>
+
+            <div class="product-option-group" data-option-type="warranty">
+                <h3>Bảo hành:</h3>
+                <button class="product-option-btn active" data-value="1year" data-price-modifier="0">1 năm</button>
+                <button class="product-option-btn" data-value="2year" data-price-modifier="200000">2 năm (+200k)</button>
+            </div>
+
+            <div class="quantity-selector">
+                <label for="quantity">Số lượng:</label>
+                <input type="number" class="quantity-input" id="quantity" min="1" value="1">
+            </div>
+
+            <div class="action-buttons">
+                <button class="add-to-cart-btn">Thêm vào giỏ hàng</button>
+                <button class="buy-now-btn">Mua ngay</button>
+            </div>
+
+            <div class="bundle-container" data-original-price="500000" data-bundle-price="300000">
+                <label>
+                    <input type="checkbox" class="bundle-checkbox">
+                    Combo lót chuột cao cấp
+                </label>
+                <div class="bundle-price">
+                    <span class="price">500,000 ₫</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Script/js_resetcheckout.js"></script>
+    <script src="/Script/js_resetproduct.js"></script>
+    <script>
+        // Initialize product page when DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            productSystem.initializeProductPage();
+        });
+    </script>
+</body>
+</html>

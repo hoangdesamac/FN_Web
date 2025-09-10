@@ -1,0 +1,58 @@
+[
+  {
+    "id": "gift_001",
+    "name": "Chuột gaming không dây Logitech G Pro X",
+    "image": "https://example.com/images/logitech-gpro-x.jpg",
+    "originalPrice": 1500000,
+    "category": "accessories"
+  },
+  {
+    "id": "gift_002", 
+    "name": "Tai nghe gaming SteelSeries Arctis 7",
+    "image": "https://example.com/images/steelseries-arctis7.jpg",
+    "originalPrice": 2000000,
+    "category": "audio"
+  },
+  {
+    "id": "gift_003",
+    "name": "Bàn phím cơ Keychron K2",
+    "image": "https://example.com/images/keychron-k2.jpg", 
+    "originalPrice": 1800000,
+    "category": "keyboard"
+  },
+  {
+    "id": "gift_004",
+    "name": "Webcam Logitech C920 HD Pro",
+    "image": "https://example.com/images/logitech-c920.jpg",
+    "originalPrice": 1200000,
+    "category": "accessories"
+  },
+  {
+    "id": "gift_005",
+    "name": "Lót chuột gaming SteelSeries QcK",
+    "image": "https://example.com/images/steelseries-qck.jpg", 
+    "originalPrice": 300000,
+    "category": "accessories"
+  },
+  {
+    "id": "gift_006",
+    "name": "USB Hub 4 cổng Anker",
+    "image": "https://example.com/images/anker-usb-hub.jpg",
+    "originalPrice": 500000,
+    "category": "accessories"
+  },
+  {
+    "id": "gift_007",
+    "name": "Micro thu âm Blue Yeti",
+    "image": "https://example.com/images/blue-yeti.jpg",
+    "originalPrice": 3000000,
+    "category": "audio"
+  },
+  {
+    "id": "gift_008",
+    "name": "Giá đỡ laptop điều chỉnh",
+    "image": "https://example.com/images/laptop-stand.jpg",
+    "originalPrice": 800000,
+    "category": "accessories"
+  }
+]
