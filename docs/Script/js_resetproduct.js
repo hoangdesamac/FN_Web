@@ -249,7 +249,7 @@ window.addEventListener('user:login', async function () {
 function requireLoginThenDo(actionType, payload, immediateFn) {
     (async () => {
         try {
-            // 1) Fast check: if AuthSync already knows user is logged -> immediate
+            // 1) fast check via AuthSync in-memory
             if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
                 try {
                     const st = window.AuthSync.getState();
@@ -258,13 +258,12 @@ function requireLoginThenDo(actionType, payload, immediateFn) {
                     }
                 } catch (e) { /* ignore */ }
             } else {
-                // legacy quick check
                 if (!!localStorage.getItem('userName') || !!localStorage.getItem('userId')) {
                     if (typeof immediateFn === 'function') return immediateFn();
                 }
             }
 
-            // 2) Wait briefly (poll) for AuthSync to initialize (useful when header/auth script is loading)
+            // 2) brief wait for AuthSync init (useful when header/auth script is loading)
             const waitTotal = 600; // ms
             const pollInterval = 100; // ms
             let waited = 0;
@@ -285,7 +284,7 @@ function requireLoginThenDo(actionType, payload, immediateFn) {
                 } catch (e) { /* ignore and continue waiting */ }
             }
 
-            // 3) Final realtime check (with network timeout) just before deciding
+            // 3) Final realtime check (networked) just before deciding
             let logged = false;
             try {
                 logged = await isLoggedInRealTime();
@@ -297,12 +296,43 @@ function requireLoginThenDo(actionType, payload, immediateFn) {
                 if (typeof immediateFn === 'function') return immediateFn();
             }
 
-            // 4) Not logged → persist pendingAction and open login modal
-            try { savePendingAction({ type: actionType, payload }); } catch (err) { console.warn('savePendingAction failed', err); }
+            // 4) Not logged -> persist pendingAction (long-lived) and set a per-tab "open modal once" flag (session)
+            try {
+                savePendingAction({ type: actionType, payload });
+            } catch (err) {
+                console.warn('savePendingAction failed', err);
+            }
+
+            // Try to set a safe per-tab show-login flag; prefer exported helper if available
+            try {
+                if (typeof window.setShowLoginAfterReset === 'function') {
+                    window.setShowLoginAfterReset(true);
+                } else if (typeof sessionStorage !== 'undefined') {
+                    sessionStorage.setItem('showLoginAfterReset', 'true');
+                } else {
+                    // Last resort: localStorage with timestamp (less ideal; cross-tab)
+                    localStorage.setItem('showLoginAfterReset', 'true');
+                    localStorage.setItem('showLoginAfterReset_ts', String(Date.now()));
+                }
+            } catch (e) {
+                try { sessionStorage.setItem('showLoginAfterReset', 'true'); } catch (_) {}
+                try { localStorage.setItem('showLoginAfterReset', 'true'); localStorage.setItem('showLoginAfterReset_ts', String(Date.now())); } catch (_) {}
+            }
+
+            // Also set a per-tab postLoginRedirect pointing back to this product page (helps OAuth flows)
+            try {
+                const redirectUrl = window.location.href;
+                if (typeof sessionStorage !== 'undefined') {
+                    sessionStorage.setItem('postLoginRedirect', redirectUrl);
+                } else {
+                    localStorage.setItem('postLoginRedirect', redirectUrl);
+                }
+            } catch (e) { /* ignore */ }
+
+            // Finally open login modal in the same tab
             openLoginModalAndNotify();
         } catch (err) {
             console.warn('requireLoginThenDo error (fallback to legacy):', err);
-            // fallback: if localStorage indicates login then run, else store pending and open modal
             if (localStorage.getItem('userName') || localStorage.getItem('userId')) {
                 if (typeof immediateFn === 'function') immediateFn();
             } else {
@@ -858,14 +888,6 @@ function showToast(message) {
         }
     }, 3000);
 }
-
-// Hàm riêng để redirect
-function redirectToCheckout(delay = 1000) {
-    setTimeout(() => {
-        window.location.href = 'resetcheckout.html';
-    }, delay);
-}
-
 
 // ==========================
 // MODULE: Scroll helpers
@@ -2038,20 +2060,35 @@ $(document).ready(function () {
     //  - document.referrer (if it was a product link)
     //  - sessionStorage.lastProductURL (optional)
     function tryRecoverParams() {
-        // 1) postLoginRedirect
+        // 1) sessionStorage.postLoginRedirect (per-tab) preferred
+        try {
+            if (typeof sessionStorage !== 'undefined') {
+                const postSession = sessionStorage.getItem('postLoginRedirect');
+                if (postSession) {
+                    const p = parseQueryFromUrl(postSession);
+                    const rid = p.get('id'), rname = p.get('name'), rtype = p.get('type');
+                    if (rid || rname || rtype) {
+                        console.log('[RECOVER] from sessionStorage.postLoginRedirect:', postSession);
+                        return { id: rid, name: rname, type: rtype, source: 'session' };
+                    }
+                }
+            }
+        } catch (e) { /* ignore */ }
+
+        // 2) localStorage.postLoginRedirect (fallback)
         try {
             const post = localStorage.getItem('postLoginRedirect');
             if (post) {
                 const p = parseQueryFromUrl(post);
                 const rid = p.get('id'), rname = p.get('name'), rtype = p.get('type');
                 if (rid || rname || rtype) {
-                    console.log('[RECOVER] from postLoginRedirect:', post);
-                    return { id: rid, name: rname, type: rtype };
+                    console.log('[RECOVER] from localStorage.postLoginRedirect:', post);
+                    return { id: rid, name: rname, type: rtype, source: 'local' };
                 }
             }
         } catch (e) { /* ignore */ }
 
-        // 2) pendingAction
+        // 3) pendingAction payload product(s)
         try {
             const raw = localStorage.getItem('pendingAction');
             if (raw) {
@@ -2061,30 +2098,30 @@ $(document).ready(function () {
                     const pr = p.product || p;
                     if (pr && pr.id) {
                         console.log('[RECOVER] from pendingAction.payload.product');
-                        return { id: pr.id, name: pr.name || null, type: null };
+                        return { id: pr.id, name: pr.name || null, type: null, source: 'pendingAction' };
                     }
                     if (Array.isArray(p.products) && p.products.length && p.products[0].product && p.products[0].product.id) {
                         const pr0 = p.products[0].product;
                         console.log('[RECOVER] from pendingAction.payload.products[0]');
-                        return { id: pr0.id, name: pr0.name || null, type: null };
+                        return { id: pr0.id, name: pr0.name || null, type: null, source: 'pendingAction' };
                     }
                 }
             }
         } catch (e) { /* ignore */ }
 
-        // 3) pendingCartItem
+        // 4) pendingCartItem
         try {
             const pending = localStorage.getItem('pendingCartItem');
             if (pending) {
                 const it = JSON.parse(pending);
                 if (it && it.id) {
                     console.log('[RECOVER] from pendingCartItem');
-                    return { id: it.id, name: it.name || null, type: null };
+                    return { id: it.id, name: it.name || null, type: null, source: 'pendingCartItem' };
                 }
             }
         } catch (e) { /* ignore */ }
 
-        // 4) referrer
+        // 5) referrer
         try {
             const ref = document.referrer;
             if (ref && ref.includes('resetproduct.html')) {
@@ -2092,12 +2129,12 @@ $(document).ready(function () {
                 const rid = p.get('id'), rname = p.get('name'), rtype = p.get('type');
                 if (rid || rname || rtype) {
                     console.log('[RECOVER] from document.referrer:', ref);
-                    return { id: rid, name: rname, type: rtype };
+                    return { id: rid, name: rname, type: rtype, source: 'referrer' };
                 }
             }
         } catch (e) { /* ignore */ }
 
-        // 5) sessionStorage.lastProductURL
+        // 6) sessionStorage.lastProductURL
         try {
             const last = sessionStorage.getItem('lastProductURL');
             if (last) {
@@ -2105,7 +2142,7 @@ $(document).ready(function () {
                 const rid = p.get('id'), rname = p.get('name'), rtype = p.get('type');
                 if (rid || rname || rtype) {
                     console.log('[RECOVER] from sessionStorage.lastProductURL');
-                    return { id: rid, name: rname, type: rtype };
+                    return { id: rid, name: rname, type: rtype, source: 'session-last' };
                 }
             }
         } catch (e) { /* ignore */ }

@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="HTML/Style/resetproduct.css">
     <script>
         window.API_BASE = "https://fn-web.onrender.com";
+        // small grace window to avoid accidental modal popups from stale flags during initial load
+        window.__preventAutoOpenUntil = Date.now() + 1200;
     </script>
 
     <!-- AuthSync: canonical auth synchronizer (loads early) -->
@@ -56,7 +58,6 @@
                     </div>
                     <div id="zoomImageList" class="image-gallery"></div>
                 </div>
-
 
                 <div class="thumbnails-wrapper">
                     <button class="nav-btn nav-prev"><i class="fas fa-chevron-left"></i></button>
@@ -316,16 +317,62 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- header script remains (but header is injected by js_resetproduct) -->
 <script src="Script/js_header.js"></script>
-<!-- NOTICE: don't load js_resetauth.js here directly — we will inject it after header exists -->
+<!-- product script -->
 <script src="Script/js_resetproduct.js"></script>
-
-<!-- After js_resetproduct loads it will inject header; use MutationObserver to detect header insertion
-     then load js_resetauth.js so auth runs after header is present. Also call AuthSync.refresh()
-     to ensure header UI gets the latest user info from server. -->
 <script>
     (function() {
         // avoid double-injection
         let authInjected = false;
+
+        // fallback safe consumer (same semantics as centralized helper)
+        function safeConsumeShowLoginFlag() {
+            try {
+                if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('showLoginAfterReset') === 'true') {
+                    try { sessionStorage.removeItem('showLoginAfterReset'); } catch (_) {}
+                    return true;
+                }
+                const v = localStorage.getItem('showLoginAfterReset');
+                if (!v) return false;
+                const ts = Number(localStorage.getItem('showLoginAfterReset_ts') || '0');
+                if (ts && (Date.now() - ts) < 10 * 1000) {
+                    try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
+                    return true;
+                }
+                try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
+                return false;
+            } catch (e) {
+                try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
+                try { sessionStorage.removeItem('showLoginAfterReset'); } catch (_) {}
+                return false;
+            }
+        }
+
+        function openModalIfSafe() {
+            try {
+                let consumed = false;
+                if (typeof window._consumeShowLoginFlag === 'function') {
+                    try { consumed = !!window._consumeShowLoginFlag(); } catch (e) { consumed = false; }
+                } else if (typeof window.consumeShowLoginFlag === 'function') {
+                    try { consumed = !!window.consumeShowLoginFlag(); } catch (e) { consumed = false; }
+                } else {
+                    consumed = safeConsumeShowLoginFlag();
+                }
+
+                // If not consumed, block auto-open during initial grace period
+                if (!consumed && Date.now() < (window.__preventAutoOpenUntil || 0)) {
+                    console.info('Blocked automatic modal open during initial grace period (product).');
+                    return;
+                }
+
+                if (consumed) {
+                    if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+                        CyberModal.open();
+                    }
+                }
+            } catch (e) {
+                console.warn('openModalIfSafe error', e);
+            }
+        }
 
         function injectAuthScript() {
             if (authInjected) return;
@@ -340,27 +387,20 @@
                         await window.AuthSync.refresh();
                     }
                 } catch (err) {
-                    console.warn('AuthSync.refresh() failed on checkout page:', err);
+                    console.warn('AuthSync.refresh() failed on product page:', err);
                 }
 
-                // ----- Ensure header UI is updated now that AuthSync has refreshed -----
+                // Update header UI now that AuthSync refreshed
                 try {
                     if (typeof updateUserDisplay === 'function') await updateUserDisplay();
                     if (typeof updateCartCount === 'function') updateCartCount();
                     if (typeof updateOrderCount === 'function') updateOrderCount();
                 } catch (e) {
-                    console.warn('Post-refresh header update (checkout) failed:', e);
+                    console.warn('Post-refresh header update (product) failed:', e);
                 }
 
-                // preserve legacy behavior: open modal if showLoginAfterReset set
-                try {
-                    if (localStorage.getItem("showLoginAfterReset") === "true") {
-                        localStorage.removeItem("showLoginAfterReset");
-                        if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                            CyberModal.open();
-                        }
-                    }
-                } catch (e) { console.warn(e); }
+                // Attempt to open modal only if safe/consumed
+                openModalIfSafe();
             };
             document.body.appendChild(s);
         }
@@ -369,23 +409,22 @@
         const headerContainer = document.getElementById('header-container');
         if (headerContainer && headerContainer.children.length > 0) {
             injectAuthScript();
-            return;
-        }
-
-        // Otherwise observe header container for child insertion
-        const obs = new MutationObserver((mutations, observer) => {
-            for (const m of mutations) {
-                if (m.type === 'childList' && m.addedNodes.length > 0) {
-                    // header injected — do the auth script injection and stop observing
-                    injectAuthScript();
-                    observer.disconnect();
-                    break;
+        } else if (headerContainer) {
+            const obs = new MutationObserver((mutations, observer) => {
+                for (const m of mutations) {
+                    if (m.type === 'childList' && m.addedNodes.length > 0) {
+                        injectAuthScript();
+                        observer.disconnect();
+                        break;
+                    }
                 }
-            }
-        });
-
-        if (headerContainer) {
+            });
             obs.observe(headerContainer, { childList: true, subtree: false });
+            // safety timeout: if header never appears, still inject after short wait
+            setTimeout(() => {
+                try { obs.disconnect(); } catch (e) {}
+                if (!authInjected) injectAuthScript();
+            }, 3500);
         } else {
             // fallback: poll for header-container and then inject
             let tries = 0;
@@ -402,6 +441,45 @@
                 }
             }, 100);
         }
+
+        // Non-destructive guard: wrap CyberModal.open to prevent accidental auto-open during grace window
+        (function guardCyberModalOpen() {
+            try {
+                const wrap = () => {
+                    if (!window.CyberModal || window.CyberModal.__openGuarded) return;
+                    const orig = window.CyberModal.open.bind(window.CyberModal);
+                    window.CyberModal.open = function (...args) {
+                        try {
+                            // prefer canonical helper
+                            if (typeof window._consumeShowLoginFlag === 'function') {
+                                const c = !!window._consumeShowLoginFlag();
+                                if (c) return orig(...args);
+                            } else {
+                                const c = safeConsumeShowLoginFlag();
+                                if (c) return orig(...args);
+                            }
+                            if (Date.now() < (window.__preventAutoOpenUntil || 0)) {
+                                console.info('Blocked CyberModal.open during initial grace window (product).');
+                                return;
+                            }
+                            return orig(...args);
+                        } catch (e) {
+                            try { return orig(...args); } catch (_) {}
+                        }
+                    };
+                    window.CyberModal.__openGuarded = true;
+                };
+
+                const p = setInterval(() => {
+                    if (window.CyberModal) {
+                        wrap();
+                        clearInterval(p);
+                    }
+                }, 80);
+                document.addEventListener('DOMContentLoaded', wrap);
+            } catch (e) {}
+        })();
+
     })();
 </script>
 

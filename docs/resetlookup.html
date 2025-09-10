@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="HTML/Style/common.css">
     <script>
         window.API_BASE = "https://fn-web.onrender.com";
+        // short grace window (ms) to avoid accidental modal popups right on page load
+        window.__preventAutoOpenUntil = Date.now() + 1200;
     </script>
 
     <!-- AuthSync: canonical auth synchronizer (loads early) -->
@@ -119,9 +121,121 @@
 <script src="Script/js_resetcheckout.js" defer></script>
 
 <!-- Inject auth script only after header exists, then sync auth with server.
-     This prevents race conditions where header renders after auth and shows stale state. -->
+     Use safe consume-on-read pattern to decide whether to open the login modal.
+     We avoid directly reading localStorage.getItem('showLoginAfterReset') here. -->
 <script>
     (function() {
+        // minimal fallback consumer if central helper not present yet
+        function safeConsumeFlagFallback() {
+            try {
+                if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('showLoginAfterReset') === 'true') {
+                    try { sessionStorage.removeItem('showLoginAfterReset'); } catch (_) {}
+                    return true;
+                }
+                const v = localStorage.getItem('showLoginAfterReset');
+                if (!v) return false;
+                const ts = Number(localStorage.getItem('showLoginAfterReset_ts') || '0');
+                if (ts && (Date.now() - ts) < 10 * 1000) {
+                    try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
+                    return true;
+                }
+                try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
+                return false;
+            } catch (e) {
+                try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
+                try { sessionStorage.removeItem('showLoginAfterReset'); } catch (_) {}
+                return false;
+            }
+        }
+
+        // Non-destructive guard for CyberModal.open — blocks auto-open during initial grace window
+        (function guardCyberModalOpen() {
+            function wrap() {
+                if (!window.CyberModal || window.CyberModal.__openGuarded) return;
+                const orig = window.CyberModal.open.bind(window.CyberModal);
+                window.CyberModal.open = function(...args) {
+                    try {
+                        let consumed = false;
+                        if (typeof window._consumeShowLoginFlag === 'function') {
+                            try { consumed = !!window._consumeShowLoginFlag(); } catch (e) { consumed = false; }
+                        } else {
+                            consumed = safeConsumeFlagFallback();
+                        }
+
+                        if (consumed) return orig(...args);
+
+                        if (Date.now() < (window.__preventAutoOpenUntil || 0)) {
+                            console.info('Blocked CyberModal.open during initial grace period (lookup).');
+                            return;
+                        }
+                        return orig(...args);
+                    } catch (e) {
+                        try { return orig(...args); } catch (_) {}
+                    }
+                };
+                window.CyberModal.__openGuarded = true;
+            }
+
+            const p = setInterval(() => {
+                try { wrap(); } catch (_) {}
+                if (window.CyberModal && window.CyberModal.__openGuarded) clearInterval(p);
+            }, 80);
+            document.addEventListener('DOMContentLoaded', wrap);
+        })();
+
+        // Show a gentle banner prompting login if user is guest and needs to access saved orders.
+        function showLoginBannerIfGuest() {
+            try {
+                // quick logged check via AuthSync or localStorage compatibility keys
+                let logged = false;
+                try {
+                    if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+                        const st = window.AuthSync.getState();
+                        logged = !!(st && st.loggedIn);
+                    } else {
+                        logged = !!localStorage.getItem('userId') || !!localStorage.getItem('userName');
+                    }
+                } catch (e) {
+                    logged = !!localStorage.getItem('userId') || !!localStorage.getItem('userName');
+                }
+                if (logged) return;
+
+                // create banner if absent
+                if (!document.getElementById('lookup-login-banner')) {
+                    const holder = document.querySelector('.lookup-container') || document.body;
+                    const banner = document.createElement('div');
+                    banner.id = 'lookup-login-banner';
+                    banner.className = 'alert alert-warning d-flex justify-content-between align-items-center';
+                    banner.style.marginBottom = '20px';
+                    banner.innerHTML = `
+                    <div>Bạn cần <strong>đăng nhập</strong> để xem đơn hàng.</div>
+                    <div style="display:flex; gap:8px;">
+                        <button id="lookup-login-open" class="btn btn-sm btn-primary">Đăng nhập</button>
+                        <button id="lookup-login-dismiss" class="btn btn-sm btn-outline-secondary">Đóng</button>
+                    </div>
+                `;
+                    holder.insertBefore(banner, holder.firstChild);
+
+                    document.getElementById('lookup-login-open').addEventListener('click', () => {
+                        try {
+                            if (typeof window.setShowLoginAfterReset === 'function') window.setShowLoginAfterReset(true);
+                            else if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('showLoginAfterReset','true');
+                        } catch (_) {}
+                        if (typeof CyberModal !== 'undefined' && typeof CyberModal.open === 'function') {
+                            CyberModal.open();
+                        }
+                    });
+
+                    document.getElementById('lookup-login-dismiss').addEventListener('click', () => {
+                        try { banner.remove(); } catch (_) {}
+                    });
+                }
+            } catch (e) {
+                console.warn('showLoginBannerIfGuest error', e);
+            }
+        }
+
+        // Inject js_resetauth AFTER header exists so updateUserDisplay/updateCartCount exist
         let authInjected = false;
         function injectAuthScript() {
             if (authInjected) return;
@@ -136,33 +250,53 @@
                         await window.AuthSync.refresh();
                     }
                 } catch (err) {
-                    console.warn('AuthSync.refresh() failed on checkout page:', err);
+                    console.warn('AuthSync.refresh() failed (lookup):', err);
                 }
 
-                // ----- Ensure header UI is updated now that AuthSync has refreshed -----
+                // Ensure header/cart/order UI updated
                 try {
-                    if (typeof updateUserDisplay === 'function') await updateUserDisplay();
+                    if (typeof updateUserDisplay === 'function') {
+                        const p = updateUserDisplay();
+                        if (p && typeof p.then === 'function') await p;
+                    }
                     if (typeof updateCartCount === 'function') updateCartCount();
                     if (typeof updateOrderCount === 'function') updateOrderCount();
                 } catch (e) {
-                    console.warn('Post-refresh header update (checkout) failed:', e);
+                    console.warn('Post-refresh header update failed (lookup):', e);
                 }
 
-                // preserve legacy behavior: open modal if showLoginAfterReset set
+                // Safe consume: prefer exported helper, fallback to safe consumer
+                let consumed = false;
                 try {
-                    if (localStorage.getItem("showLoginAfterReset") === "true") {
-                        localStorage.removeItem("showLoginAfterReset");
-                        if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                            CyberModal.open();
-                        }
+                    if (typeof window._consumeShowLoginFlag === 'function') {
+                        consumed = !!window._consumeShowLoginFlag();
+                    } else if (typeof window.consumeShowLoginFlag === 'function') {
+                        consumed = !!window.consumeShowLoginFlag();
+                    } else {
+                        consumed = safeConsumeFlagFallback();
                     }
-                } catch (e) { console.warn(e); }
+                } catch (e) { consumed = false; }
+
+                if (consumed) {
+                    // Only auto-open if beyond grace window
+                    if (Date.now() >= (window.__preventAutoOpenUntil || 0)) {
+                        try { if (typeof CyberModal !== 'undefined' && typeof CyberModal.open === 'function') CyberModal.open(); } catch (_) {}
+                    } else {
+                        // schedule a small delayed open (best-effort) after grace window
+                        setTimeout(() => {
+                            try { if (typeof CyberModal !== 'undefined' && typeof CyberModal.open === 'function') CyberModal.open(); } catch (_) {}
+                        }, Math.max(300, (window.__preventAutoOpenUntil || 0) - Date.now() + 150));
+                    }
+                } else {
+                    // normal guest browsing: show gentle banner instead of forcing modal
+                    try { showLoginBannerIfGuest(); } catch (e) {}
+                }
             };
             document.body.appendChild(s);
         }
 
+        // Wait for header-container injection then inject auth script
         const headerContainer = document.getElementById('header-container');
-
         if (headerContainer && headerContainer.children.length > 0) {
             injectAuthScript();
         } else if (headerContainer) {
@@ -177,7 +311,7 @@
             });
             obs.observe(headerContainer, { childList: true, subtree: false });
         } else {
-            // fallback polling
+            // fallback poll
             let tries = 0;
             const t = setInterval(() => {
                 const hc = document.getElementById('header-container');
@@ -187,10 +321,15 @@
                     injectAuthScript();
                 } else if (tries > 40) {
                     clearInterval(t);
-                    injectAuthScript(); // best-effort
+                    injectAuthScript();
                 }
             }, 100);
         }
+
+        // best-effort: show banner after small delay in case auth script not yet injected
+        document.addEventListener('DOMContentLoaded', function() {
+            try { setTimeout(showLoginBannerIfGuest, 450); } catch (e) {}
+        });
     })();
 </script>
 </body>

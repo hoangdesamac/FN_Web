@@ -90,6 +90,31 @@ async function _refreshCartCountFromSharedOrFallback() {
     // fallback: call legacy updateCartCount if present
     try { if (typeof updateCartCount === 'function') updateCartCount(); } catch (e) {}
 }
+function safeOpenLoginModal() {
+    try {
+        // Prefer centralized setter if available
+        if (typeof window.setShowLoginAfterReset === 'function') {
+            try { window.setShowLoginAfterReset(true); } catch (e) { /* ignore */ }
+        } else {
+            // best-effort fallback: use sessionStorage per-tab
+            try { if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('showLoginAfterReset', 'true'); } catch (e) {}
+        }
+
+        // Try to open modal; if CyberModal not present, nothing bad happens here
+        if (typeof CyberModal !== 'undefined' && typeof CyberModal.open === 'function') {
+            CyberModal.open();
+            return;
+        }
+
+        // Fallback: if no modal UI, optionally navigate to login page
+        // keep previous behavior minimal: redirect only as last resort
+        if (!window.location.pathname.includes('login')) {
+            window.location.href = 'index.html';
+        }
+    } catch (err) {
+        console.warn('safeOpenLoginModal error:', err);
+    }
+}
 
 async function initializeCartSystem() {
     const logged = isLoggedIn();
@@ -216,7 +241,7 @@ async function initializeCartSystem() {
             const productImage = productCard.querySelector('.product-image img')?.src || '';
 
             if (!isLoggedIn()) {
-                // Nếu chưa login → lưu pending
+                // Nếu chưa login → lưu pending (legacy) và mở modal bằng cách an toàn
                 localStorage.setItem('pendingCartItem', JSON.stringify({
                     id: productId,
                     name: productName,
@@ -227,9 +252,9 @@ async function initializeCartSystem() {
                     quantity: 1
                 }));
 
-                if (typeof CyberModal !== "undefined" && CyberModal.open) {
-                    CyberModal.open();
-                }
+                // Use safe open helper so modal only auto-opens in intended tab
+                safeOpenLoginModal();
+
                 showNotification('Vui lòng đăng nhập để thêm sản phẩm!', 'info');
                 return;
             }

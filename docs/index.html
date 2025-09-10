@@ -23,8 +23,12 @@
 
     <!-- ✅ CSS RIÊNG PHẦN MAIN -->
     <link rel="stylesheet" href="HTML/Style/resetmaincontent.css">
+
     <script>
+        // API base
         window.API_BASE = "https://fn-web.onrender.com";
+        // short grace window (ms) to avoid accidental modal popups right on page load
+        window.__preventAutoOpenUntil = Date.now() + 1200;
     </script>
 
     <!-- NEW: AuthSync (canonical auth-sync module) -->
@@ -39,6 +43,7 @@
 <div id="header-container"></div>
 <div id="maincontent-container"></div>
 <div id="footer-container"></div>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <!-- ✅ Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
@@ -56,13 +61,13 @@
         loadSection("HTML/Layout/resetheader.html", "#header-container", function() {
             if (typeof initHeader === 'function') initHeader();
 
-            // ✅ Load auth.js sau khi header đã vào DOM (giữ logic hiện tại)
+            // Inject auth code AFTER header present so header update functions exist
             const script = document.createElement('script');
             script.src = "Script/js_resetauth.js";
             script.defer = true;
             script.onload = async () => {
                 try {
-                    // 🔁 Sau khi auth.js đã load, ưu tiên đồng bộ trạng thái từ server (AuthSync)
+                    // Refresh auth state from server (AuthSync preferred)
                     if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
                         await window.AuthSync.refresh();
                     }
@@ -70,29 +75,61 @@
                     console.warn('AuthSync.refresh() failed:', err);
                 }
 
-                // ----- IMPORTANT: ensure header renders current auth state now -----
+                // Ensure header UI reflects current auth/cart/order state
                 try {
-                    if (typeof updateUserDisplay === 'function') await updateUserDisplay();
+                    if (typeof updateUserDisplay === 'function') {
+                        const res = updateUserDisplay();
+                        if (res && typeof res.then === 'function') await res;
+                    }
                     if (typeof updateCartCount === 'function') updateCartCount();
                     if (typeof updateOrderCount === 'function') updateOrderCount();
                 } catch (e) {
                     console.warn('Post-refresh header update failed:', e);
                 }
 
-                // 🔥 Sau đó kiểm tra flag mở modal (giữ behavior cũ)
-                if (localStorage.getItem("showLoginAfterReset") === "true") {
-                    localStorage.removeItem("showLoginAfterReset");
-                    if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
-                        CyberModal.open();
+                // Safe consume: prefer centralized helper exported by js_resethandler/js_resetauth
+                try {
+                    let consumed = false;
+
+                    if (typeof window._consumeShowLoginFlag === 'function') {
+                        try { consumed = !!window._consumeShowLoginFlag(); } catch (e) { consumed = false; }
+                    } else if (typeof window.consumeShowLoginFlag === 'function') {
+                        try { consumed = !!window.consumeShowLoginFlag(); } catch (e) { consumed = false; }
+                    } else {
+                        // Minimal fallback: session first, then local with timestamp guard
+                        try {
+                            if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('showLoginAfterReset') === 'true') {
+                                try { sessionStorage.removeItem('showLoginAfterReset'); } catch (_) {}
+                                consumed = true;
+                            } else {
+                                const v = localStorage.getItem('showLoginAfterReset');
+                                if (v) {
+                                    const ts = Number(localStorage.getItem('showLoginAfterReset_ts') || '0');
+                                    if (ts && (Date.now() - ts) < 10 * 1000) {
+                                        try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
+                                        consumed = true;
+                                    } else {
+                                        try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch (_) {}
+                                        consumed = false;
+                                    }
+                                }
+                            }
+                        } catch (e) { consumed = false; }
                     }
-                }
+
+                    // Honor the short initial grace window to avoid opening modal when user is just browsing
+                    if (consumed && Date.now() >= (window.__preventAutoOpenUntil || 0)) {
+                        if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+                            CyberModal.open();
+                        }
+                    }
+                } catch (e) { /* swallow */ }
             };
             document.body.appendChild(script);
         });
 
-
         loadSection("HTML/Layout/resetmaincontent.html", "#maincontent-container", function() {
-            initializeCartSystem(); // Gọi lại để gắn sự kiện cho nút "Mua ngay"
+            initializeCartSystem(); // reattach "Mua ngay" handlers
             if (typeof initMainContent === 'function') initMainContent();
         });
 
@@ -110,12 +147,10 @@
                 return response.text();
             })
             .then(data => {
-                document.querySelector(selector).innerHTML = data;
+                const el = document.querySelector(selector);
+                if (el) el.innerHTML = data;
 
-                // ✅ Gọi callback nếu có
-                if (callback && typeof callback === 'function') {
-                    callback();
-                }
+                if (callback && typeof callback === 'function') callback();
             })
             .catch(error => {
                 console.error('Error loading section:', error);

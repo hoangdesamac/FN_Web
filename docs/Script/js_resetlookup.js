@@ -475,6 +475,27 @@ function _mergeCartWithGifts(cartArray) {
     }
 }
 
+function safeOpenLoginModal() {
+    try {
+        if (typeof window.setShowLoginAfterReset === 'function') {
+            try { window.setShowLoginAfterReset(true); } catch (e) {}
+        } else {
+            try { if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('showLoginAfterReset', 'true'); } catch (e) {}
+        }
+
+        if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+            CyberModal.open();
+            return;
+        }
+
+        // fallback: navigate to home/login
+        if (!window.location.pathname.includes('index.html')) {
+            window.location.href = "index.html";
+        }
+    } catch (err) {
+        console.warn('safeOpenLoginModal (lookup) error:', err);
+    }
+}
 // Helper: try to refresh cart count via shared module, fallback to legacy updateCartCount if missing
 async function _refreshCartCountFromSharedOrFallback() {
     try {
@@ -1033,11 +1054,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // If still not logged in → show login modal (or redirect)
     if (!isLoggedIn()) {
-        if (typeof CyberModal !== "undefined" && CyberModal.open) {
-            CyberModal.open();
-        } else {
-            window.location.href = "index.html";
-        }
+        safeOpenLoginModal();
         return; // stop further init
     }
 

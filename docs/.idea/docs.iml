@@ -26,5 +26,9 @@
     <orderEntry type="library" name="pdfmake" level="application" />
     <orderEntry type="library" name="flatpickr" level="application" />
     <orderEntry type="library" name="lightgallery" level="application" />
+    <orderEntry type="library" name="@popperjs/core" level="application" />
+    <orderEntry type="library" name="canvas-confetti" level="application" />
+    <orderEntry type="library" name="select2" level="application" />
+    <orderEntry type="library" name="tom-select" level="application" />
   </component>
 </module>

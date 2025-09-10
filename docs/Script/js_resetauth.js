@@ -1,3 +1,53 @@
+// ==================== js_resetauth.js (updated safe showLoginAfterReset handling) ====================
+
+// Safe consume helper for showLoginAfterReset
+// Prefer sessionStorage (per-tab). Fallback to localStorage only if recent (10s).
+function _consumeShowLoginFlag() {
+    try {
+        // sessionStorage: per-tab, best for "open modal once in same tab"
+        if (sessionStorage.getItem('showLoginAfterReset') === 'true') {
+            sessionStorage.removeItem('showLoginAfterReset');
+            return true;
+        }
+
+        const v = localStorage.getItem('showLoginAfterReset');
+        if (!v) return false;
+
+        // guard by timestamp to avoid stale cross-tab triggers
+        const ts = Number(localStorage.getItem('showLoginAfterReset_ts') || '0');
+        if (ts && (Date.now() - ts) < 10 * 1000) { // 10 seconds window
+            localStorage.removeItem('showLoginAfterReset');
+            localStorage.removeItem('showLoginAfterReset_ts');
+            return true;
+        }
+
+        // stale or no ts -> clear and ignore
+        localStorage.removeItem('showLoginAfterReset');
+        localStorage.removeItem('showLoginAfterReset_ts');
+        return false;
+    } catch (e) {
+        console.warn('_consumeShowLoginFlag error', e);
+        try { localStorage.removeItem('showLoginAfterReset'); localStorage.removeItem('showLoginAfterReset_ts'); } catch(_) {}
+        try { sessionStorage.removeItem('showLoginAfterReset'); } catch(_) {}
+        return false;
+    }
+}
+
+// Optional helper to set the flag safely (use session=true to set in this tab only)
+function setShowLoginAfterReset(useSession = true) {
+    try {
+        if (useSession && typeof sessionStorage !== 'undefined') {
+            sessionStorage.setItem('showLoginAfterReset', 'true');
+        } else {
+            localStorage.setItem('showLoginAfterReset', 'true');
+            localStorage.setItem('showLoginAfterReset_ts', String(Date.now()));
+        }
+    } catch (e) {
+        console.warn('setShowLoginAfterReset failed', e);
+        try { localStorage.setItem('showLoginAfterReset', 'true'); localStorage.setItem('showLoginAfterReset_ts', String(Date.now())); } catch(_) {}
+    }
+}
+
 // ==================== HÀM HỖ TRỢ ====================
 // Hiển thị lỗi hoặc thông báo
 function showMessage(elementId, message, type = "error") {
@@ -162,7 +212,7 @@ window.addEventListener('user:login', () => {
 // If AuthSync emits change, handle it too (avoid duplicate heavy operations if not needed)
 if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
     window.AuthSync.onChange((state) => {
-        if (state.loggedIn) {
+        if (state && state.loggedIn) {
             // quick mirror of compatibility keys
             const u = state.user || {};
             localStorage.setItem("userId", u.id || "");
@@ -398,8 +448,8 @@ document.addEventListener("click", (e) => {
         // Always update check login on load
         checkLoginStatus();
 
-        if (localStorage.getItem("showLoginAfterReset") === "true") {
-            localStorage.removeItem("showLoginAfterReset");
+        // Safe consume flag (sessionStorage preferred)
+        if (_consumeShowLoginFlag()) {
             const openLoginModal = () => {
                 if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
                     CyberModal.open();
@@ -453,6 +503,15 @@ document.addEventListener("click", (e) => {
         } else if (loginStatus === "failed") {
             showMessage("login-error", "❌ Facebook login thất bại, vui lòng thử lại!");
             window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Safe consume flag (sessionStorage preferred)
+        if (_consumeShowLoginFlag()) {
+            try {
+                if (typeof CyberModal !== "undefined" && typeof CyberModal.open === "function") {
+                    CyberModal.open();
+                }
+            } catch (err) { /* ignore */ }
         }
     } catch (err) {
         console.error("Lỗi xử lý callback Facebook:", err);

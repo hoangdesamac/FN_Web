@@ -20,13 +20,47 @@ function initBannerHeaderWrapper() {
 }
 
 // Helper: nhanh kiểm tra auth (AuthSync ưu tiên)
-function isAuthFast() {
+async function isAuthFast() {
     try {
-        if (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function') {
-            return window.AuthSync.isLoggedIn();
+        // If AuthSync is present and already has in-memory state -> return immediately
+        if (window.AuthSync && typeof window.AuthSync.getState === 'function') {
+            const st = window.AuthSync.getState();
+            if (st && typeof st.loggedIn !== 'undefined') return !!st.loggedIn;
         }
-    } catch (e) { /* ignore */ }
-    return !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
+
+        // If AuthSync exposes waitUntilReady or refresh, try a short wait (non-blocking caller should await if needed)
+        if (window.AuthSync) {
+            try {
+                // prefer waitUntilReady (coalesced), fallback to refresh() with timeout
+                if (typeof window.AuthSync.waitUntilReady === 'function') {
+                    // Do not throw on timeout; return current in-memory state afterwards
+                    await Promise.race([
+                        window.AuthSync.waitUntilReady(800),
+                        new Promise(resolve => setTimeout(resolve, 800))
+                    ]);
+                    const st2 = window.AuthSync.getState ? window.AuthSync.getState() : null;
+                    if (st2 && typeof st2.loggedIn !== 'undefined') return !!st2.loggedIn;
+                } else if (typeof window.AuthSync.refresh === 'function') {
+                    const p = window.AuthSync.refresh();
+                    await Promise.race([p, new Promise(resolve => setTimeout(resolve, 800))]);
+                    const st3 = window.AuthSync.getState ? window.AuthSync.getState() : null;
+                    if (st3 && typeof st3.loggedIn !== 'undefined') return !!st3.loggedIn;
+                }
+            } catch (e) {
+                // swallow errors and fall through to legacy fallback
+                console.warn('isAuthFast: AuthSync quick check failed', e);
+            }
+        }
+    } catch (e) {
+        console.warn('isAuthFast unexpected error', e);
+    }
+
+    // Legacy fallback for pages that still rely on compatibility keys
+    try {
+        return !!localStorage.getItem('userName') || !!localStorage.getItem('userId');
+    } catch (e) {
+        return false;
+    }
 }
 
 // ================= Giỏ hàng & đơn hàng =================
