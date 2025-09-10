@@ -1145,6 +1145,75 @@ function updateCartSummary(total) {
     }
 }
 
+function setupSaveAddressCheckboxIntegration() {
+    // Tạo (nếu chưa có) và đồng bộ trạng thái ban đầu
+    ensureSaveToAddressCheckbox();
+
+    // Toggle hiển thị khi đổi radio "Của bạn/Thông tin khác"
+    const radios = document.querySelectorAll('input[name="deliveryMode"]');
+    radios.forEach(r => {
+        r.addEventListener('change', () => {
+            const saveWrapper = document.getElementById('save-address-wrapper');
+            if (!saveWrapper) return;
+            const mode = document.querySelector('input[name="deliveryMode"]:checked')?.value || 'custom';
+            saveWrapper.style.display = (mode === 'profile') ? 'none' : 'block';
+        });
+    });
+
+    // Áp dụng trạng thái ngay lần đầu load
+    const saveWrapper = document.getElementById('save-address-wrapper');
+    if (saveWrapper) {
+        const mode = document.querySelector('input[name="deliveryMode"]:checked')?.value || 'custom';
+        saveWrapper.style.display = (mode === 'profile') ? 'none' : 'block';
+    }
+}
+
+// [ADD] Tạo checkbox "Lưu vào địa chỉ của bạn!" khi chọn "Thông tin khác" và đồng bộ localStorage
+function ensureSaveToAddressCheckbox() {
+    const form = document.getElementById('custom-delivery-form');
+    if (!form) return;
+
+    let wrapper = document.getElementById('save-address-wrapper');
+    if (!wrapper) {
+        wrapper = document.createElement('div');
+        wrapper.className = 'form-check mt-2';
+        wrapper.id = 'save-address-wrapper';
+        wrapper.innerHTML = `
+            <input class="form-check-input" type="checkbox" id="save-to-address">
+            <label class="form-check-label ms-1" for="save-to-address">Lưu vào địa chỉ của bạn!</label>
+        `;
+
+        // chèn ngay sau checkbox "Xuất hóa đơn" nếu có, otherwise append cuối form
+        const invoiceRow = form.querySelector('#invoice-required')?.closest('.form-check');
+        if (invoiceRow && invoiceRow.parentNode) {
+            invoiceRow.parentNode.insertBefore(wrapper, invoiceRow.nextSibling);
+        } else {
+            form.appendChild(wrapper);
+        }
+
+        // cập nhật localStorage khi tick/untick
+        const cb = wrapper.querySelector('#save-to-address');
+        cb.addEventListener('change', () => {
+            try {
+                const info = JSON.parse(localStorage.getItem('deliveryInfo') || '{}');
+                info.saveToAddress = !!cb.checked;
+                localStorage.setItem('deliveryInfo', JSON.stringify(info));
+            } catch (_) {}
+        });
+    }
+
+    // set trạng thái từ localStorage (nếu đã lưu trước đó)
+    try {
+        const saved = JSON.parse(localStorage.getItem('deliveryInfo') || '{}').saveToAddress;
+        const cb = wrapper.querySelector('#save-to-address');
+        if (cb) cb.checked = !!saved;
+    } catch (_) {}
+
+    // Ẩn/hiện theo radio đang chọn
+    const mode = document.querySelector('input[name="deliveryMode"]:checked')?.value || 'custom';
+    wrapper.style.display = (mode === 'profile') ? 'none' : 'block';
+}
+
 let provinceDataCheckout = null;
 let provinceListenerAttachedCheckout = false;
 
@@ -1211,6 +1280,7 @@ async function populateProvinceWardCheckout(preProvince = "", preWard = "") {
     }
 }
 
+// [MODIFY] loadDeliveryInfo(): set lại trạng thái checkbox nếu đã có
 function loadDeliveryInfo() {
     const delivery = JSON.parse(localStorage.getItem('deliveryInfo')) || {};
 
@@ -1232,8 +1302,12 @@ function loadDeliveryInfo() {
         invoiceCheckbox.checked = delivery.invoiceRequired !== undefined ? delivery.invoiceRequired : true;
     }
 
+    // đồng bộ trạng thái checkbox "Lưu vào địa chỉ"
+    const saveCb = document.getElementById('save-to-address');
+    if (saveCb) saveCb.checked = !!delivery.saveToAddress;
 }
 
+// [MODIFY] saveDeliveryInfo(): thêm trường saveToAddress khi ở "Thông tin khác"
 function saveDeliveryInfo() {
     const deliveryMode = document.querySelector('input[name="deliveryMode"]:checked')?.value || "custom";
     let deliveryInfo = {};
@@ -1244,13 +1318,11 @@ function saveDeliveryInfo() {
             showNotification("❌ Vui lòng chọn một địa chỉ giao hàng!", "error");
             return;
         }
-
         const addr = addressesCache.find(a => a.id == selectedId);
         if (!addr) {
             showNotification("❌ Không tìm thấy địa chỉ đã chọn!", "error");
             return;
         }
-
         deliveryInfo = {
             mode: "profile",
             name: addr.recipient_name,
@@ -1259,14 +1331,12 @@ function saveDeliveryInfo() {
             ward: addr.ward || "",
             address: addr.street_address || "",
             note: document.getElementById("note").value.trim(),
-            invoiceRequired: document.getElementById("invoice-required").checked
+            invoiceRequired: document.getElementById("invoice-required").checked,
+            saveToAddress: false // profile không lưu thêm
         };
-    }
-    else {
-        // Nếu chọn nhập thủ công ("Thông tin khác")
+    } else {
         const provinceSelect = document.getElementById("province");
         const wardSelect = document.getElementById("ward");
-
         deliveryInfo = {
             mode: "form",
             name: document.getElementById("recipient-name").value.trim(),
@@ -1275,12 +1345,13 @@ function saveDeliveryInfo() {
             ward: wardSelect.selectedOptions[0]?.textContent || "",
             address: document.getElementById("recipient-address").value.trim(),
             note: document.getElementById("note").value.trim(),
-            invoiceRequired: document.getElementById("invoice-required").checked
+            invoiceRequired: document.getElementById("invoice-required").checked,
+            saveToAddress: document.getElementById("save-to-address")?.checked || false
         };
     }
 
     localStorage.setItem("deliveryInfo", JSON.stringify(deliveryInfo));
-    window.deliveryInfo = deliveryInfo; // gán global để render summary dùng
+    window.deliveryInfo = deliveryInfo;
 }
 
 function validateDeliveryInfo() {
@@ -1623,7 +1694,7 @@ async function processPayment() {
 
             const selectedMethod =
                 document.querySelector('input[name="payment-method"]:checked')?.value || "COD";
-            const deliveryInfo = getDeliveryInfo();
+            const deliveryInfo = getDeliveryInfo(); // lấy info hiện tại (có saveToAddress)
             const total = selectedCart.reduce((sum, item) => sum + item.salePrice * item.quantity, 0);
 
             // Tính group/setCount từ selectedCart để quyết định gửi comboRequiredIds
@@ -1653,6 +1724,9 @@ async function processPayment() {
                 loadingModal.hide();
                 return;
             }
+
+            // 1.1) Nếu user tick "Lưu vào địa chỉ của bạn!" → lưu vào Sổ địa chỉ (sau khi đơn thành công)
+            await saveAddressIfRequested(deliveryInfo);
 
             // 2) Xoá item đã mua khỏi giỏ (server đã xoá có chọn lọc trong /api/orders, gọi lại để an toàn)
             try {
@@ -1687,7 +1761,7 @@ async function processPayment() {
             // Reset cờ preview confirmed
             localStorage.removeItem("giftPreviewConfirmed");
 
-            // Giữ lại note & invoiceRequired cho lần sau
+            // Giữ lại note & invoiceRequired cho lần sau (không giữ địa chỉ form để tránh lưu nhầm khi không tick)
             const savedInfo = {
                 note: deliveryInfo?.note || "",
                 invoiceRequired: deliveryInfo?.invoiceRequired || false
@@ -1770,6 +1844,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     loadDeliveryInfo();
     populateProvinceWardCheckout();
+    setupSaveAddressCheckboxIntegration();
     setupPaymentMethodAnimations();
 
     document.querySelectorAll('.method-option').forEach(option => {
@@ -1860,6 +1935,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         defaultRadio.checked = true;
         profileBox.style.display = "block";
         formBox.style.display = "none";
+        // đảm bảo ẩn checkbox lưu địa chỉ khi đang ở "Của bạn"
+        const saveWrapper = document.getElementById('save-address-wrapper');
+        if (saveWrapper) saveWrapper.style.display = 'none';
     }
 });
 
@@ -1907,17 +1985,15 @@ function getDeliveryInfo() {
                 ward: addr.ward || "",
                 province: addr.city || "",
                 note: document.getElementById("note")?.value.trim() || "",
-                invoiceRequired: document.getElementById("invoice-required")?.checked ?? true
+                invoiceRequired: document.getElementById("invoice-required")?.checked ?? true,
+                saveToAddress: false
             };
         }
-    }
-    else {
-        // lấy từ form nhập tay
+    } else {
         const form = document.getElementById("custom-delivery-form");
         if (form) {
             const provinceSelect = form.querySelector("#province");
             const wardSelect = form.querySelector("#ward");
-
             info = {
                 mode: "form",
                 name: form.querySelector("#recipient-name")?.value.trim(),
@@ -1926,12 +2002,44 @@ function getDeliveryInfo() {
                 ward: wardSelect?.selectedOptions[0]?.textContent || "",
                 province: provinceSelect?.selectedOptions[0]?.textContent || "",
                 note: document.getElementById("note")?.value.trim() || "",
-                invoiceRequired: document.getElementById("invoice-required")?.checked ?? true
-
+                invoiceRequired: document.getElementById("invoice-required")?.checked ?? true,
+                saveToAddress: form.querySelector("#save-to-address")?.checked ?? false
             };
         }
     }
     return info;
+}
+
+async function saveAddressIfRequested(info) {
+    try {
+        if (!info || info.mode !== 'form' || !info.saveToAddress) return;
+        if (!isLoggedIn()) return;
+
+        const payload = {
+            recipient_name: info.name,
+            recipient_phone: info.phone,
+            street_address: info.address,
+            ward: info.ward || null,
+            city: info.province || null,
+            is_default: false
+        };
+
+        const res = await fetch(`${window.API_BASE}/api/addresses`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data && data.success) {
+            // Optional: báo nhẹ cho user
+            try { showNotification('Đã lưu địa chỉ mới vào Sổ địa chỉ.', 'success'); } catch (_) {}
+        } else {
+            console.warn('Không thể lưu địa chỉ mới:', data?.error);
+        }
+    } catch (err) {
+        console.warn('saveAddressIfRequested error:', err);
+    }
 }
 
 window.addEventListener('storage', function (e) {
