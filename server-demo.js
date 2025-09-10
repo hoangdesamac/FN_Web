@@ -10,11 +10,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(helmet());
+// app.use(helmet()); // Disabled for demo
 app.use(cors());
 app.use(morgan('combined'));
 app.use(express.json());
-app.use(express.static('HTML'));
+app.use(express.static('.'));
 
 // In-memory storage for demo purposes
 let cartItems = new Map(); // userId -> items array
