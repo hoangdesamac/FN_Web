@@ -128,9 +128,10 @@
                         try { consumed = !!consumeShowLoginFlag(); } catch (err) { consumed = false; }
                     }
 
-                    if (consumed) {
-                        openLoginModalSafely();
-                    }
+                    // NOTE: Do NOT auto-open modal here. Modal opening is intentionally removed so that
+                    // it only occurs when the user explicitly interacts (clicks icon/button).
+                    // Keep the consumed flag logic in case other scripts want to inspect/consume it,
+                    // but do not trigger openLoginModalSafely() automatically.
                 } catch (e) { /* ignore */ }
             };
             document.body.appendChild(s);

@@ -13,7 +13,7 @@ function _consumeShowLoginFlag() {
         const v = localStorage.getItem('showLoginAfterReset');
         if (!v) return false;
 
-        // guard by timestamp to avoid stale cross-tab trigger
+        // guard by timestamp to avoid stale cross-tab triggers
         const ts = Number(localStorage.getItem('showLoginAfterReset_ts') || '0');
         if (ts && (Date.now() - ts) < 10 * 1000) { // 10 seconds window
             localStorage.removeItem('showLoginAfterReset');
@@ -300,12 +300,12 @@ if (loginForm) {
             const data = await res.json();
 
             if (data.success && data.user) {
-                // Prefer to let AuthSync read /api/me (cookie set) to mirror keys
+                // Prefer AuthSync to refresh /api/me and mirror keys.
                 if (window.AuthSync && typeof window.AuthSync.notifyLoginFromServer === 'function') {
                     try {
                         await window.AuthSync.notifyLoginFromServer();
                     } catch (e) {
-                        // fallback to original behavior if refresh fails
+                        // fallback to writing compatibility keys if notify fails
                         localStorage.setItem("userId", data.user.id || "");
                         localStorage.setItem("firstName", (data.user.firstName || "").trim());
                         localStorage.setItem("lastName", (data.user.lastName || "").trim());
@@ -318,7 +318,7 @@ if (loginForm) {
                         }
                     }
                 } else {
-                    // legacy: write compatibility keys immediately
+                    // legacy mirror
                     localStorage.setItem("userId", data.user.id || "");
                     localStorage.setItem("firstName", (data.user.firstName || "").trim());
                     localStorage.setItem("lastName", (data.user.lastName || "").trim());
@@ -333,35 +333,47 @@ if (loginForm) {
 
                 localStorage.removeItem("cartLocked");
 
-                // Kiểm tra và thêm sản phẩm tạm sau đăng nhập
+                // Add pendingCartItem if present (legacy behavior)
                 const pendingItem = JSON.parse(localStorage.getItem('pendingCartItem'));
                 if (pendingItem) {
-                    addToCart(pendingItem.id, pendingItem.name, pendingItem.originalPrice, pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image);
+                    try {
+                        if (typeof addToCart === 'function') {
+                            addToCart(pendingItem.id, pendingItem.name, pendingItem.originalPrice, pendingItem.salePrice, pendingItem.discountPercent, pendingItem.image);
+                        }
+                    } catch (_) {}
                     localStorage.removeItem('pendingCartItem');
                     showMessage("login-error", `Đã thêm "${pendingItem.name}" vào giỏ hàng sau khi đăng nhập!`, "success");
                 }
 
-                // Đồng bộ giỏ hàng sau đăng nhập
-                await syncCartToServer();
+                // Sync cart -> server (best-effort)
+                await syncCartToServer().catch(()=>{});
 
                 if (typeof CyberModal !== "undefined" && CyberModal.close) CyberModal.close();
                 if (typeof updateUserDisplay === "function") {
                     updateUserDisplay();
                 }
 
-                // Gọi sự kiện đồng bộ
-                try { window.dispatchEvent(new Event('user:login')); } catch (err) { console.warn('Không thể dispatch user:login event', err); }
+                // Emit same-tab event
+                try { window.dispatchEvent(new Event('user:login')); } catch (err) { console.warn('dispatch user:login failed', err); }
 
-                // Thay vì reload toàn trang, xử lý cập nhật header & pending action, và redirect nếu có redirect lưu trước đó
-                const postLoginRedirect = localStorage.getItem('postLoginRedirect');
+                // Prefer sessionStorage for postLoginRedirect (per-tab). Fall back to localStorage if none.
+                const postLoginRedirect = (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('postLoginRedirect'))
+                    ? sessionStorage.getItem('postLoginRedirect')
+                    : localStorage.getItem('postLoginRedirect');
+
+                // Run post-login processing (sync header, process pendingAction, etc.)
                 await processAfterLoginNoReload();
 
+                // If redirect exists and differs from current, perform it and clean both storages
                 if (postLoginRedirect && postLoginRedirect !== window.location.href) {
-                    localStorage.removeItem('postLoginRedirect');
+                    try { sessionStorage.removeItem('postLoginRedirect'); } catch (_) {}
+                    try { localStorage.removeItem('postLoginRedirect'); } catch (_) {}
                     window.location.href = postLoginRedirect;
                     return;
-                } else if (postLoginRedirect) {
-                    localStorage.removeItem('postLoginRedirect');
+                } else {
+                    // ensure we clear any lingering redirect keys
+                    try { sessionStorage.removeItem('postLoginRedirect'); } catch (_) {}
+                    try { localStorage.removeItem('postLoginRedirect'); } catch (_) {}
                 }
 
             } else {
