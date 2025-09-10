@@ -914,21 +914,33 @@ function getRequiredIdsForCurrentProduct() {
 function renderSingleGiftBox(gifts) {
     const box = document.getElementById('gift-container');
     if (!box) return;
+
     if (!Array.isArray(gifts) || !gifts.length) {
         box.style.display = 'none';
         box.innerHTML = '';
         return;
     }
+
     const g = gifts[0];
     const qty = parseInt(g.quantity) || 1;
+
     box.innerHTML = `
-        <div class="gift-box-inner">
-            <h4 class="mb-2"><i class="fas fa-gift"></i> Quà tặng của bạn</h4>
-            <div class="d-flex align-items-center p-2 rounded" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);">
-                <img src="${g.image}" alt="${g.name}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;background:#fff;">
-                <div class="ms-3">
-                    <div style="font-weight:600">${g.name}</div>
-                    <div class="text-muted" style="font-size:12px">x${qty} • -100%</div>
+        <div class="gift-box glass glow">
+            <div class="gift-title">
+                <i class="fas fa-gift"></i>
+                Quà tặng kèm
+            </div>
+
+            <div class="gift-list">
+                <div class="gift-item">
+                    <img src="${g.image}" alt="${g.name}">
+                    <div class="gift-info">
+                        <div class="gift-name">${g.name}</div>
+                        <div class="gift-meta">
+                            <span class="gift-qty">x${qty}</span>
+                            <span class="gift-free">-100%</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
