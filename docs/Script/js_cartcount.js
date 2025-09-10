@@ -21,14 +21,12 @@
         syncDebounceMs: 700
     };
 
-    // Helper: read count from localStorage (fast)
+    // Helper: read count from localStorage (KHÔNG tính quà)
     function countFromLocal() {
         try {
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const gift = JSON.parse(localStorage.getItem('giftCart') || '[]');
             const normal = Array.isArray(cart) ? cart.reduce((t, i) => t + (Number(i.quantity) || 0), 0) : 0;
-            const giftCount = Array.isArray(gift) ? gift.reduce((t, i) => t + (Number(i.quantity) || 0), 0) : 0;
-            return normal + giftCount;
+            return normal;
         } catch (e) {
             return null;
         }
@@ -46,7 +44,7 @@
         el.style.display = n > 0 ? 'inline-flex' : 'none';
     }
 
-    // Use /api/cart to get authoritative cart when needed
+    // Use /api/cart to get authoritative cart when needed (KHÔNG tính gifts)
     async function fetchServerCartCount() {
         try {
             const res = await fetch(`${(window.API_BASE || '').replace(/\/$/, '')}/api/cart`, {
@@ -124,7 +122,6 @@
         window._cartCountCache.lastCount = next;
         window._cartCountCache.lastFetch = Date.now();
         setDOMCount(next);
-        // schedule background sync to confirm with server
         scheduleBackgroundSync();
     }
 
@@ -150,9 +147,7 @@
             }
             window._cartCountCache.pendingSyncTimer = setTimeout(async () => {
                 window._cartCountCache.pendingSyncTimer = null;
-                // only sync when logged in
                 if (!isAuth()) return;
-                // If already in flight, skip
                 if (window._cartCountCache.inFlight) return;
                 window._cartCountCache.inFlight = true;
                 try {
@@ -170,13 +165,12 @@
         } catch (e) { console.warn('scheduleBackgroundSync error', e); }
     }
 
-    // storage/auth listeners to keep in sync cross-tab and when auth changes
+    // storage/auth listeners
     try {
         window.addEventListener('storage', (e) => {
             try {
                 if (!e) return;
-                if (e.key === 'cart' || e.key === 'giftCart') {
-                    // local change -> immediate update from localStorage
+                if (e.key === 'cart' || e.key === 'serverGifts') { // nghe cả serverGifts nhưng KHÔNG tính vào badge
                     const local = countFromLocal();
                     if (typeof local === 'number') {
                         window._cartCountCache.lastCount = local;
@@ -185,7 +179,6 @@
                     }
                 }
                 if (e.key === 'auth_state' || e.key === 'auth_ping' || e.key === 'userId' || e.key === 'userName') {
-                    // auth changed cross-tab -> refresh or hide
                     if (isAuth()) updateCartCount();
                     else {
                         const el = document.querySelector('.cart-count');
@@ -210,11 +203,9 @@
         }
     } catch (e) { /* ignore */ }
 
-    // initial populate on DOM ready
+    // initial populate
     document.addEventListener('DOMContentLoaded', () => {
-        try {
-            updateCartCount();
-        } catch (e) { /* ignore */ }
+        try { updateCartCount(); } catch (e) { /* ignore */ }
     });
 
     // expose

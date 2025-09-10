@@ -472,16 +472,6 @@ function closeRewardPopup() {
     document.getElementById('reward-popup').classList.add('d-none');
 }
 
-function _mergeCartWithGifts(cartArray) {
-    try {
-        const gifts = getServerGifts();
-        const normalizedGifts = Array.isArray(gifts) ? gifts.map(g => ({ ...g, quantity: Number(g.quantity) || 1 })) : [];
-        return Array.isArray(cartArray) ? cartArray.concat(normalizedGifts) : normalizedGifts;
-    } catch (e) {
-        return Array.isArray(cartArray) ? cartArray : [];
-    }
-}
-
 // Helper: try to refresh cart count via shared module, fallback to legacy updateCartCount if missing
 async function _refreshCartCountFromSharedOrFallback() {
     try {
@@ -621,20 +611,19 @@ async function rebuyOrder(orderId) {
         }
         showToast(message);
 
-        // Đồng bộ badge/cart/gifts theo authoritative
+        // Đồng bộ badge/cart/gifts theo authoritative — CHỈ cart cho badge
         try {
             if (lastServerCart) {
                 try { localStorage.setItem('cart', JSON.stringify(lastServerCart)); } catch (e) {}
                 if (lastServerGifts) setServerGifts(lastServerGifts);
 
-                const merged = _mergeCartWithGifts(lastServerCart);
                 if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                    window.cartCountShared.setFromCart(merged);
+                    window.cartCountShared.setFromCart(lastServerCart); // KHÔNG gộp gifts
                 } else {
                     await _refreshCartCountFromSharedOrFallback();
                 }
             } else {
-                // Không có cart authoritative từ vòng lặp → gọi GET /api/cart và cập nhật cả gifts
+                // Không có cart authoritative từ vòng lặp → gọi GET /api/cart và cập nhật
                 try {
                     const cartRes = await fetch(`${window.API_BASE}/api/cart`, { method: "GET", credentials: "include" });
                     const cartData = await cartRes.json();
@@ -644,9 +633,8 @@ async function rebuyOrder(orderId) {
                         try { localStorage.setItem('cart', JSON.stringify(serverCart)); } catch (e) {}
                         setServerGifts(gifts);
 
-                        const merged = _mergeCartWithGifts(serverCart);
                         if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                            window.cartCountShared.setFromCart(merged);
+                            window.cartCountShared.setFromCart(serverCart); // KHÔNG gộp gifts
                         } else {
                             await _refreshCartCountFromSharedOrFallback();
                         }

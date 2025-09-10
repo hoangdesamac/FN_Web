@@ -66,16 +66,6 @@ function showStep(step) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function _mergeCartWithGifts(cartArray) {
-    try {
-        const gifts = getServerGifts();
-        const normalizedGifts = gifts.map(g => ({ ...g, quantity: Number(g.quantity) || 1 }));
-        return Array.isArray(cartArray) ? cartArray.concat(normalizedGifts) : normalizedGifts;
-    } catch (e) {
-        return Array.isArray(cartArray) ? cartArray : [];
-    }
-}
-
 // Robust wrapper to call shared API or fallback
 async function _refreshCartCountFromSharedOrFallback() {
     try {
@@ -93,7 +83,7 @@ async function _refreshCartCountFromSharedOrFallback() {
 async function initializeCartSystem() {
     const logged = isLoggedIn();
 
-    // Nếu có pendingCartItem (khi click mua khi chưa login) → thêm sau khi login
+    // pendingCartItem (khi bấm mua lúc chưa login)
     try {
         const pending = localStorage.getItem('pendingCartItem');
         if (pending) {
@@ -122,13 +112,13 @@ async function initializeCartSystem() {
             if (data && data.success) {
                 const serverCart = data.cart || [];
                 const gifts = data.gifts || [];
-                try { localStorage.setItem('cart', JSON.stringify(serverCart)); } catch (e) {}
+                saveCart(serverCart);     // saveCart đã lọc quà
                 setServerGifts(gifts);
                 cartCache = serverCart;
 
                 try {
                     if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                        window.cartCountShared.setFromCart(serverCart.concat(gifts));
+                        window.cartCountShared.setFromCart(serverCart); // KHÔNG gộp gifts
                     } else {
                         updateCartCount && updateCartCount();
                     }
@@ -148,10 +138,10 @@ async function initializeCartSystem() {
         } catch (err) {
             console.error('❌ Lỗi khi lấy giỏ hàng từ server (init):', err);
             cartCache = JSON.parse(localStorage.getItem('cart') || '[]');
-            setServerGifts([]);
+            setServerGifts([]); // vẫn không có quà khi lỗi
             try {
                 if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                    window.cartCountShared.setFromCart(_mergeCartWithGifts(cartCache));
+                    window.cartCountShared.setFromCart(cartCache); // KHÔNG gộp gifts
                 } else updateCartCount && updateCartCount();
             } catch (e) {}
             if (document.getElementById('cart-items-container')) renderCart(cartCache);
@@ -163,7 +153,7 @@ async function initializeCartSystem() {
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                window.cartCountShared.setFromCart(_mergeCartWithGifts(localCart));
+                window.cartCountShared.setFromCart(localCart); // KHÔNG gộp gifts
             } else {
                 updateCartCount && updateCartCount();
             }
@@ -178,7 +168,7 @@ async function initializeCartSystem() {
         }
     }
 
-    // Bind sự kiện buy-button như cũ
+    // Bind buy-button
     document.querySelectorAll('.buy-button').forEach(button => {
         if (button._boundBuy) return;
         button._boundBuy = true;
@@ -286,8 +276,9 @@ function getCart() {
 }
 
 function saveCart(cart) {
-    localStorage.setItem('cart', JSON.stringify(cart));
-    cartCache = cart;
+    const clean = Array.isArray(cart) ? cart.filter(it => !it.isGift) : [];
+    localStorage.setItem('cart', JSON.stringify(clean));
+    cartCache = clean;
 }
 
 async function addToCart(productId, productName, originalPrice, salePrice, discountPercent, image) {
@@ -326,7 +317,7 @@ async function addToCart(productId, productName, originalPrice, salePrice, disco
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                window.cartCountShared.setFromCart(_mergeCartWithGifts(cart));
+                window.cartCountShared.setFromCart(cart); // KHÔNG gộp gifts
             } else {
                 updateCartCount && updateCartCount();
             }
@@ -381,7 +372,7 @@ async function addToCart(productId, productName, originalPrice, salePrice, disco
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                window.cartCountShared.setFromCart(serverCart.concat(gifts));
+                window.cartCountShared.setFromCart(serverCart); // KHÔNG gộp gifts
             } else {
                 updateCartCount && updateCartCount();
             }
@@ -432,13 +423,10 @@ function updateCartCount() {
         }
 
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const gifts = getServerGifts();
         const normalCount = Array.isArray(cart) ? cart.reduce((t, i) => t + (Number(i.quantity) || 0), 0) : 0;
-        const giftCount = Array.isArray(gifts) ? gifts.reduce((t, g) => t + (Number(g.quantity) || 0), 0) : 0;
-        const total = normalCount + giftCount;
 
-        cartCountElement.textContent = String(total);
-        cartCountElement.style.display = total > 0 ? 'inline-flex' : 'none';
+        cartCountElement.textContent = String(normalCount);
+        cartCountElement.style.display = normalCount > 0 ? 'inline-flex' : 'none';
     } catch (err) {
         console.warn('updateCartCount fallback error:', err);
     }
@@ -525,7 +513,7 @@ async function clearCart() {
 
     try {
         if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-            window.cartCountShared.setFromCart(getCart().concat(getServerGifts()));
+            window.cartCountShared.setFromCart(getCart()); // KHÔNG gộp gifts
         } else {
             updateCartCount && updateCartCount();
         }
@@ -564,7 +552,7 @@ async function updateQuantity(index, change) {
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                window.cartCountShared.setFromCart(_mergeCartWithGifts(cart));
+                window.cartCountShared.setFromCart(cart); // KHÔNG gộp gifts
             } else {
                 updateCartCount && updateCartCount();
             }
@@ -608,7 +596,7 @@ async function updateQuantity(index, change) {
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                window.cartCountShared.setFromCart(serverCart.concat(gifts));
+                window.cartCountShared.setFromCart(serverCart); // KHÔNG gộp gifts
             } else updateCartCount && updateCartCount();
         } catch (e) {
             console.warn('updateQuantity setFromCart failed:', e);
@@ -651,7 +639,7 @@ async function performRemoveItem(index, itemName, productId) {
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                window.cartCountShared.setFromCart(_mergeCartWithGifts(cart));
+                window.cartCountShared.setFromCart(cart); // KHÔNG gộp gifts
             } else updateCartCount && updateCartCount();
         } catch (e) {
             console.warn('performRemoveItem local setFromCart failed:', e);
@@ -695,7 +683,7 @@ async function performRemoveItem(index, itemName, productId) {
 
         try {
             if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                window.cartCountShared.setFromCart(serverCart.concat(gifts));
+                window.cartCountShared.setFromCart(serverCart); // KHÔNG gộp gifts
             } else updateCartCount && updateCartCount();
         } catch (e) {
             console.warn('performRemoveItem setFromCart failed:', e);
@@ -782,7 +770,7 @@ async function cleanupExpiredItems(expiryHours = 72) {
 
             try {
                 if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                    window.cartCountShared.setFromCart(serverCart.concat(gifts));
+                    window.cartCountShared.setFromCart(serverCart); // KHÔNG gộp gifts
                 } else {
                     updateCartCount && updateCartCount();
                 }
@@ -816,8 +804,13 @@ function renderCart() {
             migrated = true;
         }
     });
-    if (migrated) { localStorage.setItem('cart', JSON.stringify(raw)); }
-    cartCache = raw;
+
+    // LỌC an toàn: nếu lỡ có quà bị đẩy vào cart → loại bỏ và lưu lại
+    const filtered = Array.isArray(raw) ? raw.filter(it => !it.isGift) : [];
+    if (filtered.length !== raw.length || migrated) {
+        localStorage.setItem('cart', JSON.stringify(filtered));
+    }
+    cartCache = filtered;
 
     const cartItemsContainer = document.getElementById('cart-items-container');
     if (!cartItemsContainer) return;
@@ -829,8 +822,8 @@ function renderCart() {
     const clearCartBtn = document.getElementById('clear-cart');
     const continueBtn = document.getElementById('continue-shopping-btn');
 
-    let cart = getCart();
-    let giftCart = getServerGifts();
+    const cart = getCart();              // chỉ còn sản phẩm thường
+    const giftCart = getServerGifts();   // quà hiển thị riêng
 
     if ((cart.length === 0) && (giftCart.length === 0)) {
         if (emptyCart) emptyCart.classList.remove('d-none');
@@ -1697,9 +1690,9 @@ window.addEventListener('storage', function (e) {
         if (e.key === 'cart' || e.key === 'serverGifts') {
             refreshCartCache();
             try {
-                const merged = _mergeCartWithGifts(JSON.parse(localStorage.getItem('cart') || '[]'));
+                const cartOnly = JSON.parse(localStorage.getItem('cart') || '[]');
                 if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                    window.cartCountShared.setFromCart(merged);
+                    window.cartCountShared.setFromCart(cartOnly); // KHÔNG gộp gifts
                 } else {
                     updateCartCount && updateCartCount();
                 }

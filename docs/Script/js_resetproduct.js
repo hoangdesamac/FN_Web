@@ -350,16 +350,6 @@ function setServerGifts(gifts) {
     try { localStorage.setItem('serverGifts', JSON.stringify(Array.isArray(gifts) ? gifts : [])); } catch {}
 }
 
-function _mergeCartWithGifts(cartArray) {
-    try {
-        const gifts = getServerGifts();
-        const normalizedGifts = Array.isArray(gifts) ? gifts.map(g => ({ ...g, quantity: Number(g.quantity) || 1 })) : [];
-        return Array.isArray(cartArray) ? cartArray.concat(normalizedGifts) : normalizedGifts;
-    } catch (e) {
-        return Array.isArray(cartArray) ? cartArray : [];
-    }
-}
-
 // Try to refresh via shared module; fallback to legacy updateCartCount()
 async function _refreshCartCountFromSharedOrFallback() {
     try {
@@ -373,31 +363,31 @@ async function _refreshCartCountFromSharedOrFallback() {
     // Fallback: call legacy DOM updater if available
     try { if (typeof updateCartCount === 'function') updateCartCount(); } catch (e) { /* ignore */ }
 }
+
 function reconcileServerCart(data) {
     try {
         if (data && Array.isArray(data.cart)) {
+            // Lưu cart thường
             try { localStorage.setItem('cart', JSON.stringify(data.cart)); } catch (e) {}
 
-            // Lưu gifts do server trả về (nếu có)
+            // Lưu gifts riêng (không tính badge)
             if (Array.isArray(data.gifts)) {
                 try { localStorage.setItem('serverGifts', JSON.stringify(data.gifts)); } catch (e) {}
             }
 
-            const merged = _mergeCartWithGifts(data.cart);
-
-            // Ưu tiên module chia sẻ
+            // Ưu tiên module chia sẻ: setFromCart(cart) — KHÔNG gộp gifts
             try {
                 if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                    window.cartCountShared.setFromCart(merged);
+                    window.cartCountShared.setFromCart(data.cart);
                     return;
                 }
             } catch (e) {
                 console.warn('cartCountShared.setFromCart error:', e);
             }
 
-            // Fallback DOM
+            // Fallback DOM (chỉ tính sản phẩm thường)
             try {
-                const total = merged.reduce((s, it) => s + (Number(it.quantity) || 0), 0);
+                const total = data.cart.reduce((s, it) => s + (Number(it.quantity) || 0), 0);
                 if (window.jQuery) {
                     $('.cart-count').text(total).css('display', total > 0 ? 'inline-flex' : 'none');
                 } else {
@@ -415,7 +405,7 @@ function reconcileServerCart(data) {
     } catch (err) {
         console.warn('reconcileServerCart error:', err);
     }
-    // Không có cart authoritative → yêu cầu refresh
+    // Không có cart authoritative → refresh
     _refreshCartCountFromSharedOrFallback();
 }
 
@@ -612,14 +602,12 @@ async function processAddToCartResponse(res) {
                     try { localStorage.setItem('serverGifts', JSON.stringify(res.gifts)); } catch (e) {}
                 }
 
-                const merged = _mergeCartWithGifts(res.cart);
-
-                // Module chia sẻ
+                // Module chia sẻ: setFromCart(cart) — KHÔNG gộp gifts
                 if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                    window.cartCountShared.setFromCart(merged);
+                    window.cartCountShared.setFromCart(res.cart);
                 } else {
                     // Fallback DOM
-                    const total = merged.reduce((s, it) => s + (Number(it.quantity) || 0), 0);
+                    const total = res.cart.reduce((s, it) => s + (Number(it.quantity) || 0), 0);
                     const $el = window.jQuery ? window.jQuery('.cart-count') : document.querySelector('.cart-count');
                     if ($el) {
                         if (window.jQuery) {
@@ -684,7 +672,7 @@ async function handleBuyNowImmediate(product, selectedCombos = [], giftCart = []
                 lastRes = res;
                 if (res && res.success && Array.isArray(res.cart)) {
                     lastServerCart = res.cart;
-                    // Nếu API thêm trả gifts → lưu lại để đồng bộ badge
+                    // Nếu API thêm trả gifts → lưu lại, KHÔNG cộng vào badge
                     if (Array.isArray(res.gifts)) {
                         try { localStorage.setItem('serverGifts', JSON.stringify(res.gifts)); } catch (e) {}
                     }
@@ -711,9 +699,10 @@ async function handleBuyNowImmediate(product, selectedCombos = [], giftCart = []
         if (lastServerCart) {
             try {
                 try { localStorage.setItem('cart', JSON.stringify(lastServerCart)); } catch (e) {}
-                const merged = _mergeCartWithGifts(lastServerCart);
                 if (window.cartCountShared && typeof window.cartCountShared.setFromCart === 'function') {
-                    window.cartCountShared.setFromCart(merged);
+                    window.cartCountShared.setFromCart(lastServerCart); // KHÔNG gộp gifts
+                } else if (typeof updateCartCountFromServer === 'function') {
+                    await updateCartCountFromServer();
                 } else if (typeof updateCartCount === 'function') {
                     updateCartCount();
                 }
@@ -739,7 +728,6 @@ async function handleBuyNowImmediate(product, selectedCombos = [], giftCart = []
 
         try { localStorage.removeItem('cartLocked'); } catch (e) {}
 
-        // 5) Quy tắc redirect: tuỳ chọn — ví dụ redirect nếu có combo
         const hasCombo = Array.isArray(selectedCombos) && selectedCombos.length > 0;
         const shouldRedirect = options.forceRedirect || (options.redirectIfEligible && hasCombo);
         if (shouldRedirect) {
