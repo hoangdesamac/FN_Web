@@ -490,7 +490,9 @@ function preferRamTypeBySocket(socket) {
 }
 
 async function applyPresetOffice() {
-    // Đảm bảo đã tải datasets cần thiết
+    resetPresetRuntimeFilters();
+    const budget = getCurrentBudgetForPreset('office');
+
     await Promise.all([
         ensureCategory('cpu'),
         ensureCategory('mainboard'),
@@ -499,90 +501,834 @@ async function applyPresetOffice() {
         ensureCategory('psu'),
         ensureCategory('case'),
         ensureCategory('cooler'),
-        ensureCategory('gpu') // chỉ dùng khi CPU không có iGPU
+        ensureCategory('monitor'),
+        ensureCategory('keyboard'),
+        ensureCategory('mouse'),
+        ensureCategory('headphones'),
+        ensureCategory('speakers'),
+        ensureCategory('os'),
+        ensureCategory('soundcard'),
+        ensureCategory('network')
     ]);
 
-    // 1) CPU: ưu tiên có iGPU, 4–8 nhân, TDP <= 65W, giá hợp lý
-    const cpu = pickCheapest(
-        PART_LIBRARY.cpu,
-        c => hasIntegratedGraphics(c) && (c.cores || 4) >= 4 && (c.tdp || 65) <= 75
-    ) || pickCheapest(PART_LIBRARY.cpu, c => (c.cores || 4) >= 4 && (c.tdp || 65) <= 75);
+    const selected = {};
 
-    // 2) Mainboard: cùng socket, ưu tiên mATX/ATX, rẻ
-    const mobo = pickCheapest(
-        PART_LIBRARY.mainboard,
-        b => !cpu || !cpu.socket ? true : (String(b.socket || '').toUpperCase() === String(cpu.socket || '').toUpperCase())
-    );
+    // CPU
+    selected.cpu = pickRandomInHalfBudgetWindow(
+        PART_LIBRARY.cpu, budget,
+        c => ((c.cores||4)>=4 && (c.tdp||65)<=75),
+        selected, 'cpu'
+    ) || pickRandom(PART_LIBRARY.cpu, c => (c.cores||4)>=4 && (c.tdp||65)<=75);
 
-    // 3) RAM: tối thiểu 16GB, ưu tiên chuẩn theo socket (DDR5 cho AM5/LGA1700 mới)
-    const preferType = preferRamTypeBySocket(cpu?.socket);
-    const ram = pickCheapest(
-        PART_LIBRARY.ram,
-        r => (r.size || 0) >= 16 && (!preferType || String(r.type || '').toUpperCase() === preferType)
-    ) || pickCheapest(PART_LIBRARY.ram, r => (r.size || 0) >= 16) || pickCheapest(PART_LIBRARY.ram, r => (r.size || 0) >= 8);
+    // Mainboard (cùng socket)
+    selected.mainboard = pickRandomInHalfBudgetWindow(
+        PART_LIBRARY.mainboard, budget,
+        b => !selected.cpu?.socket || String(b.socket||'').toUpperCase()===String(selected.cpu.socket||'').toUpperCase(),
+        selected, 'mainboard'
+    ) || pickRandom(PART_LIBRARY.mainboard, b => !selected.cpu?.socket || String(b.socket||'').toUpperCase()===String(selected.cpu.socket||'').toUpperCase());
 
-    // 4) Storage: NVMe >= 500GB (fallback SATA SSD >= 500GB)
-    const storageNVMe = pickCheapest(PART_LIBRARY.storage, s => /nvme/i.test(s.type || '') && (s.size || 0) >= 500);
-    const storageSATA = pickCheapest(PART_LIBRARY.storage, s => /sata/i.test(s.type || '') && /ssd/i.test(s.type || '') && (s.size || 0) >= 500);
-    const storage = storageNVMe || storageSATA || pickCheapest(PART_LIBRARY.storage, s => (s.size || 0) >= 240);
+    // RAM >=16GB, ưu tiên theo socket
+    const preferType = preferRamTypeBySocket(selected.cpu?.socket);
+    selected.ram = pickRandomInHalfBudgetWindow(
+        PART_LIBRARY.ram, budget,
+        r => (r.size||0)>=16 && (!preferType || String(r.type||'').toUpperCase()===preferType),
+        selected, 'ram'
+    ) || pickRandom(PART_LIBRARY.ram, r => (r.size||0)>=16);
 
-    // 5) PSU: đủ cho CPU + dư 40% (office không GPU hoặc GPU nhẹ)
-    const basePower = (cpu?.tdp || 65) + 40; // overhead cho phần khác
-    const minWatt = Math.max(450, Math.ceil(basePower * 1.4 / 50) * 50);
-    const psu = pickCheapest(PART_LIBRARY.psu, p => (p.watt || 0) >= minWatt) || pickCheapest(PART_LIBRARY.psu);
+    // Storage: NVMe >=500 → SATA SSD >=500 → >=240
+    selected.storage =
+        pickRandomInHalfBudgetWindow(PART_LIBRARY.storage, budget, s=> /nvme/i.test(s.type||'') && (s.size||0)>=500, selected, 'storage') ||
+        pickRandomInHalfBudgetWindow(PART_LIBRARY.storage, budget, s=> /sata/i.test(s.type||'') && /ssd/i.test(s.type||'') && (s.size||0)>=500, selected, 'storage') ||
+        pickRandomInHalfBudgetWindow(PART_LIBRARY.storage, budget, s=> (s.size||0)>=240, selected, 'storage') ||
+        pickRandom(PART_LIBRARY.storage, s=> (s.size||0)>=240);
 
-    // 6) Case: Mid tower/mATX/ATX rẻ
-    const pcCase = pickCheapest(PART_LIBRARY.case, c => /mid/i.test(c.type || '') || /atx|matx|micro/i.test((c.formSupport || '') + '') );
+    // PSU: >=140% công suất ước
+    const basePower = (selected.cpu?.tdp||65) + 40;
+    const minWatt = Math.max(450, Math.ceil(basePower*1.4/50)*50);
+    selected.psu = pickRandomInHalfBudgetWindow(
+        PART_LIBRARY.psu, budget,
+        p => (p.watt||0) >= minWatt,
+        selected, 'psu'
+    ) || pickRandom(PART_LIBRARY.psu, p => (p.watt||0) >= minWatt);
 
-    // 7) Cooler: nếu CPU TDP <= 65 có thể dùng stock; vẫn chọn 1 cooler rẻ có tdp >= CPU tdp để đủ bộ
-    const cooler = pickCheapest(PART_LIBRARY.cooler, cl => (cl.tdp || 120) >= (cpu?.tdp || 65)) || pickCheapest(PART_LIBRARY.cooler);
+    // Case
+    selected.case = pickRandomInHalfBudgetWindow(
+        PART_LIBRARY.case, budget,
+        c => /mid/i.test(c.type||'') || /atx|matx|micro/i.test((c.formSupport||'')+''),
+        selected, 'case'
+    ) || pickRandom(PART_LIBRARY.case);
 
-    // 8) GPU: chỉ chọn khi CPU không có iGPU → chọn GPU công suất thấp/giá rẻ
-    let gpu = null;
-    if (!hasIntegratedGraphics(cpu)) {
-        gpu = pickCheapest(PART_LIBRARY.gpu, g => (g.power || g.tgp || g.tbp || 120) <= 150);
+    // Cooler: đủ TDP CPU
+    selected.cooler = pickRandomInHalfBudgetWindow(
+        PART_LIBRARY.cooler, budget,
+        cl => (cl.tdp||120) >= (selected.cpu?.tdp||65),
+        selected, 'cooler'
+    ) || pickRandom(PART_LIBRARY.cooler, cl=> (cl.tdp||0) >= (selected.cpu?.tdp||65));
+
+    // GPU: chỉ khi CPU không có iGPU
+    const needGPU = needDedicatedGPU('office', selected.cpu);
+    if(needGPU){
+        await ensureCategory('gpu');
+        selected.gpu = pickRandomInHalfBudgetWindow(
+            PART_LIBRARY.gpu, budget,
+            g => (g.power||g.tgp||g.tbp||120) <= 150,
+            selected, 'gpu'
+        ) || pickRandom(PART_LIBRARY.gpu, g => (g.power||g.tgp||g.tbp||120) <= 150);
+        setRowVisibility('gpu', true);
+    } else {
+        delete selected.gpu;
+        setRowVisibility('gpu', false);
     }
 
-    // Áp dụng vào state và render
-    const selected = {};
-    if (cpu) selected.cpu = cpu;
-    if (mobo) selected.mainboard = mobo;
-    if (ram) selected.ram = ram;
-    if (storage) selected.storage = storage;
-    if (psu) selected.psu = psu;
-    if (pcCase) selected.case = pcCase;
-    if (cooler) selected.cooler = cooler;
-    if (gpu) selected.gpu = gpu; // khi cần
+    // Màn hình 1080p 60Hz 22–27"
+    selected.monitor = pickRandomInHalfBudgetWindow(
+        PART_LIBRARY.monitor, budget,
+        m => /1920x1080|full\s*hd|1080p/i.test(String(m.res||'')) && ((m.size||24)>=22 && (m.size||24)<=27) && (m.hz||60)>=60,
+        selected, 'monitor'
+    ) || pickRandom(PART_LIBRARY.monitor);
 
-    // Gán & vẽ
-    Object.assign(state.selected, selected);
-    ['cpu','mainboard','ram','storage','psu','case','cooler','gpu'].forEach(k => renderSelected(k));
-    recalcTotals();
-    updateSummary();
-    saveToLocal();
-    try { if (typeof showNotification === 'function') showNotification('Đã áp dụng cấu hình Văn phòng', 'success'); } catch(_) {}
+    // Keyboard / Mouse / Headphones / Speakers / OS
+    selected.keyboard = pickRandomInHalfBudgetWindow(PART_LIBRARY.keyboard, budget, k=> /membrane|office|full\s*size|104/i.test((k.type||'')+' '+(k.layout||'')+' '+(k.name||'')), selected, 'keyboard')
+        || pickRandom(PART_LIBRARY.keyboard);
+    selected.mouse = pickRandomInHalfBudgetWindow(PART_LIBRARY.mouse, budget, m=> /office|silent|bluetooth|usb/i.test((m.connection||'')+' '+(m.name||'')+' '+(m.sensor||'')) || (m.weight||0)>=70, selected, 'mouse')
+        || pickRandom(PART_LIBRARY.mouse);
+    selected.headphones = pickRandomInHalfBudgetWindow(PART_LIBRARY.headphones, budget, h=> /mic|headset/i.test((h.mic?'mic ':'')+(h.type||'')+' '+(h.name||'')), selected, 'headphones')
+        || pickRandom(PART_LIBRARY.headphones);
+    selected.speakers = pickRandomInHalfBudgetWindow(PART_LIBRARY.speakers, budget, s=> /(^|\b)2\.0(\b|$)/.test(String(s.channels||'')) || /2\.0/i.test(String(s.name||'')), selected, 'speakers')
+        || pickRandom(PART_LIBRARY.speakers);
+    selected.os = pickRandomInHalfBudgetWindow(PART_LIBRARY.os, budget, o=> /windows\s*(10|11)/i.test((o.name||'')+' '+(o.version||'')) && !/server|ltsc|volume|kms/i.test((o.name||'')+' '+(o.license||'')), selected, 'os')
+        || pickRandom(PART_LIBRARY.os);
+
+    // Soundcard optional
+    selected.soundcard = pickRandomInHalfBudgetWindow(PART_LIBRARY.soundcard, budget, ()=>true, selected, 'soundcard') || null;
+
+    // Network nếu mainboard không WiFi
+    const moboHasWifi = !!(selected.mainboard && (selected.mainboard.wifi || /wifi|wi\-?fi/i.test((selected.mainboard.name||'')+' '+(selected.mainboard.lan||''))));
+    if(!moboHasWifi){
+        selected.network = pickRandomInHalfBudgetWindow(PART_LIBRARY.network, budget, n=> /wifi|wireless|usb/i.test((n.name||'')+' '+(n.wifi||'')+' '+(n.standard||'')), selected, 'network')
+            || pickRandom(PART_LIBRARY.network);
+    } else delete selected.network;
+
+    state.selected = selected;
+    [
+        'cpu','mainboard','ram','storage','psu','case','cooler','gpu',
+        'monitor','keyboard','mouse','headphones','speakers','os','soundcard','network'
+    ].forEach(k => renderSelected(k));
+    recalcTotals(); updateSummary(); saveToLocal();
+
+    // Reset filters SAU khi lọc xong
+    resetPresetRuntimeFilters();
+    try { showNotification?.('Đã áp dụng cấu hình Văn phòng (chọn ngẫu nhiên trong cửa sổ 1/3 ngân sách)', 'success'); } catch(_){}
 }
 
-// === Bind preset select ===
+// === Gaming preset helpers ===
+function pickRandom(list, filter = () => true) {
+    const arr = (list || []).filter(it => (Number(it.price) || 0) > 0).filter(filter);
+    if (!arr.length) return null;
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+async function applyPresetGaming() {
+    resetPresetRuntimeFilters();
+    const budget = getCurrentBudgetForPreset('gaming');
+
+    await Promise.all([
+        ensureCategory('cpu'),
+        ensureCategory('mainboard'),
+        ensureCategory('ram'),
+        ensureCategory('gpu'),
+        ensureCategory('storage'),
+        ensureCategory('psu'),
+        ensureCategory('case'),
+        ensureCategory('cooler'),
+        ensureCategory('monitor'),
+        ensureCategory('keyboard'),
+        ensureCategory('mouse'),
+        ensureCategory('headphones'),
+        ensureCategory('speakers'),
+        ensureCategory('os'),
+        ensureCategory('soundcard'),
+        ensureCategory('network')
+    ]);
+
+    const selected = {};
+
+    selected.cpu = pickRandomInHalfBudgetWindow(PART_LIBRARY.cpu, budget, c => (c.cores||0)>=8, selected, 'cpu')
+        || pickRandom(PART_LIBRARY.cpu, c => (c.cores||0)>=8);
+
+    selected.mainboard = pickRandomInHalfBudgetWindow(PART_LIBRARY.mainboard, budget, b => !selected.cpu?.socket || String(b.socket||'').toUpperCase()===String(selected.cpu.socket||'').toUpperCase(), selected, 'mainboard')
+        || pickRandom(PART_LIBRARY.mainboard, b => !selected.cpu?.socket || String(b.socket||'').toUpperCase()===String(selected.cpu.socket||'').toUpperCase());
+
+    selected.ram = pickRandomInHalfBudgetWindow(PART_LIBRARY.ram, budget, r => (r.size||0)>=32 && String(r.type||'').toUpperCase().includes('DDR5'), selected, 'ram')
+        || pickRandom(PART_LIBRARY.ram, r => (r.size||0)>=32);
+
+    selected.gpu = pickRandomInHalfBudgetWindow(PART_LIBRARY.gpu, budget, g => (g.vram||0) >= 12, selected, 'gpu')
+        || pickRandom(PART_LIBRARY.gpu, g => (g.vram||0)>=8);
+    setRowVisibility('gpu', true);
+
+    selected.storage = pickRandomInHalfBudgetWindow(PART_LIBRARY.storage, budget, s => /nvme/i.test(String(s.type||'')) && (s.size||0)>=1000, selected, 'storage')
+        || pickRandom(PART_LIBRARY.storage, s => /nvme/i.test(String(s.type||'')) && (s.size||0)>=500);
+
+    selected.psu = pickRandomInHalfBudgetWindow(PART_LIBRARY.psu, budget, p => (p.watt||0)>=750, selected, 'psu')
+        || pickRandom(PART_LIBRARY.psu, p=> (p.watt||0)>=650);
+
+    selected.case = pickRandomInHalfBudgetWindow(PART_LIBRARY.case, budget, c => /mesh|airflow/i.test((c.name||'')+' '+(c.type||'')) || /mid|atx/i.test((c.type||'')+' '+(c.formSupport||'')), selected, 'case')
+        || pickRandom(PART_LIBRARY.case);
+
+    selected.cooler = pickRandomInHalfBudgetWindow(PART_LIBRARY.cooler, budget, cl => /360|aio/i.test((cl.type||'')+' '+(cl.name||'')) || (cl.tdp||0) >= ((selected.cpu?.tdp||125)+50), selected, 'cooler')
+        || pickRandom(PART_LIBRARY.cooler, cl => (cl.tdp||0) >= (selected.cpu?.tdp||125));
+
+    selected.monitor = pickRandomInHalfBudgetWindow(PART_LIBRARY.monitor, budget, m => (m.hz||0)>=120 && (/2560x1440|1440p|2k|3840x2160|4k/i.test(String(m.res||''))), selected, 'monitor')
+        || pickRandom(PART_LIBRARY.monitor, m=> (m.hz||0)>=120);
+
+    selected.keyboard = pickRandomInHalfBudgetWindow(PART_LIBRARY.keyboard, budget, k=> /mechanical|switch|rgb/i.test((k.type||'')+' '+(k.switch||'')+' '+(k.name||'')), selected, 'keyboard')
+        || pickRandom(PART_LIBRARY.keyboard);
+    selected.mouse = pickRandomInHalfBudgetWindow(PART_LIBRARY.mouse, budget, m=> (m.dpi||0)>=16000 || /wireless/i.test(String(m.connection||'')), selected, 'mouse')
+        || pickRandom(PART_LIBRARY.mouse);
+    selected.headphones = pickRandomInHalfBudgetWindow(PART_LIBRARY.headphones, budget, h=> /headset|gaming|mic/i.test((h.type||'')+' '+(h.name||'')+' '+(h.mic?'mic':'')), selected, 'headphones')
+        || pickRandom(PART_LIBRARY.headphones);
+    selected.speakers = pickRandomInHalfBudgetWindow(PART_LIBRARY.speakers, budget, s=> /2\.1|sub/i.test((s.channels||'')+' '+(s.name||'')), selected, 'speakers')
+        || pickRandom(PART_LIBRARY.speakers);
+    selected.os = pickRandomInHalfBudgetWindow(PART_LIBRARY.os, budget, o=> /windows\s*11/i.test((o.name||'')+' '+(o.version||'')), selected, 'os')
+        || pickRandom(PART_LIBRARY.os);
+
+    selected.soundcard = pickRandomInHalfBudgetWindow(PART_LIBRARY.soundcard, budget, ()=>true, selected, 'soundcard') || null;
+
+    const moboHasWifi = !!(selected.mainboard && (selected.mainboard.wifi || /wifi|wi\-?fi/i.test((selected.mainboard.name||'')+' '+(selected.mainboard.lan||''))));
+    if(!moboHasWifi){
+        selected.network = pickRandomInHalfBudgetWindow(PART_LIBRARY.network, budget, n=> /wifi\s*6|wifi\s*6e|ax|usb|pcie/i.test((n.name||'')+' '+(n.wifi||'')+' '+(n.standard||'')), selected, 'network')
+            || pickRandom(PART_LIBRARY.network);
+    } else delete selected.network;
+
+    state.selected = selected;
+    [
+        'cpu','mainboard','ram','gpu','storage','psu','case','cooler',
+        'monitor','keyboard','mouse','headphones','speakers','os','soundcard','network'
+    ].forEach(k => renderSelected(k));
+    recalcTotals(); updateSummary(); saveToLocal();
+
+    resetPresetRuntimeFilters();
+    try { showNotification?.('Đã áp dụng cấu hình Gaming (ngẫu nhiên trong cửa sổ 1/3 ngân sách)', 'success'); } catch(_){}
+}
+
+// === Design preset helpers ===
+
+// === APPLY PRESET: DESIGN (Thiết kế đồ họa đầy đủ) ===
+async function applyPresetDesign() {
+    resetPresetRuntimeFilters();
+    const budget = getCurrentBudgetForPreset('design');
+
+    await Promise.all([
+        ensureCategory('cpu'),
+        ensureCategory('mainboard'),
+        ensureCategory('ram'),
+        ensureCategory('gpu'),
+        ensureCategory('storage'),
+        ensureCategory('psu'),
+        ensureCategory('case'),
+        ensureCategory('cooler'),
+        ensureCategory('monitor'),
+        ensureCategory('keyboard'),
+        ensureCategory('mouse'),
+        ensureCategory('headphones'),
+        ensureCategory('speakers'),
+        ensureCategory('os'),
+        ensureCategory('soundcard'),
+        ensureCategory('network')
+    ]);
+
+    const selected = {};
+
+    selected.cpu = pickRandomInHalfBudgetWindow(PART_LIBRARY.cpu, budget, c=> (c.cores||0)>=12, selected, 'cpu')
+        || pickRandom(PART_LIBRARY.cpu, c=> (c.cores||0)>=8);
+
+    selected.mainboard = pickRandomInHalfBudgetWindow(PART_LIBRARY.mainboard, budget, b=> !selected.cpu?.socket || String(b.socket||'').toUpperCase()===String(selected.cpu.socket||'').toUpperCase(), selected, 'mainboard')
+        || pickRandom(PART_LIBRARY.mainboard, b=> !selected.cpu?.socket || String(b.socket||'').toUpperCase()===String(selected.cpu.socket||'').toUpperCase());
+
+    selected.ram = pickRandomInHalfBudgetWindow(PART_LIBRARY.ram, budget, r=> (r.size||0)>=64, selected, 'ram')
+        || pickRandom(PART_LIBRARY.ram, r=> (r.size||0)>=32);
+
+    selected.gpu = pickRandomInHalfBudgetWindow(PART_LIBRARY.gpu, budget, g=> (g.vram||0)>=12 && /rtx|nvidia/i.test((g.name||'')+' '+(g.chipset||'')), selected, 'gpu')
+        || pickRandom(PART_LIBRARY.gpu, g=> (g.vram||0)>=12);
+    setRowVisibility('gpu', true);
+
+    selected.storage = pickRandomInHalfBudgetWindow(PART_LIBRARY.storage, budget, s=> /nvme/i.test(String(s.type||'')) && (s.size||0)>=2000, selected, 'storage')
+        || pickRandom(PART_LIBRARY.storage, s=> /nvme/i.test(String(s.type||'')) && (s.size||0)>=1000);
+
+    selected.psu = pickRandomInHalfBudgetWindow(PART_LIBRARY.psu, budget, p=> (p.watt||0)>=750, selected, 'psu')
+        || pickRandom(PART_LIBRARY.psu, p=> (p.watt||0)>=650);
+
+    selected.case = pickRandomInHalfBudgetWindow(PART_LIBRARY.case, budget, c=> /mesh|airflow/i.test((c.name||'')+' '+(c.type||'')) || /mid|full|atx/i.test((c.type||'')+' '+(c.formSupport||'')), selected, 'case')
+        || pickRandom(PART_LIBRARY.case);
+
+    selected.cooler = pickRandomInHalfBudgetWindow(PART_LIBRARY.cooler, budget, cl=> /360|aio/i.test((cl.type||'')+' '+(cl.name||'')) || (cl.tdp||0) >= ((selected.cpu?.tdp||125)+50), selected, 'cooler')
+        || pickRandom(PART_LIBRARY.cooler, cl=> (cl.tdp||0) >= (selected.cpu?.tdp||125));
+
+    selected.monitor = pickRandomInHalfBudgetWindow(PART_LIBRARY.monitor, budget, m=> ((m.size||27)>=27 && (m.size||27)<=32) && (/3840x2160|4k|2560x1440|1440p|2k/i.test(String(m.res||''))), selected, 'monitor')
+        || pickRandom(PART_LIBRARY.monitor, m=> /3840x2160|4k|2560x1440|1440p|2k/i.test(String(m.res||'')));
+
+    selected.keyboard = pickRandomInHalfBudgetWindow(PART_LIBRARY.keyboard, budget, k=> /full\s*size|104|numpad/i.test((k.layout||'')+' '+(k.name||'')), selected, 'keyboard')
+        || pickRandom(PART_LIBRARY.keyboard);
+    selected.mouse = pickRandomInHalfBudgetWindow(PART_LIBRARY.mouse, budget, m=> (m.dpi||0)>=8000 || /ergonomic|wireless/i.test((m.name||'')+' '+(m.connection||'')), selected, 'mouse')
+        || pickRandom(PART_LIBRARY.mouse);
+    selected.headphones = pickRandomInHalfBudgetWindow(PART_LIBRARY.headphones, budget, h=> /over|studio|monitor|headset/i.test((h.type||'')+' '+(h.name||'')), selected, 'headphones')
+        || pickRandom(PART_LIBRARY.headphones);
+    selected.speakers = pickRandomInHalfBudgetWindow(PART_LIBRARY.speakers, budget, s=> /2\.0|monitor/i.test((s.channels||'')+' '+(s.name||'')), selected, 'speakers')
+        || pickRandom(PART_LIBRARY.speakers);
+    selected.os = pickRandomInHalfBudgetWindow(PART_LIBRARY.os, budget, o=> /windows\s*11/i.test((o.name||'')+' '+(o.version||'')), selected, 'os')
+        || pickRandom(PART_LIBRARY.os);
+
+    selected.soundcard = pickRandomInHalfBudgetWindow(PART_LIBRARY.soundcard, budget, ()=>true, selected, 'soundcard') || null;
+
+    const moboHasWifi = !!(selected.mainboard && (selected.mainboard.wifi || /wifi|wi\-?fi/i.test((selected.mainboard.name||'')+' '+(selected.mainboard.lan||''))));
+    if(!moboHasWifi){
+        selected.network = pickRandomInHalfBudgetWindow(PART_LIBRARY.network, budget, n=> /wifi\s*6|wifi\s*6e|ax|usb|pcie/i.test((n.name||'')+' '+(n.wifi||'')+' '+(n.standard||'')), selected, 'network')
+            || pickRandom(PART_LIBRARY.network);
+    } else delete selected.network;
+
+    state.selected = selected;
+    [
+        'cpu','mainboard','ram','gpu','storage','psu','case','cooler',
+        'monitor','keyboard','mouse','headphones','speakers','os','soundcard','network'
+    ].forEach(k => renderSelected(k));
+    recalcTotals(); updateSummary(); saveToLocal();
+
+    resetPresetRuntimeFilters();
+    try { showNotification?.('Đã áp dụng cấu hình Thiết kế (ngẫu nhiên trong cửa sổ 1/3 ngân sách)', 'success'); } catch(_){}
+}
+
+// === Video/Studio preset helpers ===
+// === APPLY PRESET: VIDEO/PHOTO (Dựng video, chỉnh sửa hình ảnh - full set) ===
+async function applyPresetVideo() {
+    resetPresetRuntimeFilters();
+    const budget = getCurrentBudgetForPreset('video');
+
+    await Promise.all([
+        ensureCategory('cpu'),
+        ensureCategory('mainboard'),
+        ensureCategory('ram'),
+        ensureCategory('gpu'),
+        ensureCategory('storage'),
+        ensureCategory('psu'),
+        ensureCategory('case'),
+        ensureCategory('cooler'),
+        ensureCategory('monitor'),
+        ensureCategory('keyboard'),
+        ensureCategory('mouse'),
+        ensureCategory('headphones'),
+        ensureCategory('speakers'),
+        ensureCategory('os'),
+        ensureCategory('soundcard'),
+        ensureCategory('network')
+    ]);
+
+    const selected = {};
+
+    selected.cpu = pickRandomInHalfBudgetWindow(PART_LIBRARY.cpu, budget, c=> (c.cores||0)>=12, selected, 'cpu')
+        || pickRandom(PART_LIBRARY.cpu, c=> (c.cores||0)>=8);
+
+    selected.mainboard = pickRandomInHalfBudgetWindow(PART_LIBRARY.mainboard, budget, b=> !selected.cpu?.socket || String(b.socket||'').toUpperCase()===String(selected.cpu.socket||'').toUpperCase(), selected, 'mainboard')
+        || pickRandom(PART_LIBRARY.mainboard, b=> !selected.cpu?.socket || String(b.socket||'').toUpperCase()===String(selected.cpu.socket||'').toUpperCase());
+
+    selected.ram = pickRandomInHalfBudgetWindow(PART_LIBRARY.ram, budget, r=> (r.size||0)>=64, selected, 'ram')
+        || pickRandom(PART_LIBRARY.ram, r=> (r.size||0)>=32);
+
+    selected.gpu = pickRandomInHalfBudgetWindow(PART_LIBRARY.gpu, budget, g=> (g.vram||0)>=12 && /rtx|nvidia/i.test((g.name||'')+' '+(g.chipset||'')), selected, 'gpu')
+        || pickRandom(PART_LIBRARY.gpu, g=> (g.vram||0)>=12);
+    setRowVisibility('gpu', true);
+
+    selected.storage = pickRandomInHalfBudgetWindow(PART_LIBRARY.storage, budget, s=> /nvme/i.test(String(s.type||'')) && (s.size||0)>=2000, selected, 'storage')
+        || pickRandom(PART_LIBRARY.storage, s=> /nvme/i.test(String(s.type||'')) && (s.size||0)>=1000);
+
+    selected.psu = pickRandomInHalfBudgetWindow(PART_LIBRARY.psu, budget, p=> (p.watt||0)>=750, selected, 'psu')
+        || pickRandom(PART_LIBRARY.psu, p=> (p.watt||0)>=650);
+
+    selected.case = pickRandomInHalfBudgetWindow(PART_LIBRARY.case, budget, c=> /mesh|airflow/i.test((c.name||'')+' '+(c.type||'')) || /mid|full|atx/i.test((c.type||'')+' '+(c.formSupport||'')), selected, 'case')
+        || pickRandom(PART_LIBRARY.case);
+
+    selected.cooler = pickRandomInHalfBudgetWindow(PART_LIBRARY.cooler, budget, cl=> /360|aio/i.test((cl.type||'')+' '+(cl.name||'')) || (cl.tdp||0) >= ((selected.cpu?.tdp||125)+50), selected, 'cooler')
+        || pickRandom(PART_LIBRARY.cooler, cl=> (cl.tdp||0) >= (selected.cpu?.tdp||125));
+
+    selected.monitor = pickRandomInHalfBudgetWindow(PART_LIBRARY.monitor, budget, m=> ((m.size||27)>=27 && (m.size||27)<=32) && (/3840x2160|4k|2560x1440|1440p|2k/i.test(String(m.res||''))), selected, 'monitor')
+        || pickRandom(PART_LIBRARY.monitor, m=> /3840x2160|4k|2560x1440|1440p|2k/i.test(String(m.res||'')));
+
+    selected.keyboard = pickRandomInHalfBudgetWindow(PART_LIBRARY.keyboard, budget, k=> /full\s*size|104|numpad/i.test((k.layout||'')+' '+(k.name||'')), selected, 'keyboard')
+        || pickRandom(PART_LIBRARY.keyboard);
+    selected.mouse = pickRandomInHalfBudgetWindow(PART_LIBRARY.mouse, budget, m=> (m.dpi||0)>=8000 || /ergonomic|wireless/i.test((m.name||'')+' '+(m.connection||'')), selected, 'mouse')
+        || pickRandom(PART_LIBRARY.mouse);
+    selected.headphones = pickRandomInHalfBudgetWindow(PART_LIBRARY.headphones, budget, h=> /over|studio|monitor|headset/i.test((h.type||'')+' '+(h.name||'')), selected, 'headphones')
+        || pickRandom(PART_LIBRARY.headphones);
+    selected.speakers = pickRandomInHalfBudgetWindow(PART_LIBRARY.speakers, budget, s=> /2\.0|monitor/i.test((s.channels||'')+' '+(s.name||'')), selected, 'speakers')
+        || pickRandom(PART_LIBRARY.speakers);
+    selected.os = pickRandomInHalfBudgetWindow(PART_LIBRARY.os, budget, o=> /windows\s*11/i.test((o.name||'')+' '+(o.version||'')), selected, 'os')
+        || pickRandom(PART_LIBRARY.os);
+
+    selected.soundcard = pickRandomInHalfBudgetWindow(PART_LIBRARY.soundcard, budget, ()=>true, selected, 'soundcard') || null;
+
+    const moboHasWifi = !!(selected.mainboard && (selected.mainboard.wifi || /wifi|wi\-?fi/i.test((selected.mainboard.name||'')+' '+(selected.mainboard.lan||''))));
+    if(!moboHasWifi){
+        selected.network = pickRandomInHalfBudgetWindow(PART_LIBRARY.network, budget, n=> /wifi\s*6|wifi\s*6e|ax|usb|pcie/i.test((n.name||'')+' '+(n.wifi||'')+' '+(n.standard||'')), selected, 'network')
+            || pickRandom(PART_LIBRARY.network);
+    } else delete selected.network;
+
+    state.selected = selected;
+    [
+        'cpu','mainboard','ram','gpu','storage','psu','case','cooler',
+        'monitor','keyboard','mouse','headphones','speakers','os','soundcard','network'
+    ].forEach(k => renderSelected(k));
+    recalcTotals(); updateSummary(); saveToLocal();
+
+    resetPresetRuntimeFilters();
+    try { showNotification?.('Đã áp dụng cấu hình Video (ngẫu nhiên trong cửa sổ 1/3 ngân sách)', 'success'); } catch(_){}
+}
+
+// === BUDGET-AWARE PICKERS + GPU GATING + FILTER RESET (ADD) ===
+window.__presetBudgetPref = null; // { key, vnd } set trong applyPresetWithBudget
+
+function getCurrentBudgetForPreset(presetKey){
+    const ctx = window.__presetBudgetPref;
+    return (ctx && ctx.key === presetKey && typeof ctx.vnd === 'number') ? ctx.vnd : null;
+}
+
+function resetPresetRuntimeFilters(){
+    try {
+        const s = document.getElementById('part-search'); if(s) s.value='';
+        const f = document.getElementById('part-filter-socket'); if(f){ f.value=''; f.classList.remove('hidden'); f.dataset.facetKey=''; }
+        const b = document.getElementById('brand-filter');
+        if(b){ b.querySelectorAll('input[type="checkbox"]').forEach(cb=> cb.checked=false); }
+        currentModalLimit = MODAL_PAGE_SIZE;
+    } catch(_){}
+}
+
+function setRowVisibility(cat, visible){
+    try{
+        const row = document.getElementById('row-'+cat);
+        if(row) row.style.display = visible ? '' : 'none';
+        const li = document.querySelector(`.builder-categories li[data-key="${cat}"]`);
+        if(li) li.style.display = visible ? '' : 'none';
+    }catch(_){}
+}
+
+function needDedicatedGPU(presetKey, cpu){
+    if(presetKey === 'office') return !hasIntegratedGraphics(cpu);
+    // Gaming/Design/Video luôn cần GPU rời
+    return true;
+}
+
+// Kiểm tra tương thích tối thiểu khi thử đặt 1 linh kiện mới vào map hiện tại
+function isCategoryItemCompatible(category, candidate, ctxMap){
+    const cpu = ctxMap.cpu;
+    switch(category){
+        case 'mainboard':
+            if(cpu && cpu.socket && candidate.socket && String(cpu.socket).toUpperCase() !== String(candidate.socket).toUpperCase()) return false;
+            return true;
+        case 'cooler': {
+            const cTdp = Number(cpu?.tdp)||0;
+            const coolTdp = Number(candidate?.tdp)||0;
+            if(cTdp && coolTdp && coolTdp < cTdp) return false;
+            return true;
+        }
+        case 'psu': {
+            const tmp = { ...ctxMap, psu: candidate };
+            const need = Math.ceil(Object.values(tmp).reduce((s,p)=> s+(Number(p?.tdp||p?.power)||0),0) * 1.4);
+            if((candidate.watt||0) < need) return false;
+            return true;
+        }
+        case 'ram': {
+            const prefer = preferRamTypeBySocket(cpu?.socket);
+            // Không bắt buộc, chỉ ưu tiên bằng sắp xếp → luôn true để không khóa lựa chọn
+            return true;
+        }
+        default:
+            return true;
+    }
+}
+
+// Ưu tiên món có giá <= ngân sách; nếu không có thì rơi về rẻ nhất tương thích.
+// list: mảng PART_LIBRARY[cat], budgetVND: số hoặc null, baseFilter: fn, ctxMap: map hiện tại, category: chuỗi
+// Random integer inclusive
+function randInt(min, max){
+    min = Math.ceil(min); max = Math.floor(max);
+    if (max < min) return min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Chọn NGẪU NHIÊN món có giá trong cửa sổ [budget/2 - N(tr), budget/2]
+// - N (triệu) được random mỗi lần gọi; nếu không có món nào trong cửa sổ → fallback random trong các ứng viên tương thích
+// - Nếu vẫn không có → fallback random theo baseFilter (bỏ qua tương thích) → cuối cùng null nếu trống
+function pickRandomInHalfBudgetWindow(list, budgetVND, baseFilter, ctxMap, category){
+    const pool = (list||[]).filter(it => (Number(it.price)||0) > 0).filter(baseFilter || (()=>true));
+    if (!pool.length){
+        return null;
+    }
+    // Lọc tương thích trước
+    const compatPool = pool.filter(c => isCategoryItemCompatible(category, c, ctxMap));
+    // Nếu không có ngân sách → random trong tập tương thích
+    if (typeof budgetVND !== 'number' || budgetVND <= 0){
+        return compatPool.length ? compatPool[randInt(0, compatPool.length-1)] : pool[randInt(0, pool.length-1)];
+    }
+
+    const upper = Math.floor(budgetVND / 3);
+    const maxMillions = Math.max(1, Math.floor(upper / 1_000_000) - 1); // đảm bảo >=1
+    const N = randInt(1, maxMillions);
+    const lower = Math.max(0, upper - N * 1_000_000);
+
+    const windowCompat = compatPool.filter(p => {
+        const pr = Number(p.price)||0;
+        return pr >= lower && pr <= upper;
+    });
+
+    if (windowCompat.length){
+        return windowCompat[randInt(0, windowCompat.length-1)];
+    }
+
+    // Fallback: toàn bộ tương thích (random)
+    if (compatPool.length){
+        return compatPool[randInt(0, compatPool.length-1)];
+    }
+
+    // Fallback: random theo baseFilter (bỏ qua compat)
+    return pool[randInt(0, pool.length-1)] || null;
+}
+
+// === PRESET REGISTRY + UNIFIED RESOLVER & BINDING (thay cho 4 khối bind riêng lẻ) ===
+
+// Chuẩn hóa chuỗi: bỏ dấu, thường hóa, trim
+function _normPreset(s){
+    return String(s||'')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g,'')
+        .trim();
+}
+
+// Khai báo registry preset và alias → handler
+const PRESET_REGISTRY = {
+    office: {
+        handler: typeof applyPresetOffice === 'function' ? applyPresetOffice : null,
+        aliases: ['office','van phong','vanphong','van-phong','văn phòng','vănphòng']
+    },
+    gaming: {
+        handler: typeof applyPresetGaming === 'function' ? applyPresetGaming : null,
+        aliases: ['gaming']
+    },
+    design: {
+        handler: typeof applyPresetDesign === 'function' ? applyPresetDesign : null,
+        aliases: ['design','thiet ke','thietke','thiet-ke','thiết kế','thiếtkế']
+    },
+    video: {
+        handler: typeof applyPresetVideo === 'function' ? applyPresetVideo : null,
+        aliases: [
+            'video','studio',
+            'dung video','dungvideo','dựng video','dựngvideo',
+            'edit','editing','photo',
+            'anh','ảnh','hinh','hình'
+        ]
+    }
+};
+
+// Dựng map alias → key (tối ưu tra cứu O(1))
+const _aliasToPresetKey = (() => {
+    const map = {};
+    for (const key of Object.keys(PRESET_REGISTRY)) {
+        const entry = PRESET_REGISTRY[key];
+        const all = new Set([key, ...(entry.aliases || [])]);
+        all.forEach(a => { map[_normPreset(a)] = key; });
+    }
+    return map;
+})();
+
+function getPresetKey(input){
+    return _aliasToPresetKey[_normPreset(input)] || '';
+}
+
+async function applyPresetByKey(key){
+    const entry = PRESET_REGISTRY[key];
+    if (!entry || typeof entry.handler !== 'function') return;
+
+    // Nếu người dùng đổi preset trực tiếp (không đi qua applyPresetWithBudget) → clear budget context
+    const ctx = window.__presetBudgetPref;
+    if (!ctx || ctx.key !== key) {
+        window.__presetBudgetPref = null;
+    }
+
+    // Đồng bộ lại select với key chuẩn (office/gaming/design/video)
+    const sel = document.getElementById('preset-select');
+    if (sel && sel.value !== key) sel.value = key;
+
+    await entry.handler();
+}
+
+// Bind DUY NHẤT cho select + query ?preset=...
 document.addEventListener('DOMContentLoaded', () => {
-    const presetSel = document.getElementById('preset-select');
-    if (presetSel && !presetSel._boundPreset) {
-        presetSel._boundPreset = true;
-        presetSel.addEventListener('change', async (e) => {
-            const v = String(e.target.value || '').toLowerCase().trim();
-            if (v === 'office' || v === 'văn phòng' || v === 'vanphong' || v === 'vănphòng') {
-                await applyPresetOffice();
-            }
+    const sel = document.getElementById('preset-select');
+    if (sel && !sel._boundUnifiedPreset) {
+        sel._boundUnifiedPreset = true;
+        sel.addEventListener('change', async (e) => {
+            const key = getPresetKey(e.target.value);
+            if (key) await applyPresetByKey(key);
         });
     }
 
-    // Optional: hỗ trợ query ?preset=office
+    // Hỗ trợ alias trong query param (?preset=office/gaming/design/video và cả biến thể có dấu/không dấu)
     try {
         const params = new URLSearchParams(location.search);
-        const preset = (params.get('preset') || '').toLowerCase();
-        if (preset === 'office') applyPresetOffice();
+        const raw = params.get('preset');
+        const key = getPresetKey(raw);
+        if (key) applyPresetByKey(key);
     } catch (_) {}
 });
+
+// === BUDGET TIERS + MIN-COST-OVER-BUDGET ENGINE ===
+const PRESET_BUDGETS = {
+    office: [
+        { label: 'Giá từ 5tr',  vnd: 5_000_000 },
+        { label: 'Giá từ 15tr', vnd: 15_000_000 }
+    ],
+    gaming: [
+        { label: 'Giá từ 25tr', vnd: 25_000_000 },
+        { label: 'Giá từ 40tr', vnd: 40_000_000 },
+        { label: 'Giá từ 80tr', vnd: 80_000_000 }
+    ],
+    design: [
+        { label: 'Giá từ 35tr', vnd: 35_000_000 },
+        { label: 'Giá từ 60tr', vnd: 60_000_000 },
+        { label: 'Giá từ 100tr', vnd: 100_000_000 }
+    ],
+    video: [
+        { label: 'Giá từ 35tr', vnd: 35_000_000 },
+        { label: 'Giá từ 60tr', vnd: 60_000_000 },
+        { label: 'Giá từ 100tr', vnd: 100_000_000 }
+    ]
+};
+
+async function applyPresetWithBudget(presetKey, minBudgetVND){
+    // Set ngữ cảnh ngân sách để các applyPreset* ưu tiên chọn món <= ngân sách
+    window.__presetBudgetPref = { key: presetKey, vnd: minBudgetVND };
+
+    // Gọi preset gốc để lấy cấu hình "rẻ nhất nhưng ưu tiên <= ngân sách"
+    await applyPresetByKey(presetKey);
+
+    // Làm việc trên bản sao, tránh chớp nháy UI khi nâng cấp nhiều bước
+    let working = JSON.parse(JSON.stringify(state.selected || {}));
+    const sumPrice = (m)=> Object.values(m||{}).reduce((s,p)=> s + (Number(p?.price)||0), 0);
+    let total = sumPrice(working);
+
+    // Nếu đã đạt ngưỡng -> giữ nguyên
+    if(total >= minBudgetVND){
+        try { showNotification?.(`Đã áp dụng ${presetKey} ≥ ${minBudgetVND.toLocaleString('vi-VN')}₫`, 'success'); } catch(_){}
+        window.__presetBudgetPref = null;
+        return;
+    }
+
+    // Nâng cấp từng bước, delta nhỏ nhất (tương thích)
+    let guard=0, maxSteps=200;
+    const estimatePower = (map)=> Object.values(map).reduce((s,p)=> s + (Number(p?.tdp||p?.power)||0), 0);
+    const compatOk = (map)=>{
+        const cpu=map.cpu, mb=map.mainboard, cooler=map.cooler, psu=map.psu;
+        if(cpu && mb && cpu.socket && mb.socket && String(cpu.socket).toUpperCase() !== String(mb.socket).toUpperCase()) return false;
+        if(cpu && cooler){
+            const cT=Number(cpu.tdp)||0, clT=Number(cooler.tdp)||0;
+            if(cT && clT && clT < cT) return false;
+        }
+        const needWatt = Math.ceil(estimatePower(map)*1.4);
+        if(psu && psu.watt && psu.watt < needWatt) return false;
+        return true;
+    };
+    const nextMoreExp = (cat, cur, map)=>{
+        const list = PART_LIBRARY[cat]||[];
+        const curPrice = Number(cur?.price)||0;
+        const cands = list.filter(x => (Number(x.price)||0) > curPrice)
+            .sort((a,b)=> (Number(a.price)-Number(b.price)) || ((a._order||0)-(b._order||0)));
+        for(const cand of cands){
+            const tmp = JSON.parse(JSON.stringify(map));
+            tmp[cat] = cand;
+            if(compatOk(tmp)) return cand;
+        }
+        return null;
+    };
+
+    while(total < minBudgetVND && guard++<maxSteps){
+        let best=null;
+        for(const cat of Object.keys(working)){
+            const cand = nextMoreExp(cat, working[cat], working);
+            if(!cand) continue;
+            const delta = (Number(cand.price)||0) - (Number(working[cat]?.price)||0);
+            if(delta<=0) continue;
+            if(!best || delta < best.delta) best={cat, cand, delta};
+        }
+        if(!best) break;
+        working[best.cat] = best.cand;
+        total += best.delta;
+    }
+
+    // PSU tự nâng nếu thiếu sau nâng cấp
+    if(working.psu){
+        const need = Math.ceil(estimatePower(working)*1.4);
+        if((working.psu.watt||0) < need){
+            const ps = (PART_LIBRARY.psu||[]).filter(p=> (p.watt||0) >= need)
+                .sort((a,b)=> (Number(a.price)-Number(b.price)) || ((a._order||0)-(b._order||0)));
+            if(ps[0]){ working.psu = ps[0]; total = sumPrice(working); }
+        }
+    }
+
+    // GPU gating hậu kiểm theo preset (đặc biệt Office)
+    if(presetKey === 'office'){
+        const cpu = working.cpu || null;
+        const requireGPU = needDedicatedGPU('office', cpu);
+        if(requireGPU && !working.gpu){
+            // Thêm GPU công suất thấp/giá thấp nhất khả dụng
+            await ensureCategory('gpu');
+            const cand = (PART_LIBRARY.gpu||[])
+                .filter(g=> (Number(g.price)||0)>0 && (g.power||g.tgp||g.tbp||120) <= 150)
+                .sort((a,b)=> (Number(a.price)-Number(b.price)) || ((a._order||0)-(b._order||0)))[0] || null;
+            if(cand){
+                working.gpu = cand;
+                total = sumPrice(working);
+                setRowVisibility('gpu', true);
+            }
+        } else if(!requireGPU && working.gpu){
+            delete working.gpu;
+            total = sumPrice(working);
+            setRowVisibility('gpu', false);
+        }
+    } else {
+        // Các preset còn lại luôn cần GPU → đảm bảo hiển thị hàng GPU (không động đến lựa chọn hiện có)
+        setRowVisibility('gpu', true);
+    }
+
+    // Áp dụng
+    state.selected = working;
+    [
+        'cpu','mainboard','ram','gpu','storage','psu','case','cooler',
+        'monitor','keyboard','mouse','headphones','speakers','os','soundcard','network'
+    ].forEach(k => renderSelected(k));
+    recalcTotals(); updateSummary(); saveToLocal();
+
+    const ok = total >= minBudgetVND;
+    try {
+        showNotification?.(
+            ok
+                ? `Đã áp dụng ${presetKey} theo ngân sách ≥ ${minBudgetVND.toLocaleString('vi-VN')}₫ (tối thiểu vượt ngưỡng).`
+                : `Không đủ dữ liệu để đạt ≥ ${minBudgetVND.toLocaleString('vi-VN')}₫. Đã chọn cấu hình cao nhất khả dụng (${total.toLocaleString('vi-VN')}₫).`,
+            ok ? 'success' : 'error'
+        );
+    } catch(_){}
+
+    // Clear ngữ cảnh sau khi hoàn tất
+    window.__presetBudgetPref = null;
+}
+
+// === UI: Cột/Khối Option Giá theo Preset (hover để hiện tier, click để áp dụng) ===
+function _injectBudgetStyleOnce(){
+    if(document.getElementById('preset-budget-inline-style')) return;
+    const css = `
+  .preset-budget-wrap{ position:relative; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .preset-pills{ display:flex; gap:8px; flex-wrap:wrap; }
+  .preset-pill{
+    padding:6px 10px; border:1px solid #0ae; color:#0ae; border-radius:999px; cursor:pointer; user-select:none;
+    font-weight:600; background:#00000020;
+  }
+  .preset-pill:hover{ background:#0ae; color:#111; }
+  .budget-choices{
+    position:absolute; top:100%; left:0; margin-top:6px; background:#0b1e27; border:1px solid #0ae; border-radius:8px;
+    box-shadow:0 8px 32px #00e6ff44; padding:8px; display:none; z-index:20; min-width:260px;
+  }
+  .budget-choices.show{ display:block; }
+  .budget-row{ display:flex; gap:6px; flex-wrap:wrap; }
+  .budget-btn{
+    padding:6px 10px; border:1px dashed #09c; color:#09c; background:#00000030; border-radius:6px; cursor:pointer; font-weight:600;
+  }
+  .budget-btn:hover{ background:#09c; color:#111; }
+  `;
+    const el = document.createElement('style');
+    el.id = 'preset-budget-inline-style';
+    el.textContent = css;
+    document.head.appendChild(el);
+}
+
+function initPresetBudgetUI(){
+    const hdr = document.querySelector('.builder-header .builder-preset') || document.querySelector('.builder-header');
+    if(!hdr) return;
+
+    _injectBudgetStyleOnce();
+
+    const wrap = document.createElement('div');
+    wrap.className = 'preset-budget-wrap';
+    wrap.innerHTML = `
+    <div class="preset-pills" aria-label="Chọn cấu hình nhanh (hover để hiện giá)">
+      <span class="preset-pill" data-key="office" title="Văn phòng">Office</span>
+      <span class="preset-pill" data-key="gaming" title="Gaming">Gaming</span>
+      <span class="preset-pill" data-key="design" title="Thiết kế">Design</span>
+      <span class="preset-pill" data-key="video"  title="Dựng video">Video</span>
+    </div>
+    <div class="budget-choices" role="menu" aria-hidden="true">
+      <div class="budget-row" id="budget-row"></div>
+    </div>
+  `;
+    hdr.appendChild(wrap);
+
+    const choices = wrap.querySelector('.budget-choices');
+    const row = wrap.querySelector('#budget-row');
+
+    let hoverTimer = null;
+    let lockedFiltering = false;
+
+    function showChoicesFor(key){
+        const tiers = PRESET_BUDGETS[key] || [];
+        row.innerHTML = '';
+        tiers.forEach(t=>{
+            const btn = document.createElement('button');
+            btn.className = 'budget-btn';
+            btn.type = 'button';
+            btn.textContent = t.label;
+            btn.addEventListener('click', async ()=>{
+                try{
+                    // Khóa đóng modal cho tới khi lọc xong
+                    lockedFiltering = true;
+                    choices.classList.add('show');
+                    choices.setAttribute('aria-hidden','false');
+
+                    await applyPresetWithBudget(key, t.vnd);
+
+                    // Sau khi lọc xong: reset filter UI để lần sau luôn sạch
+                    resetPresetRuntimeFilters?.();
+                } finally {
+                    // Chỉ lúc này mới đóng modal giá
+                    lockedFiltering = false;
+                    choices.classList.remove('show');
+                    choices.setAttribute('aria-hidden','true');
+                }
+            });
+            row.appendChild(btn);
+        });
+        choices.classList.add('show');
+        choices.setAttribute('aria-hidden','false');
+    }
+
+    function hideChoicesSoon(){
+        if (lockedFiltering) return; // đang lọc → không đóng
+        clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(()=>{
+            if (lockedFiltering) return;
+            choices.classList.remove('show');
+            choices.setAttribute('aria-hidden','true');
+        }, 200);
+    }
+
+    wrap.querySelectorAll('.preset-pill').forEach(p=>{
+        p.addEventListener('mouseenter', ()=>{
+            if (lockedFiltering) return;
+            clearTimeout(hoverTimer);
+            showChoicesFor(p.dataset.key);
+        });
+    });
+    choices.addEventListener('mouseenter', ()=> clearTimeout(hoverTimer));
+    wrap.addEventListener('mouseleave', hideChoicesSoon);
+}
+
+// Tự khởi tạo UI Option giá
+document.addEventListener('DOMContentLoaded', initPresetBudgetUI);
 
 function buildCategoryList(){
     const ul=document.getElementById('category-list');
@@ -1115,30 +1861,36 @@ async function initProcessed(){
 document.addEventListener('DOMContentLoaded', ()=>{ loadPagePart('HTML/Layout/resetheader.html','header-container', ()=>{ if(typeof initHeader==='function') initHeader(); }); loadPagePart('HTML/Layout/resetfooter.html','footer-container'); initProcessed(); });
 
 // ==== Thêm vào giỏ hàng từ trang Build PC ====
-async function addCurrentSelectionToCart(options={bundle:false}){
-    const baseRequired = ['cpu','mainboard','ram','storage','psu','case','cooler'];
-    const cpuItem = partsMap['cpu'];
-    const cpuHasIGPU = !!(cpuItem && (cpuItem.igpu || cpuItem.iGPU || cpuItem.graphics
-        || (/ryzen/i.test(cpuItem.name||'') && /\b\d{3,5}g\b/i.test((cpuItem.name||'').replace(/\s+/g,'')))
-        || ((/intel|core/i.test(cpuItem.name||'')) && !/\bf\b/i.test(cpuItem.name||''))));
-    const effectiveRequired = cpuHasIGPU ? baseRequired : [...baseRequired, 'gpu'];
+async function addCurrentSelectionToCart(options = { bundle: false }) {
     const partsMap = state.selected || {};
     const parts = Object.values(partsMap);
-    if(!parts.length){ showNotification?.('Chưa chọn linh kiện nào','error'); return; }
+    if (!parts.length) { showNotification?.('Chưa chọn linh kiện nào', 'error'); return; }
 
-    if(options.bundle){
+    // Bộ tối thiểu để lắp ráp thùng máy (bundle)
+    const baseRequired = ['cpu', 'mainboard', 'ram', 'storage', 'psu', 'case', 'cooler'];
+    const cpuItem = partsMap['cpu'];
+    const cpuHasIGPU = !!(cpuItem && (cpuItem.igpu || cpuItem.iGPU || cpuItem.graphics
+        || (/ryzen/i.test(cpuItem.name || '') && /\b\d{3,5}g\b/i.test((cpuItem.name || '').replace(/\s+/g, '')))
+        || ((/intel|core/i.test(cpuItem.name || '')) && !/\bf\b/i.test(cpuItem.name || ''))));
+    const effectiveRequired = cpuHasIGPU ? baseRequired : [...baseRequired, 'gpu'];
+
+    if (options.bundle) {
         const missing = effectiveRequired.filter(k => !partsMap[k]);
-        if (missing.length){
-            const labels = { cpu:'CPU', gpu:'GPU', mainboard:'Mainboard', ram:'RAM', storage:'Ổ cứng', psu:'Nguồn', case:'Case', cooler:'Tản nhiệt' };
-            if (typeof window.showNotification==='function') window.showNotification('Vui lòng chọn đủ: '+missing.map(k=>labels[k]||k).join(', '), 'error');
+        if (missing.length) {
+            const labels = { cpu: 'CPU', gpu: 'GPU', mainboard: 'Mainboard', ram: 'RAM', storage: 'Ổ cứng', psu: 'Nguồn', case: 'Case', cooler: 'Tản nhiệt' };
+            window.showNotification?.('Vui lòng chọn đủ: ' + missing.map(k => labels[k] || k).join(', '), 'error');
             return;
         }
-        const totalPrice = parts.reduce((s,p)=> s + (Number(p.price)||0), 0);
+        const totalPrice = parts.reduce((s, p) => s + (Number(p.price) || 0), 0);
         const cpu = partsMap['cpu']; const gpu = partsMap['gpu']; const ram = partsMap['ram']; const storage = partsMap['storage'];
-        const ramSize = ram?.size ? ram.size+'GB' : '';
-        let storageSize = '';
-        if(storage?.size){ storageSize = storage.size>=1000 ? (storage.size/1000)+'TB' : storage.size+'GB'; }
-        const bundleName = 'PC ' + (cpu?.name||'CPU') + ' + ' + (gpu?.name||'GPU') + (ramSize?(' + '+ramSize):'') + (storageSize?(' + '+storageSize):'');
+
+        const segments = [];
+        if (cpu?.name) segments.push(cpu.name);
+        if (gpu?.name) segments.push(gpu.name); // chỉ thêm nếu có GPU rời
+        if (ram?.size) segments.push((ram.size || 0) + 'GB RAM');
+        if (storage?.size) segments.push(storage.size >= 1000 ? (storage.size / 1000) + 'TB' : storage.size + 'GB');
+
+        const bundleName = 'PC ' + (segments.join(' + ') || 'Văn phòng');
         const bundleId = 'build_' + Date.now();
 
         await _addOneItemToCart({
@@ -1154,8 +1906,8 @@ async function addCurrentSelectionToCart(options={bundle:false}){
     }
 
     // Không bundle: thêm từng linh kiện
-    for (const p of parts){
-        const price = Number(p.price)||0;
+    for (const p of parts) {
+        const price = Number(p.price) || 0;
         await _addOneItemToCart({
             id: p.id,
             name: p.name,
@@ -1166,7 +1918,7 @@ async function addCurrentSelectionToCart(options={bundle:false}){
             quantity: 1
         });
     }
-    if (typeof window.showNotification==='function') window.showNotification(`Đã thêm ${parts.length} linh kiện vào giỏ hàng`, 'success');
+    window.showNotification?.(`Đã thêm ${parts.length} linh kiện vào giỏ hàng`, 'success');
 }
 
 
