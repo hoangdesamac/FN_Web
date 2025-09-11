@@ -24,10 +24,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="Script/js_header.js"></script>
     <!-- Thêm hệ thống giỏ hàng để có thể thêm linh kiện đã build -->
-    <script src="Script/js_CartHandler.js" defer></script>
     <!-- xuất file pdf -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script>
@@ -108,7 +106,6 @@ function importPCConfigFromPDF(text) {
       if(typeof renderSelected==='function') { Object.keys(selected).forEach(function(cat){ renderSelected(cat); }); }
       if(typeof recalcTotals==='function') recalcTotals();
       if(typeof updateSummary==='function') updateSummary();
-      if(window.updateFloatBar) window.updateFloatBar();
       alert('Đã tải lại cấu hình từ PDF!');
     } else {
       alert('Đã đọc cấu hình từ PDF:\nCPU: '+result.cpu+'\nGPU: '+result.gpu+'\nRAM: '+result.ram+'\nỔ cứng: '+result.storage+'\n(Nhưng không thể tự động chọn linh kiện)');
@@ -116,45 +113,37 @@ function importPCConfigFromPDF(text) {
 }
 // Đảm bảo cả hai nút Thêm vào giỏ hàng (tổng và minibar) đều gọi chung một hàm xử lý
 function handleAddToCartClick() {
-  var snackbar = document.getElementById('snackbar-buildpc');
-  var snackBundle = document.getElementById('snack-bundle');
-  var snackParts = document.getElementById('snack-parts');
-  // Lấy danh sách required từ PART_CATEGORIES (chỉ lấy 8 mục đầu tiên)
-  var required = (window.PART_CATEGORIES||[]).slice(0,8).map(c=>c.key.toLowerCase());
-  var labels = (window.PART_CATEGORIES||[]).reduce((obj,c)=>{ obj[c.key.toLowerCase()]=c.label; return obj; }, {});
-  var missing = required.filter(function(key){
-    return !(window.state && state.selected && state.selected[key]);
-  });
-  if(missing.length) {
-    if(window.showNotification) window.showNotification('Vui lòng chọn đủ các bộ phận: '+missing.map(function(k){return labels[k]||k;}).join(', '),'error');
-    return;
-  }
-  if(snackbar && snackBundle && snackParts) {
-    snackbar.style.display = 'flex';
-    setTimeout(()=>{snackbar.classList.add('show')},10);
-  } else {
-    // Fallback: hỏi confirm nếu không có snackbar
-    if (!window.confirm('Bạn có muốn chúng tôi tiến hành lắp ráp sẵn cho bạn không?\n\nChọn OK để lắp ráp sẵn (thêm 1 sản phẩm tổng),\nChọn Cancel để thêm từng linh kiện riêng lẻ.')) {
-      if(typeof addCurrentSelectionToCart==='function') addCurrentSelectionToCart({bundle:false});
-      return;
+    var snackbar = document.getElementById('snackbar-buildpc');
+    // Lấy danh sách required từ PART_CATEGORIES (chỉ lấy 8 mục đầu tiên)
+    var required = (window.PART_CATEGORIES || []).slice(0, 8).map(c => c.key.toLowerCase());
+    var labels = (window.PART_CATEGORIES || []).reduce((obj, c) => {
+        obj[c.key.toLowerCase()] = c.label;
+        return obj;
+    }, {});
+    var missing = required.filter(function (key) {
+        return !(window.state && state.selected && state.selected[key]);
+    });
+
+    // Nếu còn thiếu linh kiện bắt buộc
+    if (missing.length) {
+        if (window.showNotification)
+            window.showNotification(
+                'Vui lòng chọn đủ các bộ phận: ' +
+                missing.map(k => labels[k] || k).join(', '),
+                'error'
+            );
+        return;
     }
-    if(typeof addCurrentSelectionToCart==='function') addCurrentSelectionToCart({bundle:true});
-  }
-}
-function bindAddToCartButtons() {
-  var btn = document.getElementById('export-json');
-  var floatBtn = document.getElementById('floatbar-addcart');
-  if(btn) btn.onclick = handleAddToCartClick;
-  if(floatBtn) floatBtn.onclick = function() {
-    console.log('[DEBUG] Nhấn nút floatbar-addcart', window.state && state.selected);
-    if(typeof addCurrentSelectionToCart==='function') {
-      addCurrentSelectionToCart({bundle:false});
-    } else {
-      alert('Không tìm thấy hàm addCurrentSelectionToCart!');
+
+    // Nếu đủ linh kiện thì hiển thị snackbar 3 nút
+    if (snackbar) {
+        snackbar.style.display = 'flex';
+        setTimeout(() => {
+            snackbar.classList.add('show');
+        }, 10);
     }
-  };
 }
-document.addEventListener('DOMContentLoaded', bindAddToCartButtons);
+
 </script>
     <script src="Script/js_resetbuildPC.js" defer></script>
 
@@ -177,35 +166,49 @@ document.addEventListener('DOMContentLoaded', bindAddToCartButtons);
 
         <!-- Config table -->
         <section class="builder-config">
-            <h2 class="builder-title">Tự Build PC</h2>
-            <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">          
+            <!-- Hàng tiêu đề + Select gợi ý cấu hình -->
+            <div class="builder-header">
+                <h2 class="builder-title">Tự Build PC</h2>
+                <div class="builder-preset">
+                    <label for="preset-select" class="visually-hidden">Gợi ý cấu hình</label>
+                    <select id="preset-select" class="preset-select" aria-label="Gợi ý cấu hình">
+                        <option value="">Gợi ý cấu hình</option>
+                        <option value="office">Văn phòng</option>
+                        <option value="gaming">Gaming</option>
+                        <option value="design">Thiết kế</option>
+                        <option value="video">Video</option>
+                    </select>
+                </div>
             </div>
+
+            <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;"></div>
             <div class="compatibility-status" id="compat-status"></div>
+
             <table class="config-table">
                 <thead>
-                    <tr>
-                        <th>Hạng mục</th>
-                        <th>Chọn linh kiện</th>
-                        <th>Giá</th>
-                        <th></th>
-                    </tr>
+                <tr>
+                    <th>Hạng mục</th>
+                    <th>Chọn linh kiện</th>
+                    <th>Giá</th>
+                    <th></th>
+                </tr>
                 </thead>
                 <tbody id="config-rows"></tbody>
                 <tfoot>
-                    <tr class="total-row">
-                        <td colspan="2">Tổng cộng</td>
-                        <td id="total-price">0₫</td>
-                        <td></td>
-                    </tr>
-                    
+                <tr class="total-row">
+                    <td colspan="2">Tổng cộng</td>
+                    <td id="total-price">0₫</td>
+                    <td></td>
+                </tr>
                 </tfoot>
             </table>
+
             <div class="export-actions">
-                <button class="btn neon-btn" id="export-json"><i class="fa fa-shopping-cart"></i>Thêm vào giỏ hàng</button>
+                <button class="btn neon-btn" id="export-json"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
                 <button class="btn neon-btn alt" id="clear-config"><i class="fa fa-trash"></i> Xóa hết</button>
             </div>
-           
         </section>
+
 
         <!-- Summary / Recommendation -->
         <aside class="builder-summary">
@@ -240,13 +243,6 @@ document.addEventListener('DOMContentLoaded', bindAddToCartButtons);
                     <label class="chk"><input type="checkbox" value="AMD"> <span>AMD</span></label>
                     <label class="chk"><input type="checkbox" value="Intel"> <span>Intel</span></label>
                 </div>
-                <div class="filter-group price-filter" id="price-filter" style="display:none;">
-                    <div class="fg-title">Giá tối đa</div>
-                    <div class="pf-labels"><span id="pf-min">0₫</span><span id="pf-max">0₫</span></div>
-                    <div class="pf-sliders single">
-                        <input type="range" id="pf-range-max" min="0" max="0" value="0" step="50000">
-                    </div>
-                </div>
             </div>
         </aside>
         <div class="parts-area">
@@ -259,21 +255,22 @@ document.addEventListener('DOMContentLoaded', bindAddToCartButtons);
 <!-- Footer -->
 <div id="footer-container"></div>
 
-<!-- Floating mini summary bar -->
-<div class="builder-float-bar" id="builder-float-bar">
-  <div class="bf-left">
-    <span id="floatbar-total-price">Tổng: 0₫</span>
-  </div>
-  <div class="bf-actions">
-    <button id="floatbar-addcart" type="button" class="bf-btn" aria-label="Thêm vào giỏ hàng"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
-  </div>
-</div>
-
 <!-- Snackbar xác nhận lắp ráp sẵn -->
 <div id="snackbar-buildpc" style="display:none;position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:9999;min-width:320px;max-width:90vw;padding:18px 24px;border-radius:14px;box-shadow:0 4px 32px #00e6ff55,0 2px 12px #0008;display:flex;align-items:center;gap:16px;font-size:1.1rem;backdrop-filter:blur(2px);">
-  <span style="flex:1">Bạn có muốn chúng tôi lắp ráp sẵn cho bạn không?</span>
-  <button id="snack-bundle" class="btn neon-btn" style="margin-right:4px;">Lắp ráp sẵn</button>
-  <button id="snack-parts" class="btn neon-btn alt">Từng linh kiện</button>
+    <span style="flex:1">Bạn có muốn chúng tôi lắp ráp sẵn cho bạn không?</span>
+
+    <!-- Actions trong snackbar/minibar khi thêm vào giỏ -->
+    <div id="snackbar-buildpc-actions" class="snackbar-actions" style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="snackbar-add-bundle" class="btn neon-btn">
+            <i class="fa fa-screwdriver-wrench"></i> Lắp ráp sẵn
+        </button>
+        <button id="snackbar-add-each" class="btn neon-btn alt">
+            <i class="fa fa-plus-circle"></i> Từng linh kiện
+        </button>
+        <button id="cancel-build" class="btn neon-btn alt" type="button" title="Hủy thao tác">
+            <i class="fa fa-times"></i> Hủy
+        </button>
+    </div>
 </div>
 
 <!-- 
@@ -352,74 +349,45 @@ document.addEventListener('DOMContentLoaded', positionChatLaunch);
 -->
 
 <script>
-// Gán sự kiện cho nút Thêm vào giỏ hàng tổng bằng snackbar đẹp (và minibar cũng dùng chung logic này)
-document.addEventListener('DOMContentLoaded', function() {
-  var snackbar = document.getElementById('snackbar-buildpc');
-  var snackBundle = document.getElementById('snack-bundle');
-  var snackParts = document.getElementById('snack-parts');
-  function closeSnack() {
-    snackbar.classList.remove('show');
-    setTimeout(()=>{snackbar.style.display='none';},300);
-  }
-  if(snackBundle && snackParts) {
-    snackBundle.onclick = function() {
-      if(typeof addCurrentSelectionToCart==='function') addCurrentSelectionToCart({bundle:true});
-      closeSnack();
-    };
-    snackParts.onclick = function() {
-      if(typeof addCurrentSelectionToCart==='function') addCurrentSelectionToCart({bundle:false});
-      closeSnack();
-    };
-  }
-});
+    // Gán sự kiện cho các nút trong snackbar (3 nút: Lắp ráp sẵn, Từng linh kiện, Hủy)
+    document.addEventListener('DOMContentLoaded', function() {
+        var snackbar = document.getElementById('snackbar-buildpc');
+        var btnBundle = document.getElementById('snackbar-add-bundle');
+        var btnEach   = document.getElementById('snackbar-add-each');
+        var btnCancel = document.getElementById('cancel-build');
+
+        function closeSnack() {
+            if (!snackbar) return;
+            snackbar.classList.remove('show');
+            setTimeout(() => { snackbar.style.display = 'none'; }, 200);
+        }
+
+        if (btnBundle) {
+            btnBundle.addEventListener('click', function() {
+                if (typeof addCurrentSelectionToCart === 'function') {
+                    addCurrentSelectionToCart({ bundle: true });
+                }
+                closeSnack();
+            });
+        }
+
+        if (btnEach) {
+            btnEach.addEventListener('click', function() {
+                if (typeof addCurrentSelectionToCart === 'function') {
+                    addCurrentSelectionToCart({ bundle: false });
+                }
+                closeSnack();
+            });
+        }
+
+        if (btnCancel) {
+            btnCancel.addEventListener('click', function() {
+                closeSnack();
+            });
+        }
+    });
 </script>
-<script>
-// Gán sự kiện cho nút Thêm vào giỏ hàng trên thanh builder-float-bar (minibar) dùng chung logic với nút tổng
-document.addEventListener('DOMContentLoaded', function() {
-  var floatBtn = document.getElementById('floatbar-addcart');
-  if(floatBtn) floatBtn.onclick = handleAddToCartClick;
-});
-</script>
-<script>
-// Cập nhật động tổng giá cho thanh builder-float-bar (bỏ công suất)
-function updateFloatBar() {
-  var totalText = '';
-  var mainTotal = document.getElementById('total-price');
-  if(mainTotal) {
-    totalText = mainTotal.textContent || mainTotal.innerText || '';
-    // Nếu là 'Liên hệ' hoặc rỗng thì hiển thị 0₫
-    if(!totalText.trim() || /liên hệ/i.test(totalText)) totalText = '0₫';
-  } else {
-    // Fallback: tự tính lại nếu không tìm thấy
-    var total = 0;
-    if(window.state && state.selected) {
-      Object.values(state.selected).forEach(function(p){
-        total += p.price||0;
-      });
-    }
-    totalText = (typeof formatPrice === 'function') ? formatPrice(total) : (total? total.toLocaleString('vi-VN')+'₫' : '0₫');
-  }
-  var el = document.getElementById('floatbar-total-price');
-  if(el) el.textContent = 'Tổng: ' + totalText.replace(/^Tổng: /,'').replace(/^\s+|\s+$/g,'');
-  // Đảm bảo nút thanh toán luôn enable/disable đúng trạng thái
-  var btn = document.getElementById('floatbar-addcart');
-  // Lấy số tiền số để disable đúng
-  var totalNum = 0;
-  if(mainTotal) {
-    var num = (mainTotal.textContent||'').replace(/[^\d]/g,'');
-    totalNum = parseInt(num,10)||0;
-  }
-  // Chỉ disable nếu không chọn linh kiện nào
-  if(btn) btn.disabled = !(window.state && state.selected && Object.keys(state.selected).length > 0);
-  // Luôn gán lại sự kiện cho cả hai nút mỗi lần cập nhật minibar
-  bindAddToCartButtons();
-}
-document.addEventListener('DOMContentLoaded', function() {
-  updateFloatBar();
-});
-window.updateFloatBar = updateFloatBar;
-// Gọi updateFloatBar trong các hàm chọn/xóa linh kiện (js_resetbuildPC.js) để luôn đồng bộ
-</script>
+
 <script>
 // ====== Xuất PDF cấu hình PC ======
 
