@@ -546,55 +546,49 @@ function buildFacetOptions(category){
     if(facetGroup){ facetGroup.style.display='block'; }
     if(facetTitle){ facetTitle.textContent = labelMap[key] || 'Thuộc tính'; }
 }
+
 function openPartModal(category){
     const modal=document.getElementById('part-modal');
     document.getElementById('modal-title').textContent='Chọn '+(PART_CATEGORIES.find(c=>c.key===category)?.label||category);
     modal.dataset.category=category;
-    currentModalLimit = MODAL_PAGE_SIZE; // reset mỗi lần mở
+    currentModalLimit = MODAL_PAGE_SIZE;
     buildFacetOptions(category);
     renderPartModalList();
-    buildAdvancedFilters(category);
+    // removed: buildAdvancedFilters(category)
     modal.style.display='flex';
-    // Chặn scroll nền khi mở modal
     document.body.classList.add('no-scroll');
     const modalContent = modal.querySelector('.builder-modal-content');
     if(modalContent){
-        // Thêm overlay fade nếu chưa có
         if(!modalContent.querySelector('.scroll-fade-top')){
-            const fadeTop=document.createElement('div');
-            fadeTop.className='scroll-fade-top';
-            modalContent.prepend(fadeTop);
+            const fadeTop=document.createElement('div'); fadeTop.className='scroll-fade-top'; modalContent.prepend(fadeTop);
         }
         if(!modalContent.querySelector('.scroll-fade-bottom')){
-            const fadeBottom=document.createElement('div');
-            fadeBottom.className='scroll-fade-bottom';
-            modalContent.appendChild(fadeBottom);
+            const fadeBottom=document.createElement('div'); fadeBottom.className='scroll-fade-bottom'; modalContent.appendChild(fadeBottom);
         }
-                                                const scrollContainer = modalContent.querySelector('.parts-area') || modalContent; // chỉ cuộn phần danh sách
+        const scrollContainer = modalContent.querySelector('.parts-area') || modalContent;
         const checkScroll=()=>{
             const st = scrollContainer.scrollTop;
             const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight - 1;
-            if(st>8) modalContent.classList.add('has-scroll-top'); else modalContent.classList.remove('has-scroll-top');
-            if(st < maxScroll-8) modalContent.classList.add('has-scroll-bottom'); else modalContent.classList.remove('has-scroll-bottom');
+            modalContent.classList.toggle('has-scroll-top', st>8);
+            modalContent.classList.toggle('has-scroll-bottom', st < maxScroll-8);
         };
-        // Remove previous listeners
-        if(modalContent._scrollFadeHandler && modalContent._scrollFadeEl){ modalContent._scrollFadeEl.removeEventListener('scroll', modalContent._scrollFadeHandler); }
+        if(modalContent._scrollFadeHandler && modalContent._scrollFadeEl){
+            modalContent._scrollFadeEl.removeEventListener('scroll', modalContent._scrollFadeHandler);
+        }
         modalContent._scrollFadeHandler = checkScroll;
         modalContent._scrollFadeEl = scrollContainer;
         scrollContainer.addEventListener('scroll', checkScroll);
-        // init state
         requestAnimationFrame(checkScroll);
         if(WIDE_TABLE_CATS.has(category)) modalContent.classList.add('cpu-mode'); else modalContent.classList.remove('cpu-mode');
     }
 }
+
 function renderPartModalList(){
     const modal=document.getElementById('part-modal');
     const category=modal.dataset.category;
     const grid=document.getElementById('parts-grid');
     const q=(document.getElementById('part-search').value||'').toLowerCase();
     // Advanced filter state (persist in memory between renders within modal)
-    const advState = window._advFilterState || (window._advFilterState={});
-    const catState = advState[category] || {};
     const facetSelect=document.getElementById('part-filter-socket');
     const facetKey=facetSelect?.dataset?.facetKey;
     const facetValue = facetSelect && !facetSelect.classList.contains('hidden') ? facetSelect.value : '';
@@ -615,8 +609,6 @@ function renderPartModalList(){
             return brandSelected.some(b=> name.includes(b));
         });
     }
-    // Apply advanced numeric / option filters
-    list = list.filter(p=> applyAdvancedFilter(category, p));
     // (Đã xóa lọc giá tối đa)
     if(TABLE_CATS.has(category)){
         const s=ensureSortState(category);
@@ -743,110 +735,6 @@ function renderPartModalList(){
     // (Đã ước tính giá cho mọi sản phẩm => không cần ghi chú ẩn giá 0)
 }
 
-// ===== Advanced Filters =====
-function buildAdvancedFilters(category){
-    const wrap=document.getElementById('dynamic-filters');
-    if(!wrap) return;
-    wrap.innerHTML='';
-    const data = PART_LIBRARY[category]||[];
-    if(!data.length){ wrap.innerHTML=''; return; }
-    const add=(html)=>{ const div=document.createElement('div'); div.className='filter-group dyn'; div.innerHTML=html; wrap.appendChild(div); };
-    // Helper builds
-    const numberRange=(id,label,min,max,step=1)=>{
-        if(min===Infinity||max===-Infinity||min===max) return;
-        add(`<div class="fg-title">${label}</div><div class="range-line"><input type="number" id="af-${id}-min" class="af-num" placeholder="Min" value=""><span>→</span><input type="number" id="af-${id}-max" class="af-num" placeholder="Max" value=""></div>`);
-    };
-    const multiSelect=(id,label,values)=>{
-        if(!values.length) return;
-        add(`<div class="fg-title">${label}</div><div class="chk-col">${values.slice(0,30).map(v=>`<label class="chk"><input type="checkbox" data-af-multi="${id}" value="${v}"> <span>${v}</span></label>`).join('')}</div>`);
-    };
-    // Derive stats
-    const collect = (field)=> data.map(p=>p[field]).filter(v=> v!==undefined && v!==null && v!=='');
-    const numericStats=(field)=>{ const nums=collect(field).map(Number).filter(n=>!isNaN(n)); return {min:Math.min(...nums), max:Math.max(...nums)}; };
-    switch(category){
-        case 'cpu':{
-            multiSelect('socket','Socket', Array.from(new Set(collect('socket'))));
-            numberRange('cores','Số nhân', ...Object.values(numericStats('cores')) );
-            numberRange('tdp','TDP (W)', ...Object.values(numericStats('tdp')) );
-            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),100000 );
-            break; }
-        case 'gpu':{
-            numberRange('vram','VRAM (GB)', ...Object.values(numericStats('vram')) );
-            numberRange('power','Công suất (W)', ...Object.values(numericStats('power')) );
-            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),100000 );
-            break; }
-        case 'ram':{
-            numberRange('size','Dung lượng (GB)', ...Object.values(numericStats('size')) );
-            numberRange('speed','Tốc độ (MHz)', ...Object.values(numericStats('speed')) );
-            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),50000 );
-            break; }
-        case 'storage':{
-            multiSelect('type','Loại', Array.from(new Set(collect('type'))));
-            numberRange('size','Dung lượng (GB)', ...Object.values(numericStats('size')) );
-            numberRange('read','Đọc MB/s', ...Object.values(numericStats('read')) );
-            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),50000 );
-            break; }
-        case 'psu':{
-            numberRange('watt','Công suất (W)', ...Object.values(numericStats('watt')) );
-            multiSelect('efficiency','Chuẩn', Array.from(new Set(collect('efficiency'))));
-            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),50000 );
-            break; }
-        case 'monitor':{
-            numberRange('size','Kích thước (inch)', ...Object.values(numericStats('size')) );
-            numberRange('hz','Tần số (Hz)', ...Object.values(numericStats('hz')) );
-            multiSelect('res','Độ phân giải', Array.from(new Set(collect('res'))));
-            numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),100000 );
-            break; }
-        default: {
-            // Generic price filter if variety
-            if(data.some(p=>p.price)) numberRange('price','Giá (VND)', ...Object.values(numericStats('price')),50000 );
-        }
-    }
-    // Attach listeners for inputs
-    wrap.querySelectorAll('input').forEach(el=>{
-        el.addEventListener('input', debounce(()=> renderPartModalList(), 250));
-        el.addEventListener('change', ()=> renderPartModalList());
-    });
-}
-
-function getAdvancedFilterValues(category){
-    const wrap=document.getElementById('dynamic-filters');
-    if(!wrap) return {};
-    const vals={ multis:{} };
-    wrap.querySelectorAll('input[type="number"]').forEach(inp=>{
-        const id=inp.id.replace(/^af-/,'');
-        const [field,kind] = id.split('-').slice(0,2);
-        if(!vals[field]) vals[field]={};
-        const v=parseFloat(inp.value);
-        if(!isNaN(v)) vals[field][kind]=v;
-    });
-    wrap.querySelectorAll('input[data-af-multi]:checked').forEach(cb=>{
-        const f=cb.getAttribute('data-af-multi');
-        if(!vals.multis[f]) vals.multis[f]=[];
-        vals.multis[f].push(cb.value);
-    });
-    return vals;
-}
-
-function applyAdvancedFilter(category, p){
-    const vals=getAdvancedFilterValues(category);
-    // Range checks
-    for(const field in vals){
-        if(field==='multis') continue;
-        const cond=vals[field];
-        if(cond.min!==undefined && p[field]!==undefined && p[field] < cond.min) return false;
-        if(cond.max!==undefined && p[field]!==undefined && p[field] > cond.max) return false;
-    }
-    // Multi select
-    for(const f in vals.multis){
-        const arr=vals.multis[f];
-        if(arr.length && !arr.includes(String(p[f]))) return false;
-    }
-    return true;
-}
-
-function debounce(fn,delay){ let t; return function(){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,arguments),delay); }; }
-
 function _isLoggedIn() {
     try {
         return (window.AuthSync && typeof window.AuthSync.isLoggedIn === 'function')
@@ -927,19 +815,18 @@ async function _addOneItemToCart(payload) {
     }
 }
 
-function selectPart(category,part){
-    // Ép key hợp lệ
-    var validKeys = ['cpu','gpu','mainboard','ram','storage','psu','case','cooler'];
-    var key = (category+'').toLowerCase();
-    if(!validKeys.includes(key)) {
-        console.warn('Linh kiện chọn không hợp lệ:', category, part);
+function selectPart(category, part) {
+    const key = String(category || '').toLowerCase();
+    // Chỉ nhận key có trong PART_CATEGORIES
+    if (!PART_CATEGORIES.some(c => c.key === key)) {
+        console.warn('Bỏ qua category không tồn tại trong PART_CATEGORIES:', category);
+        return;
     }
-    state.selected[key]=part;
+    state.selected[key] = part;
     renderSelected(key);
     recalcTotals();
     updateSummary();
     saveToLocal();
-    console.log('DEBUG selectPart:', key, state.selected);
 }
 
 function removePart(category){
@@ -980,7 +867,7 @@ function renderSelected(category){
         // Gắn thêm vào giỏ cho từng dòng (server-sync)
         window.handleAddToCart = async function handleAddToCart(cat) {
             const p = state.selected[cat];
-            if(!p){ showNotification?.('Chưa chọn linh kiện','error'); return; }
+            if (!p) { if (typeof window.showNotification==='function') window.showNotification('Chưa chọn linh kiện','error'); return; }
             const price = Number(p.price)||0;
             await _addOneItemToCart({
                 id: p.id,
@@ -1002,7 +889,7 @@ function renderSelected(category){
 // Thêm 1 linh kiện đơn lẻ vào giỏ hàng
 async function addSinglePart(category){
     const part=state.selected[category];
-    if(!part){ showNotification?.('Chưa chọn linh kiện','error'); return; }
+    if(!part){ if (typeof window.showNotification==='function') window.showNotification('Chưa chọn linh kiện','error'); return; }
     const price = Number(part.price)||0;
     await _addOneItemToCart({
         id: part.id,
@@ -1046,15 +933,15 @@ function loadFromLocal(){
             });
         }catch(e){}
 }
-function clearConfig(){
-        // Xóa sạch mọi key cũ
-        state.selected={};
-        buildConfigRows();
-        recalcTotals();
-        updateSummary();
-        saveToLocal();
-        if(window.updateFloatBar) window.updateFloatBar();
+
+function clearConfig() {
+    state.selected = {};
+    buildConfigRows();
+    recalcTotals();
+    updateSummary();
+    saveToLocal();
 }
+
 function closeModal(){ document.getElementById('part-modal').style.display='none'; }
 // Gỡ class no-scroll khi đóng modal
 const _closeModalRef = closeModal;
@@ -1131,9 +1018,9 @@ async function addCurrentSelectionToCart(options={bundle:false}){
 
     if(options.bundle){
         const missing = requiredKeys.filter(k => !partsMap[k]);
-        if(missing.length){
+        if (missing.length){
             const labels = { cpu:'CPU', gpu:'GPU', mainboard:'Mainboard', ram:'RAM', storage:'Ổ cứng', psu:'Nguồn', case:'Case', cooler:'Tản nhiệt' };
-            showNotification?.('Vui lòng chọn đủ: '+missing.map(k=>labels[k]||k).join(', '), 'error');
+            if (typeof window.showNotification==='function') window.showNotification('Vui lòng chọn đủ: '+missing.map(k=>labels[k]||k).join(', '), 'error');
             return;
         }
         const totalPrice = parts.reduce((s,p)=> s + (Number(p.price)||0), 0);
@@ -1169,23 +1056,9 @@ async function addCurrentSelectionToCart(options={bundle:false}){
             quantity: 1
         });
     }
-    showNotification?.(`Đã thêm ${parts.length} linh kiện vào giỏ hàng`, 'success');
+    if (typeof window.showNotification==='function') window.showNotification(`Đã thêm ${parts.length} linh kiện vào giỏ hàng`, 'success');
 }
 
-// Trường hợp header/cart script load chậm -> thử cập nhật lại nhiều lần
-function scheduleCartCountRefresh(){
-    let attempts=0;
-    const max=10;
-    const timer=setInterval(()=>{
-        attempts++;
-        if(typeof updateCartCount==='function'){
-            updateCartCount();
-            clearInterval(timer);
-        } else if(attempts>=max){
-            clearInterval(timer);
-        }
-    },300);
-}
 
 // Bind nút "Thêm vào giỏ hàng" chính để mở snackbar (floatbar đã loại bỏ)
 document.addEventListener('DOMContentLoaded', () => {
@@ -1195,36 +1068,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ===== PCPartPicker List Import =====
-async function importPcPartPickerList(url){
-    try{
-        const res = await fetch('/api/import-pcpartpicker', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ url }) });
-        if(!res.ok) throw new Error('Import thất bại');
-        const data = await res.json();
-        if(!data.items) return;
-        // Ensure categories loaded before matching
-        const catsToLoad = ['cpu','mainboard','ram','gpu','storage','psu','case','cooler'];
-        await Promise.all(catsToLoad.map(c=> ensureCategory(c)));
-        // Simple fuzzy name match: choose first dataset item whose normalized name contains main token(s)
-        function norm(s){ return (s||'').toLowerCase().replace(/[^a-z0-9]+/g,' '); }
-        data.items.forEach(it=>{
-            if(!it.category) return;
-            const list = PART_LIBRARY[it.category]||[];
-            const targetTokens = norm(it.name).split(' ').filter(t=>t.length>2);
-            let best=null, bestScore=0;
-            list.forEach(p=>{
-                const base = norm(p.name);
-                let score=0;
-                targetTokens.forEach(t=>{ if(base.includes(t)) score++; });
-                if(score>bestScore){ bestScore=score; best=p; }
-            });
-            if(best && bestScore>=2){ // require at least 2 token matches to reduce false positives
-                selectPart(it.category, best);
+(function initAddToCartSnackbar(){
+    function openSnackbar() {
+        const bar = document.getElementById('snackbar-buildpc');
+        if (!bar) {
+            // Fallback: nếu thiếu snackbar, thêm từng linh kiện
+            if (typeof addCurrentSelectionToCart === 'function') {
+                addCurrentSelectionToCart({ bundle: false });
+                if (typeof window.showNotification === 'function') window.showNotification('Đã thêm các linh kiện vào giỏ', 'success');
             }
-        });
-        recalcTotals(); updateSummary();
-    }catch(e){ console.warn('Import list error', e); }
-}
+            return;
+        }
+        bar.style.display = 'flex';
+        // force reflow
+        void bar.offsetWidth;
+        bar.classList.add('show');
+        // auto-close sau 10s nếu không bấm
+        clearTimeout(bar._autoCloseTimer);
+        bar._autoCloseTimer = setTimeout(() => {
+            bar.classList.remove('show');
+            setTimeout(() => { bar.style.display = 'none'; }, 200);
+        }, 10000);
+    }
+
+    // Expose để các nơi khác có thể dùng (nếu cần)
+    window.handleAddToCartClick = openSnackbar;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('export-json');
+        if (btn) btn.onclick = openSnackbar;
+    });
+})();
 
 // Bind UI
 document.addEventListener('DOMContentLoaded', ()=>{
