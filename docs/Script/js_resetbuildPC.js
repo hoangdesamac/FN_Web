@@ -463,6 +463,127 @@ const MODAL_PAGE_SIZE = 400; // số lượng tải mỗi lần
 let currentModalLimit = MODAL_PAGE_SIZE; // giới hạn hiện tại
 let DATA_MANIFEST = null; // manifest dữ liệu processed
 
+// === Office preset helpers ===
+function hasIntegratedGraphics(cpu) {
+    if (!cpu) return false;
+    const name = String(cpu.name || '').toLowerCase();
+    // Có trường igpu/iGPU/graphics hoặc tên AMD có "G", Intel KHÔNG có "F"
+    if (cpu.igpu || cpu.iGPU || cpu.graphics) return true;
+    if (name.includes('ryzen') && /\b\d{3,5}g\b/.test(name.replace(/\s+/g,''))) return true;
+    if ((name.includes('intel') || name.includes('core')) && !/\bf\b/.test(name)) return true;
+    return false;
+}
+
+function pickCheapest(list, filter = () => true, sortKey = p => Number(p.price) || 0) {
+    return (list || [])
+        .filter(it => (Number(it.price) || 0) > 0)
+        .filter(filter)
+        .sort((a, b) => (sortKey(a) - sortKey(b)) || ((a._order || 0) - (b._order || 0)))[0] || null;
+}
+
+function preferRamTypeBySocket(socket) {
+    const s = String(socket || '').toUpperCase();
+    if (s.includes('AM5')) return 'DDR5';
+    if (s.includes('AM4')) return 'DDR4';
+    if (s.includes('LGA1700')) return 'DDR5'; // ưu tiên DDR5 cho gen mới; fallback sẽ tự chọn DDR4 nếu không có
+    return '';
+}
+
+async function applyPresetOffice() {
+    // Đảm bảo đã tải datasets cần thiết
+    await Promise.all([
+        ensureCategory('cpu'),
+        ensureCategory('mainboard'),
+        ensureCategory('ram'),
+        ensureCategory('storage'),
+        ensureCategory('psu'),
+        ensureCategory('case'),
+        ensureCategory('cooler'),
+        ensureCategory('gpu') // chỉ dùng khi CPU không có iGPU
+    ]);
+
+    // 1) CPU: ưu tiên có iGPU, 4–8 nhân, TDP <= 65W, giá hợp lý
+    const cpu = pickCheapest(
+        PART_LIBRARY.cpu,
+        c => hasIntegratedGraphics(c) && (c.cores || 4) >= 4 && (c.tdp || 65) <= 75
+    ) || pickCheapest(PART_LIBRARY.cpu, c => (c.cores || 4) >= 4 && (c.tdp || 65) <= 75);
+
+    // 2) Mainboard: cùng socket, ưu tiên mATX/ATX, rẻ
+    const mobo = pickCheapest(
+        PART_LIBRARY.mainboard,
+        b => !cpu || !cpu.socket ? true : (String(b.socket || '').toUpperCase() === String(cpu.socket || '').toUpperCase())
+    );
+
+    // 3) RAM: tối thiểu 16GB, ưu tiên chuẩn theo socket (DDR5 cho AM5/LGA1700 mới)
+    const preferType = preferRamTypeBySocket(cpu?.socket);
+    const ram = pickCheapest(
+        PART_LIBRARY.ram,
+        r => (r.size || 0) >= 16 && (!preferType || String(r.type || '').toUpperCase() === preferType)
+    ) || pickCheapest(PART_LIBRARY.ram, r => (r.size || 0) >= 16) || pickCheapest(PART_LIBRARY.ram, r => (r.size || 0) >= 8);
+
+    // 4) Storage: NVMe >= 500GB (fallback SATA SSD >= 500GB)
+    const storageNVMe = pickCheapest(PART_LIBRARY.storage, s => /nvme/i.test(s.type || '') && (s.size || 0) >= 500);
+    const storageSATA = pickCheapest(PART_LIBRARY.storage, s => /sata/i.test(s.type || '') && /ssd/i.test(s.type || '') && (s.size || 0) >= 500);
+    const storage = storageNVMe || storageSATA || pickCheapest(PART_LIBRARY.storage, s => (s.size || 0) >= 240);
+
+    // 5) PSU: đủ cho CPU + dư 40% (office không GPU hoặc GPU nhẹ)
+    const basePower = (cpu?.tdp || 65) + 40; // overhead cho phần khác
+    const minWatt = Math.max(450, Math.ceil(basePower * 1.4 / 50) * 50);
+    const psu = pickCheapest(PART_LIBRARY.psu, p => (p.watt || 0) >= minWatt) || pickCheapest(PART_LIBRARY.psu);
+
+    // 6) Case: Mid tower/mATX/ATX rẻ
+    const pcCase = pickCheapest(PART_LIBRARY.case, c => /mid/i.test(c.type || '') || /atx|matx|micro/i.test((c.formSupport || '') + '') );
+
+    // 7) Cooler: nếu CPU TDP <= 65 có thể dùng stock; vẫn chọn 1 cooler rẻ có tdp >= CPU tdp để đủ bộ
+    const cooler = pickCheapest(PART_LIBRARY.cooler, cl => (cl.tdp || 120) >= (cpu?.tdp || 65)) || pickCheapest(PART_LIBRARY.cooler);
+
+    // 8) GPU: chỉ chọn khi CPU không có iGPU → chọn GPU công suất thấp/giá rẻ
+    let gpu = null;
+    if (!hasIntegratedGraphics(cpu)) {
+        gpu = pickCheapest(PART_LIBRARY.gpu, g => (g.power || g.tgp || g.tbp || 120) <= 150);
+    }
+
+    // Áp dụng vào state và render
+    const selected = {};
+    if (cpu) selected.cpu = cpu;
+    if (mobo) selected.mainboard = mobo;
+    if (ram) selected.ram = ram;
+    if (storage) selected.storage = storage;
+    if (psu) selected.psu = psu;
+    if (pcCase) selected.case = pcCase;
+    if (cooler) selected.cooler = cooler;
+    if (gpu) selected.gpu = gpu; // khi cần
+
+    // Gán & vẽ
+    Object.assign(state.selected, selected);
+    ['cpu','mainboard','ram','storage','psu','case','cooler','gpu'].forEach(k => renderSelected(k));
+    recalcTotals();
+    updateSummary();
+    saveToLocal();
+    try { if (typeof showNotification === 'function') showNotification('Đã áp dụng cấu hình Văn phòng', 'success'); } catch(_) {}
+}
+
+// === Bind preset select ===
+document.addEventListener('DOMContentLoaded', () => {
+    const presetSel = document.getElementById('preset-select');
+    if (presetSel && !presetSel._boundPreset) {
+        presetSel._boundPreset = true;
+        presetSel.addEventListener('change', async (e) => {
+            const v = String(e.target.value || '').toLowerCase().trim();
+            if (v === 'office' || v === 'văn phòng' || v === 'vanphong' || v === 'vănphòng') {
+                await applyPresetOffice();
+            }
+        });
+    }
+
+    // Optional: hỗ trợ query ?preset=office
+    try {
+        const params = new URLSearchParams(location.search);
+        const preset = (params.get('preset') || '').toLowerCase();
+        if (preset === 'office') applyPresetOffice();
+    } catch (_) {}
+});
+
 function buildCategoryList(){
     const ul=document.getElementById('category-list');
     ul.innerHTML='';
@@ -886,22 +1007,6 @@ function renderSelected(category){
     updateCategoryCount(category);
 }
 
-// Thêm 1 linh kiện đơn lẻ vào giỏ hàng
-async function addSinglePart(category){
-    const part=state.selected[category];
-    if(!part){ if (typeof window.showNotification==='function') window.showNotification('Chưa chọn linh kiện','error'); return; }
-    const price = Number(part.price)||0;
-    await _addOneItemToCart({
-        id: part.id,
-        name: part.name,
-        originalPrice: price,
-        salePrice: price,
-        discountPercent: 0,
-        image: part.image || 'Images/Logo.jpg',
-        quantity: 1
-    });
-}
-
 function recalcTotals(){
     let total=0, power=0;
     Object.values(state.selected).forEach(p=>{
@@ -1011,13 +1116,18 @@ document.addEventListener('DOMContentLoaded', ()=>{ loadPagePart('HTML/Layout/re
 
 // ==== Thêm vào giỏ hàng từ trang Build PC ====
 async function addCurrentSelectionToCart(options={bundle:false}){
-    const requiredKeys = ['cpu','gpu','mainboard','ram','storage','psu','case','cooler'];
+    const baseRequired = ['cpu','mainboard','ram','storage','psu','case','cooler'];
+    const cpuItem = partsMap['cpu'];
+    const cpuHasIGPU = !!(cpuItem && (cpuItem.igpu || cpuItem.iGPU || cpuItem.graphics
+        || (/ryzen/i.test(cpuItem.name||'') && /\b\d{3,5}g\b/i.test((cpuItem.name||'').replace(/\s+/g,'')))
+        || ((/intel|core/i.test(cpuItem.name||'')) && !/\bf\b/i.test(cpuItem.name||''))));
+    const effectiveRequired = cpuHasIGPU ? baseRequired : [...baseRequired, 'gpu'];
     const partsMap = state.selected || {};
     const parts = Object.values(partsMap);
     if(!parts.length){ showNotification?.('Chưa chọn linh kiện nào','error'); return; }
 
     if(options.bundle){
-        const missing = requiredKeys.filter(k => !partsMap[k]);
+        const missing = effectiveRequired.filter(k => !partsMap[k]);
         if (missing.length){
             const labels = { cpu:'CPU', gpu:'GPU', mainboard:'Mainboard', ram:'RAM', storage:'Ổ cứng', psu:'Nguồn', case:'Case', cooler:'Tản nhiệt' };
             if (typeof window.showNotification==='function') window.showNotification('Vui lòng chọn đủ: '+missing.map(k=>labels[k]||k).join(', '), 'error');
