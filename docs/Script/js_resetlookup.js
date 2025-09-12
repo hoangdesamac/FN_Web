@@ -360,51 +360,47 @@ async function renderOrders(ordersToRender) {
 
             // Render card
             orderCard.innerHTML = `
-                <div class="order-item ${statusClass}" id="order-item-${index}" data-order-id="${order.id}">
-                  <div class="order-front">
-                     ${rewardBtnHTML}
-                     ${receiveBtnHTML}
-                    <div class="order-profile">
-                      <div class="order-avatar-wrapper">
-                        <img src="${firstItem.image}" alt="Avatar" class="order-avatar">
-                      </div>
-                      <div>
-                        <h3 class="order-number-circle">${order.orderCode}${unseenIndicator}</h3>
-                        <div class="points-badge">
-                          <i class='bx bx-medal'></i> ${points} điểm
-                        </div>
-                      </div>
-                    </div>
-                    <div class="order-status ${statusClass}">
-                      <lottie-player src="${lottieAnimation}" background="transparent" speed="1"
-                        style="width: 30px; height: 30px;" loop autoplay></lottie-player>
-                      ${order.status}
-                    </div>
-                    ${trackingTimelineHTML}
-                    ${order.completedAt ? `<div class="mt-2 small text-info">Hoàn thành lúc: ${new Date(order.completedAt).toLocaleString('vi-VN')}</div>` : ''}
-                    <div class="flip-hint">Nhấn để xem chi tiết sản phẩm</div>
-                  </div>
-                  <div class="order-back">
-                    <h3>Chi tiết đơn hàng #${order.orderCode}</h3>
-                    <div class="order-products">${productsHTML}</div>
-                    <div class="order-delivery-info">
-                      <h4><i class='bx bx-map'></i> Thông tin giao hàng</h4>
-                      <p><strong>Người nhận:</strong> ${deliveryInfo.name || 'Không có thông tin'}</p>
-                      <p><strong>SĐT:</strong> ${deliveryInfo.phone || 'Không có thông tin'}</p>
-                      <p><strong>Địa chỉ:</strong> ${deliveryInfo.address || ''}, ${deliveryInfo.ward || ''}, ${deliveryInfo.district || ''}, ${deliveryInfo.province || ''}</p>
-                      <p><strong>Thanh toán:</strong> ${getPaymentMethodText(order.paymentMethod)}</p>
-                      ${deliveryInfo.note ? `<p><strong>Ghi chú:</strong> ${deliveryInfo.note}</p>` : ''}
-                      <p><strong>Xuất HĐ:</strong> ${deliveryInfo.invoiceRequired ? 'Có' : 'Không'}</p>
-                    </div>
-                    <div class="order-total">Tổng cộng: ${formatCurrency(total)}</div>
-                    <div class="order-actions d-flex gap-2">
-                      <button class="btn btn-cancel" onclick="cancelOrder(${order.id})"><i class='bx bx-trash'></i> Hủy đơn</button>
-                      ${!deliveryInfo.invoiceRequired ? '' : `<button class="btn btn-invoice" onclick="exportToPDF(${order.id})"><i class='bx bx-download'></i> Xuất đơn</button>`}
-                      ${order.status === 'Đơn hàng đã hủy' ? `<button class="btn btn-rebuy" onclick="rebuyOrder(${order.id})"><i class='bx bx-cart'></i> Mua lại</button>` : ''}
-                    </div>
-                  </div>
-                </div>
-            `;
+    <div class="order-item ${statusClass}" id="order-item-${index}" data-order-id="${order.id}">
+      <div class="order-front">
+         ${rewardBtnHTML}
+         ${receiveBtnHTML}
+        <div class="order-profile">
+          <div class="order-avatar-wrapper">
+            <img src="${firstItem.image}" alt="Avatar" class="order-avatar">
+          </div>
+          <div>
+            <h3 class="order-number-circle">${order.orderCode}${unseenIndicator}</h3>
+            <div class="points-badge">
+              <i class='bx bx-medal'></i> ${points} điểm
+            </div>
+          </div>
+        </div>
+        <div class="order-status ${statusClass}">
+          <lottie-player src="${lottieAnimation}" background="transparent" speed="1"
+            style="width: 30px; height: 30px;" loop autoplay></lottie-player>
+          ${order.status}
+        </div>
+        ${trackingTimelineHTML}
+        ${order.completedAt ? `<div class="mt-2 small text-info">Hoàn thành lúc: ${new Date(order.completedAt).toLocaleString('vi-VN')}</div>` : ''}
+        <div class="flip-hint">Nhấn để xem chi tiết sản phẩm</div>
+      </div>
+      <div class="order-back">
+        <h3>Chi tiết đơn hàng #${order.orderCode}</h3>
+        <div class="order-products">${productsHTML}</div>
+        <div class="order-delivery-info">
+          <h4><i class='bx bx-map'></i> Thông tin giao hàng</h4>
+          <p><strong>Người nhận:</strong> ${deliveryInfo.name || 'Không có thông tin'}</p>
+          <p><strong>SĐT:</strong> ${deliveryInfo.phone || 'Không có thông tin'}</p>
+          <p><strong>Địa chỉ:</strong> ${deliveryInfo.address || ''}, ${deliveryInfo.ward || ''}, ${deliveryInfo.district || ''}, ${deliveryInfo.province || ''}</p>
+          <p><strong>Thanh toán:</strong> ${getPaymentMethodText(order.paymentMethod)}</p>
+          ${deliveryInfo.note ? `<p><strong>Ghi chú:</strong> ${deliveryInfo.note}</p>` : ''}
+          <p><strong>Xuất HĐ:</strong> ${deliveryInfo.invoiceRequired ? 'Có' : 'Không'}</p>
+        </div>
+        <div class="order-total">Tổng cộng: ${formatCurrency(total)}</div>
+        ${buildBackActions(order, deliveryInfo)}
+      </div>
+    </div>
+`;
 
             ordersContainer.appendChild(orderCard);
 
@@ -503,7 +499,33 @@ async function claimReward(orderId, event) {
         await performClaim(order.id);
     }
 }
+function buildBackActions(order, deliveryInfo) {
+    const status = order.status;
+    const btns = [];
 
+    // Chỉ khi hoàn thành mới xuất hiện "Xuất đơn" + "Mua lại"
+    if (status === 'Đơn hàng đã hoàn thành') {
+        if (deliveryInfo?.invoiceRequired) {
+            btns.push(
+                `<button class="btn btn-invoice" onclick="exportToPDF(${order.id})">
+                   <i class='bx bx-download'></i> Xuất đơn
+                 </button>`
+            );
+        }
+        btns.push(
+            `<button class="btn btn-rebuy" onclick="rebuyOrder(${order.id})">
+               <i class='bx bx-cart'></i> Mua lại
+             </button>`
+        );
+    }
+
+    // KHÔNG còn nút Hủy đơn theo yêu cầu mới
+    if (!btns.length) {
+        // Trả về khung rỗng để layout không vỡ (có thể bỏ nếu muốn ẩn hẳn)
+        return `<div class="order-actions d-flex gap-2"></div>`;
+    }
+    return `<div class="order-actions d-flex gap-2">${btns.join('')}</div>`;
+}
 function ensureReceiveModal() {
     if (document.getElementById('receiveConfirmModal')) return;
     const wrap = document.createElement('div');
