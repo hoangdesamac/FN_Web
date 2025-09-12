@@ -300,11 +300,14 @@ async function renderOrders(ordersToRender) {
                 case 'Đơn hàng đã hoàn thành':
                     statusClass = 'completed';
                     lottieAnimation = lottieAnimations.completed;
+                    const completedTimeFmt = order.completedAt
+                        ? new Date(order.completedAt).toLocaleString('vi-VN')
+                        : 'Hiện tại';
                     trackingSteps = [
                         { title: 'Đã đặt hàng', time: formattedDate, status: 'completed' },
                         { title: 'Đang xử lý', time: formattedDate, status: 'completed' },
                         { title: 'Đang vận chuyển', time: formattedDate, status: 'completed' },
-                        { title: 'Đã hoàn thành', time: 'Hiện tại', status: 'completed' }
+                        { title: 'Đã hoàn thành', time: completedTimeFmt, status: 'completed' }
                     ];
                     break;
                 case 'Đơn hàng đã hủy':
@@ -334,14 +337,27 @@ async function renderOrders(ordersToRender) {
             `;
 
             const unseenIndicator = order.unseen ? '<span class="unseen-indicator"></span>' : '';
+            const rewardBtnHTML = (() => {
+                if (order.status !== 'Đơn hàng đã hoàn thành') {
+                    return `<button class="btn btn-reward" onclick="claimReward(${order.id}, event)">
+               <i class='bx bx-gift'></i> Nhận thưởng
+             </button>`;
+                }
+                if (order.rewardClaimed) {
+                    return `<button class="btn btn-reward claimed" onclick="event.stopPropagation();" disabled>
+               <i class='bx bx-medal'></i> ĐÃ NHẬN (${order.rewardPoints || Math.floor(order.total/10000)}đ)
+             </button>`;
+                }
+                return `<button class="btn btn-reward" onclick="claimReward(${order.id}, event)">
+            <i class='bx bx-gift'></i> Nhận thưởng
+          </button>`;
+            })();
 
             // Render card
             orderCard.innerHTML = `
                 <div class="order-item ${statusClass}" id="order-item-${index}" data-order-id="${order.id}">
                   <div class="order-front">
-                    <button class="btn btn-reward" onclick="claimReward(${order.id}, event)">
-                      <i class='bx bx-gift'></i> Nhận thưởng
-                    </button>
+                     ${rewardBtnHTML}
                     <div class="order-profile">
                       <div class="order-avatar-wrapper">
                         <img src="${firstItem.image}" alt="Avatar" class="order-avatar">
@@ -359,6 +375,7 @@ async function renderOrders(ordersToRender) {
                       ${order.status}
                     </div>
                     ${trackingTimelineHTML}
+                    ${order.completedAt ? `<div class="mt-2 small text-info">Hoàn thành lúc: ${new Date(order.completedAt).toLocaleString('vi-VN')}</div>` : ''}
                     <div class="flip-hint">Nhấn để xem chi tiết sản phẩm</div>
                   </div>
                   <div class="order-back">
@@ -445,29 +462,95 @@ function toggleCard(index) {
 }
 
 // Claim reward
-function claimReward(orderId, event) {
+async function claimReward(orderId, event) {
     event.stopPropagation();
-
     const order = serverOrders.find(o => o.id === orderId);
-    if (!order) {
-        showToast('Không tìm thấy đơn hàng!');
-        return;
-    }
-
-    if (order.status === 'Đơn hàng đã hủy') {
-        showRewardPopup('Đơn hàng đã bị hủy, hãy mua lại và hoàn tất thủ tục để nhận phần thưởng này!');
-        return;
-    }
+    if (!order) return showToast('Không tìm thấy đơn');
 
     if (order.status !== 'Đơn hàng đã hoàn thành') {
+        // Giữ hành vi cũ (chưa hoàn thành)
         showRewardPopup('Hãy hoàn tất nhận hàng để tiến hành nhận thưởng');
         return;
     }
+    if (order.rewardClaimed) {
+        showRewardPopup('Bạn đã nhận thưởng đơn này rồi!');
+        return;
+    }
 
-    // ✅ Ở đây bạn có thể thêm logic gọi API thưởng (nếu cần), tạm thời chỉ hiện toast
-    showToast('🎉 Bạn đã nhận được thưởng cho đơn hàng này!');
+    // Modal custom đề xuất review
+    showReviewPrompt(order);
 }
 
+function showReviewPrompt(order) {
+    // Tạo modal nếu chưa có
+    if (!document.getElementById('reviewPromptModal')) {
+        const div = document.createElement('div');
+        div.innerHTML = `
+      <div class="modal fade" id="reviewPromptModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+              <h5 class="modal-title"><i class="fa fa-gift text-warning"></i> Nhận thưởng</h5>
+              <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <p class="mb-0">Đánh giá sản phẩm bạn vừa mua ngay để nhận điểm thưởng!</p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Để sau</button>
+              <button class="btn btn-success btn-sm" id="btnGoReview">Đánh giá ngay</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+        document.body.appendChild(div);
+    }
+    const m = new bootstrap.Modal(document.getElementById('reviewPromptModal'));
+    m.show();
+
+    document.getElementById('btnGoReview').onclick = () => {
+        m.hide();
+        // Chọn ngẫu nhiên 1 product trong order (bỏ quà)
+        const normals = order.items.filter(it => !it.isGift);
+        if (!normals.length) {
+            showToast('Không tìm thấy sản phẩm để đánh giá.');
+            return;
+        }
+        const pick = normals[Math.floor(Math.random()*normals.length)];
+        // Chuyển sang trang product, kèm query review=1 để auto mở tab đánh giá
+        window.location.href = `resetproduct.html?id=${encodeURIComponent(pick.id)}&review=1&order=${order.id}`;
+    };
+}
+
+async function performClaim(orderId) {
+    try {
+        const r = await fetch(`${window.API_BASE}/api/orders/${orderId}/claim-reward`, {
+            method:'POST', credentials:'include'
+        });
+        const data = await r.json();
+        if (data.success) {
+            showToast(`+${data.rewardPoints} điểm! Tổng: ${data.totalPoints}`);
+            // Tải lại danh sách đơn để cập nhật trạng thái rewardClaimed
+            await fetchOrdersFromServer();
+            // Cập nhật điểm tài khoản (nếu AuthSync có)
+            if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+                try { await window.AuthSync.refresh(); } catch(e) {}
+            }
+            // Hiệu ứng nhấn mạnh nút vừa claim (sau khi render xong)
+            setTimeout(() => {
+                const el = document.querySelector(`.order-item[data-order-id="${orderId}"] .btn-reward.claimed`);
+                if (el) {
+                    el.classList.add('pulse-once');
+                    setTimeout(() => el.classList.remove('pulse-once'), 1500);
+                }
+            }, 500);
+        } else {
+            showToast(data.error || 'Không claim được');
+        }
+    } catch {
+        showToast('Lỗi mạng khi claim thưởng');
+    }
+}
 
 // Show reward popup
 function showRewardPopup(message) {
@@ -1104,14 +1187,16 @@ async function fetchOrdersFromServer() {
         });
         const data = await res.json();
         if (data.success) {
-            serverOrders = data.orders;   // chỉ giữ trong biến
+            serverOrders = data.orders;
             renderOrders(serverOrders);
         } else {
             console.warn("⚠️ Không lấy được orders:", data.error);
+            serverOrders = [];
             renderOrders([]);
         }
     } catch (err) {
         console.error("❌ Lỗi fetch orders:", err);
+        serverOrders = [];
         renderOrders([]);
     }
 }

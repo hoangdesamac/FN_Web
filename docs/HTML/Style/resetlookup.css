@@ -673,4 +673,19 @@
         transform: translateY(-2px);
         text-decoration: none;
     }
-
+    .btn-reward.claimed {
+        background: linear-gradient(90deg,#444,#222);
+        cursor: not-allowed;
+        opacity: .85;
+    }
+    .btn-reward.claimed i {
+        color: gold;
+    }
+    .pulse-once {
+        animation: pulseOnce .9s ease;
+    }
+    @keyframes pulseOnce {
+        0% { transform: scale(1); box-shadow:0 0 0 0 rgba(255,215,0,.7); }
+        50% { transform: scale(1.05); box-shadow:0 0 12px 4px rgba(255,215,0,.45); }
+        100% { transform: scale(1); box-shadow:0 0 0 0 rgba(255,215,0,0); }
+    }

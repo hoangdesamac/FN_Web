@@ -322,6 +322,7 @@ async function loadProfile() {
             user.avatar_url || "https://via.placeholder.com/80?text=U";
         document.getElementById("sidebarName").textContent =
             `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Người dùng";
+        document.getElementById("userPointsDisplay").textContent = `Điểm của bạn: ${user.points || 0}`;
 
         currentPhone = user.phone || null;
         phoneVerified = true; // mặc định đã xác minh nếu số từ DB
@@ -868,5 +869,15 @@ function initAvatarDragEvents() {
         warnIfMultiple(fl);
         const first = getFirstValidImageFile(fl);
         handleAvatarSelection(first);
+    });
+}
+if (window.AuthSync && typeof window.AuthSync.onChange === 'function') {
+    window.AuthSync.onChange(st => {
+        try {
+            if (st && st.loggedIn && st.user) {
+                const el = document.getElementById('userPointsDisplay');
+                if (el) el.textContent = `Điểm của bạn: ${st.user.points || 0}`;
+            }
+        } catch(e){}
     });
 }

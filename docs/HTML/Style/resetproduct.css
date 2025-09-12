@@ -1914,3 +1914,16 @@ h1, h2, h3, h4, h5, h6 {
     .gift-item img { width: 50px; height: 50px; }
     .gift-box { padding: 12px; }
 }
+.user-review-form {
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    background: rgba(0,0,0,.3);
+}
+.user-review-form h5 {
+    font-weight:600;
+    margin-bottom: .75rem;
+    color: var(--primary);
+}
+.user-review-form button {
+    min-width:140px;
+}

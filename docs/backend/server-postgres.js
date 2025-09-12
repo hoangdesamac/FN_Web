@@ -202,37 +202,42 @@ app.get('/api/me', async (req, res) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-
-        // Lấy profile đầy đủ từ DB để đảm bảo dữ liệu mới nhất
         const { rows } = await pool.query(
-            `SELECT id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified
-             FROM users WHERE id = $1`,
+            `SELECT id, email, first_name, last_name, avatar_url,
+                    phone, gender, birthday, phone_verified,
+                    points, is_admin
+             FROM users
+             WHERE id = $1`,
             [decoded.id]
         );
-        const row = rows[0] || {};
-
-        // birthday có thể là Date hoặc string (PG tùy cấu hình)
+        if (!rows.length) {
+            return res.json({ loggedIn: false });
+        }
+        const row = rows[0];
         const birthday = row.birthday
-            ? (row.birthday instanceof Date ? row.birthday.toISOString().slice(0,10) : row.birthday)
+            ? (row.birthday instanceof Date
+                ? row.birthday.toISOString().slice(0,10)
+                : row.birthday)
             : null;
 
         res.json({
             loggedIn: true,
             user: {
-                id: row.id || decoded.id,
-                email: row.email || decoded.email || null,
-                firstName: row.first_name || null,
-                lastName: row.last_name || decoded.lastName || null,
-                avatar_url: row.avatar_url || null,
-                phone: row.phone || null,
-                gender: row.gender || null,
-                birthday: birthday,
-                phone_verified: row.phone_verified || false
+                id: row.id,
+                email: row.email,
+                firstName: row.first_name,
+                lastName: row.last_name,
+                avatar_url: row.avatar_url,
+                phone: row.phone,
+                gender: row.gender,
+                birthday,
+                phone_verified: row.phone_verified,
+                points: row.points || 0,
+                is_admin: !!row.is_admin
             }
         });
     } catch (err) {
         console.error('GET /api/me error:', err);
-        // token invalid → clear cookie
         try { res.clearCookie(COOKIE_NAME, COOKIE_OPTS); } catch(e) {}
         return res.json({ loggedIn: false });
     }
@@ -1573,7 +1578,10 @@ app.get("/api/orders", authenticateToken, async (req, res) => {
             `SELECT id, order_code AS "orderCode", items, total, status,
                     delivery_info AS "deliveryInfo",
                     payment_method AS "paymentMethod",
-                    created_at AS "createdAt", unseen
+                    created_at AS "createdAt", unseen,
+                    reward_points AS "rewardPoints",
+                    reward_claimed AS "rewardClaimed",
+                    completed_at AS "completedAt"
              FROM orders
              WHERE user_id = $1
              ORDER BY created_at DESC`,
@@ -1604,7 +1612,10 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
             `SELECT id, order_code AS "orderCode", items, total, status,
                     delivery_info AS "deliveryInfo",
                     payment_method AS "paymentMethod",
-                    created_at AS "createdAt", unseen
+                    created_at AS "createdAt", unseen,
+                    reward_points AS "rewardPoints",
+                    reward_claimed AS "rewardClaimed",
+                    completed_at AS "completedAt"
              FROM orders
              WHERE id=$1 AND user_id=$2`,
             [id, req.user.id]
@@ -1614,20 +1625,18 @@ app.get("/api/orders/:id", authenticateToken, async (req, res) => {
             return res.status(404).json({ success: false, error: "Không tìm thấy đơn hàng" });
         }
 
-        // ✅ Đánh dấu đã xem
         await pool.query(
             `UPDATE orders SET unseen=false WHERE id=$1 AND user_id=$2`,
             [id, req.user.id]
         );
 
+        const row = result.rows[0];
         const order = {
-            ...result.rows[0],
-            items: typeof result.rows[0].items === "string"
-                ? JSON.parse(result.rows[0].items)
-                : result.rows[0].items,
-            deliveryInfo: result.rows[0].deliveryInfo && typeof result.rows[0].deliveryInfo === "string"
-                ? JSON.parse(result.rows[0].deliveryInfo)
-                : result.rows[0].deliveryInfo,
+            ...row,
+            items: typeof row.items === "string" ? JSON.parse(row.items) : row.items,
+            deliveryInfo: row.deliveryInfo && typeof row.deliveryInfo === "string"
+                ? JSON.parse(row.deliveryInfo)
+                : row.deliveryInfo,
             unseen: false
         };
 
@@ -1645,7 +1654,7 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
     try {
         const { items, total, deliveryInfo, paymentMethod, comboRequiredIds } = req.body;
 
-        if (!items || !Array.isArray(items) || !items.length || !total) {
+        if (!items || !Array.isArray(items) || !items.length) {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu đơn hàng" });
         }
 
@@ -1666,7 +1675,7 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
             exists = check.rows.length > 0;
         }
 
-        // [NEW] Single gift ưu tiên khi có comboRequiredIds đủ bộ; ngược lại fallback computeGiftsForTotal
+        // Quà (single gift ưu tiên)
         let gifts = [];
         const requiredIds = Array.isArray(comboRequiredIds) ? comboRequiredIds.map(String) : [];
         if (requiredIds.length) {
@@ -1678,24 +1687,31 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
         }
 
         const orderItems = [...normalized, ...gifts];
+        const rewardPoints = Math.floor(computedTotal / 10000); // << THÊM
 
         const insert = await client.query(
-            `INSERT INTO orders (user_id, order_code, items, total, delivery_info, payment_method, unseen)
-             VALUES ($1, $2, $3::jsonb, $4, $5::jsonb, $6, true)
-                 RETURNING id, order_code AS "orderCode", items, total, status,
-                           delivery_info AS "deliveryInfo",
-                           payment_method AS "paymentMethod",
-                           created_at AS "createdAt", unseen`,
+            `INSERT INTO orders (user_id, order_code, items, total, delivery_info,
+                                 payment_method, unseen, reward_points, reward_claimed)
+             VALUES ($1,$2,$3::jsonb,$4,$5::jsonb,$6,true,$7,false)
+             RETURNING id, order_code AS "orderCode", items, total, status,
+                       delivery_info AS "deliveryInfo",
+                       payment_method AS "paymentMethod",
+                       created_at AS "createdAt", unseen,
+                       reward_points AS "rewardPoints",
+                       reward_claimed AS "rewardClaimed",
+                       completed_at AS "completedAt"`,
             [
                 req.user.id,
                 orderCode,
                 JSON.stringify(orderItems),
                 computedTotal,
                 deliveryInfo ? JSON.stringify(deliveryInfo) : null,
-                paymentMethod || null
+                paymentMethod || null,
+                rewardPoints
             ]
         );
 
+        // Xóa cart items đã mua (ko xoá quà)
         const productIdsToDelete = normalized.filter(it => !it.isGift).map(it => String(it.id));
         if (productIdsToDelete.length) {
             await client.query(
@@ -1707,13 +1723,13 @@ app.post("/api/orders", authenticateToken, async (req, res) => {
 
         await client.query("COMMIT");
 
-        const orderRow = insert.rows[0];
+        const row = insert.rows[0];
         const order = {
-            ...orderRow,
-            items: typeof orderRow.items === "string" ? JSON.parse(orderRow.items) : orderRow.items,
-            deliveryInfo: orderRow.deliveryInfo && typeof orderRow.deliveryInfo === "string"
-                ? JSON.parse(orderRow.deliveryInfo)
-                : orderRow.deliveryInfo
+            ...row,
+            items: typeof row.items === "string" ? JSON.parse(row.items) : row.items,
+            deliveryInfo: row.deliveryInfo && typeof row.deliveryInfo === "string"
+                ? JSON.parse(row.deliveryInfo)
+                : row.deliveryInfo
         };
 
         res.json({ success: true, order });
@@ -1806,6 +1822,264 @@ app.use((err, _req, res, _next) => {
     return res.status(500).json({ success: false, error: 'Lỗi máy chủ không xác định' });
 });
 
+/* ================== (ADD) ADMIN & REVIEW FEATURE BLOCK ================== */
+
+// Middleware kiểm tra admin
+async function requireAdmin(req, res, next) {
+    try {
+        const token =
+            req.cookies?.[COOKIE_NAME] ||
+            req.headers['authorization']?.split(' ')[1];
+        if (!token) return res.status(401).json({ success: false, error: 'Chưa đăng nhập' });
+        let decoded;
+        try {
+            decoded = jwt.verify(token, JWT_SECRET);
+        } catch {
+            return res.status(401).json({ success: false, error: 'Token không hợp lệ' });
+        }
+        const u = await pool.query('SELECT id, is_admin FROM users WHERE id=$1', [decoded.id]);
+        if (!u.rows.length) return res.status(401).json({ success: false, error: 'User không tồn tại' });
+        if (!u.rows[0].is_admin) return res.status(403).json({ success: false, error: 'Không có quyền admin' });
+        req.adminUser = { id: u.rows[0].id };
+        next();
+    } catch (err) {
+        console.error('requireAdmin error:', err);
+        res.status(500).json({ success: false, error: 'Lỗi server (admin auth)' });
+    }
+}
+
+// (PATCH) Khi tạo đơn (ở endpoint POST /api/orders trong file gốc) bạn bổ sung reward_points = floor(total/10000)
+// -> ĐÃ MÔ TẢ: Chỉ cần sửa câu INSERT orders thêm trường reward_points
+// Ví dụ trong INSERT ... VALUES (..., true) thêm: reward_points
+// Hoặc sau khi insert: await client.query('UPDATE orders SET reward_points=FLOOR(total/10000) WHERE id=$1',[orderRow.id]);
+
+// (A) API: Danh sách đơn cho Admin
+app.get('/api/admin/orders', requireAdmin, async (req, res) => {
+    try {
+        const status = req.query.status || null;
+        let q = `SELECT o.id, o.order_code AS "orderCode", o.items, o.total, o.status,
+                        o.delivery_info AS "deliveryInfo", o.payment_method AS "paymentMethod",
+                        o.created_at AS "createdAt", o.unseen,
+                        o.reward_points AS "rewardPoints", o.reward_claimed AS "rewardClaimed",
+                        o.completed_at AS "completedAt", u.email, u.first_name, u.last_name
+                 FROM orders o
+                 JOIN users u ON u.id = o.user_id`;
+        const params = [];
+        if (status) {
+            q += ' WHERE o.status = $1';
+            params.push(status);
+        }
+        q += ' ORDER BY o.created_at DESC LIMIT 500';
+        const { rows } = await pool.query(q, params);
+        const orders = rows.map(r => ({
+            ...r,
+            items: typeof r.items === 'string' ? JSON.parse(r.items) : r.items,
+            deliveryInfo: r.deliveryInfo && typeof r.deliveryInfo === 'string' ? JSON.parse(r.deliveryInfo) : r.deliveryInfo
+        }));
+        res.json({ success: true, orders });
+    } catch (err) {
+        console.error('GET /api/admin/orders error:', err);
+        res.status(500).json({ success: false, error: 'Lỗi server' });
+    }
+});
+
+// (B) API: Admin cập nhật trạng thái (skip shipping)
+app.patch('/api/admin/orders/:id/status', requireAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { action } = req.body; // 'approve' | 'cancel'
+        if (!['approve', 'cancel'].includes(action)) {
+            return res.status(400).json({ success: false, error: 'action không hợp lệ' });
+        }
+
+        let newStatus;
+        let extraSet = '';
+        if (action === 'cancel') {
+            newStatus = 'Đơn hàng đã hủy';
+        } else {
+            newStatus = 'Đơn hàng đã hoàn thành';
+            extraSet = ', completed_at = NOW()';
+        }
+
+        const update = await pool.query(
+            `UPDATE orders
+             SET status=$1 ${extraSet}
+             WHERE id=$2
+             RETURNING id, order_code AS "orderCode", items, total, status,
+                       delivery_info AS "deliveryInfo", payment_method AS "paymentMethod",
+                       created_at AS "createdAt", reward_points AS "rewardPoints",
+                       reward_claimed AS "rewardClaimed", completed_at AS "completedAt"`,
+            [ newStatus, id ]
+        );
+        if (!update.rows.length) {
+            return res.status(404).json({ success: false, error: 'Không tìm thấy đơn' });
+        }
+        const row = update.rows[0];
+        const order = {
+            ...row,
+            items: typeof row.items === 'string' ? JSON.parse(row.items) : row.items,
+            deliveryInfo: row.deliveryInfo && typeof row.deliveryInfo === 'string' ? JSON.parse(row.deliveryInfo) : row.deliveryInfo
+        };
+        res.json({ success: true, order });
+    } catch (err) {
+        console.error('PATCH /api/admin/orders/:id/status error:', err);
+        res.status(500).json({ success: false, error: 'Lỗi server' });
+    }
+});
+
+// (C) API: Claim reward
+app.post('/api/orders/:id/claim-reward', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        // Lấy order
+        const { rows } = await pool.query(
+            `SELECT id, user_id, reward_points, reward_claimed, status
+             FROM orders WHERE id=$1 AND user_id=$2`,
+            [id, req.user.id]
+        );
+        if (!rows.length) return res.status(404).json({ success: false, error: 'Không tìm thấy đơn' });
+        const ord = rows[0];
+        if (ord.status !== 'Đơn hàng đã hoàn thành') {
+            return res.status(400).json({ success: false, error: 'Đơn chưa hoàn thành' });
+        }
+        if (ord.reward_claimed) {
+            return res.status(400).json({ success: false, error: 'Đã nhận thưởng' });
+        }
+
+        await pool.query('BEGIN');
+        await pool.query(
+            'UPDATE orders SET reward_claimed=true WHERE id=$1',
+            [ord.id]
+        );
+        await pool.query(
+            'UPDATE users SET points = points + $1 WHERE id=$2',
+            [ord.reward_points, req.user.id]
+        );
+        const userAfter = await pool.query('SELECT points FROM users WHERE id=$1', [req.user.id]);
+        await pool.query('COMMIT');
+        res.json({ success: true, rewardPoints: ord.reward_points, totalPoints: userAfter.rows[0].points });
+    } catch (err) {
+        console.error('POST /api/orders/:id/claim-reward error:', err);
+        try { await pool.query('ROLLBACK'); } catch(_) {}
+        res.status(500).json({ success: false, error: 'Lỗi claim reward' });
+    }
+});
+
+// (D) API: /api/me bổ sung points (CHÈN vào logic trả JSON user ở /api/me)
+/*
+Trong /api/me hiện trả:
+
+user: {
+  ...
+  phone_verified: ...
+}
+
+=> Bổ sung thêm: points: row.points || 0
+
+Sửa truy vấn SELECT ở /api/me thêm cột points:
+SELECT id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified, points
+*/
+
+// (E) API: Review purchase check helper
+async function userPurchasedProduct(userId, productId) {
+    try {
+        const q = `
+            SELECT 1
+            FROM orders
+            WHERE user_id = $1
+              AND status = 'Đơn hàng đã hoàn thành'
+              AND EXISTS (
+                SELECT 1
+                FROM jsonb_array_elements(items) AS elem
+                WHERE (elem->>'id') = $2
+            )
+                LIMIT 1
+        `;
+        const { rows } = await pool.query(q, [userId, String(productId)]);
+        return rows.length > 0;
+    } catch (e) {
+        console.error('userPurchasedProduct error:', e);
+        return false;
+    }
+}
+
+// (F) API: Review context
+app.get('/api/review-context', authenticateToken, async (req, res) => {
+    try {
+        const productId = req.query.productId;
+        if (!productId) return res.status(400).json({ success: false, error: 'Thiếu productId' });
+        const purchased = await userPurchasedProduct(req.user.id, productId);
+        res.json({ success: true, purchased });
+    } catch (err) {
+        console.error('/api/review-context error:', err);
+        res.status(500).json({ success: false, error: 'Lỗi server' });
+    }
+});
+
+// (G) API: Post review
+app.post('/api/reviews', authenticateToken, async (req, res) => {
+    try {
+        const { productId, rating, title, content, images, videos, orderId } = req.body || {};
+        if (!productId || !rating) {
+            return res.status(400).json({ success: false, error: 'Thiếu productId hoặc rating' });
+        }
+        const purchased = await userPurchasedProduct(req.user.id, productId);
+        if (!purchased) {
+            return res.status(403).json({ success: false, error: 'Bạn chưa mua sản phẩm này' });
+        }
+        const r = await pool.query(
+            `INSERT INTO reviews (user_id, product_id, order_id, rating, title, content, images, videos)
+             VALUES ($1,$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb)
+             RETURNING id, user_id AS "userId", product_id AS "productId", rating, title, content, images, videos, created_at AS "createdAt"`,
+            [req.user.id, productId, orderId || null, rating, title || null, content || null,
+                JSON.stringify(Array.isArray(images) ? images : []),
+                JSON.stringify(Array.isArray(videos) ? videos : [])]
+        );
+        res.json({ success: true, review: r.rows[0] });
+    } catch (err) {
+        console.error('POST /api/reviews error:', err);
+        res.status(500).json({ success: false, error: 'Lỗi server tạo review' });
+    }
+});
+
+// (H) API: Get reviews by product
+app.get('/api/products/:productId/reviews', async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const { rows } = await pool.query(
+            `SELECT r.id,
+                    r.product_id AS "productId",
+                    r.rating,
+                    r.title,
+                    r.content,
+                    r.images,
+                    r.videos,
+                    r.created_at AS "createdAt",
+                    r.order_id AS "orderId",
+                    u.first_name,
+                    u.last_name
+             FROM reviews r
+             JOIN users u ON u.id = r.user_id
+             WHERE r.product_id = $1
+             ORDER BY r.created_at DESC
+             LIMIT 500`,
+            [productId]
+        );
+
+        // (Optional) đảm bảo images/videos luôn là mảng
+        const safe = rows.map(r => ({
+            ...r,
+            images: Array.isArray(r.images) ? r.images : (r.images ? r.images : []),
+            videos: Array.isArray(r.videos) ? r.videos : (r.videos ? r.videos : [])
+        }));
+
+        res.json({ success: true, reviews: safe });
+    } catch (err) {
+        console.error('GET /api/products/:productId/reviews error:', err);
+        res.status(500).json({ success: false, error: 'Lỗi server lấy reviews' });
+    }
+});
+/* ================== END ADMIN & REVIEW BLOCK ================== */
 // ===== Start =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

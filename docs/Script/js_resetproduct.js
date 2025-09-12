@@ -1523,7 +1523,6 @@ function prepareProduct(product) {
     };
 }
 
-
 function generateStars(rating) {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 >= 0.5 ? 1 : 0;
@@ -1531,6 +1530,229 @@ function generateStars(rating) {
 
     return '★'.repeat(fullStars) + (halfStar ? '✬' : '') + '☆'.repeat(emptyStars);
 }
+/* ========== REVIEW FEATURE INTEGRATION ========== */
+async function initReviewFeature() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get('id');
+        if (!productId) return;
+
+        // Nếu có review=1 → chuyển sang tab Đánh giá
+        if (params.get('review') === '1') {
+            showTab('tab3');
+            // Scroll nhẹ
+            setTimeout(() => window.scrollTo({ top: document.querySelector('#tab3').offsetTop - 80, behavior:'smooth'}), 300);
+        }
+
+        // Gọi context (yêu cầu đăng nhập)
+        let purchased = false;
+        try {
+            const ctxRes = await fetch(`${window.API_BASE}/api/review-context?productId=${encodeURIComponent(productId)}`, {
+                credentials: 'include'
+            });
+            const ctxData = await ctxRes.json();
+            if (ctxData.success) purchased = !!ctxData.purchased;
+        } catch {}
+
+        // Render form review nếu đã mua
+        if (purchased) {
+            renderReviewForm(productId);
+        }
+
+        // Load danh sách reviews
+        await loadReviews(productId);
+    } catch (err) {
+        console.error('initReviewFeature error:', err);
+    }
+}
+
+function renderReviewForm(productId) {
+    const tab = document.getElementById('tab3');
+    if (!tab) return;
+    if (tab.querySelector('.user-review-form')) return; // tránh trùng
+
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('order');
+
+    const formBox = document.createElement('div');
+    formBox.className = 'user-review-form glass p-3 mb-4';
+    formBox.innerHTML = `
+      <h5><i class="fas fa-pen"></i> Viết đánh giá để nhận thưởng</h5>
+      <div class="mb-2">
+        <label class="form-label">Chấm sao:</label>
+        <select id="reviewRating" class="form-select form-select-sm" style="max-width:120px;">
+          <option value="5">5 - Tuyệt vời</option>
+          <option value="4">4 - Tốt</option>
+          <option value="3">3 - Bình thường</option>
+          <option value="2">2 - Chưa hài lòng</option>
+          <option value="1">1 - Tệ</option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Tiêu đề (tùy chọn)</label>
+        <input type="text" id="reviewTitle" class="form-control form-control-sm" maxlength="120">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Nội dung</label>
+        <textarea id="reviewContent" rows="4" class="form-control form-control-sm" maxlength="2000" placeholder="Chia sẻ trải nghiệm của bạn..."></textarea>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Ảnh (tùy chọn)</label>
+        <input type="file" id="reviewImages" class="form-control form-control-sm" accept="image/*" multiple>
+        <div class="form-text">Tối đa 5 ảnh. Mỗi ảnh ≤ 2MB</div>
+      </div>
+      <button id="btnSubmitReview" class="btn btn-primary btn-sm">
+        <i class="fas fa-paper-plane"></i> Gửi đánh giá
+      </button>
+      <div id="reviewSubmitStatus" class="small mt-2 text-warning"></div>
+    `;
+    tab.prepend(formBox);
+
+    document.getElementById('btnSubmitReview').addEventListener('click', () => submitReview(productId, orderId));
+}
+
+function ensureReviewReturnModal() {
+    if (document.getElementById('reviewReturnModal')) return;
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+    <div class="modal fade" id="reviewReturnModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="fa fa-gift text-warning"></i> Hoàn tất đánh giá</h5>
+            <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-2">Quay lại đơn hàng của bạn để nhận thưởng ngay?</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Để sau</button>
+            <button class="btn btn-success btn-sm" id="btnReturnLookupNow">Quay lại ngay</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    document.body.appendChild(wrap);
+}
+
+async function submitReview(productId, orderId) {
+    const rating = Number(document.getElementById('reviewRating').value || 5);
+    const title = document.getElementById('reviewTitle').value.trim();
+    const content = document.getElementById('reviewContent').value.trim();
+    const statusEl = document.getElementById('reviewSubmitStatus');
+    const imagesInput = document.getElementById('reviewImages');
+
+    if (!rating || rating < 1 || rating > 5) {
+        statusEl.textContent = 'Số sao không hợp lệ.';
+        return;
+    }
+    if (!content) {
+        statusEl.textContent = 'Vui lòng nhập nội dung đánh giá.';
+        return;
+    }
+
+    // (Tuỳ chọn) xử lý upload ảnh base64
+    let imagesArr = [];
+    try {
+        const files = Array.from(imagesInput.files || []).slice(0, 5);
+        for (const f of files) {
+            if (f.size > 2 * 1024 * 1024) continue;
+            const b64 = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(f);
+            });
+            imagesArr.push(b64);
+        }
+    } catch (e) {}
+
+    statusEl.textContent = 'Đang gửi...';
+    try {
+        const res = await fetch(`${window.API_BASE}/api/reviews`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                productId,
+                orderId: orderId ? Number(orderId) : undefined,
+                rating,
+                title: title || null,
+                content,
+                images: imagesArr,
+                videos: []
+            })
+        });
+        const data = await res.json();
+        if (!data.success) {
+            statusEl.textContent = data.error || 'Gửi đánh giá thất bại.';
+            return;
+        }
+        statusEl.textContent = 'Đã gửi đánh giá thành công!';
+        ensureReviewReturnModal();
+        const modalEl = document.getElementById('reviewReturnModal');
+        const mInst = new bootstrap.Modal(modalEl);
+        mInst.show();
+        const orderIdSafe = orderId;
+        document.getElementById('btnReturnLookupNow').onclick = () => {
+            mInst.hide();
+            if (orderIdSafe) {
+                window.location.href = `resetlookup.html?claim=${orderIdSafe}`;
+            } else {
+                window.location.href = `resetlookup.html`;
+            }
+        };
+    } catch (err) {
+        console.error('submitReview error:', err);
+        statusEl.textContent = 'Lỗi mạng khi gửi đánh giá.';
+    }
+}
+
+async function loadReviews(productId) {
+    try {
+        const res = await fetch(`${window.API_BASE}/api/products/${encodeURIComponent(productId)}/reviews`);
+        const data = await res.json();
+        if (!data.success) return;
+        const list = document.getElementById('reviewList');
+        if (!list) return;
+
+        if (!data.reviews.length) {
+            list.innerHTML = '<div class="text-muted small">Chưa có đánh giá.</div>';
+            return;
+        }
+
+        list.innerHTML = data.reviews.map(r => {
+            const name = ((r.first_name || '') + ' ' + (r.last_name || '')).trim() || 'Người dùng';
+            const stars = '★★★★★'.slice(0, r.rating) + '☆☆☆☆☆'.slice(0, 5 - r.rating);
+            let imgs = '';
+            if (Array.isArray(r.images) && r.images.length) {
+                imgs = `<div class="d-flex flex-wrap gap-2 mt-2">
+                   ${r.images.map(img => `<img src="${img}" style="width:70px;height:70px;object-fit:cover;border-radius:6px;border:1px solid #333;">`).join('')}
+                </div>`;
+            }
+            const purchasedBadge = r.orderId ? `<span class="badge" style="background:linear-gradient(135deg,#00ff99,#00cc66);color:#000;margin-left:8px;">✓ Đã mua hàng</span>` : '';
+            return `
+  <div class="review-item border-bottom pb-3 mb-3">
+    <div class="d-flex justify-content-between">
+      <strong>${name} ${purchasedBadge}</strong>
+      <span class="text-warning">${stars}</span>
+    </div>
+    ${r.title ? `<div class="fw-semibold">${r.title}</div>` : ''}
+    <div style="white-space:pre-wrap;">${r.content || ''}</div>
+    <div class="small text-muted mt-1">${new Date(r.createdAt).toLocaleString('vi-VN')}</div>
+    ${imgs}
+  </div>
+`;
+        }).join('');
+    } catch (err) {
+        console.error('loadReviews error:', err);
+    }
+}
+
+// Gọi init review sau khi product data đã render (đặt cuối file hoặc sau khi fetch product)
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(initReviewFeature, 400); // delay nhẹ để đảm bảo DOM tab3 tồn tại
+});
 
 // 3) Dữ liệu sản phẩm
 // =========================
