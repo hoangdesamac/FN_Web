@@ -1763,15 +1763,25 @@ app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
             return res.status(400).json({ success: false, error: "Thiếu dữ liệu cập nhật" });
         }
 
+        // Nếu chuyển sang 'Đơn hàng đã hoàn thành' -> set completed_at nếu chưa có
         const update = await pool.query(
             `UPDATE orders
              SET status = COALESCE($1, status),
-                 unseen = COALESCE($2, unseen)
+                 unseen = COALESCE($2, unseen),
+                 completed_at = CASE
+                                    WHEN $1 = 'Đơn hàng đã hoàn thành' AND completed_at IS NULL
+                                        THEN NOW()
+                                    ELSE completed_at
+                     END
              WHERE id=$3 AND user_id=$4
                  RETURNING id, order_code AS "orderCode", items, total, status,
-                           delivery_info AS "deliveryInfo",
-                           payment_method AS "paymentMethod",
-                           created_at AS "createdAt", unseen`,
+                       delivery_info AS "deliveryInfo",
+                       payment_method AS "paymentMethod",
+                       created_at AS "createdAt",
+                       unseen,
+                       completed_at AS "completedAt",
+                       reward_points AS "rewardPoints",
+                       reward_claimed AS "rewardClaimed"`,
             [
                 status || null,
                 typeof unseen !== "undefined" ? unseen : null,
@@ -1784,14 +1794,15 @@ app.patch("/api/orders/:id", authenticateToken, async (req, res) => {
             return res.status(404).json({ success: false, error: "Không tìm thấy đơn hàng" });
         }
 
+        const row = update.rows[0];
         const order = {
-            ...update.rows[0],
-            items: typeof update.rows[0].items === "string"
-                ? JSON.parse(update.rows[0].items)
-                : update.rows[0].items,
-            deliveryInfo: update.rows[0].deliveryInfo && typeof update.rows[0].deliveryInfo === "string"
-                ? JSON.parse(update.rows[0].deliveryInfo)
-                : update.rows[0].deliveryInfo
+            ...row,
+            items: typeof row.items === "string"
+                ? JSON.parse(row.items)
+                : row.items,
+            deliveryInfo: row.deliveryInfo && typeof row.deliveryInfo === "string"
+                ? JSON.parse(row.deliveryInfo)
+                : row.deliveryInfo
         };
 
         res.json({ success: true, order });
@@ -1908,18 +1919,19 @@ app.patch('/api/admin/orders/:id/status', requireAdmin, async (req, res) => {
         if (action === 'cancel') {
             newStatus = 'Đơn hàng đã hủy';
         } else {
-            newStatus = 'Đơn hàng đã hoàn thành';
-            extraSet = ', completed_at = NOW()';
+            // DUYỆT giờ chỉ sang "Đơn hàng đang được vận chuyển" (KHÔNG set completed_at)
+            newStatus = 'Đơn hàng đang được vận chuyển';
+            extraSet = ''; // không completed_at ở bước này
         }
 
         const update = await pool.query(
             `UPDATE orders
              SET status=$1 ${extraSet}
              WHERE id=$2
-             RETURNING id, order_code AS "orderCode", items, total, status,
-                       delivery_info AS "deliveryInfo", payment_method AS "paymentMethod",
-                       created_at AS "createdAt", reward_points AS "rewardPoints",
-                       reward_claimed AS "rewardClaimed", completed_at AS "completedAt"`,
+                 RETURNING id, order_code AS "orderCode", items, total, status,
+                 delivery_info AS "deliveryInfo", payment_method AS "paymentMethod",
+                 created_at AS "createdAt", reward_points AS "rewardPoints",
+                 reward_claimed AS "rewardClaimed", completed_at AS "completedAt"`,
             [ newStatus, id ]
         );
         if (!update.rows.length) {
@@ -1942,7 +1954,6 @@ app.patch('/api/admin/orders/:id/status', requireAdmin, async (req, res) => {
 app.post('/api/orders/:id/claim-reward', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
-        // Lấy order
         const { rows } = await pool.query(
             `SELECT id, user_id, reward_points, reward_claimed, status
              FROM orders WHERE id=$1 AND user_id=$2`,
@@ -1950,6 +1961,7 @@ app.post('/api/orders/:id/claim-reward', authenticateToken, async (req, res) => 
         );
         if (!rows.length) return res.status(404).json({ success: false, error: 'Không tìm thấy đơn' });
         const ord = rows[0];
+
         if (ord.status !== 'Đơn hàng đã hoàn thành') {
             return res.status(400).json({ success: false, error: 'Đơn chưa hoàn thành' });
         }
@@ -1957,18 +1969,29 @@ app.post('/api/orders/:id/claim-reward', authenticateToken, async (req, res) => 
             return res.status(400).json({ success: false, error: 'Đã nhận thưởng' });
         }
 
+        // NEW: kiểm tra user đã có ít nhất 1 review gắn với order chưa
+        const rev = await pool.query(
+            'SELECT 1 FROM reviews WHERE user_id=$1 AND order_id=$2 LIMIT 1',
+            [req.user.id, id]
+        );
+        if (!rev.rows.length) {
+            return res.status(400).json({
+                success: false,
+                error: 'Vui lòng đánh giá sản phẩm trong đơn trước khi nhận thưởng.'
+            });
+        }
+
         await pool.query('BEGIN');
-        await pool.query(
-            'UPDATE orders SET reward_claimed=true WHERE id=$1',
-            [ord.id]
-        );
-        await pool.query(
-            'UPDATE users SET points = points + $1 WHERE id=$2',
-            [ord.reward_points, req.user.id]
-        );
+        await pool.query('UPDATE orders SET reward_claimed=true WHERE id=$1', [ord.id]);
+        await pool.query('UPDATE users SET points = points + $1 WHERE id=$2', [ord.reward_points, req.user.id]);
         const userAfter = await pool.query('SELECT points FROM users WHERE id=$1', [req.user.id]);
         await pool.query('COMMIT');
-        res.json({ success: true, rewardPoints: ord.reward_points, totalPoints: userAfter.rows[0].points });
+
+        res.json({
+            success: true,
+            rewardPoints: ord.reward_points,
+            totalPoints: userAfter.rows[0].points
+        });
     } catch (err) {
         console.error('POST /api/orders/:id/claim-reward error:', err);
         try { await pool.query('ROLLBACK'); } catch(_) {}
@@ -2073,6 +2096,17 @@ app.get('/api/products/:productId/reviews', async (req, res) => {
     } catch (err) {
         console.error('GET /api/products/:productId/reviews error:', err);
         res.status(500).json({ success: false, error: 'Lỗi server lấy reviews' });
+    }
+});
+app.get('/api/orders/:id/reviewed', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const q = `SELECT 1 FROM reviews WHERE user_id=$1 AND order_id=$2 LIMIT 1`;
+        const { rows } = await pool.query(q, [req.user.id, id]);
+        res.json({ success: true, reviewed: rows.length > 0 });
+    } catch (err) {
+        console.error('GET /api/orders/:id/reviewed error:', err);
+        res.status(500).json({ success: false, reviewed: false, error: 'Lỗi server' });
     }
 });
 /* ================== END ADMIN & REVIEW BLOCK ================== */

@@ -14,6 +14,7 @@
     function statusBadge(st){
         switch(st){
             case 'Đơn hàng đang xử lý': return '<span class="badge-status badge-processing">Xử lý</span>';
+            case 'Đơn hàng đang được vận chuyển': return '<span class="badge-status" style="background:#17a2b8">Vận chuyển</span>';
             case 'Đơn hàng đã hoàn thành': return '<span class="badge-status badge-completed">Hoàn thành</span>';
             case 'Đơn hàng đã hủy': return '<span class="badge-status badge-cancelled">Hủy</span>';
             default: return `<span class="badge-status" style="background:#555">${st||'?'}</span>`;
@@ -91,7 +92,7 @@
     }
 
     async function updateOrder(id, action) {
-        if (!confirm(`Xác nhận thực hiện: ${action==='approve'?'DUYỆT (-> Hoàn thành)':'HỦY'} đơn #${id}?`)) return;
+        if (!confirm(`Xác nhận thực hiện: ${action==='approve'?'DUYỆT (-> Vận chuyển)':'HỦY'} đơn #${id}?`)) return;
         try {
             const r = await fetch(`${API.replace(/\/$/,'')}/api/admin/orders/${id}/status`, {
                 method:'PATCH',

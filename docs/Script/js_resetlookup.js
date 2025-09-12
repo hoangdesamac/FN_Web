@@ -352,12 +352,18 @@ async function renderOrders(ordersToRender) {
             <i class='bx bx-gift'></i> Nhận thưởng
           </button>`;
             })();
+            const receiveBtnHTML = (order.status === 'Đơn hàng đang được vận chuyển')
+                ? `<button class="btn btn-success btn-sm mb-2" onclick="openReceiveModal(${order.id}, event)">
+         <i class='bx bx-check-circle'></i> ĐÃ NHẬN ĐƯỢC HÀNG
+       </button>`
+                : '';
 
             // Render card
             orderCard.innerHTML = `
                 <div class="order-item ${statusClass}" id="order-item-${index}" data-order-id="${order.id}">
                   <div class="order-front">
                      ${rewardBtnHTML}
+                     ${receiveBtnHTML}
                     <div class="order-profile">
                       <div class="order-avatar-wrapper">
                         <img src="${firstItem.image}" alt="Avatar" class="order-avatar">
@@ -463,22 +469,111 @@ function toggleCard(index) {
 
 // Claim reward
 async function claimReward(orderId, event) {
-    event.stopPropagation();
+    event?.stopPropagation();
     const order = serverOrders.find(o => o.id === orderId);
     if (!order) return showToast('Không tìm thấy đơn');
 
-    if (order.status !== 'Đơn hàng đã hoàn thành') {
-        // Giữ hành vi cũ (chưa hoàn thành)
-        showRewardPopup('Hãy hoàn tất nhận hàng để tiến hành nhận thưởng');
+    // Chưa tới trạng thái vận chuyển hoặc hoàn thành
+    if (order.status === 'Đơn hàng đang xử lý') {
+        showRewardPopup('Đơn đang xử lý. Chờ duyệt để nhận thưởng sau.');
         return;
     }
-    if (order.rewardClaimed) {
-        showRewardPopup('Bạn đã nhận thưởng đơn này rồi!');
+    if (order.status === 'Đơn hàng đang được vận chuyển') {
+        showRewardPopup('Hãy xác nhận đã nhận hàng để tiếp tục nhận thưởng.');
+        return;
+    }
+    if (order.status === 'Đơn hàng đã hủy') {
+        showRewardPopup('Đơn đã bị hủy – không thể nhận thưởng.');
         return;
     }
 
-    // Modal custom đề xuất review
-    showReviewPrompt(order);
+    // Đã hoàn thành
+    if (order.status === 'Đơn hàng đã hoàn thành') {
+        if (order.rewardClaimed) {
+            showRewardPopup('Bạn đã nhận thưởng đơn này rồi!');
+            return;
+        }
+        const reviewed = await hasReviewed(order.id);
+        if (!reviewed) {
+            // Chưa review -> buộc review trước
+            showReviewPrompt(order);
+            return;
+        }
+        // ĐÃ review -> thực sự claim
+        await performClaim(order.id);
+    }
+}
+
+function ensureReceiveModal() {
+    if (document.getElementById('receiveConfirmModal')) return;
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+    <div class="modal fade" id="receiveConfirmModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class='bx bx-package text-info'></i> Xác nhận giao hàng</h5>
+            <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p>Bạn đã nhận được hàng hay chưa?</p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Chưa (Quay lại)</button>
+            <button class="btn btn-success btn-sm" id="btnConfirmReceived">ĐÃ NHẬN</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    document.body.appendChild(wrap);
+}
+let _pendingReceiveOrderId = null;
+function openReceiveModal(orderId, ev) {
+    ev?.stopPropagation();
+    _pendingReceiveOrderId = orderId;
+    ensureReceiveModal();
+    const m = new bootstrap.Modal(document.getElementById('receiveConfirmModal'));
+    m.show();
+    document.getElementById('btnConfirmReceived').onclick = async () => {
+        try {
+            await markOrderCompleted(_pendingReceiveOrderId);
+            m.hide();
+        } catch(e) {
+            showToast('Không cập nhật được trạng thái!');
+        }
+    };
+}
+async function markOrderCompleted(orderId) {
+    if (!orderId) return;
+    try {
+        const r = await fetch(`${window.API_BASE}/api/orders/${orderId}`, {
+            method:'PATCH',
+            headers:{'Content-Type':'application/json'},
+            credentials:'include',
+            body: JSON.stringify({ status: 'Đơn hàng đã hoàn thành' })
+        });
+        const data = await r.json();
+        if (data.success) {
+            showToast('Đơn đã chuyển sang HOÀN THÀNH!');
+            await fetchOrdersFromServer();
+        } else {
+            showToast(data.error || 'Không cập nhật được đơn!');
+        }
+    } catch(err){
+        console.error(err);
+        showToast('Lỗi mạng khi cập nhật đơn!');
+    }
+}
+
+// NEW: kiểm tra đã review đơn hàng chưa
+async function hasReviewed(orderId) {
+    try {
+        const r = await fetch(`${window.API_BASE}/api/orders/${orderId}/reviewed`, {credentials:'include'});
+        const data = await r.json();
+        return !!(data && data.success && data.reviewed);
+    } catch {
+        return false;
+    }
 }
 
 function showReviewPrompt(order) {
