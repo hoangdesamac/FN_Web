@@ -29,7 +29,18 @@ const storage = multer.diskStorage({
 // ===== Trust Proxy =====
 app.set('trust proxy', 1);
 
-app.use(express.json());
+app.use(express.json({ limit: '5mb' })); // có thể tăng lên '10mb' nếu cần
+
+// (TÙY CHỌN) Bắt lỗi body quá lớn để trả JSON chuẩn
+app.use((err, req, res, next) => {
+    if (err && err.type === 'entity.too.large') {
+        return res.status(413).json({
+            success: false,
+            error: 'Dung lượng dữ liệu gửi lên vượt giới hạn (tối đa ~5MB). Vui lòng giảm kích thước ảnh.'
+        });
+    }
+    next(err);
+});
 app.use(cookieParser());
 
 // ===== CORS =====
@@ -1964,21 +1975,6 @@ app.post('/api/orders/:id/claim-reward', authenticateToken, async (req, res) => 
         res.status(500).json({ success: false, error: 'Lỗi claim reward' });
     }
 });
-
-// (D) API: /api/me bổ sung points (CHÈN vào logic trả JSON user ở /api/me)
-/*
-Trong /api/me hiện trả:
-
-user: {
-  ...
-  phone_verified: ...
-}
-
-=> Bổ sung thêm: points: row.points || 0
-
-Sửa truy vấn SELECT ở /api/me thêm cột points:
-SELECT id, email, first_name, last_name, avatar_url, phone, gender, birthday, phone_verified, points
-*/
 
 // (E) API: Review purchase check helper
 async function userPurchasedProduct(userId, productId) {

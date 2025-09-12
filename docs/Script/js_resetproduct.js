@@ -1599,6 +1599,7 @@ function renderReviewForm(productId) {
       <div class="mb-2">
         <label class="form-label">Ảnh (tùy chọn)</label>
         <input type="file" id="reviewImages" class="form-control form-control-sm" accept="image/*" multiple>
+        <div class="form-text text-info">Ảnh sẽ được tự động nén về ≤1200px, tối đa 5 ảnh.</div>
         <div class="form-text">Tối đa 5 ảnh. Mỗi ảnh ≤ 2MB</div>
       </div>
       <button id="btnSubmitReview" class="btn btn-primary btn-sm">
@@ -1634,6 +1635,49 @@ function ensureReviewReturnModal() {
     </div>`;
     document.body.appendChild(wrap);
 }
+async function compressImageToBase64(file, options = { maxSize: 1200, quality: 0.8 }) {
+    return new Promise((resolve, reject) => {
+        try {
+            const img = new Image();
+            img.onload = () => {
+                try {
+                    const canvas = document.createElement('canvas');
+                    let { width, height } = img;
+                    const max = options.maxSize || 1200;
+
+                    // Giữ tỉ lệ
+                    if (width > height && width > max) {
+                        height = Math.round(height * (max / width));
+                        width = max;
+                    } else if (height >= width && height > max) {
+                        width = Math.round(width * (max / height));
+                        height = max;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const q = Math.min(Math.max(options.quality || 0.8, 0.1), 0.95);
+                    const b64 = canvas.toDataURL('image/jpeg', q);
+                    resolve(b64);
+                } catch (e) {
+                    reject(e);
+                }
+            };
+            img.onerror = reject;
+            const reader = new FileReader();
+            reader.onload = () => {
+                img.src = reader.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
 
 async function submitReview(productId, orderId) {
     const rating = Number(document.getElementById('reviewRating').value || 5);
@@ -1651,21 +1695,39 @@ async function submitReview(productId, orderId) {
         return;
     }
 
-    // (Tuỳ chọn) xử lý upload ảnh base64
+    // Đọc & nén ảnh (tối đa 5)
     let imagesArr = [];
     try {
         const files = Array.from(imagesInput.files || []).slice(0, 5);
         for (const f of files) {
-            if (f.size > 2 * 1024 * 1024) continue;
-            const b64 = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(f);
-            });
-            imagesArr.push(b64);
+            if (f.size > 5 * 1024 * 1024) {
+                console.warn('Ảnh bỏ qua vì >5MB gốc:', f.name);
+                continue;
+            }
+            try {
+                const compressed = await compressImageToBase64(f, { maxSize: 1200, quality: 0.8 });
+                // Kích thước base64 ~ lớn hơn file gốc 33%: kiểm tra lại nếu quá lớn
+                if (compressed.length > 2.5 * 1024 * 1024) { // ~2.5MB chuỗi base64
+                    console.warn('Ảnh sau nén vẫn quá lớn, bỏ qua:', f.name);
+                    continue;
+                }
+                imagesArr.push(compressed);
+            } catch (e) {
+                console.warn('Lỗi nén ảnh, bỏ qua:', f.name, e);
+            }
         }
-    } catch (e) {}
+    } catch (e) {
+        console.warn('Lỗi xử lý ảnh:', e);
+    }
+
+    // Nếu tổng payload dự kiến quá lớn thì cảnh báo
+    try {
+        const approxBytes = new Blob([JSON.stringify(imagesArr)]).size;
+        if (approxBytes > 7 * 1024 * 1024) {
+            statusEl.textContent = 'Tổng ảnh quá lớn (>7MB). Hãy chọn ảnh nhỏ hơn hoặc ít ảnh hơn.';
+            return;
+        }
+    } catch (_) { /* ignore size check errors */ }
 
     statusEl.textContent = 'Đang gửi...';
     try {
@@ -1683,11 +1745,21 @@ async function submitReview(productId, orderId) {
                 videos: []
             })
         });
-        const data = await res.json();
-        if (!data.success) {
-            statusEl.textContent = data.error || 'Gửi đánh giá thất bại.';
+
+        // Nếu server trả 413 → payload lớn
+        if (res.status === 413) {
+            statusEl.textContent = 'Dung lượng dữ liệu vượt quá giới hạn server (413). Hãy giảm kích thước ảnh.';
             return;
         }
+
+        let data = {};
+        try { data = await res.json(); } catch (e) {}
+
+        if (!res.ok || !data.success) {
+            statusEl.textContent = data.error || `Gửi đánh giá thất bại (HTTP ${res.status}).`;
+            return;
+        }
+
         statusEl.textContent = 'Đã gửi đánh giá thành công!';
         ensureReviewReturnModal();
         const modalEl = document.getElementById('reviewReturnModal');
@@ -1702,9 +1774,12 @@ async function submitReview(productId, orderId) {
                 window.location.href = `resetlookup.html`;
             }
         };
+
+        // Reload danh sách review sau khi submit để hiển thị ngay
+        try { await loadReviews(productId); } catch (e) {}
     } catch (err) {
         console.error('submitReview error:', err);
-        statusEl.textContent = 'Lỗi mạng khi gửi đánh giá.';
+        statusEl.textContent = 'Lỗi mạng hoặc CORS khi gửi đánh giá.';
     }
 }
 
