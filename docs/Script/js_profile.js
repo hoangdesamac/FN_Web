@@ -157,23 +157,33 @@ function warnIfMultiple(fileList) {
 // NEW: Áp dụng avatar mới đồng bộ toàn site
 function applyNewAvatar(url) {
     if (!url) return;
+
+    // Cập nhật ảnh trong sidebar (trang profile)
     const img = document.getElementById('sidebarAvatar');
     if (img) img.src = url;
+
+    // Lưu localStorage (giữ tương thích)
     try { localStorage.setItem('avatarUrl', url); } catch(_) {}
 
-    if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
-        window.AuthSync.refresh().catch(()=>{});
+    // Nếu có AuthSync.setAvatar → cập nhật state & bắn sự kiện auth:changed ngay
+    if (window.AuthSync && typeof window.AuthSync.setAvatar === 'function') {
+        try {
+            window.AuthSync.setAvatar(url);
+        } catch (e) {
+            console.warn('applyNewAvatar -> AuthSync.setAvatar error:', e);
+        }
+    } else {
+        // Fallback: phát event thủ công để header khác có thể nghe
+        try {
+            const ev = new CustomEvent('user:avatar-updated', { detail: { url } });
+            window.dispatchEvent(ev);
+        } catch(_) {}
     }
 
+    // Cập nhật header ngay (không chờ bất kỳ request nào)
     if (typeof updateUserDisplay === 'function') {
         try { updateUserDisplay(); } catch(_) {}
     }
-
-    // phát event custom
-    try {
-        const ev = new CustomEvent('user:avatar-updated', { detail: { url } });
-        window.dispatchEvent(ev);
-    } catch(_) {}
 }
 // Load và cache JSON (FormText/danhmucxaphuong.json)
 async function loadProvinceData() {
@@ -818,16 +828,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Kéo-thả (optional)
         const shell = document.querySelector('.avatar-shell');
         if (shell) {
-            shell.addEventListener('drop', e => {
-                const fl = e.dataTransfer.files;
-                if (!fl || !fl.length) {
-                    showAvatarMessage('❌ Không có file!', 'error');
-                    return;
-                }
-                warnIfMultiple(fl);
-                const first = getFirstValidImageFile(fl);
-                handleAvatarSelection(first);
-            });
             shell.addEventListener('paste', e => {
                 const items = e.clipboardData?.files;
                 if (!items || !items.length) return;
@@ -842,7 +842,9 @@ document.addEventListener("DOMContentLoaded", () => {
 // === NEW: Khởi tạo đầy đủ drag & drop avatar (ngăn mở ảnh tab mới) ===
 function initAvatarDragEvents() {
     const shell = document.querySelector('.avatar-shell');
-    if (!shell) return;
+    if (!shell || shell.dataset.dragInit === '1') return; // tránh gắn lại
+    shell.dataset.dragInit = '1';
+
     ['dragenter','dragover'].forEach(ev => {
         shell.addEventListener(ev, e => {
             e.preventDefault(); e.stopPropagation();

@@ -227,6 +227,22 @@
             return getStoredState();
         }
     };
+    // === ADD: Cập nhật avatar cục bộ không cần gọi /api/me ===
+    AuthSync.setAvatar = function(newUrl) {
+        try {
+            if (!newUrl) return;
+            const cur = getStoredState();
+            if (!cur.loggedIn || !cur.user) return;
+            // cập nhật user object
+            cur.user.avatar_url = newUrl;
+            // mirror sang các key legacy
+            mirrorCompatibilityKeys(cur.user);
+            // ghi lại state (giữ nguyên timestamp mới)
+            setStoredState({ loggedIn: true, user: cur.user });
+        } catch (e) {
+            console.warn('AuthSync.setAvatar error:', e);
+        }
+    };
 
     // attach to window
     global.AuthSync = AuthSync;
