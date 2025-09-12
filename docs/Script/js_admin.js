@@ -6,9 +6,7 @@
     const adminInfo = document.getElementById('adminInfo');
 
     function fmtDate(iso){
-        try {
-            return new Date(iso).toLocaleString('vi-VN');
-        } catch { return iso || ''; }
+        try { return new Date(iso).toLocaleString('vi-VN'); } catch { return iso || ''; }
     }
 
     function statusBadge(st){
@@ -35,8 +33,26 @@
             return false;
         }
         adminInfo.textContent = `${me.user?.email || ''} | Điểm: ${me.user?.points ?? 0}`;
-        // Ở backend: nếu không phải admin sẽ trả 403 ở list => ta cứ cho load.
         return true;
+    }
+
+    function renderActionCellByStatus(status){
+        if (status === 'Đơn hàng đang xử lý') {
+            return `
+                <button class="action-btn approve me-1" data-action="approve" title="Duyệt"><i class="fa fa-check"></i></button>
+                <button class="action-btn cancel" data-action="cancel" title="Hủy"><i class="fa fa-xmark"></i></button>
+            `;
+        }
+        if (status === 'Đơn hàng đang được vận chuyển') {
+            return `<span class="text-success fw-semibold">ĐÃ DUYỆT</span>`;
+        }
+        if (status === 'Đơn hàng đã hủy') {
+            return `<span class="text-danger fw-semibold">ĐÃ HỦY</span>`;
+        }
+        if (status === 'Đơn hàng đã hoàn thành') {
+            return `<span class="text-info fw-semibold">HOÀN THÀNH</span>`;
+        }
+        return '';
     }
 
     async function loadOrders() {
@@ -57,8 +73,6 @@
                 const first = o.items && o.items[0];
                 const avatar = first?.image || 'https://via.placeholder.com/60x60?text=NO';
                 const productsShort = o.items.slice(0,2).map(it => it.name).join(', ') + (o.items.length>2?` +${o.items.length-2}`:'');
-                const disabledApprove = (o.status !== 'Đơn hàng đang xử lý') ? 'disabled opacity-50' : '';
-                const disabledCancel  = (o.status !== 'Đơn hàng đang xử lý') ? 'disabled opacity-50' : '';
                 return `
           <tr data-id="${o.id}">
             <td><img src="${avatar}" style="width:46px;height:46px;object-fit:cover;border-radius:6px;border:1px solid #333"></td>
@@ -78,9 +92,8 @@
                             ? `<span class="text-warning">${o.rewardPoints}</span>`
                             : o.rewardPoints || 0)
                 }</td>
-            <td class="text-center">
-              <button class="action-btn approve me-1 ${disabledApprove}" data-action="approve" title="Duyệt"><i class="fa fa-check"></i></button>
-              <button class="action-btn cancel ${disabledCancel}" data-action="cancel" title="Hủy"><i class="fa fa-xmark"></i></button>
+            <td class="text-center action-cell">
+              ${renderActionCellByStatus(o.status)}
             </td>
           </tr>
         `;
@@ -88,6 +101,36 @@
         } catch (err) {
             console.error(err);
             ordersBody.innerHTML = '<tr><td colspan="8" class="text-center text-danger">Lỗi tải dữ liệu</td></tr>';
+        }
+    }
+
+    function updateRowAfterAction(order, action){
+        const row = ordersBody.querySelector(`tr[data-id="${order.id}"]`);
+        if (!row) return;
+        // Cập nhật trạng thái (cột thứ 5 – index dựa trên cấu trúc hiện tại)
+        const tds = row.querySelectorAll('td');
+        // Status cell
+        if (tds[4]) tds[4].innerHTML = statusBadge(order.status);
+        // Reward cell (re-tint nếu cần)
+        if (tds[6]) {
+            if (order.rewardClaimed) {
+                tds[6].innerHTML = `<span class="badge bg-success">${order.rewardPoints}</span>`;
+            } else if (order.status === 'Đơn hàng đã hoàn thành') {
+                tds[6].innerHTML = `<span class="text-warning">${order.rewardPoints}</span>`;
+            } else {
+                tds[6].textContent = order.rewardPoints || 0;
+            }
+        }
+        // Action cell
+        const actionCell = row.querySelector('.action-cell');
+        if (actionCell) {
+            if (action === 'approve') {
+                actionCell.innerHTML = `<span class="text-success fw-semibold">ĐÃ DUYỆT</span>`;
+            } else if (action === 'cancel') {
+                actionCell.innerHTML = `<span class="text-danger fw-semibold">ĐÃ HỦY</span>`;
+            } else {
+                actionCell.innerHTML = '';
+            }
         }
     }
 
@@ -101,15 +144,23 @@
                 body: JSON.stringify({ action })
             });
             const data = await r.json();
-            if (!data.success) return alert(data.error || 'Cập nhật thất bại');
-            await loadOrders();
+            if (!data.success) {
+                alert(data.error || 'Cập nhật thất bại');
+                return;
+            }
+            // Cập nhật trực tiếp hàng hiện tại thay vì tải lại toàn bộ
+            if (data.order) {
+                updateRowAfterAction(data.order, action);
+            } else {
+                // fallback nếu không có order trong response (không xảy ra theo backend hiện tại)
+                await loadOrders();
+            }
         } catch (err) {
             console.error(err);
             alert('Lỗi cập nhật');
         }
     }
 
-    // Modal show detail
     function showItemsModal(orderCode, items) {
         const cont = document.getElementById('itemsContainer');
         cont.innerHTML = items.map(it => `
@@ -130,12 +181,11 @@
         return (Number(v)||0).toLocaleString('vi-VN') + '₫';
     }
 
-    // Event delegation
     ordersBody.addEventListener('click', async (e) => {
         const row = e.target.closest('tr[data-id]');
         if (!row) return;
         const id = row.dataset.id;
-        // actions
+
         const btnAct = e.target.closest('[data-action]');
         if (btnAct) {
             const action = btnAct.getAttribute('data-action');
@@ -144,8 +194,6 @@
         }
         const viewBtn = e.target.closest('.btn-view-items');
         if (viewBtn) {
-            // Lấy lại detail từ hàng đã render (đơn giản: refetch 1 đơn từ /api/admin/orders?status=)
-            // Để nhẹ: clone đã load => cần map giữ orders. Đơn giản nhất: fetch all again & tìm.
             try {
                 const qs = filterStatus.value ? '?status=' + encodeURIComponent(filterStatus.value) : '';
                 const r = await fetch(`${API.replace(/\/$/,'')}/api/admin/orders${qs}`, {credentials:'include'});
