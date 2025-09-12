@@ -154,27 +154,6 @@
     </div>
 </div>
 
-<!-- 
-<button id="openChatbox" class="chat-launch-bar sunken" aria-label="Mở chat tư vấn" title="Chat tư vấn">
-    <span class="clb-icon"><i class="fa fa-comments"></i></span>
-    <span class="clb-label">Chat tư vấn - Giải đáp mọi thắc mắc</span>
-</button>
-<div id="chat-backdrop" class="chat-backdrop" aria-hidden="true"></div>
-<div class="chat-wrapper minimal" id="chatDrawer" role="dialog" aria-label="Chat hỗ trợ" aria-hidden="true">
-    <div class="chat-header minimal">
-        <div class="ch-left">
-            <img src="Image_Showroom/Slogan_w_logo.png" alt="logo" class="chat-logo" />
-            <div class="ch-meta"><strong>3TD Chat</strong><br><small>Chat với chúng tôi</small></div>
-        </div>
-        <button id="closeChatbox" class="close-btn minimal" aria-label="Đóng">✕</button>
-    </div>
-    <div id="chatMessages" class="chat-messages" role="log"></div>
-    <form id="chatForm" class="chat-input minimal" autocomplete="off">
-        <input id="chatInput" type="text" placeholder="Nhập nội dung..." aria-label="Nhập nội dung" />
-        <button type="submit" class="send-btn" aria-label="Gửi">➤</button>
-    </form>
-</div>
-<script src="Script/resetChatbox.js"></script>
 <script>
 // Align chat bar just above builder float bar dynamically
 function positionChatLaunch(){
@@ -194,40 +173,24 @@ window.addEventListener('resize', positionChatLaunch);
 document.addEventListener('DOMContentLoaded', positionChatLaunch);
 </script>
 <div id="webchat-container" style="position: relative; width: 100%; height: 100%;">
-  
-    
-    <script src="https://cdn.botpress.cloud/webchat/v3.2/inject.js"></script>
-    <script src="https://files.bpcontent.cloud/2025/08/17/15/20250817153751-NPWG92P6.js" defer></script>
-    
-  <script>
-    window.botpress.on('webchat:initialized', () => {
-      window.botpress.open()
-    })
 
-    // Paste your Webchat config snippet here
-  </script>
-  <style>
-    #webchat-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-    .bpFab {
-      display: flex;
-    }
-    .bpWebchat {
-      position: absolute !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      max-height: 100% !important;
-    }
-  </style>
+
+    <!-- Botpress Webchat -->
+    <script src="https://cdn.botpress.cloud/webchat/v3.3/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/09/11/16/20250911163455-WV71YLDB.js" defer></script>
+
+    <script>
+        window.addEventListener("load", () => {
+            // Khi webchat đã load xong → mở luôn cửa sổ
+            window.botpressWebChat.onEvent(
+                function () {
+                    window.botpressWebChat.sendEvent({ type: "show" })
+                },
+                ["LIFECYCLE.LOADED"]
+            )
+        })
+    </script>
 </div>
--->
 
 <script>
     // Gán sự kiện cho các nút trong snackbar (3 nút: Lắp ráp sẵn, Từng linh kiện, Hủy)

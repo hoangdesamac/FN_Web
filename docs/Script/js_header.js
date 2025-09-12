@@ -86,18 +86,134 @@ function initHexagonBackground() {
 function initCategoryDropdown() {
     const categoryBtn = document.querySelector('.cyber-category-btn');
     const categoriesDropdown = document.querySelector('.cyber-categories-dropdown');
+    const megaWrapper = document.querySelector('.xnavmega-wrapper');
+
     if (!categoryBtn || !categoriesDropdown) return;
+
+    // Lấy / tạo dim layer
+    let dimLayer = document.getElementById('xnavmega-dim-layer');
+    if (!dimLayer) {
+        dimLayer = document.createElement('div');
+        dimLayer.id = 'xnavmega-dim-layer';
+        document.body.appendChild(dimLayer);
+    }
+
+    function hideDim() {
+        dimLayer.classList.remove('active');
+    }
+    function showDim() {
+        dimLayer.classList.add('active');
+    }
+
+    function closeAllMenus() {
+        categoriesDropdown.classList.remove('active');
+        hideDim();
+        if (megaWrapper) {
+            megaWrapper.classList.remove('xnavmega-has-open');
+            megaWrapper.querySelectorAll('.xnavmega-panel').forEach(p => {
+                p.classList.remove('xnavmega-visible');
+            });
+        }
+        document.querySelectorAll('.xnavmega-trigger').forEach(t => t.classList.remove('xnavmega-active'));
+    }
 
     categoryBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        categoriesDropdown.classList.toggle('active');
+        const willOpen = !categoriesDropdown.classList.contains('active');
+        if (!willOpen) {
+            closeAllMenus();
+        } else {
+            categoriesDropdown.classList.add('active');
+            showDim();
+        }
+    });
+
+    // Click nền tối → đóng
+    dimLayer.addEventListener('click', () => {
+        closeAllMenus();
     });
 
     document.addEventListener('click', function (event) {
-        if (!categoryBtn.contains(event.target) && !categoriesDropdown.contains(event.target)) {
-            categoriesDropdown.classList.remove('active');
+        if (!categoryBtn.contains(event.target) &&
+            !categoriesDropdown.contains(event.target) &&
+            !(megaWrapper && megaWrapper.contains(event.target))) {
+            closeAllMenus();
         }
     });
+
+    // ESC để đóng
+    document.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape') closeAllMenus();
+    });
+}
+// ================= XNAV MEGA MENU HEADER (NEW) =================
+function initXNavMegaMenu() {
+    const dropdown = document.querySelector('.cyber-categories-dropdown');
+    const wrapper = document.querySelector('.xnavmega-wrapper');
+    const triggers = document.querySelectorAll('.xnavmega-trigger');
+    const panels = document.querySelectorAll('.xnavmega-panel');
+    if (!dropdown || !wrapper || triggers.length === 0 || panels.length === 0) return;
+    const dimLayer = document.getElementById('xnavmega-dim-layer');
+    if (dimLayer) dimLayer.style.background = 'rgba(0,0,0,0.60)';
+
+    function hideAllPanels() {
+        panels.forEach(p => p.classList.remove('xnavmega-visible'));
+        triggers.forEach(t => t.classList.remove('xnavmega-active'));
+        wrapper.classList.remove('xnavmega-has-open');
+    }
+
+    function showPanel(id, triggerEl) {
+        if (!dropdown.classList.contains('active')) return; // chỉ hoạt động khi dropdown đang mở
+        let found = false;
+        panels.forEach(p => {
+            if (p.id === id) {
+                p.classList.add('xnavmega-visible');
+                found = true;
+            } else {
+                p.classList.remove('xnavmega-visible');
+            }
+        });
+        if (!found) return;
+        triggers.forEach(t => t.classList.remove('xnavmega-active'));
+        triggerEl.classList.add('xnavmega-active');
+        wrapper.classList.add('xnavmega-has-open');
+    }
+
+    // Hover hoặc focus vào trigger để mở panel
+    triggers.forEach(tr => {
+        const targetId = tr.dataset.xnavmegaTarget;
+        tr.addEventListener('mouseenter', () => showPanel(targetId, tr));
+        tr.addEventListener('focus', () => showPanel(targetId, tr));
+        // Click cũng cho mở (support mobile desktop click)
+        tr.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (tr.classList.contains('xnavmega-active')) {
+                // Toggle tắt panel nếu click lại cùng mục
+                hideAllPanels();
+            } else {
+                showPanel(targetId, tr);
+            }
+        });
+    });
+
+    // Rời khỏi toàn bộ vùng (dropdown + mega wrapper) thì ẩn panel (giữ dropdown hay tắt?)
+    const safeArea = [dropdown, wrapper];
+    document.addEventListener('mousemove', (ev) => {
+        // Nếu dropdown không mở thì bỏ qua
+        if (!dropdown.classList.contains('active')) return;
+        const inside = safeArea.some(el => el.contains(ev.target));
+        if (!inside) {
+            hideAllPanels();
+        }
+    });
+
+    // Khi dropdown tự đóng (do click ngoài) → ẩn panel (phòng trường hợp wrapper còn class)
+    const observer = new MutationObserver(() => {
+        if (!dropdown.classList.contains('active')) {
+            hideAllPanels();
+        }
+    });
+    observer.observe(dropdown, { attributes: true, attributeFilter: ['class'] });
 }
 
 // ================= Responsive search =================
@@ -470,6 +586,7 @@ function initHeader() {
     initResponsiveHandler();
     initCartIconClick();
     initOrderIconClick();
+    initXNavMegaMenu();
 
     try {
         if (typeof updateUserDisplay === 'function') {

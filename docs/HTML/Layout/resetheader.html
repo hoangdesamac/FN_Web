@@ -157,29 +157,548 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="categories-list">
-                        <!-- Trong danh sách -->
-                        <div class="category-item"><i class="bx bx-laptop"></i><span>Laptop</span></div>
-                        <div class="category-item"><i class="bx bx-laptop"></i><span>Laptop Gaming</span></div>
-                        <div class="category-item"><i class="bx bx-desktop"></i><span>PC GVN</span></div>
-                        <div class="category-item"><i class="bx bx-chip"></i><span>Main, CPU, VGA</span></div>
-                        <div class="category-item"><i class="bx bx-cube"></i><span>Case, Nguồn, Tản</span></div>
-                        <div class="category-item"><i class="bx bx-hdd"></i><span>Ổ cứng, RAM, Thẻ nhớ</span></div>
-                        <div class="category-item"><i class="bx bx-microphone"></i><span>Loa, Micro, Webcam</span></div>
-                        <div class="category-item"><i class="bx bx-tv"></i><span>Màn hình</span></div>
-                        <div class="category-item"><i class="bx bxs-keyboard"></i><span>Bàn phím</span></div>
-                        <div class="category-item"><i class="bx bx-mouse-alt"></i><span>Chuột + Lót chuột</span></div>
-                        <div class="category-item"><i class="bx bx-headphone"></i><span>Tai Nghe</span></div>
-                        <div class="category-item"><i class="bx bx-chair"></i><span>Ghế - Bàn</span></div>
-                        <div class="category-item"><i class="bx bx-network-chart"></i><span>Phần mềm, mạng</span></div>
-                        <div class="category-item"><i class="bx bx-joystick"></i><span>Handheld, Console</span></div>
-                        <div class="category-item"><i class="bx bx-plug"></i><span>Phụ kiện (Hub, sạc, cáp..)</span></div>
-                        <div class="category-item"><i class="bx bx-info-circle"></i><span>Dịch vụ và thông tin khác</span></div>
+                    <div class="categories-list xnavmega-trigger-list">
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-laptop"><i class="bx bx-laptop"></i><span>Laptop</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-laptop-gaming"><i class="bx bx-laptop"></i><span>Laptop Gaming</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-pc-gvn"><i class="bx bx-desktop"></i><span>PC GVN</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-main-cpu-vga"><i class="bx bx-chip"></i><span>Main, CPU, VGA</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-case-psu-cooler"><i class="bx bx-cube"></i><span>Case, Nguồn, Tản</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-storage"><i class="bx bx-hdd"></i><span>Ổ cứng, RAM, Thẻ nhớ</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-audio"><i class="bx bx-microphone"></i><span>Loa, Micro, Webcam</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-monitor"><i class="bx bx-tv"></i><span>Màn hình</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-keyboard"><i class="bx bxs-keyboard"></i><span>Bàn phím</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-mouse"><i class="bx bx-mouse-alt"></i><span>Chuột + Lót chuột</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-headphone"><i class="bx bx-headphone"></i><span>Tai Nghe</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-chair"><i class="bx bx-chair"></i><span>Ghế - Bàn</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-network"><i class="bx bx-network-chart"></i><span>Phần mềm, mạng</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-handheld"><i class="bx bx-joystick"></i><span>Handheld, Console</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-phukien"><i class="bx bx-plug"></i><span>Phụ kiện (Hub, sạc, cáp..)</span></div>
+                        <div class="category-item xnavmega-trigger" data-xnavmega-target="xnavmega-dichvu"><i class="bx bx-info-circle"></i><span>Dịch vụ và thông tin khác</span></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- BẮT ĐẦU: Mega menu header (đã đổi toàn bộ class/id để tránh xung đột) -->
+    <div class="xnavmega-wrapper" aria-hidden="true">
+        <!-- Laptop -->
+        <div class="xnavmega-panel" id="xnavmega-laptop" role="menu" aria-label="Laptop">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Thương hiệu</h4>
+                    <ul><li>ASUS</li><li>ACER</li><li>MSI</li><li>LENOVO</li><li>DELL</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Giá bán</h4>
+                    <ul><li>Dưới 15 triệu</li><li>15 – 20 triệu</li><li>Trên 20 triệu</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>CPU</h4>
+                    <ul><li>Intel Core i3</li><li>Intel Core i5</li><li>Intel Core i7</li><li>AMD Ryzen</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Nhu cầu sử dụng</h4>
+                    <ul><li>Học sinh - Sinh viên</li><li>Văn phòng - Doanh nghiệp</li><li>Đồ họa - Studio</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Laptop ASUS</h4>
+                    <ul><li>ASUS OLED Series</li><li>Vivobook Series</li><li>Zenbook Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Laptop ACER</h4>
+                    <ul><li>Aspire Series</li><li>Swift Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Laptop MSI</h4>
+                    <ul><li>Modern Series</li><li>Prestige Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Laptop Lenovo</h4>
+                    <ul><li>Thinkbook Series</li><li>Ideapad Series</li><li>Thinkpad Series</li><li>Yoga Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Laptop Dell</h4>
+                    <ul><li>Inspiron Series</li><li>Vostro Series</li><li>Latitude Series</li><li>XPS Series</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Laptop Gaming -->
+        <div class="xnavmega-panel" id="xnavmega-laptop-gaming" role="menu" aria-label="Laptop Gaming">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Thương hiệu</h4>
+                    <ul><li>ACER / PREDATOR</li><li>ASUS / ROG</li><li>MSI</li><li>LENOVO</li><li>DELL</li><li>GIGABYTE / AORUS</li><li>HP</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Giá bán</h4>
+                    <ul><li>Dưới 20 triệu</li><li>20 - 25 triệu</li><li>25 - 30 triệu</li><li>Trên 30 triệu</li><li>Gaming RTX 50 Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>ACER | PREDATOR</h4>
+                    <ul><li>Nitro Series</li><li>Aspire Series</li><li>Predator Series</li><li>ACER RTX 50 Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>ASUS | ROG Gaming</h4>
+                    <ul><li>ROG Series</li><li>TUF Series</li><li>Zephyrus Series</li><li>ASUS RTX 50 Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>MSI Gaming</h4>
+                    <ul><li>Titan GT Series</li><li>Stealth GS Series</li><li>Raider GE Series</li><li>Vector GP Series</li><li>Crosshair / Pulse GL</li><li>Sword / Katana GF</li><li>Cyborg / Thin GF</li><li>MSI RTX 50 Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>LENOVO Gaming</h4>
+                    <ul><li>Legion Gaming</li><li>LOQ Series</li><li>RTX 50 Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Dell Gaming</h4>
+                    <ul><li>Dell Gaming G</li><li>Alienware Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>HP Gaming</h4>
+                    <ul><li>HP Victus</li><li>HP Omen</li><li>HP RTX 50 Series</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Cấu hình</h4>
+                    <ul><li>RTX 50 Series</li><li>CPU Core Ultra</li><li>CPU AMD</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Linh - Phụ kiện</h4>
+                    <ul><li>Ram laptop</li><li>SSD laptop</li><li>Ổ cứng di động</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- PC GVN -->
+        <div class="xnavmega-panel" id="xnavmega-pc-gvn" role="menu" aria-label="PC GVN">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>PC RTX 50 SERIES</h4>
+                    <ul><li>PC RTX 5090</li><li>PC RTX 5080</li><li>PC RTX 5070Ti</li><li>PC RTX 5070</li><li>PC RTX 5060Ti</li><li>PC RTX 5060 (HOT)</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>PC HOT CHIẾN HÈ</h4>
+                    <ul><li>I5 - 5060</li><li>I5 - 4060</li><li>I5 - 3060</li><li>I3 - 3050</li><li>I3 - RX6500XT</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Khuyến mãi KHỦNG</h4>
+                    <ul><li>BUILD PC TẶNG MÀN 240HZ</li><li>GVN x MSI - Tặng màn OLED</li><li>GVN x CORSAIR - Tặng tản 5TR</li><li>GVN x ASUS - MAX SETTING</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Theo VGA</h4>
+                    <ul><li>PC RTX 3050</li><li>PC RX6500XT</li><li>PC RTX 3060</li><li>PC RTX 4060</li><li>PC RTX 4070 Super</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>A.I PC - GVN</h4>
+                    <ul><li>PC GVN X ASUS - PBA</li><li>PC GVN X MSI</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>PC theo CPU Intel</h4>
+                    <ul><li>PC Core I3</li><li>PC Core I5</li><li>PC Core I7</li><li>PC Core I9</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>PC CPU Ultra</h4>
+                    <ul><li>PC Ultra 7</li><li>PC Ultra 9</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>PC theo CPU AMD</h4>
+                    <ul><li>PC AMD R3</li><li>PC AMD R5</li><li>PC AMD R7</li><li>PC AMD R9</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>PC Văn phòng</h4>
+                    <ul><li>Homework Athlon</li><li>Homework R3</li><li>Homework R5</li><li>Homework I5</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Phần mềm</h4>
+                    <ul><li>Windows bản quyền</li><li>Office 365 bản quyền</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main / CPU / VGA -->
+        <div class="xnavmega-panel" id="xnavmega-main-cpu-vga" role="menu" aria-label="Main CPU VGA">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>VGA RTX 50 SERIES</h4>
+                    <ul><li>RTX 5090</li><li>RTX 5080</li><li>RTX 5070Ti</li><li>RTX 5070</li><li>RTX 5060Ti</li><li>RTX 5060</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>VGA > 12GB</h4>
+                    <ul><li>RTX 4070 SUPER</li><li>RTX 4070Ti SUPER</li><li>RTX 4080 SUPER</li><li>RTX 4090 SUPER</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>VGA ≤ 12GB</h4>
+                    <ul><li>RTX 4060Ti</li><li>RTX 4060</li><li>RTX 3060</li><li>RTX 3050</li><li>GTX 1650</li><li>GT/GT 1030</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Card chuyên dụng</h4>
+                    <ul><li>NVIDIA Quadro</li><li>AMD Radeon</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Main AMD</h4>
+                    <ul><li>AMD X870</li><li>AMD X670</li><li>AMD X570</li><li>AMD B650</li><li>AMD B550</li><li>AMD A320</li><li>AMD TRX40</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Main Intel</h4>
+                    <ul><li>Z890</li><li>Z790</li><li>B760</li><li>H610</li><li>X299X</li><li><a href="allproducts.html?type=pc">Xem tất cả</a></li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>CPU Intel</h4>
+                    <ul><li>Core Ultra Series 2</li><li>Intel 9</li><li>Intel 7</li><li>Intel 5</li><li>Intel 3</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>CPU AMD</h4>
+                    <ul><li>AMD Athlon</li><li>AMD R3</li><li>AMD R5</li><li>AMD R7</li><li>AMD R9</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Case / PSU / Cooler -->
+        <div class="xnavmega-panel" id="xnavmega-case-psu-cooler" role="menu" aria-label="Case Nguồn Tản">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Case - Hãng</h4>
+                    <ul><li>ASUS</li><li>Corsair</li><li>Lianli</li><li>NZXT</li><li>Inwin</li><li>Thermaltake</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Case - Giá</h4>
+                    <ul><li>&lt; 1 triệu</li><li>1 - 2 triệu</li><li>&gt; 2 triệu</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Nguồn - Hãng</h4>
+                    <ul><li>ASUS</li><li>DeepCool</li><li>Corsair</li><li>NZXT</li><li>MSI</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Nguồn - Công suất</h4>
+                    <ul><li>400W - 500W</li><li>500W - 600W</li><li>700W - 800W</li><li>&gt; 1000W</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Phụ kiện PC</h4>
+                    <ul><li>Dây LED</li><li>Dây riser</li><li>Giá đỡ VGA</li><li>Keo tản nhiệt</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Tản nhiệt</h4>
+                    <ul><li>AIO 240</li><li>AIO 280</li><li>AIO 360</li><li>AIO 420</li><li>Tản khí</li><li>Fan RGB</li><li>Xem tất cả</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Storage -->
+        <div class="xnavmega-panel" id="xnavmega-storage" role="menu" aria-label="Storage">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>RAM dung lượng</h4>
+                    <ul><li>8 GB</li><li>16 GB</li><li>32 GB</li><li>64 GB</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Loại RAM</h4>
+                    <ul><li>DDR4</li><li>DDR5</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Hãng RAM</h4>
+                    <ul><li>Corsair</li><li>Kingston</li><li>G.Skill</li><li>PNY</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Dung lượng SSD</h4>
+                    <ul><li>120-128GB</li><li>250-256GB</li><li>480-512GB</li><li>960GB-1TB</li><li>2TB</li><li>&gt;2TB</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Hãng SSD</h4>
+                    <ul><li>Samsung</li><li>Western Digital</li><li>Kingston</li><li>Corsair</li><li>PNY</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Dung lượng HDD</h4>
+                    <ul><li>1 TB</li><li>2 TB</li><li>4 - 6 TB</li><li>&gt; 8 TB</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Hãng HDD</h4>
+                    <ul><li>WesternDigital</li><li>Seagate</li><li>Toshiba</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Thẻ nhớ / USB</h4>
+                    <ul><li>Sandisk</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Ổ cứng di động</h4>
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audio -->
+        <div class="xnavmega-panel" id="xnavmega-audio" role="menu" aria-label="Audio">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Thương hiệu loa</h4>
+                    <ul><li>Edifier</li><li>Razer</li><li>Logitech</li><li>SoundMax</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Kiểu Loa</h4>
+                    <ul><li>Loa vi tính</li><li>Loa Bluetooth</li><li>Loa Soundbar</li><li>Loa mini</li><li>Sub phụ</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Webcam</h4>
+                    <ul><li>4K</li><li>1080p</li><li>720p</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Microphone</h4>
+                    <ul><li>Micro HyperX</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitor -->
+        <div class="xnavmega-panel" id="xnavmega-monitor" role="menu" aria-label="Monitor">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Hãng sản xuất</h4>
+                    <ul><li>LG</li><li>Asus</li><li>ViewSonic</li><li>Dell</li><li>Gigabyte</li><li>AOC</li><li>Acer</li><li>HKC</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Hãng khác</h4>
+                    <ul><li>MSI</li><li>Lenovo</li><li>Samsung</li><li>Philips</li><li>E-Dra</li><li>Dahua</li><li>KOORUI</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Giá tiền</h4>
+                    <ul><li>&lt; 5 triệu</li><li>5 - 10 triệu</li><li>10 - 20 triệu</li><li>20 - 30 triệu</li><li>&gt; 30 triệu</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Độ phân giải</h4>
+                    <ul><li>Full HD</li><li>2K 1440p</li><li>4K UHD</li><li>6K</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Tần số quét</h4>
+                    <ul><li>60Hz</li><li>75Hz</li><li>100Hz</li><li>144Hz</li><li>240Hz</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Màn hình cong</h4>
+                    <ul><li>24" Curved</li><li>27" Curved</li><li>32" Curved</li><li>&gt;32" Curved</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Kích thước</h4>
+                    <ul><li>22"</li><li>24"</li><li>27"</li><li>29"</li><li>32"</li><li>&gt;32"</li><li>VESA</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Màn hình đồ họa</h4>
+                    <ul><li>24"</li><li>27"</li><li>32"</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Phụ kiện màn hình</h4>
+                    <ul><li>Giá treo</li><li>Dây HDMI / DP / LAN</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Màn hình di động</h4>
+                    <ul><li>Full HD</li><li>2K 1440p</li><li>Có cảm ứng</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Keyboard -->
+        <div class="xnavmega-panel" id="xnavmega-keyboard" role="menu" aria-label="Keyboard">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Thương hiệu</h4>
+                    <ul><li>AKKO</li><li>AULA</li><li>Dare-U</li><li>Durgod</li><li>Leobog</li><li>Keychron</li><li>FL-Esports</li><li>Corsair</li><li>E-Dra</li><li>Cidoo</li><li>Machenike</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Thương hiệu khác</h4>
+                    <ul><li>ASUS</li><li>Logitech</li><li>Razer</li><li>Leopold</li><li>Steelseries</li><li>Rapoo</li><li>VGN</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Giá tiền</h4>
+                    <ul><li>&lt; 1 triệu</li><li>1 - 2 triệu</li><li>2 - 3 triệu</li><li>3 - 4 triệu</li><li>&gt; 4 triệu</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Kết nối</h4>
+                    <ul><li>Bluetooth</li><li>Wireless</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Phụ kiện bàn phím</h4>
+                    <ul><li>Keycaps</li><li>Dwarf Factory</li><li>Kê tay</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Rapid Trigger</h4>
+                    <ul><li>Danh mục đặc biệt</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mouse -->
+        <div class="xnavmega-panel" id="xnavmega-mouse" role="menu" aria-label="Mouse">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Thương hiệu chuột</h4>
+                    <ul><li>Logitech</li><li>Razer</li><li>Corsair</li><li>Pulsar</li><li>Microsoft</li><li>Dare U</li><li>ASUS</li><li>Steelseries</li><li>Glorious</li><li>Rapoo</li><li>HyperX</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Theo giá</h4>
+                    <ul><li>&lt; 500k</li><li>500k - 1 triệu</li><li>1 - 2 triệu</li><li>2 - 3 triệu</li><li>&gt; 3 triệu</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Loại chuột</h4>
+                    <ul><li>Gaming</li><li>Văn phòng</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Logitech</h4>
+                    <ul><li>Gaming</li><li>Văn phòng</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Thương hiệu lót</h4>
+                    <ul><li>GEARVN</li><li>ASUS</li><li>Steelseries</li><li>Dare-U</li><li>Razer</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Loại lót chuột</h4>
+                    <ul><li>Mềm</li><li>Cứng</li><li>Dày</li><li>Mỏng</li><li>Viền LED</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Size lót chuột</h4>
+                    <ul><li>Nhỏ</li><li>Vừa</li><li>Lớn</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Headphone -->
+        <div class="xnavmega-panel" id="xnavmega-headphone" role="menu" aria-label="Headphone">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Thương hiệu</h4>
+                    <ul><li>ASUS</li><li>HyperX</li><li>Corsair</li><li>Razer</li><li>Steelseries</li><li>Rapoo</li><li>Logitech</li><li>Edifier</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Theo giá</h4>
+                    <ul><li>&lt; 1 triệu</li><li>1 - 2 triệu</li><li>2 - 3 triệu</li><li>3 - 4 triệu</li><li>&gt; 4 triệu</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Kết nối</h4>
+                    <ul><li>Wireless</li><li>Bluetooth</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Kiểu tai nghe</h4>
+                    <ul><li>Over-ear</li><li>Gaming In-ear</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chair / Desk -->
+        <div class="xnavmega-panel" id="xnavmega-chair" role="menu" aria-label="Chair Desk">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Ghế Gaming</h4>
+                    <ul><li>Corsair</li><li>Warrior</li><li>E-DRA</li><li>DXRacer</li><li>Cougar</li><li>AKRacing</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Ghế CTH</h4>
+                    <ul><li>Warrior</li><li>Sihoo</li><li>E-Dra</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Giá tiền</h4>
+                    <ul><li>&lt; 5 triệu</li><li>5 - 10 triệu</li><li>&gt; 10 triệu</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Kiểu ghế</h4>
+                    <ul><li>Công thái học</li><li>Gaming</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Bàn Gaming</h4>
+                    <ul><li>DXRacer</li><li>E-Dra</li><li>Warrior</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Bàn công thái học</h4>
+                    <ul><li>Warrior</li><li>Phụ kiện bàn ghế</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Network / Software -->
+        <div class="xnavmega-panel" id="xnavmega-network" role="menu" aria-label="Network Software">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Hãng sản xuất</h4>
+                    <ul><li>Asus</li><li>LinkSys</li><li>TP-LINK</li><li>Mercusys</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Router Wi-Fi</h4>
+                    <ul><li>Gaming</li><li>Phổ thông</li><li>Xuyên tường</li><li>Mesh Pack</li><li>WiFi 5</li><li>WiFi 6</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>USB / Card mạng</h4>
+                    <ul><li>Usb WiFi</li><li>Card WiFi</li><li>Dây cáp mạng</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Microsoft Office</h4>
+                    <ul><li>Office 365</li><li>Office Home 2024</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Microsoft Windows</h4>
+                    <ul><li>Windows 11 Home</li><li>Windows 11 Pro</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Handheld -->
+        <div class="xnavmega-panel" id="xnavmega-handheld" role="menu" aria-label="Handheld">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Handheld PC</h4>
+                    <ul><li>Rog Ally</li><li>MSI Claw</li><li>Legion Go</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Tay cầm</h4>
+                    <ul><li>Playstation</li><li>Rapoo</li><li>DareU</li><li>Xem tất cả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Vô lăng / Flight</h4>
+                    <ul><li><!-- Bổ sung sau --></li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Sony Playstation</h4>
+                    <ul><li>PS5 chính hãng</li><li>Tay cầm chính hãng</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phụ kiện -->
+        <div class="xnavmega-panel" id="xnavmega-phukien" role="menu" aria-label="Phụ kiện">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Hub, sạc, cáp</h4>
+                    <ul><li>Hub chuyển đổi</li><li>Dây cáp</li><li>Củ sạc</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Quạt mini</h4>
+                    <ul><li>Jisulife</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Phụ kiện Elgato</h4>
+                    <ul><li><!-- ... --></li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Sạc dự phòng</h4>
+                    <ul><li><!-- ... --></li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dịch vụ -->
+        <div class="xnavmega-panel" id="xnavmega-dichvu" role="menu" aria-label="Dịch vụ">
+            <div class="xnavmega-body">
+                <div class="xnavmega-col">
+                    <h4>Dịch vụ</h4>
+                    <ul><li>Kỹ thuật tại nhà</li><li>Dịch vụ sửa chữa</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Chính sách</h4>
+                    <ul><li>Thu VGA đã qua sử dụng</li><li>Chính sách bảo hành</li><li>Chính sách giao hàng</li><li>Chính sách đổi trả</li></ul>
+                </div>
+                <div class="xnavmega-col">
+                    <h4>Build PC</h4>
+                    <ul><li><!-- Bổ sung sau --></li></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- KẾT THÚC: Mega menu header mới -->
+
 </header>
 </div>
 
@@ -264,6 +783,6 @@
 
     </div>
 </div>
-
+<div id="xnavmega-dim-layer" aria-hidden="true"></div>
 </body>
 </html>

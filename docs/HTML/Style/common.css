@@ -1,10 +1,4 @@
-.mega-menu {
-    z-index: 10 !important; /* Đảm bảo mega menu luôn chìm dưới header khi cuộn */
-}
-/* Đảm bảo mega menu luôn ngang với sidebar bằng cách dịch xuống đúng top sidebar */
-.mega-menu {
-    margin-top: 110px !important; /* Đảm bảo mega menu luôn ngang bằng top với sidebar */
-}
+
 :root {
     --primary: #00f2ff;
     --secondary: #ff00e6;
@@ -1351,7 +1345,151 @@ body {
     0 0 25px rgba(0, 242, 255, 0.8),
     inset 0 0 8px rgba(255, 255, 255, 0.3);
 }
+/* ==== HEADER XNAV MEGA MENU (PATCH) ==== */
+.xnavmega-wrapper {
+    position: absolute;
+    top: 150px;          /* Theo yêu cầu */
+    left: 280px;         /* Theo yêu cầu */
+    z-index: 1400;
+    display: none;       /* Ẩn mặc định */
+    pointer-events: none;
+    width: auto;
+    max-width: 1280px;
+    padding: 4px;
+}
 
+.xnavmega-wrapper.xnavmega-has-open {
+    display: block;
+    pointer-events: auto;
+}
 
+/* Mỗi panel (ẩn mặc định) */
+.xnavmega-panel {
+    display: none;
+    background: rgba(13, 13, 43, 0.97);
+    border: 1px solid rgba(0, 242, 255, 0.25);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+    border-radius: 12px;
+    padding: 18px 22px;
+    min-width: 860px;
+    max-width: 1180px;
+    max-height: 520px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+
+.xnavmega-panel::-webkit-scrollbar {
+    width: 6px;
+}
+.xnavmega-panel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.18);
+    border-radius: 4px;
+}
+.xnavmega-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.xnavmega-panel.xnavmega-visible {
+    display: block;
+    animation: xnavmegaFade 140ms ease;
+}
+
+@keyframes xnavmegaFade {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Bố cục cột */
+.xnavmega-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 34px;
+}
+
+.xnavmega-col h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #58c9ff;
+    margin: 0 0 6px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.xnavmega-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.xnavmega-col ul li {
+    font-size: 12.5px;
+    padding: 3px 0;
+    cursor: pointer;
+    color: #d2d7e1;
+    transition: color .18s;
+    white-space: nowrap;
+}
+.xnavmega-col ul li:hover {
+    color: #ffffff;
+}
+
+/* Trigger (mục cha) đang active */
+.cyber-categories-dropdown .category-item.xnavmega-trigger.xnavmega-active {
+    background: linear-gradient(90deg,#123348,#0d1f2b);
+    color: #fff;
+    border-left: 2px solid var(--primary);
+    transform: translateX(0); /* ghi đè hiệu ứng hover mặc định */
+}
+
+/* Khi dropdown đóng → đảm bảo mega ẩn (an toàn) */
+.cyber-categories-dropdown:not(.active) ~ .xnavmega-wrapper {
+    display: none !important;
+}
+
+/* Mobile: ẩn mega menu header (nếu muốn tắt ở màn hình nhỏ) */
+@media (max-width: 990px) {
+    .xnavmega-wrapper {
+        display: none !important;
+    }
+}
+/* ==== DIM LAYER KHI MỞ DANH MỤC ==== */
+#xnavmega-dim-layer {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+    z-index: 800; /* Dưới header(1000) & dưới mega wrapper(1400) nhưng trên nội dung */
+}
+#xnavmega-dim-layer.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ==== FOCUS ĐẬM CHO MEGA PANEL KHI HIỆN ==== */
+.xnavmega-panel.xnavmega-visible {
+    background: linear-gradient(135deg,#0f1b33 0%, #0a0f25 70%);
+    box-shadow:
+            0 0 0 1px rgba(0,242,255,0.35),
+            0 0 22px -4px rgba(0,242,255,0.55),
+            0 0 60px -10px rgba(255,0,230,0.35);
+    border-color: rgba(0,242,255,0.45);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    transform: translateY(0) scale(1.01);
+    transition: box-shadow .25s ease, transform .25s ease, background .3s ease;
+}
+
+/* (Tuỳ chọn – hover sâu hơn ngay trong panel) */
+.xnavmega-panel.xnavmega-visible:hover {
+    box-shadow:
+            0 0 0 1px rgba(0,242,255,0.5),
+            0 0 30px -2px rgba(0,242,255,0.7),
+            0 0 70px -8px rgba(255,0,230,0.45);
+    transform: scale(1.015);
+}
 
 

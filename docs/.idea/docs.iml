@@ -30,5 +30,7 @@
     <orderEntry type="library" name="canvas-confetti" level="application" />
     <orderEntry type="library" name="select2" level="application" />
     <orderEntry type="library" name="tom-select" level="application" />
+    <orderEntry type="library" name="inject" level="application" />
+    <orderEntry type="library" name="20250911163455-WV71YLDB" level="application" />
   </component>
 </module>
