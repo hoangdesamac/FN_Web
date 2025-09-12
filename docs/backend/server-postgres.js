@@ -8,9 +8,23 @@ const jwt = require('jsonwebtoken');
 const sgMail = require('@sendgrid/mail');
 const crypto = require('crypto');
 const { OAuth2Client } = require('google-auth-library');
-
-
 const app = express();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+const AVATAR_DIR = path.join(__dirname, 'uploads', 'avatars');
+if (!fs.existsSync(AVATAR_DIR)) fs.mkdirSync(AVATAR_DIR, { recursive: true });
+
+const storage = multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, AVATAR_DIR),
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        const safeExt = ext || '.png';
+        cb(null, `u${Date.now()}-${Math.random().toString(36).slice(2)}${safeExt}`);
+    }
+});
+
 
 // ===== Trust Proxy =====
 app.set('trust proxy', 1);
@@ -333,6 +347,146 @@ app.patch('/api/me', async (req, res) => {
             return res.status(401).json({ success: false, error: 'Chưa xác thực' });
         }
         res.status(500).json({ success: false, error: 'Lỗi server' });
+    }
+});
+function imageFileFilter(_req, file, cb) {
+    if (file.mimetype && file.mimetype.startsWith('image/')) return cb(null, true);
+    // fallback ext
+    const allowed = /\.(png|jpe?g|jfif|pjpeg|pjp|webp|gif|svg|ico|cur|bmp|dib|tiff?|avif|heic|heif|jxl|psd)$/i;
+    if (allowed.test(file.originalname)) return cb(null, true);
+    cb(new Error('Định dạng không hỗ trợ'), false);
+}
+const uploadAvatar = multer({
+    storage,
+    fileFilter: imageFileFilter,
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+});
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+    setHeaders: (res) => {
+        res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    }
+}));
+// === Helper: Xóa avatar cũ nếu thuộc thư mục local ===
+async function deleteOldAvatarIfLocal(userId) {
+    try {
+        const { rows } = await pool.query('SELECT avatar_url FROM users WHERE id=$1', [userId]);
+        const oldUrl = rows[0]?.avatar_url;
+        if (!oldUrl || typeof oldUrl !== 'string') return;
+
+        const safePrefix = `${BACKEND_BASE_URL.replace(/\/+$/,'')}/uploads/avatars/`;
+        if (!oldUrl.startsWith(safePrefix)) return;
+
+        const filename = oldUrl.substring(safePrefix.length);
+        if (!/^[a-zA-Z0-9._-]+$/.test(filename)) return;
+
+        const oldPath = path.join(AVATAR_DIR, filename);
+        fs.unlink(oldPath, () => {});
+    } catch (e) {
+        console.warn('deleteOldAvatarIfLocal error:', e.message);
+    }
+}
+/* === (ADD) Endpoint multipart upload avatar === */
+app.post('/api/me/avatar', authenticateToken, uploadAvatar.single('avatar'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, error: 'Không nhận được file' });
+        }
+
+        // Double-check MIME (phòng edge case filter bị bypass)
+        const ALLOWED_MIMES = new Set([
+            'image/png','image/jpeg','image/jpg','image/webp','image/gif',
+            'image/svg+xml','image/avif','image/bmp','image/x-icon',
+            'image/vnd.microsoft.icon','image/heic','image/heif','image/tiff','image/jxl','image/jfif'
+        ]);
+        if (!ALLOWED_MIMES.has(req.file.mimetype)) {
+            // Xóa file vừa upload
+            try { fs.unlink(req.file.path, () => {}); } catch(_) {}
+            return res.status(400).json({ success: false, error: 'MIME không hợp lệ' });
+        }
+
+        // Xóa avatar cũ nếu có
+        await deleteOldAvatarIfLocal(req.user.id);
+
+        const publicUrl = `${BACKEND_BASE_URL}/uploads/avatars/${req.file.filename}`;
+        await pool.query('UPDATE users SET avatar_url=$1 WHERE id=$2', [publicUrl, req.user.id]);
+
+        return res.json({ success: true, url: publicUrl });
+    } catch (err) {
+        console.error('Upload avatar error:', err);
+        return res.status(500).json({ success: false, error: 'Lỗi server upload avatar' });
+    }
+});
+
+/* === (ADD) Fallback base64 endpoint (nếu dùng base64) === */
+app.post('/api/me/avatar-base64', authenticateToken, async (req, res) => {
+    try {
+        const { data } = req.body || {};
+        if (!data || typeof data !== 'string' || !data.startsWith('data:image/')) {
+            return res.status(400).json({ success: false, error: 'Data base64 không hợp lệ' });
+        }
+        const matches = data.match(/^data:(image\/[a-zA-Z0-9+\-.]+);base64,(.+)$/);
+        if (!matches) {
+            return res.status(400).json({ success: false, error: 'Chuỗi base64 sai định dạng' });
+        }
+
+        const mime = matches[1];
+        const b64 = matches[2];
+        const ALLOWED_MIMES = new Set([
+            'image/png','image/jpeg','image/jpg','image/webp','image/gif',
+            'image/svg+xml','image/avif','image/bmp','image/x-icon',
+            'image/vnd.microsoft.icon','image/heic','image/heif','image/tiff','image/jxl'
+        ]);
+        if (!ALLOWED_MIMES.has(mime)) {
+            return res.status(400).json({ success: false, error: 'Định dạng ảnh không được hỗ trợ (base64)' });
+        }
+
+        let buffer;
+        try { buffer = Buffer.from(b64, 'base64'); } catch(_) {
+            return res.status(400).json({ success: false, error: 'Không giải mã được dữ liệu base64' });
+        }
+        if (!buffer || !buffer.length) {
+            return res.status(400).json({ success: false, error: 'Dữ liệu rỗng' });
+        }
+        if (buffer.length > 5 * 1024 * 1024) {
+            return res.status(400).json({ success: false, error: 'Ảnh >5MB' });
+        }
+
+        const EXT_MAP = {
+            'image/png': '.png',
+            'image/jpeg': '.jpg',
+            'image/jpg': '.jpg',
+            'image/webp': '.webp',
+            'image/gif': '.gif',
+            'image/svg+xml': '.svg',
+            'image/avif': '.avif',
+            'image/bmp': '.bmp',
+            'image/x-icon': '.ico',
+            'image/vnd.microsoft.icon': '.ico',
+            'image/heic': '.heic',
+            'image/heif': '.heif',
+            'image/tiff': '.tiff',
+            'image/jxl': '.jxl'
+        };
+        const ext = EXT_MAP[mime];
+        if (!ext) {
+            return res.status(400).json({ success: false, error: 'MIME không được map sang đuôi hợp lệ' });
+        }
+
+        // Xóa avatar cũ
+        await deleteOldAvatarIfLocal(req.user.id);
+
+        const filename = `u${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`;
+        const filepath = path.join(AVATAR_DIR, filename);
+        fs.writeFileSync(filepath, buffer);
+
+        const publicUrl = `${BACKEND_BASE_URL}/uploads/avatars/${filename}`;
+        await pool.query('UPDATE users SET avatar_url=$1 WHERE id=$2', [publicUrl, req.user.id]);
+
+        return res.json({ success: true, url: publicUrl });
+    } catch (err) {
+        console.error('avatar-base64 error:', err);
+        return res.status(500).json({ success: false, error: 'Lỗi server lưu base64' });
     }
 });
 
@@ -889,11 +1043,7 @@ app.delete('/api/addresses/:id', async (req, res) => {
 });
 
 // ==================== GIFT HELPERS ====================
-const fs = require('fs');
-const path = require('path');
-
 let GIFT_CACHE = null;
-
 // ENV configs (tinh chỉnh logic quà)
 const GIFT_MIN_TOTAL = Number(process.env.GIFT_MIN_TOTAL || 20000000); // 20,000,000
 const GIFT_MAX_COUNT = Math.max(1, Number(process.env.GIFT_MAX_COUNT || 5));
@@ -1642,6 +1792,18 @@ app.delete("/api/orders/:id", authenticateToken, async (req, res) => {
         console.error("❌ Lỗi DELETE /api/orders/:id:", err);
         res.status(500).json({ success: false, error: "Server error" });
     }
+});
+// ==== Multer error handler (THÊM) ====
+app.use((err, _req, res, _next) => {
+    if (err && err.message && (err.message.includes('Định dạng không hỗ trợ') || err.code === 'LIMIT_FILE_SIZE')) {
+        return res.status(400).json({
+            success: false,
+            error: err.code === 'LIMIT_FILE_SIZE'
+                ? 'Ảnh vượt quá giới hạn 5MB'
+                : 'Định dạng ảnh không được hỗ trợ'
+        });
+    }
+    return res.status(500).json({ success: false, error: 'Lỗi máy chủ không xác định' });
 });
 
 // ===== Start =====

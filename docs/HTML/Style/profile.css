@@ -331,4 +331,97 @@ select.readonly-select {
     background: #00e673;
     box-shadow: 0 0 12px rgba(0, 204, 102, 0.7);
 }
+/* ==== Avatar Edit Enhancement ==== */
+.profile-avatar-wrapper .avatar-shell {
+    position: relative;
+    display: inline-block;
+}
+.user-main-avatar {
+    object-fit: cover;
+    background: #1a1f2b;
+    box-shadow: 0 0 0 2px rgba(0,255,255,0.2), 0 0 8px rgba(0,255,255,0.3) inset;
+    transition: transform .25s;
+}
+.user-main-avatar:hover {
+    transform: scale(1.04);
+}
 
+.avatar-edit-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.btn-avatar-edit {
+    --cyber-accent:#ff00a8;
+    background: linear-gradient(90deg,#1c1f27,#222b35);
+    border: 1px solid var(--cyber-accent);
+    color: var(--cyber-accent);
+    font-size: .75rem;
+    line-height: 1.1;
+    padding: .35rem .6rem;
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    border-radius: 999px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background .25s, color .25s, box-shadow .25s;
+}
+.btn-avatar-edit:hover {
+    background: var(--cyber-accent);
+    color:#0a0d12;
+    box-shadow: 0 0 10px var(--cyber-accent);
+}
+
+.avatar-msg {
+    min-height: 16px;
+    font-size: 11px;
+}
+.avatar-msg.success { color:#11d690; }
+.avatar-msg.error { color:#ff4d4f; }
+.avatar-upload-progress {
+    width:100%;
+    height:4px;
+    background:#233041;
+    border-radius:2px;
+    margin-top:4px;
+    overflow:hidden;
+}
+.avatar-upload-progress span {
+    display:block;
+    height:100%;
+    background:linear-gradient(90deg,#06f,#0ff);
+    width:0%;
+    transition:width .25s;
+}
+
+.user-display-name {
+    font-weight:600;
+    font-size: 15px;
+}
+
+/* Optional shimmer while uploading */
+.avatar-shell.uploading::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    background:
+            linear-gradient(120deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.25) 50%,rgba(255,255,255,0) 100%);
+    animation: avatarShimmer 1.1s linear infinite;
+    mix-blend-mode: lighten;
+}
+@keyframes avatarShimmer {
+    from { transform:translateX(-150%); }
+    to   { transform:translateX(150%); }
+}
+
+.avatar-shell.dragging {
+    outline: 2px dashed var(--primary);
+    outline-offset: 4px;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 6px var(--primary));
+}

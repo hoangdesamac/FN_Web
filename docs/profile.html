@@ -34,9 +34,29 @@
         <!-- Sidebar -->
         <div class="col-lg-3 col-md-4">
             <div class="profile-sidebar p-3 rounded-3 shadow">
-                <div class="text-center mb-3">
-                    <img id="sidebarAvatar" alt="avatar" class="rounded-circle border border-primary" width="80" height="80">
-                    <h5 id="sidebarName" class="mt-2">User Name</h5>
+                <div class="text-center mb-3 profile-avatar-wrapper">
+                    <div class="avatar-shell">
+                        <img id="sidebarAvatar" alt="avatar" class="rounded-circle border border-primary user-main-avatar" width="80" height="80">
+                    </div>
+
+                    <!-- HÀNG CHỈNH SỬA AVATAR (icon + chữ trên 1 hàng) -->
+                    <div class="avatar-edit-row mt-2">
+                        <button type="button" id="changeAvatarBtn" class="btn btn-avatar-edit">
+                            <i class="fa-solid fa-camera-retro me-1"></i>
+                            <span>Chỉnh sửa</span>
+                        </button>
+                        <!-- Input ẩn để chọn ảnh -->
+                        <input type="file"
+                               id="avatarFile"
+                               class="d-none"
+                               accept="image/*,.png,.jpg,.jpeg,.jfif,.pjpeg,.pjp,.webp,.avif,.gif,.svg,.ico,.cur,.bmp,.dib,.tif,.tiff,.heic,.heif,.jxl,.psd">
+                    </div>
+
+                    <!-- TÊN NGƯỜI DÙNG (bên dưới hàng chỉnh sửa) -->
+                    <h5 id="sidebarName" class="mt-2 user-display-name">User Name</h5>
+
+                    <!-- Thông báo upload -->
+                    <div id="avatarUploadMsg" class="small mt-1 avatar-msg"></div>
                 </div>
                 <ul class="list-unstyled sidebar-menu">
                     <li class="active" data-target="tab-profile"><i class="fa-solid fa-user"></i> Thông tin tài khoản</li>

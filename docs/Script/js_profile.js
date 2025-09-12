@@ -2,7 +2,179 @@
 let addressesCache = [];         // cập nhật trong loadAddresses()
 let provinceData = null;         // cache json danh mục tỉnh/xã
 let provinceListenerAttached = false;
+/* ==== Avatar Upload Config (ADD) ==== */
+const AVATAR_MAX_SIZE_MB = 5; // giới hạn 5MB
+const AVATAR_ALLOWED_EXT = [
+    'png','jpg','jpeg','jfif','pjpeg','pjp',
+    'webp','avif','gif','svg','ico','cur',
+    'bmp','dib','tif','tiff','heic','heif','jxl','psd'
+];
+/* file.type phải bắt đầu với image/, tuy nhiên vài trình duyệt có thể thiếu => fallback theo ext */
+function isValidImageFile(file) {
+    if (!file) return false;
+    const ext = (file.name.split('.').pop() || '').toLowerCase();
+    if (file.type && file.type.startsWith('image/')) return true;
+    return AVATAR_ALLOWED_EXT.includes(ext);
+}
+/* ==== Avatar Upload Helpers (ADD) ==== */
+function showAvatarMessage(msg, type='info') {
+    const box = document.getElementById('avatarUploadMsg');
+    if (!box) return;
+    box.textContent = msg;
+    box.className = `small mt-1 avatar-msg ${type === 'success' ? 'success' : type === 'error' ? 'error' : ''}`;
+}
 
+function fileToBase64(file){
+    return new Promise((resolve,reject)=>{
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file); // data:image/...
+    });
+}
+
+/**
+ * Tải avatar lên backend.
+ * Ưu tiên endpoint multipart: POST /api/me/avatar (đề xuất ở backend phần 4).
+ * Nếu endpoint này chưa có (404) => fallback PATCH /api/me với avatarData (cần backend hỗ trợ).
+ */
+let avatarUploadInProgress = false;
+async function uploadAvatarFile(file){
+    if (!file) {
+        showAvatarMessage('❌ Không có file để upload!', 'error');
+        return;
+    }
+    if (avatarUploadInProgress) {
+        showAvatarMessage('⏳ Đang tải ảnh trước đó, vui lòng chờ...', 'info');
+        return;
+    }
+    if (!isValidImageFile(file)) {
+        showAvatarMessage('❌ File không hợp lệ!', 'error');
+        return;
+    }
+
+    avatarUploadInProgress = true;
+    const shell = document.querySelector('.avatar-shell');
+    shell?.classList.add('uploading');
+    showAvatarMessage('Đang tải ảnh...', 'info');
+
+    try {
+        const fd = new FormData();
+        fd.append('avatar', file);
+
+        let res = await fetch(`${window.API_BASE}/api/me/avatar`, {
+            method: 'POST',
+            credentials: 'include',
+            body: fd
+        });
+
+        if (res.status === 404) {
+            const base64 = await fileToBase64(file);
+            res = await fetch(`${window.API_BASE}/api/me/avatar-base64`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ data: base64 })
+            });
+        }
+
+        if (!res.ok) {
+            let errMsg = 'Upload thất bại';
+            try { const j = await res.json(); errMsg = j.error || errMsg; } catch(_) {}
+            throw new Error(errMsg);
+        }
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Upload thất bại');
+
+        const newUrl = data.url || data.user?.avatar_url;
+        if (newUrl) {
+            applyNewAvatar(newUrl);
+            showAvatarMessage('✅ Cập nhật avatar thành công!', 'success');
+        } else {
+            showAvatarMessage('⚠ Upload thành công nhưng không có URL!', 'error');
+        }
+    } catch (err) {
+        console.error('Upload avatar error:', err);
+        showAvatarMessage('❌ Lỗi tải ảnh: ' + err.message, 'error');
+    } finally {
+        avatarUploadInProgress = false;
+        shell?.classList.remove('uploading');
+    }
+}
+
+function handleAvatarSelection(file){
+    if (!file) {
+        showAvatarMessage('❌ Không tìm thấy file hợp lệ!', 'error');
+        return;
+    }
+    if (avatarUploadInProgress) {
+        showAvatarMessage('⏳ Đang tải ảnh trước đó, vui lòng đợi...', 'info');
+        return;
+    }
+    if (!isValidImageFile(file)) {
+        showAvatarMessage('❌ File không phải định dạng ảnh hợp lệ!', 'error');
+        return;
+    }
+    if (file.size > AVATAR_MAX_SIZE_MB * 1024 * 1024) {
+        showAvatarMessage(`❌ Ảnh quá lớn (>${AVATAR_MAX_SIZE_MB}MB)!`, 'error');
+        return;
+    }
+
+    const img = document.getElementById('sidebarAvatar');
+    if (img) {
+        if (img.dataset.objectUrl) {
+            try { URL.revokeObjectURL(img.dataset.objectUrl); } catch(_) {}
+        }
+        const objectURL = URL.createObjectURL(file);
+        img.dataset.objectUrl = objectURL;
+        img.onload = () => {
+            try { URL.revokeObjectURL(objectURL); delete img.dataset.objectUrl; } catch(_) {}
+        };
+        img.src = objectURL;
+    }
+
+    uploadAvatarFile(file);
+}
+
+function getFirstValidImageFile(fileList) {
+    if (!fileList || !fileList.length) return null;
+    for (let i = 0; i < fileList.length; i++) {
+        const f = fileList[i];
+        if (isValidImageFile(f)) return f;
+    }
+    return null;
+}
+
+function warnIfMultiple(fileList) {
+    try {
+        if (fileList && fileList.length > 1) {
+            showAvatarMessage(`Chỉ dùng ảnh đầu tiên. (${fileList.length} ảnh đã chọn)`, 'info');
+        }
+    } catch(_) {}
+}
+
+// NEW: Áp dụng avatar mới đồng bộ toàn site
+function applyNewAvatar(url) {
+    if (!url) return;
+    const img = document.getElementById('sidebarAvatar');
+    if (img) img.src = url;
+    try { localStorage.setItem('avatarUrl', url); } catch(_) {}
+
+    if (window.AuthSync && typeof window.AuthSync.refresh === 'function') {
+        window.AuthSync.refresh().catch(()=>{});
+    }
+
+    if (typeof updateUserDisplay === 'function') {
+        try { updateUserDisplay(); } catch(_) {}
+    }
+
+    // phát event custom
+    try {
+        const ev = new CustomEvent('user:avatar-updated', { detail: { url } });
+        window.dispatchEvent(ev);
+    } catch(_) {}
+}
 // Load và cache JSON (FormText/danhmucxaphuong.json)
 async function loadProvinceData() {
     if (provinceData) return provinceData;
@@ -621,4 +793,78 @@ document.addEventListener("DOMContentLoaded", () => {
             loadAddresses();
         });
     }
+    // === (ADD) Avatar edit events ===
+    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+    const avatarFileInput = document.getElementById('avatarFile');
+
+    if (changeAvatarBtn && avatarFileInput) {
+        changeAvatarBtn.addEventListener('click', () => {
+            avatarFileInput.click();
+        });
+
+        avatarFileInput.addEventListener('change', () => {
+            const fl = avatarFileInput.files;
+            if (!fl || !fl.length) {
+                showAvatarMessage('❌ Chưa chọn ảnh!', 'error');
+                return;
+            }
+            warnIfMultiple(fl); // cảnh báo nếu có >1
+            const first = getFirstValidImageFile(fl);
+            handleAvatarSelection(first);
+            // Xoá selection còn lại (nếu browser hỗ trợ) để tránh upload lại nhiều file
+            avatarFileInput.value = '';
+        });
+
+        // Kéo-thả (optional)
+        const shell = document.querySelector('.avatar-shell');
+        if (shell) {
+            shell.addEventListener('drop', e => {
+                const fl = e.dataTransfer.files;
+                if (!fl || !fl.length) {
+                    showAvatarMessage('❌ Không có file!', 'error');
+                    return;
+                }
+                warnIfMultiple(fl);
+                const first = getFirstValidImageFile(fl);
+                handleAvatarSelection(first);
+            });
+            shell.addEventListener('paste', e => {
+                const items = e.clipboardData?.files;
+                if (!items || !items.length) return;
+                warnIfMultiple(items);
+                const first = getFirstValidImageFile(items);
+                if (first) handleAvatarSelection(first);
+            });
+        }
+    }
+    initAvatarDragEvents();
 });
+// === NEW: Khởi tạo đầy đủ drag & drop avatar (ngăn mở ảnh tab mới) ===
+function initAvatarDragEvents() {
+    const shell = document.querySelector('.avatar-shell');
+    if (!shell) return;
+    ['dragenter','dragover'].forEach(ev => {
+        shell.addEventListener(ev, e => {
+            e.preventDefault(); e.stopPropagation();
+            shell.classList.add('dragging');
+        });
+    });
+    ['dragleave','dragend'].forEach(ev => {
+        shell.addEventListener(ev, e => {
+            e.preventDefault(); e.stopPropagation();
+            shell.classList.remove('dragging');
+        });
+    });
+    shell.addEventListener('drop', e => {
+        e.preventDefault(); e.stopPropagation();
+        shell.classList.remove('dragging');
+        const fl = e.dataTransfer?.files;
+        if (!fl || !fl.length) {
+            showAvatarMessage('❌ Không có file!', 'error');
+            return;
+        }
+        warnIfMultiple(fl);
+        const first = getFirstValidImageFile(fl);
+        handleAvatarSelection(first);
+    });
+}
