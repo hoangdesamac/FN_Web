@@ -277,6 +277,30 @@
             </div>
         </div>
     </div>
+    <div class="cyber-review-form mb-4" id="writeReviewBox" style="display:none;">
+        <h5><i class="bx bx-message-square-edit me-1"></i> Viết đánh giá của bạn</h5>
+        <div class="cyber-rating-stars" id="reviewStars">
+            <span class="star" data-v="1">★</span>
+            <span class="star" data-v="2">★</span>
+            <span class="star" data-v="3">★</span>
+            <span class="star" data-v="4">★</span>
+            <span class="star" data-v="5">★</span>
+        </div>
+        <input type="text" id="reviewTitleInput" placeholder="Tiêu đề ngắn (ví dụ: Rất hài lòng)">
+        <textarea id="reviewContentInput" rows="4" placeholder="Chia sẻ trải nghiệm: hiệu năng, chất lượng, đóng gói, vv..."></textarea>
+        <div class="cyber-upload-row" id="reviewMediaRow">
+            <label class="cyber-upload-tile" id="addImageTile" title="Thêm ảnh/video">
+                <input type="file" id="reviewMediaInput" accept="image/*,video/*" multiple style="display:none">
+                <i class="bx bx-plus"></i>
+            </label>
+        </div>
+        <button class="cyber-submit-review" id="submitReviewBtn">
+            <i class='bx bx-cloud-upload'></i> Gửi đánh giá
+        </button>
+        <small class="d-block mt-2 text-secondary">
+            * Ảnh/video giúp đánh giá đáng tin hơn. Hệ thống tự ẩn thông tin cá nhân trong tên hiển thị.
+        </small>
+    </div>
 
     <div id="tab4" class="tab-content">
         <div class="container-fluid">

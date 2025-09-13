@@ -338,19 +338,15 @@ async function renderOrders(ordersToRender) {
 
             const unseenIndicator = order.unseen ? '<span class="unseen-indicator"></span>' : '';
             const rewardBtnHTML = (() => {
-                if (order.status !== 'Đơn hàng đã hoàn thành') {
-                    return `<button class="btn btn-reward" onclick="claimReward(${order.id}, event)">
-               <i class='bx bx-gift'></i> Nhận thưởng
-             </button>`;
-                }
-                if (order.rewardClaimed) {
+                const base = (label, extraClass='') => `<button class="btn btn-reward ${extraClass}" onclick="claimReward(${order.id}, event)">
+        <i class='bx bx-gift'></i> ${label}
+    </button>`;
+                if (order.status !== 'Đơn hàng đã hoàn thành') return base('Nhận thưởng');
+                if (order.rewardClaimed)
                     return `<button class="btn btn-reward claimed" onclick="event.stopPropagation();" disabled>
-               <i class='bx bx-medal'></i> ĐÃ NHẬN (${order.rewardPoints || Math.floor(order.total/10000)}đ)
-             </button>`;
-                }
-                return `<button class="btn btn-reward" onclick="claimReward(${order.id}, event)">
-            <i class='bx bx-gift'></i> Nhận thưởng
-          </button>`;
+            <i class='bx bx-medal'></i> ĐÃ NHẬN (${order.rewardPoints || Math.floor(order.total/10000)})
+        </button>`;
+                return base('Nhận thưởng');
             })();
             const receiveBtnHTML = (order.status === 'Đơn hàng đang được vận chuyển')
                 ? `<button class="btn btn-success btn-sm mb-2" onclick="openReceiveModal(${order.id}, event)">
@@ -362,8 +358,10 @@ async function renderOrders(ordersToRender) {
             orderCard.innerHTML = `
     <div class="order-item ${statusClass}" id="order-item-${index}" data-order-id="${order.id}">
       <div class="order-front">
-         ${rewardBtnHTML}
-         ${receiveBtnHTML}
+   <div class="order-actions-top">
+      ${receiveBtnHTML}
+      ${rewardBtnHTML}
+   </div>
         <div class="order-profile">
           <div class="order-avatar-wrapper">
             <img src="${firstItem.image}" alt="Avatar" class="order-avatar">
@@ -530,25 +528,32 @@ function ensureReceiveModal() {
     if (document.getElementById('receiveConfirmModal')) return;
     const wrap = document.createElement('div');
     wrap.innerHTML = `
-    <div class="modal fade" id="receiveConfirmModal" tabindex="-1">
+    <div class="modal fade cyber-modal-lite" id="receiveConfirmModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-light">
-          <div class="modal-header">
-            <h5 class="modal-title"><i class='bx bx-package text-info'></i> Xác nhận giao hàng</h5>
+        <div class="modal-content cyber-modal-content">
+          <div class="modal-header cyber-modal-header">
+            <h5 class="modal-title"><i class='bx bx-package text-info'></i> Xác nhận đã nhận hàng</h5>
             <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
-          <div class="modal-body">
-            <p>Bạn đã nhận được hàng hay chưa?</p>
+          <div class="modal-body cyber-modal-body">
+            <p class="mb-2 small text-secondary">Vui lòng xác nhận bạn đã nhận đủ sản phẩm để chuyển đơn sang trạng thái hoàn thành.</p>
+            <div class="cyber-soft-box">
+                <i class='bx bx-info-circle'></i>
+                <span>Hành động này không thể hoàn tác.</span>
+            </div>
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Chưa (Quay lại)</button>
-            <button class="btn btn-success btn-sm" id="btnConfirmReceived">ĐÃ NHẬN</button>
+          <div class="modal-footer cyber-modal-footer">
+            <button class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Để sau</button>
+            <button class="btn btn-success btn-sm px-3" id="btnConfirmReceived">
+               <i class='bx bx-check-circle me-1'></i> ĐÃ NHẬN
+            </button>
           </div>
         </div>
       </div>
     </div>`;
     document.body.appendChild(wrap);
 }
+
 let _pendingReceiveOrderId = null;
 function openReceiveModal(orderId, ev) {
     ev?.stopPropagation();
@@ -599,23 +604,30 @@ async function hasReviewed(orderId) {
 }
 
 function showReviewPrompt(order) {
-    // Tạo modal nếu chưa có
     if (!document.getElementById('reviewPromptModal')) {
         const div = document.createElement('div');
         div.innerHTML = `
-      <div class="modal fade" id="reviewPromptModal" tabindex="-1">
+      <div class="modal fade cyber-modal-lite" id="reviewPromptModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content bg-dark text-light">
-            <div class="modal-header">
-              <h5 class="modal-title"><i class="fa fa-gift text-warning"></i> Nhận thưởng</h5>
+          <div class="modal-content cyber-modal-content">
+            <div class="modal-header cyber-modal-header">
+              <h5 class="modal-title">
+                <i class="bx bx-edit-alt text-warning"></i> Đánh giá & nhận thưởng
+              </h5>
               <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-              <p class="mb-0">Đánh giá sản phẩm bạn vừa mua ngay để nhận điểm thưởng!</p>
+            <div class="modal-body cyber-modal-body">
+              <p class="mb-2">Bạn cần để lại ít nhất <strong>một đánh giá</strong> cho sản phẩm trong đơn để nhận thưởng.</p>
+              <div class="cyber-soft-box">
+                 <i class='bx bx-bulb'></i>
+                 <span>Nên kèm ảnh/video để đánh giá đáng tin hơn.</span>
+              </div>
             </div>
-            <div class="modal-footer">
-              <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Để sau</button>
-              <button class="btn btn-success btn-sm" id="btnGoReview">Đánh giá ngay</button>
+            <div class="modal-footer cyber-modal-footer">
+              <button class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Để sau</button>
+              <button class="btn btn-success btn-sm" id="btnGoReview">
+                <i class='bx bx-star me-1'></i> Viết đánh giá
+              </button>
             </div>
           </div>
         </div>
@@ -627,14 +639,9 @@ function showReviewPrompt(order) {
 
     document.getElementById('btnGoReview').onclick = () => {
         m.hide();
-        // Chọn ngẫu nhiên 1 product trong order (bỏ quà)
         const normals = order.items.filter(it => !it.isGift);
-        if (!normals.length) {
-            showToast('Không tìm thấy sản phẩm để đánh giá.');
-            return;
-        }
+        if (!normals.length) return showToast('Không tìm thấy sản phẩm để đánh giá.');
         const pick = normals[Math.floor(Math.random()*normals.length)];
-        // Chuyển sang trang product, kèm query review=1 để auto mở tab đánh giá
         window.location.href = `resetproduct.html?id=${encodeURIComponent(pick.id)}&review=1&order=${order.id}`;
     };
 }

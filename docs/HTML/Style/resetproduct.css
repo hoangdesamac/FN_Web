@@ -1927,3 +1927,128 @@ h1, h2, h3, h4, h5, h6 {
 .user-review-form button {
     min-width:140px;
 }
+.cyber-review-form {
+    background: linear-gradient(145deg,#0c1426,#09101e);
+    border:1px solid rgba(0,255,255,.18);
+    padding:18px 20px;
+    border-radius:18px;
+    box-shadow:0 0 14px -4px rgba(0,255,255,.35);
+    position:relative;
+    overflow:hidden;
+}
+.cyber-review-form:before {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+            radial-gradient(circle at 85% 15%,rgba(0,255,255,0.08),transparent 55%),
+            radial-gradient(circle at 10% 85%,rgba(255,0,180,0.07),transparent 60%);
+    pointer-events:none;
+}
+.cyber-review-form h5 {
+    font-size:15px;
+    font-weight:600;
+    color:#00f2ff;
+    margin-bottom:10px;
+    letter-spacing:.5px;
+}
+.cyber-rating-stars {
+    display:flex;
+    gap:6px;
+    margin:6px 0 12px;
+}
+.cyber-rating-stars .star {
+    font-size:22px;
+    cursor:pointer;
+    color:#444;
+    transition:.25s;
+    filter:drop-shadow(0 0 3px rgba(0,0,0,.4));
+}
+.cyber-rating-stars .star.active,
+.cyber-rating-stars .star:hover,
+.cyber-rating-stars .star:hover ~ .star { color:#ffcc00; }
+.cyber-review-form textarea,
+.cyber-review-form input[type="text"] {
+    background:#0f1d33;
+    border:1px solid rgba(0,255,255,.18);
+    color:#d9faff;
+    font-size:13px;
+    border-radius:10px;
+    padding:9px 12px;
+    width:100%;
+    resize:vertical;
+    margin-bottom:10px;
+    outline:none;
+    transition:border-color .25s, box-shadow .25s;
+}
+.cyber-review-form textarea:focus,
+.cyber-review-form input[type="text"]:focus {
+    border-color:#00f2ff;
+    box-shadow:0 0 0 2px rgba(0,255,255,.15);
+}
+.cyber-upload-row {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+}
+.cyber-upload-tile {
+    width:70px;
+    height:70px;
+    border:1px dashed rgba(0,255,255,.35);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    background:rgba(0,255,255,.05);
+    cursor:pointer;
+    font-size:26px;
+    color:#00e0ff;
+    position:relative;
+    transition:.3s;
+}
+.cyber-upload-tile:hover {
+    background:rgba(0,255,255,.1);
+}
+.cyber-upload-thumb {
+    width:70px;
+    height:70px;
+    object-fit:cover;
+    border-radius:10px;
+    border:1px solid rgba(0,255,255,.25);
+    position:relative;
+}
+.cyber-upload-thumb.remove::after{
+    content:"✕";
+    position:absolute;
+    top:4px;
+    right:4px;
+    background:rgba(0,0,0,.55);
+    width:18px;
+    height:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    font-size:11px;
+    color:#fff;
+}
+.cyber-submit-review {
+    background:linear-gradient(115deg,#00ffc8,#009dff);
+    border:none;
+    padding:10px 18px;
+    border-radius:28px;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.5px;
+    color:#04121e;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:.25s;
+}
+.cyber-submit-review:hover {
+    filter:brightness(1.08);
+    transform:translateY(-2px);
+}
+.cyber-review-form .star { cursor:pointer; }

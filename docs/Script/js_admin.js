@@ -32,7 +32,7 @@
             ordersBody.innerHTML = '<tr><td colspan="8" class="text-center text-danger">Chưa đăng nhập</td></tr>';
             return false;
         }
-        adminInfo.textContent = `${me.user?.email || ''} | Điểm: ${me.user?.points ?? 0}`;
+        adminInfo.textContent = `${me.user?.email || ''}`;
         return true;
     }
 

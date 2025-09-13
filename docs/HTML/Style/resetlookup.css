@@ -689,3 +689,85 @@
         50% { transform: scale(1.05); box-shadow:0 0 12px 4px rgba(255,215,0,.45); }
         100% { transform: scale(1); box-shadow:0 0 0 0 rgba(255,215,0,0); }
     }
+    /* PATCH: Điều chỉnh nút trên cùng để tránh đè + style cyber modal */
+    .order-actions-top {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+    .order-actions-top .btn-reward {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        align-self: flex-end;
+        margin-top: 6px;
+    }
+    .order-actions-top .btn-success {
+        box-shadow: 0 0 0 1px rgba(0,255,170,.25);
+    }
+    .btn-reward {
+        background: linear-gradient(115deg,#00ffc8,#0099ff);
+        font-size: 13px;
+        padding: 6px 14px;
+        border-radius: 30px;
+        box-shadow: 0 0 8px rgba(0,255,200,.25);
+        transition: background .25s, transform .2s;
+    }
+    .btn-reward:hover:not(.claimed) {
+        background: linear-gradient(115deg,#05ffd8,#22b0ff);
+        transform: translateY(-2px);
+    }
+    .btn-reward i { font-size:16px; }
+
+    .cyber-modal-lite .modal-dialog { max-width: 450px; }
+    .cyber-modal-content {
+        background: radial-gradient(circle at 20% 15%, #0b1328 0%, #060a16 70%);
+        border: 1px solid rgba(0,255,255,.25);
+        box-shadow: 0 0 18px -4px rgba(0,255,255,.4), 0 0 32px -10px rgba(255,0,180,.35);
+        border-radius: 16px;
+        font-family: 'Rajdhani', sans-serif;
+    }
+    .cyber-modal-header {
+        border-bottom: 1px solid rgba(255,255,255,.07);
+        background: linear-gradient(90deg, rgba(0,255,255,.08), rgba(255,0,180,.05));
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+    }
+    .cyber-modal-header .modal-title {
+        font-weight:600;
+        letter-spacing:.5px;
+        font-size:15px;
+    }
+    .cyber-modal-body {
+        font-size: 13.5px;
+        line-height: 1.55;
+    }
+    .cyber-modal-footer {
+        border-top: 1px solid rgba(255,255,255,.07);
+        background: rgba(255,255,255,.02);
+    }
+    .cyber-soft-box {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        padding:8px 10px;
+        border:1px solid rgba(0,255,255,.15);
+        background: rgba(0,255,255,.05);
+        border-radius:10px;
+        font-size:12.5px;
+        margin-top:6px;
+    }
+    .cyber-soft-box i {
+        color:#00ffc8;
+        font-size:18px;
+    }
+
+    /* Nút claimed giữ nguyên nhưng làm dịu */
+    .btn-reward.claimed {
+        background: linear-gradient(115deg,#3d3d3d,#1f1f1f);
+        box-shadow:none;
+    }
+

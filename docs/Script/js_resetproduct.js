@@ -1823,6 +1823,153 @@ async function loadReviews(productId) {
         console.error('loadReviews error:', err);
     }
 }
+(function initCyberReviewForm(){
+    const params = new URLSearchParams(window.location.search);
+    const need = params.get('review');
+    if (!document.getElementById('writeReviewBox')) return;
+
+    async function purchasedOk() {
+        try {
+            const r = await fetch(`${window.API_BASE}/api/review-context?productId=${encodeURIComponent(productId)}`, {credentials:'include'});
+            const d = await r.json();
+            return d && d.success && d.purchased;
+        } catch { return false; }
+    }
+
+    (async () => {
+        if (need === '1' && await purchasedOk()) {
+            document.getElementById('writeReviewBox').style.display = 'block';
+            scrollIntoViewSmooth(document.getElementById('writeReviewBox'));
+        }
+    })();
+
+    function scrollIntoViewSmooth(el){
+        try { el.scrollIntoView({behavior:'smooth', block:'start'}); } catch {}
+    }
+
+    // Rating stars
+    const starBox = document.getElementById('reviewStars');
+    let currentRating = 0;
+    starBox.querySelectorAll('.star').forEach(st=>{
+        st.addEventListener('click', ()=>{
+            currentRating = Number(st.dataset.v);
+            starBox.querySelectorAll('.star').forEach(s=>{
+                s.classList.toggle('active', Number(s.dataset.v) <= currentRating);
+            });
+        });
+    });
+
+    // Media previews
+    const mediaInput = document.getElementById('reviewMediaInput');
+    const mediaRow = document.getElementById('reviewMediaRow');
+    const addTile = document.getElementById('addImageTile');
+    const mediaPayload = [];
+
+    addTile.addEventListener('click', ()=> mediaInput.click());
+    mediaInput.addEventListener('change', ()=>{
+        [...mediaInput.files].forEach(file=>{
+            if (file.size > 8*1024*1024) return; // limit 8MB
+            const url = URL.createObjectURL(file);
+            const wrap = document.createElement('div');
+            wrap.className = 'cyber-upload-thumb remove';
+            wrap.style.background = '#081424';
+            const isVideo = file.type.startsWith('video/');
+            if (isVideo) {
+                const v = document.createElement('video');
+                v.src = url;
+                v.muted = true;
+                v.playsInline = true;
+                v.style.width='100%';
+                v.style.height='100%';
+                v.style.objectFit='cover';
+                wrap.appendChild(v);
+            } else {
+                const img = document.createElement('img');
+                img.src = url;
+                img.style.width='100%';
+                img.style.height='100%';
+                img.style.objectFit='cover';
+                wrap.appendChild(img);
+            }
+            wrap.onclick = () => {
+                const idx = mediaPayload.findIndex(m => m.id === file._rid);
+                if (idx >= 0) mediaPayload.splice(idx,1);
+                wrap.remove();
+            };
+            file._rid = Math.random().toString(36).slice(2);
+            mediaPayload.push({ id:file._rid, file, isVideo });
+            mediaRow.insertBefore(wrap, addTile);
+        });
+        mediaInput.value = '';
+    });
+
+    document.getElementById('submitReviewBtn').addEventListener('click', async ()=>{
+        if (!currentRating) return toastMini('Chọn số sao trước.');
+        const title = document.getElementById('reviewTitleInput').value.trim();
+        const content = document.getElementById('reviewContentInput').value.trim();
+        // Giản lược: upload ảnh/video dạng base64 inline (nếu bạn có endpoint upload riêng thì thay)
+        const images = [];
+        const videos = [];
+        for (const m of mediaPayload) {
+            const b64 = await fileToBase64(m.file);
+            if (m.isVideo) videos.push(b64);
+            else images.push(b64);
+        }
+        const orderId = params.get('order') || null;
+        try {
+            const res = await fetch(`${window.API_BASE}/api/reviews`, {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                credentials:'include',
+                body: JSON.stringify({
+                    productId,
+                    rating: currentRating,
+                    title,
+                    content,
+                    images,
+                    videos,
+                    orderId
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                toastMini('Đã gửi đánh giá!');
+                document.getElementById('writeReviewBox').style.display='none';
+                // reload reviews (giả sử có hàm loadReviews)
+                if (typeof loadReviews === 'function') loadReviews();
+            } else {
+                toastMini(data.error || 'Không gửi được đánh giá');
+            }
+        } catch {
+            toastMini('Lỗi mạng');
+        }
+    });
+
+    function fileToBase64(file){
+        return new Promise((resolve,reject)=>{
+            const fr = new FileReader();
+            fr.onload = ()=> resolve(fr.result);
+            fr.onerror = reject;
+            fr.readAsDataURL(file);
+        });
+    }
+
+    function toastMini(msg){
+        const t = document.createElement('div');
+        t.textContent = msg;
+        t.style.position='fixed';
+        t.style.bottom='18px';
+        t.style.right='18px';
+        t.style.background='rgba(10,25,40,.9)';
+        t.style.border='1px solid #00f2ff';
+        t.style.padding='8px 14px';
+        t.style.borderRadius='10px';
+        t.style.fontSize='13px';
+        t.style.zIndex='9999';
+        document.body.appendChild(t);
+        setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(),400); },2000);
+    }
+})();
 
 // Gọi init review sau khi product data đã render (đặt cuối file hoặc sau khi fetch product)
 document.addEventListener('DOMContentLoaded', () => {
