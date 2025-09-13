@@ -1566,75 +1566,240 @@ async function initReviewFeature() {
     }
 }
 
+// === PATCH: Thay thế hàm renderReviewForm bằng phiên bản CYBER ===
 function renderReviewForm(productId) {
     const tab = document.getElementById('tab3');
     if (!tab) return;
-    if (tab.querySelector('.user-review-form')) return; // tránh trùng
+    if (document.getElementById('cyberReviewFormShell')) return;
 
     const params = new URLSearchParams(window.location.search);
     const orderId = params.get('order');
 
-    const formBox = document.createElement('div');
-    formBox.className = 'user-review-form glass p-3 mb-4';
-    formBox.innerHTML = `
-      <h5><i class="fas fa-pen"></i> Viết đánh giá để nhận thưởng</h5>
-      <div class="mb-2">
-        <label class="form-label">Chấm sao:</label>
-        <select id="reviewRating" class="form-select form-select-sm" style="max-width:120px;">
-          <option value="5">5 - Tuyệt vời</option>
-          <option value="4">4 - Tốt</option>
-          <option value="3">3 - Bình thường</option>
-          <option value="2">2 - Chưa hài lòng</option>
-          <option value="1">1 - Tệ</option>
-        </select>
-      </div>
-      <div class="mb-2">
-        <label class="form-label">Tiêu đề (tùy chọn)</label>
-        <input type="text" id="reviewTitle" class="form-control form-control-sm" maxlength="120">
-      </div>
-      <div class="mb-2">
-        <label class="form-label">Nội dung</label>
-        <textarea id="reviewContent" rows="4" class="form-control form-control-sm" maxlength="2000" placeholder="Chia sẻ trải nghiệm của bạn..."></textarea>
-      </div>
-      <div class="mb-2">
-        <label class="form-label">Ảnh (tùy chọn)</label>
-        <input type="file" id="reviewImages" class="form-control form-control-sm" accept="image/*" multiple>
-        <div class="form-text text-info">Ảnh sẽ được tự động nén về ≤1200px, tối đa 5 ảnh.</div>
-        <div class="form-text">Tối đa 5 ảnh. Mỗi ảnh ≤ 2MB</div>
-      </div>
-      <button id="btnSubmitReview" class="btn btn-primary btn-sm">
-        <i class="fas fa-paper-plane"></i> Gửi đánh giá
-      </button>
-      <div id="reviewSubmitStatus" class="small mt-2 text-warning"></div>
+    const shell = document.createElement('div');
+    shell.id = 'cyberReviewFormShell';
+    shell.className = 'cyber-review-shell mb-4';
+
+    shell.innerHTML = `
+       <div class="crf-header">
+          <i class='bx bx-edit-alt'></i>
+          <span>VIẾT ĐÁNH GIÁ ĐỂ NHẬN THƯỞNG</span>
+       </div>
+       <div class="crf-row">
+          <div class="crf-col">
+             <div class="crf-label"><i class='bx bx-star'></i>Chấm sao</div>
+             <div class="crf-rating">
+                <div class="crf-stars" id="crfStars">
+                   <span data-v="1">★</span>
+                   <span data-v="2">★</span>
+                   <span data-v="3">★</span>
+                   <span data-v="4">★</span>
+                   <span data-v="5" class="active">★</span>
+                </div>
+                <div class="crf-rating-badge" id="crfRatingBadge">5 - Tuyệt vời</div>
+             </div>
+          </div>
+          <div class="crf-col">
+             <div class="crf-label"><i class='bx bx-text'></i>Tiêu đề</div>
+             <input type="text" id="crfTitle" class="crf-input" maxlength="120" placeholder="Ví dụ: Quá hài lòng, sản phẩm cực ngon">
+          </div>
+       </div>
+       <div class="crf-row">
+          <div class="crf-col" style="flex:1 1 100%">
+             <div class="crf-label"><i class='bx bx-comment-detail'></i>Nội dung đánh giá</div>
+             <textarea id="crfContent" class="crf-textarea" maxlength="2000" placeholder="Chia sẻ trải nghiệm thực tế: hiệu năng, chất lượng, đóng gói, giao hàng, nhiệt độ, FPS..."></textarea>
+             <div class="crf-footer" style="margin-top:6px;">
+                <div class="crf-counter" id="crfCounter">0 / 2000 ký tự</div>
+             </div>
+          </div>
+       </div>
+       <div class="crf-row">
+         <div class="crf-col" style="flex:1 1 100%">
+            <div class="crf-label"><i class='bx bx-image-add'></i>Ảnh / Video minh họa</div>
+            <div class="crf-media-zone" id="crfMediaZone">
+               <label class="crf-upload-tile" id="crfAddTile">
+                 <input type="file" id="crfMediaInput" accept="image/*,video/*" multiple hidden>
+                 <i class='bx bx-plus'></i>
+                 <small>Thêm</small>
+               </label>
+            </div>
+         </div>
+       </div>
+       <div class="crf-footer">
+          <div class="crf-status" id="crfStatus"></div>
+          <button class="crf-submit" id="crfSubmitBtn">
+             <i class='bx bx-cloud-upload'></i> GỬI ĐÁNH GIÁ
+          </button>
+       </div>
     `;
-    tab.prepend(formBox);
 
-    document.getElementById('btnSubmitReview').addEventListener('click', () => submitReview(productId, orderId));
+    tab.prepend(shell);
+
+    let currentRating = 5;
+    const starsWrap = shell.querySelector('#crfStars');
+    const ratingBadge = shell.querySelector('#crfRatingBadge');
+    const contentEl = shell.querySelector('#crfContent');
+    const counterEl = shell.querySelector('#crfCounter');
+    const mediaInput = shell.querySelector('#crfMediaInput');
+    const mediaZone = shell.querySelector('#crfMediaZone');
+    const addTile = shell.querySelector('#crfAddTile');
+    const statusEl = shell.querySelector('#crfStatus');
+    const submitBtn = shell.querySelector('#crfSubmitBtn');
+    const mediaPayload = []; // {id,file,isVideo}
+
+    const ratingTextMap = {
+        1:'1 - Tệ',
+        2:'2 - Chưa tốt',
+        3:'3 - Ổn',
+        4:'4 - Tốt',
+        5:'5 - Tuyệt vời'
+    };
+
+    starsWrap.querySelectorAll('span').forEach(el=>{
+        el.addEventListener('click', ()=>{
+            currentRating = Number(el.dataset.v);
+            starsWrap.querySelectorAll('span').forEach(s=>{
+                s.classList.toggle('active', Number(s.dataset.v) <= currentRating);
+            });
+            ratingBadge.textContent = ratingTextMap[currentRating] || `${currentRating} sao`;
+        });
+    });
+
+    contentEl.addEventListener('input', ()=>{
+        counterEl.textContent = `${contentEl.value.length} / 2000 ký tự`;
+    });
+
+    addTile.addEventListener('click', ()=> mediaInput.click());
+    mediaInput.addEventListener('change', ()=>{
+        [...mediaInput.files].forEach(file=>{
+            if (file.size > 10 * 1024 * 1024) return; // 10MB hard cap
+            const id = Math.random().toString(36).slice(2);
+            const isVideo = file.type.startsWith('video/');
+            mediaPayload.push({ id, file, isVideo });
+            const tile = document.createElement('div');
+            tile.className='crf-thumb';
+            tile.dataset.id = id;
+            const url = URL.createObjectURL(file);
+            if (isVideo){
+                tile.innerHTML = `<video src="${url}" muted playsinline></video><div class="remove-chip">×</div>`;
+            } else {
+                tile.innerHTML = `<img src="${url}" alt=""><div class="remove-chip">×</div>`;
+            }
+            tile.querySelector('.remove-chip').onclick = (e)=>{
+                e.stopPropagation();
+                const idx = mediaPayload.findIndex(m => m.id === id);
+                if (idx>=0) mediaPayload.splice(idx,1);
+                tile.remove();
+            };
+            mediaZone.insertBefore(tile, addTile);
+        });
+        mediaInput.value='';
+    });
+
+    submitBtn.addEventListener('click', async ()=>{
+        if (!currentRating) {
+            statusEl.textContent='Hãy chọn số sao.';
+            return;
+        }
+        const title = document.getElementById('crfTitle').value.trim();
+        const content = contentEl.value.trim();
+        if (!content) {
+            statusEl.textContent='Nội dung không được để trống.';
+            return;
+        }
+        statusEl.textContent='Đang xử lý...';
+
+        // Chuẩn bị ảnh/video base64
+        const images = [];
+        const videos = [];
+        for (const m of mediaPayload) {
+            const b64 = await fileToBase64(m.file);
+            (m.isVideo ? videos : images).push(b64);
+        }
+
+        try {
+            const res = await fetch(`${window.API_BASE}/api/reviews`, {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                credentials:'include',
+                body: JSON.stringify({
+                    productId,
+                    rating: currentRating,
+                    title: title||null,
+                    content,
+                    images,
+                    videos,
+                    orderId: orderId ? Number(orderId) : undefined
+                })
+            });
+            if (res.status === 413) {
+                statusEl.textContent='Dữ liệu quá lớn (413). Giảm số/ kích thước media.';
+                return;
+            }
+            let data={};
+            try { data = await res.json(); } catch {}
+            if (!data.success) {
+                statusEl.textContent= data.error || 'Gửi thất bại.';
+                return;
+            }
+            statusEl.style.color='#00ffc8';
+            statusEl.textContent='Gửi thành công!';
+            ensureReviewReturnModal(); // mở modal đẹp
+            showReviewReturnModal(orderId);
+            // Làm trống form nhẹ
+            contentEl.value='';
+            counterEl.textContent='0 / 2000 ký tự';
+            mediaZone.querySelectorAll('.crf-thumb').forEach(t=>t.remove());
+            mediaPayload.splice(0,mediaPayload.length);
+            await loadReviews(productId); // reload list
+        } catch (e) {
+            statusEl.textContent='Lỗi mạng.';
+        }
+    });
 }
-
+function showReviewReturnModal(orderId){
+    const el = document.getElementById('reviewReturnModal');
+    if (!el) return;
+    const m = new bootstrap.Modal(el);
+    m.show();
+    const btn = document.getElementById('btnReturnClaimNow');
+    if (btn){
+        btn.onclick = () => {
+            m.hide();
+            if (orderId) window.location.href = `resetlookup.html?claim=${orderId}`;
+            else window.location.href = 'resetlookup.html';
+        };
+    }
+}
+// === PATCH: Modal quay lại claim thưởng (thay thế hàm cũ) ===
 function ensureReviewReturnModal() {
     if (document.getElementById('reviewReturnModal')) return;
     const wrap = document.createElement('div');
     wrap.innerHTML = `
-    <div class="modal fade" id="reviewReturnModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-light">
-          <div class="modal-header">
-            <h5 class="modal-title"><i class="fa fa-gift text-warning"></i> Hoàn tất đánh giá</h5>
-            <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <p class="mb-2">Quay lại đơn hàng của bạn để nhận thưởng ngay?</p>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Để sau</button>
-            <button class="btn btn-success btn-sm" id="btnReturnLookupNow">Quay lại ngay</button>
+      <div class="modal fade cyber-return-modal" id="reviewReturnModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+             <div class="modal-header">
+                <h5 class="modal-title"><i class='bx bx-gift bx-tada' style="color:#ffcc00;"></i> HOÀN TẤT ĐÁNH GIÁ</h5>
+                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+             </div>
+             <div class="modal-body">
+                <p class="mb-2 fw-semibold">Đánh giá của bạn đã được ghi nhận thành công.</p>
+                <p style="margin:0;">Bạn muốn quay lại trang quản lý đơn hàng để <strong>NHẬN THƯỞNG</strong> ngay bây giờ?</p>
+             </div>
+             <div class="modal-footer">
+                <button class="cr-btn cr-btn-secondary" data-bs-dismiss="modal">
+                   <i class='bx bx-time'></i> Để sau
+                </button>
+                <button class="cr-btn cr-btn-primary" id="btnReturnClaimNow">
+                   <i class='bx bx-arrow-back'></i> Quay lại nhận thưởng
+                </button>
+             </div>
           </div>
         </div>
-      </div>
-    </div>`;
+      </div>`;
     document.body.appendChild(wrap);
 }
+
 async function compressImageToBase64(file, options = { maxSize: 1200, quality: 0.8 }) {
     return new Promise((resolve, reject) => {
         try {
@@ -1782,47 +1947,83 @@ async function submitReview(productId, orderId) {
         statusEl.textContent = 'Lỗi mạng hoặc CORS khi gửi đánh giá.';
     }
 }
-
 async function loadReviews(productId) {
     try {
         const res = await fetch(`${window.API_BASE}/api/products/${encodeURIComponent(productId)}/reviews`);
         const data = await res.json();
-        if (!data.success) return;
         const list = document.getElementById('reviewList');
         if (!list) return;
-
+        if (!data.success) {
+            list.innerHTML = '<div class="text-danger fw-semibold">Không tải được đánh giá.</div>';
+            return;
+        }
         if (!data.reviews.length) {
-            list.innerHTML = '<div class="text-muted small">Chưa có đánh giá.</div>';
+            list.innerHTML = '<div class="fw-semibold" style="color:#00f2ff;">Chưa có đánh giá – Hãy là người đầu tiên!</div>';
             return;
         }
 
-        list.innerHTML = data.reviews.map(r => {
-            const name = ((r.first_name || '') + ' ' + (r.last_name || '')).trim() || 'Người dùng';
-            const stars = '★★★★★'.slice(0, r.rating) + '☆☆☆☆☆'.slice(0, 5 - r.rating);
-            let imgs = '';
-            if (Array.isArray(r.images) && r.images.length) {
-                imgs = `<div class="d-flex flex-wrap gap-2 mt-2">
-                   ${r.images.map(img => `<img src="${img}" style="width:70px;height:70px;object-fit:cover;border-radius:6px;border:1px solid #333;">`).join('')}
-                </div>`;
+        function maskName(first,last,email){
+            let base = (first||'').trim() + ' ' + (last||'').trim();
+            base = base.trim();
+            if (!base) {
+                // dùng email
+                if (email){
+                    const at = email.indexOf('@');
+                    if (at>2){
+                        return email.slice(0,2) + '***' + email.slice(at-1);
+                    }
+                    return email;
+                }
+                return 'Người dùng';
             }
-            const purchasedBadge = r.orderId ? `<span class="badge" style="background:linear-gradient(135deg,#00ff99,#00cc66);color:#000;margin-left:8px;">✓ Đã mua hàng</span>` : '';
+            const parts = base.split(/\s+/);
+            return parts.map((p,i)=>{
+                if (p.length<=2) return p[0] + '*';
+                return p[0] + p.slice(1,-1).replace(/./g,'*') + p.slice(-1);
+            }).join(' ');
+        }
+        function renderStarsFancy(rating){
+            const full = '★'.repeat(rating);
+            const empty = '★'.repeat(5-rating);
+            return `<span class="rc-stars">${full}<span style="opacity:.18;">${empty}</span></span>`;
+        }
+
+        list.innerHTML = data.reviews.map(r=>{
+            const displayName = maskName(r.first_name, r.last_name, r.email);
+            const initial = displayName.trim()[0]?.toUpperCase() || 'U';
+            const dateStr = new Date(r.createdAt).toLocaleString('vi-VN');
+            const stars = renderStarsFancy(r.rating);
+            let mediaHtml = '';
+            if (Array.isArray(r.images) && r.images.length) {
+                mediaHtml = `
+                  <div class="rc-media">
+                    ${r.images.map(img=> `<img src="${img}" alt="media">`).join('')}
+                  </div>`;
+            }
+            const purchased = r.orderId ? `<span class="rc-badge"><i class='bx bx-check-shield'></i>ĐÃ MUA</span>`:'';
             return `
-  <div class="review-item border-bottom pb-3 mb-3">
-    <div class="d-flex justify-content-between">
-      <strong>${name} ${purchasedBadge}</strong>
-      <span class="text-warning">${stars}</span>
-    </div>
-    ${r.title ? `<div class="fw-semibold">${r.title}</div>` : ''}
-    <div style="white-space:pre-wrap;">${r.content || ''}</div>
-    <div class="small text-muted mt-1">${new Date(r.createdAt).toLocaleString('vi-VN')}</div>
-    ${imgs}
-  </div>
-`;
+              <div class="review-card mb-3">
+                 <div class="rc-head">
+                   <div class="rc-avatar">${initial}</div>
+                   <div class="rc-user-block">
+                      <div class="rc-name-line">
+                         <span>${displayName}</span>
+                         ${purchased}
+                         <span class="rc-date"><i class='bx bx-time-five'></i> ${dateStr}</span>
+                      </div>
+                      ${stars}
+                   </div>
+                 </div>
+                 ${r.title ? `<div class="rc-title">${r.title}</div>`:``}
+                 <div class="rc-content">${(r.content||'').replace(/</g,'&lt;')}</div>
+                 ${mediaHtml}
+              </div>`;
         }).join('');
     } catch (err) {
         console.error('loadReviews error:', err);
     }
 }
+
 (function initCyberReviewForm(){
     const params = new URLSearchParams(window.location.search);
     const need = params.get('review');
@@ -1945,14 +2146,16 @@ async function loadReviews(productId) {
         }
     });
 
-    function fileToBase64(file){
+    // === PATCH: helper base64 (dùng lại cho form mới) ===
+    function fileToBase64(file) {
         return new Promise((resolve,reject)=>{
-            const fr = new FileReader();
+            const fr=new FileReader();
             fr.onload = ()=> resolve(fr.result);
-            fr.onerror = reject;
+            fr.onerror= reject;
             fr.readAsDataURL(file);
         });
     }
+
 
     function toastMini(msg){
         const t = document.createElement('div');
